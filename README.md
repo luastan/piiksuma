@@ -11,3 +11,6 @@ Proyecto de bases de datos
 
 ## Diagramas de Cacoo
 - Diagrama de prueba: https://cacoo.com/diagrams/hPLvHeCUMNMiuGHq/56830
+
+## Carpeta de Drive
+- Proyecto: https://drive.google.com/drive/folders/1VeIF8h1xAgP7jFYru67I-2t3v5YcIQFJ?usp=sharing
