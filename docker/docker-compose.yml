@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+    bd2:
+        image: postgres
+        environment:
+            POSTGRES_USER: piiksuma_db_user  # Nombre del usuario
+            POSTGRES_PASSWORD: piiksuma_db_pass  # Contraseña del usuario
+            POSTGRES_DB: piiksuma  # Nombre para la base de datos
+        volumes:
+            - ./scripts/:/docker-entrypoint-initdb.d/
+        ports:
+            - 5432:5432
+
+# URL DataGrip: jdbc:postgresql://localhost:5432/piiksuma?user=piiksuma_db_user&amp;password=piiksuma_db_pass
