@@ -1,10 +1,10 @@
-package myCoolApp.database;
+package piiksuma.database;
 
-import myCoolApp.Usuario;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class FachadaBDD {
@@ -48,6 +48,12 @@ public class FachadaBDD {
         FachadaBDD.db = db;
     }
 
+    public List<Map<String, Object>> test() {
+
+
+        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM usuario;").mapList();
+    }
+/*
 
     public List<Usuario> usuarios() {
         return (new QueryMapper<Usuario>(this.conexion)).crearConsulta("SELECT nombre, tipo_usuario FROM usuario WHERE tipo_usuario=?").
@@ -59,4 +65,5 @@ public class FachadaBDD {
         //(new QueryMapper<Usuario>(this.conexion)).definirEntidad(Usuario.class).insertar("usuario", usuario);
         (new InsertionMapper<Usuario>(this.conexion)).definirClase(Usuario.class).add(usuario).insertar();
     }
+    */
 }

@@ -1,4 +1,4 @@
-package myCoolApp.database;
+package piiksuma.database;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -142,7 +142,7 @@ class QueryMapper<T> {
         try {
             statement.execute();
             set = statement.getResultSet();
-            for (int i = 0; i < set.getMetaData().getColumnCount(); i++) {
+            for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
                 columnas.add(set.getMetaData().getColumnName(i));
             }
             while (set.next()) {
@@ -155,6 +155,7 @@ class QueryMapper<T> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(resultadosMapeados);
 
         return resultadosMapeados;
     }

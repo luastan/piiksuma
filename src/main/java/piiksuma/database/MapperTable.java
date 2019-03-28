@@ -1,4 +1,4 @@
-package myCoolApp.database;
+package piiksuma.database;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
