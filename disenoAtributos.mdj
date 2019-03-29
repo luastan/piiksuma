@@ -8124,7 +8124,7 @@
 											"top": 1150,
 											"width": 147.80517578125,
 											"height": 13,
-											"text": "+fechaAdquisicion{PK_P}",
+											"text": "+fechaAdquisicion",
 											"horizontalAlignment": 0
 										}
 									],
@@ -11003,8 +11003,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFpw8EcriY+WmI="
 							},
-							"name": "fechaAdquisicion{PK_P}",
-							"type": ""
+							"name": "fechaAdquisicion"
 						}
 					]
 				},
