@@ -2007,7 +2007,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -752,
+											"left": -784,
 											"top": -304,
 											"height": 13
 										},
@@ -2018,11 +2018,11 @@
 												"$ref": "AAAAAAFpw611g6HmJg8="
 											},
 											"font": "Arial;13;1",
-											"left": 389,
+											"left": 373,
 											"top": 151,
-											"width": 74.08984375,
+											"width": 98.9853515625,
 											"height": 13,
-											"text": "M Privado"
+											"text": "MensajePrivado"
 										},
 										{
 											"_type": "LabelView",
@@ -2032,7 +2032,7 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -752,
+											"left": -784,
 											"top": -304,
 											"width": 73.67724609375,
 											"height": 13,
@@ -2046,16 +2046,16 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -752,
+											"left": -784,
 											"top": -304,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 384,
+									"left": 368,
 									"top": 144,
-									"width": 84.08984375,
+									"width": 108.9853515625,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAFpw611g6Hnxow="
@@ -2090,9 +2090,9 @@
 												"$ref": "AAAAAAFpw+Ss4JW6hVA="
 											},
 											"font": "Arial;13;0",
-											"left": 389,
+											"left": 373,
 											"top": 174,
-											"width": 74.08984375,
+											"width": 98.9853515625,
 											"height": 13,
 											"text": "+texto",
 											"horizontalAlignment": 0
@@ -2107,18 +2107,18 @@
 												"$ref": "AAAAAAFpw+TBz5cm8ms="
 											},
 											"font": "Arial;13;0",
-											"left": 389,
+											"left": 373,
 											"top": 189,
-											"width": 74.08984375,
+											"width": 98.9853515625,
 											"height": 13,
 											"text": "+fecha{PKP}",
 											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 384,
+									"left": 368,
 									"top": 169,
-									"width": 84.08984375,
+									"width": 108.9853515625,
 									"height": 38
 								},
 								{
@@ -2131,9 +2131,9 @@
 										"$ref": "AAAAAAFpw611g6HjbCM="
 									},
 									"font": "Arial;13;0",
-									"left": 384,
+									"left": 368,
 									"top": 207,
-									"width": 84.08984375,
+									"width": 108.9853515625,
 									"height": 10
 								},
 								{
@@ -2147,7 +2147,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": -376,
+									"left": -392,
 									"top": -152,
 									"width": 10,
 									"height": 10
@@ -2163,7 +2163,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": -376,
+									"left": -392,
 									"top": -152,
 									"width": 10,
 									"height": 10
@@ -2171,9 +2171,9 @@
 							],
 							"font": "Arial;13;0",
 							"containerChangeable": true,
-							"left": 384,
+							"left": 368,
 							"top": 144,
-							"width": 84.08984375,
+							"width": 108.9853515625,
 							"height": 73,
 							"nameCompartment": {
 								"$ref": "AAAAAAFpw611g6HmJg8="
@@ -3765,8 +3765,7 @@
 							"tail": {
 								"$ref": "AAAAAAFpw611g6Hl06E="
 							},
-							"lineStyle": 1,
-							"points": "424:217;424:240"
+							"points": "423:217;423:239"
 						},
 						{
 							"_type": "UMLGeneralizationView",
@@ -4270,7 +4269,7 @@
 										"$ref": "AAAAAAFpw7NEJa7J+zo="
 									},
 									"font": "Arial;13;0",
-									"left": 526,
+									"left": 531,
 									"top": 171,
 									"width": 102.96533203125,
 									"height": 13,
@@ -4293,7 +4292,7 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 577,
+									"left": 582,
 									"top": 156,
 									"height": 13,
 									"alpha": 1.5707963267948966,
@@ -4314,7 +4313,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 577,
+									"left": 582,
 									"top": 201,
 									"height": 13,
 									"alpha": -1.5707963267948966,
@@ -4335,7 +4334,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 492,
+									"left": 501,
 									"top": 171,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -4356,7 +4355,7 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 495,
+									"left": 504,
 									"top": 157,
 									"height": 13,
 									"alpha": 0.7853981633974483,
@@ -4376,7 +4375,7 @@
 										"$ref": "AAAAAAFpw7NEJq7KcvY="
 									},
 									"font": "Arial;13;0",
-									"left": 479,
+									"left": 488,
 									"top": 198,
 									"width": 19.5126953125,
 									"height": 13,
@@ -4489,7 +4488,7 @@
 							"tail": {
 								"$ref": "AAAAAAFpw611g6Hl06E="
 							},
-							"points": "467:192;688:192",
+							"points": "476:192;688:192",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFpw7NEKq7Ocnk="
@@ -10626,7 +10625,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "M Privado",
+					"name": "MensajePrivado",
 					"ownedElements": [
 						{
 							"_type": "UMLAssociationClassLink",
