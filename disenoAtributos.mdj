@@ -3890,7 +3890,7 @@
 										"$ref": "AAAAAAFpw7GQv6wCm24="
 									},
 									"edgePosition": 1,
-									"text": "+{obligatorio, OR}"
+									"text": "+{optativa, OR}"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -10563,7 +10563,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFpw61ezqGPtN8="
 							},
-							"name": "{obligatorio, OR}",
+							"name": "{optativa, OR}",
 							"source": {
 								"$ref": "AAAAAAFpw61ezqGPtN8="
 							},
