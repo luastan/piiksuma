@@ -9,6 +9,10 @@ env:
   COMPOSE_VERSION: 1.20.1
 
 before_install:
+  # Hay que parar el postgresql que viene por defecto en el travis
+  - sudo service postgresql stop
+  # Espera a que termine el postgres
+  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
   - curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin

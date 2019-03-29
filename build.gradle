@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
     id 'com.avast.gradle.docker-compose' version '0.7.1'
 }
 group 'DreamTeamEvolved'
 version '0.1'
+
 
 sourceCompatibility = 1.8
 
@@ -21,14 +23,19 @@ sourceSets {
     }
 }
 
-repositories {
-    mavenCentral()
+application {
+    mainClassName = 'piiksuma.Arranque'
+}
+
+dockerCompose {
+    isRequiredBy(project.tasks.run)
+    isRequiredBy(project.tasks.test)
+    useComposeFiles = ['docker/docker-compose.yml']
 }
 
 
-dockerCompose {
-    isRequiredBy(project.tasks.test)
-    useComposeFiles = ['docker/docker-compose.yml']
+repositories {
+    mavenCentral()
 }
 
 dependencies {
