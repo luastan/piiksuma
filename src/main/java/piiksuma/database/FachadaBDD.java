@@ -3,6 +3,7 @@ package piiksuma.database;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -66,4 +67,8 @@ public class FachadaBDD {
         (new InsertionMapper<Usuario>(this.conexion)).definirClase(Usuario.class).add(usuario).insertar();
     }
     */
+
+    public List<Integer> numList() {
+        return new ArrayList<>();
+    }
 }
