@@ -4912,9 +4912,9 @@
 										"$ref": "AAAAAAFpw7VT9Lfq2f8="
 									},
 									"font": "Arial;13;0",
-									"left": 288,
+									"left": 271,
 									"top": 504,
-									"width": 71.18896484375,
+									"width": 105.37744140625,
 									"height": 13,
 									"alpha": 4.331881741203657,
 									"distance": 10.770329614269007,
@@ -4922,7 +4922,7 @@
 										"$ref": "AAAAAAFpw7VT9Lful20="
 									},
 									"edgePosition": 1,
-									"text": "+Responder"
+									"text": "+ResponderTicket"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -5018,9 +5018,9 @@
 										"$ref": "AAAAAAFpw7VT9LfrH/w="
 									},
 									"font": "Arial;13;0",
-									"left": 391,
+									"left": 385,
 									"top": 507,
-									"width": 7.22998046875,
+									"width": 19.5126953125,
 									"height": 13,
 									"alpha": -0.29735666492562496,
 									"distance": 22.67156809750927,
@@ -5028,7 +5028,7 @@
 										"$ref": "AAAAAAFpw7VT9Lful20="
 									},
 									"edgePosition": 2,
-									"text": "1"
+									"text": "0..*"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -6071,7 +6071,7 @@
 											"top": 815,
 											"width": 117.7744140625,
 											"height": 13,
-											"text": "Cuentas asociadas"
+											"text": "CuentasAsociadas"
 										},
 										{
 											"_type": "LabelView",
@@ -9850,7 +9850,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFpw6wOhqBAycA="
 							},
-							"name": "Responder",
+							"name": "ResponderTicket",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFpw7VT9LfrH/w=",
@@ -9860,7 +9860,7 @@
 								"reference": {
 									"$ref": "AAAAAAFpw6wOhqBAycA="
 								},
-								"multiplicity": "1"
+								"multiplicity": "0..*"
 							},
 							"end2": {
 								"_type": "UMLAssociationEnd",
@@ -10838,7 +10838,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "Cuentas asociadas",
+					"name": "CuentasAsociadas",
 					"attributes": [
 						{
 							"_type": "UMLAttribute",
