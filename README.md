@@ -27,7 +27,7 @@ Proyecto de bases de datos
 #### Instalación
 Es importante seguir todos los pasos...
  * **Ubuntu**:
-    1. [Instalación](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package)
+    1. [Instalación](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
     2. [Configuración](https://docs.docker.com/install/linux/linux-postinstall/)
     3. [Docker-Compose](https://docs.docker.com/compose/install/) (Puede instalarse con pip tammbién)
 
