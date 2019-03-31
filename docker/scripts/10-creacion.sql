@@ -1,120 +1,290 @@
+/*
 
-Create table categoria
+Script de creación de tablas para Piiksuma
+
+Authors:
+    @luastan
+    @danimf99
+    @CardamaS99
+    @alvrogd
+    @Marcos-marpin
+    @OswaldOswin1
+
+Source Code:
+    https://github.com/luastan/piiksuma
+*/
+
+
+/*
+
+    Multimedia
+
+*/
+
+CREATE TABLE multimedia
 (
-  nombre varchar(60) not null primary key,
-  descripcion varchar(500)
+    id         text primary key,
+    hash       text not null,
+    resolucion text
+    -- uri varchar(10)
 );
 
-Create sequence seq_libro_id_libro;
 
-Create table libro
+
+CREATE TABLE multimediaFotos
 (
-  id_libro integer default nextval('seq_libro_id_libro') not null primary key,
-  titulo varchar(150) not null,
-  isbn char(13) not null,
-  editorial varchar(100),
-  paginas integer,
-  ano varchar(4)
+    id text not null primary key references multimedia (id) on delete cascade on update cascade
 );
 
 
-create or replace function controla_secuencias_libro() returns trigger as $csl$
-declare
-	ejemplar integer;
-begin
-  case TG_OP
-    when 'INSERT' then
-      execute 'create sequence seq_ejemplares_libro_'||cast(NEW.id_libro as text);
-      return new;
-    when 'UPDATE' then
-      IF OLD.id_libro <> NEW.id_libro THEN
-	     ejemplar:=nextval('seq_ejemplares_libro_'||cast(OLD.id_libro as text));
-	     execute 'drop sequence seq_ejemplares_libro_'||cast(OLD.id_libro as text);
-	     execute 'create sequence seq_ejemplares_libro_'||cast(NEW.id_libro as text)|| ' start '||cast(ejemplar as text);
-      END IF;
-      return new;
-    when 'DELETE' then
-      execute 'drop sequence seq_ejemplares_libro_'||cast(OLD.id_libro as text);
-      return old;
-    else null;
-  end case;
-end;
-$csl$ Language plpgsql;
-
-
-create trigger afterLibros after insert or update or delete on libro
-for each row execute procedure controla_secuencias_libro();
-
-
-
-Create table autor
+CREATE TABLE multimediaVideos
 (
- libro integer default currval('seq_libro_id_libro') not null,
- nombre varchar(100) not null,
- orden integer not null,
-
- primary key (libro, nombre),
- foreign key (libro) references libro (id_libro)
-   on delete cascade on update cascade
+    id text not null primary key references multimedia (id) on delete cascade on update cascade
 );
 
-Create table cat_tiene_libro
+
+/*
+
+    Usuarios
+
+*/
+
+
+CREATE TABLE usuarios
 (
-  categoria varchar(60) not null,
-  libro integer default currval('seq_libro_id_libro') not null,
-  primary key (categoria,libro),
-  foreign key (categoria) references categoria(nombre)
-    on delete restrict on update cascade,
-  foreign key (libro) references libro(id_libro)
-    on delete cascade on update cascade
+    id                   text         not null primary key,
+    nombre               varchar(50)  not null default '',
+    pass                 varchar(256) not null,
+    sexo                 varchar(100) CHECK (sexo IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá')),
+    descripcion          varchar(256),
+    domicilio            varchar(256),
+    email                varchar(50),
+    codigoPostal         varchar(50),
+    provincia            varchar(50),
+    pais                 varchar(50),
+    ciudad               varchar(50),
+    lugarNacimiento      varchar(50),
+    fechaNacimiento      timestamp,
+    fechaRegistro        timestamp             default now(),
+    fechaMuerte          timestamp,
+    religion             varchar(50),
+    situacionSentimental varchar(50),
+    trabajo              varchar(50),
+
+    -- Aqui hay que pensar como va a funcionar por defecto
+    fotoPerfil           text references multimediaFotos (id) on delete set null on update cascade
+
 );
 
-create table ejemplar
+
+CREATE TABLE administradores
 (
- libro integer default currval('seq_libro_id_libro') not null,
- num_ejemplar integer not null,
- ano_compra varchar(4) not null,
- localizador varchar(25) not null,
-
- primary key (libro, num_ejemplar),
- foreign key (libro) references libro(id_libro)
-   on delete restrict on update cascade
+    id text primary key references usuarios (id) on delete set null on update cascade
 );
 
 
-create or replace function introduce_num_ejemplar() returns trigger as $csl$
-begin
-  new.num_ejemplar:=nextval('seq_ejemplares_libro_'||cast(new.libro as text));
-  return new;
-end;
-$csl$ Language plpgsql;
-
-
-create trigger beforeInsertEjemplares before insert on ejemplar
-for each row execute procedure introduce_num_ejemplar();
-
-
-
-create table usuario
+CREATE TABLE cuentasAsociadas
 (
-  id_usuario varchar(10) not null primary key,
-  clave varchar(8) not null,
-  nombre varchar(150) not null,
-  direccion varchar(200),
-  email varchar(30) not null,
-  tipo_usuario varchar(15) Default 'Normal' CHECK (tipo_usuario IN ('Normal', 'Administrador'))
+    id      text primary key,
+    token   text,
+    usuario text,
+
+    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
 );
 
-create table prestamo(
-    usuario varchar(10) not null,
-    ejemplar integer not null,
-    libro integer default currval('seq_libro_id_libro') not null,
-    fecha_prestamo timestamp default now(),
-    fecha_devolucion timestamp default null,
-    primary key (usuario, libro, ejemplar, fecha_prestamo),
-    foreign key (libro, ejemplar) references ejemplar(libro, num_ejemplar)
-        on delete restrict on update cascade,
-    foreign key (usuario) references usuario(id_usuario)
-        on delete restrict on update cascade
 
+CREATE TABLE telefonos
+(
+    prefijo  varchar(3),
+    telefono text,
+    usuario  text,
+
+    primary key (telefono, usuario, prefijo),
+    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
 );
+
+/*
+
+    Interacciones
+
+*/
+
+CREATE TABLE seguirUsuario
+(
+    seguido  text,
+    seguidor text,
+
+    primary key (seguido, seguidor),
+    foreign key (seguido) references usuarios (id) on delete cascade on update cascade,
+    foreign key (seguidor) references usuarios (id) on delete cascade on update cascade
+);
+
+
+
+CREATE TABLE mensajesPrivados
+(
+    id         text,
+    texto      text,
+    emisor     text,
+    receptor   text,
+    multimedia text,
+    fecha      timestamp default now(),
+
+    primary key (emisor, receptor, fecha, id),
+    foreign key (emisor) references usuarios (id) on delete cascade on update cascade,
+    foreign key (receptor) references usuarios (id) on delete cascade on update cascade,
+    foreign key (multimedia) references multimedia (id) on delete set null on update cascade
+);
+
+
+CREATE TABLE posts
+(
+    autor            text,
+    id               text,
+    fechaPublicacion timestamp default now() not null,
+    paapa            timestamp,
+    autorPaapa       text,
+    multimedia       text,
+
+    primary key (id)
+);
+
+
+/*
+
+    Hashtags
+
+*/
+
+
+CREATE TABLE hashtag (
+    nombre varchar(280) not null primary key
+);
+
+CREATE TABLE tenerHashtag
+(
+    hashtag   text,
+    post      text,
+
+    primary key (hashtag, post),
+    foreign key (post) references posts (id) on delete cascade on update cascade
+);
+
+
+/*
+
+    Reacciones y Reposts
+
+*/
+
+
+CREATE TABLE reacciones
+(
+    tipoReaccion text,
+    post         text,
+    usuario      text,
+    primary key (post, usuario),
+    foreign key (post) references posts (id) on delete cascade on update cascade,
+    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+);
+
+
+CREATE TABLE reposts
+(
+    post    text,
+    usuario text,
+    primary key (post, usuario),
+    foreign key (post) references posts (id) on delete cascade on update cascade,
+    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+);
+
+
+/*
+
+    Eventos
+
+*/
+
+
+CREATE TABLE eventos
+(
+    id             text,
+    nombre         text not null default '',
+    descripcion    text not null default '',
+    localizacion   text not null default '',
+    fecha          timestamp,
+    usuarioCreador text,
+    primary key (id),
+    foreign key (usuarioCreador) references usuarios (id) on delete cascade on update cascade
+);
+
+CREATE TABLE participarEvento
+(
+    evento  text,
+    usuario text,
+    primary key (evento, usuario),
+    foreign key (evento) references eventos (id) on delete cascade on update cascade,
+    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+);
+
+
+/*
+
+    Logros
+
+*/
+
+CREATE TABLE logros
+(
+    id          text primary key,
+    nombre      varchar(25),
+    descripcion varchar(100)
+);
+
+
+CREATE TABLE tenerLogros
+(
+    logro            text,
+    usuario          text,
+    fechaAdquisicion timestamp not null default now(),
+
+    foreign key (logro) references logros (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key (usuario) references usuarios (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+/*
+
+    Tickets
+
+*/
+
+
+CREATE TABLE tickets
+(
+    id            text,
+    usuario       text,
+    seccion       text,
+    texto         text,
+    fechaCreacion timestamp not null default now(),
+    fechaCierre   timestamp,
+    adminCierre   text,
+    primary key (id),
+    foreign key (usuario) references usuarios (id) on delete set null on update cascade ,
+    foreign key (adminCierre) references administradores (id) on delete set null on update cascade
+);
+
+
+CREATE TABLE respuestasTicket
+(
+    id               text,
+    ticket           text,
+    respuesta        text,
+    usuarioRespuesta text,
+    fecha            timestamp not null default now(),
+
+    primary key (id),
+    foreign key (ticket) references tickets (id),
+    foreign key (usuarioRespuesta) references usuarios (id) on delete set null on update cascade
+);
+
