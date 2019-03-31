@@ -52,7 +52,7 @@ public class FachadaBDD {
     public List<Map<String, Object>> test() {
 
 
-        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM usuario;").mapList();
+        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").mapList();
     }
 /*
 
