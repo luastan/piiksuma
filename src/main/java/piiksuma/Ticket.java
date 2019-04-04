@@ -3,25 +3,36 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-
 @MapperTable(nombre = "tickets")
-public class Ticket {
+
+public class Ticket extends Messages {
+
+    /* Attributes */
+
     @MapperColumn
-    private String id;
+    private String seccion;
 
 
-    public Ticket(String id) {
-        this.id = id;
-    }
+    /* Constructors */
 
     public Ticket() {
     }
 
-    public String getId() {
-        return id;
+    public Ticket(String seccion) {
+
+        if(seccion != null ) {
+            this.seccion = seccion;
+        }
     }
 
-    public void setId(String id) {
-        this.id = id;
+
+    /* Getters and setters */
+
+    public String getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(String seccion) {
+        this.seccion = seccion;
     }
 }

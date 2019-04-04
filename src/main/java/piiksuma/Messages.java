@@ -1,6 +1,7 @@
 package piiksuma;
 
 public class Messages {
+
     private String id;
     private String mensaje;
 
