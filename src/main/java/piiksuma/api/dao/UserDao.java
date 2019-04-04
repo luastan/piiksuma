@@ -1,6 +1,10 @@
 package piiksuma.api.dao;
 
+import piiksuma.Achievement;
+import piiksuma.User;
+
 import java.sql.Connection;
+import java.util.List;
 
 public class UserDao extends AbstractDao{
 

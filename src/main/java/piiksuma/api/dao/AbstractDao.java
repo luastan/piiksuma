@@ -3,7 +3,7 @@ package piiksuma.api.dao;
 import java.sql.Connection;
 
 public class AbstractDao {
-    private Connection connection;
+    private java.sql.Connection connection;
 
 
     public AbstractDao(Connection connection) {
