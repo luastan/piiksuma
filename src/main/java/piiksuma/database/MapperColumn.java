@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface MapperColumn {
     String columna() default "";
     boolean pkey() default false;
+
 }

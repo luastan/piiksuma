@@ -94,7 +94,7 @@ class QueryMapper<T> {
         T elemento;
         try {
             /* Mapeado */
-            statement.execute();
+            statement.executeQuery();
             ResultSet set = statement.getResultSet();
             // Metadata parsing
             for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {

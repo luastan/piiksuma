@@ -1,12 +1,12 @@
 import org.junit.Test;
-import piiksuma.database.FachadaBDD;
+import piiksuma.database.SampleFachada;
 
 import static org.junit.Assert.assertNotNull;
 
 public class Test1 {
     @Test
     public void whatever_test1() {
-        System.out.println(FachadaBDD.getDb().test().get(0).get("nombre"));
+        System.out.println(SampleFachada.getDb().test().get(0).get("nombre"));
     }
 
     @Test

@@ -1,11 +1,10 @@
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import piiksuma.FancyClassTest;
-import piiksuma.database.FachadaBDD;
+import piiksuma.database.SampleFachada;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class MockitoTestSample {
     FancyClassTest fancyClassTest;  // Instancia falsa como el billete de 39
 
     @Mock
-    FachadaBDD mockedDB = FachadaBDD.getDb();
+    SampleFachada mockedDB = SampleFachada.getDb();
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -47,10 +46,10 @@ public class MockitoTestSample {
     @Test
     public void testMasComplicado() {
         // Se guarda la antigua fachada
-        FachadaBDD antigua = FachadaBDD.getDb();
+        SampleFachada antigua = SampleFachada.getDb();
 
         // Se le mete a la fachada una instancia falsa
-        FachadaBDD.setDb(mockedDB);
+        SampleFachada.setDb(mockedDB);
 
         // Se define lo que debe devolver el metodo .numList() de la fachada
         when(mockedDB.numList()).thenReturn(listaNumeros);
@@ -62,6 +61,6 @@ public class MockitoTestSample {
         assertEquals(listaNumeros, instanciaNormal.returnsFromFachadaBDD());
 
         // Se vuelve a poner la antigua
-        FachadaBDD.setDb(antigua);
+        SampleFachada.setDb(antigua);
     }
 }

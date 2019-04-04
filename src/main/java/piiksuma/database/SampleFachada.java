@@ -1,6 +1,8 @@
 package piiksuma.database;
 
 
+import piiksuma.Usuario;
+
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -8,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class FachadaBDD {
-    private static FachadaBDD db;
+public class SampleFachada {
+    private static SampleFachada db;
     private Connection conexion;
 
 
-    private FachadaBDD() {
+    private SampleFachada() {
         Properties configuracion = new Properties();
         FileInputStream arqConfiguracion;
 
@@ -39,15 +41,23 @@ public class FachadaBDD {
     }
 
     static {
-        db = new FachadaBDD();
+        db = new SampleFachada();
     }
-    public static FachadaBDD getDb() {
+    public static SampleFachada getDb() {
         return db;
     }
 
-    public static void setDb(FachadaBDD db) {
-        FachadaBDD.db = db;
+    public static void setDb(SampleFachada db) {
+        SampleFachada.db = db;
     }
+
+
+    public List<Usuario> usuarios() {
+        return (new QueryMapper<Usuario>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").
+                definirEntidad(Usuario.class).list();
+    }
+
+
 
     public List<Map<String, Object>> test() {
 
