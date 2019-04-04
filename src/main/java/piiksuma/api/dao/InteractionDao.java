@@ -6,8 +6,8 @@ import piiksuma.Reaction;
 import java.sql.Connection;
 import java.util.List;
 
-public class InteraccionesDao extends AbstractDao {
-    public InteraccionesDao(Connection connection) {
+public class InteractionDao extends AbstractDao {
+    public InteractionDao(Connection connection) {
         super(connection);
     }
 

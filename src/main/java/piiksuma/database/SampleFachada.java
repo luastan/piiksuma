@@ -1,7 +1,7 @@
 package piiksuma.database;
 
 
-import piiksuma.Usuario;
+import piiksuma.User;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -52,9 +52,9 @@ public class SampleFachada {
     }
 
 
-    public List<Usuario> usuarios() {
-        return (new QueryMapper<Usuario>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").
-                definirEntidad(Usuario.class).list();
+    public List<User> usuarios() {
+        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").
+                definirEntidad(User.class).list();
     }
 
 
@@ -66,15 +66,15 @@ public class SampleFachada {
     }
 /*
 
-    public List<Usuario> usuarios() {
-        return (new QueryMapper<Usuario>(this.conexion)).crearConsulta("SELECT nombre, tipo_usuario FROM usuario WHERE tipo_usuario=?").
-                definirEntidad(Usuario.class).definirParametros("Normal").list();
+    public List<User> usuarios() {
+        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT nombre, tipo_usuario FROM usuario WHERE tipo_usuario=?").
+                definirEntidad(User.class).definirParametros("Normal").list();
     }
 
 
-    public void nuevoUsuario(Usuario usuario) {
-        //(new QueryMapper<Usuario>(this.conexion)).definirEntidad(Usuario.class).insertar("usuario", usuario);
-        (new InsertionMapper<Usuario>(this.conexion)).definirClase(Usuario.class).add(usuario).insertar();
+    public void nuevoUsuario(User usuario) {
+        //(new QueryMapper<User>(this.conexion)).definirEntidad(User.class).insertar("usuario", usuario);
+        (new InsertionMapper<User>(this.conexion)).definirClase(User.class).add(usuario).insertar();
     }
 */
 
