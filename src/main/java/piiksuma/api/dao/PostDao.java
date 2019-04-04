@@ -41,7 +41,7 @@ public class PostDao extends AbstractDao {
 
     }
 
-    public removeRepost(Post repost, User user, User current) {
+    public void removeRepost(Post repost, User user, User current) {
 
     }
 
