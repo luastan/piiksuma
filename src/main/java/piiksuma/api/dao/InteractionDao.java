@@ -1,10 +1,10 @@
 package piiksuma.api.dao;
 
-import piiksuma.ReactionType;
-import piiksuma.User;
+import piiksuma.*;
 
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.List;
 
 public class InteractionDao extends AbstractDao {
     public InteractionDao(Connection connection) {
