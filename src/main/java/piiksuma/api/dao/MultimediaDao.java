@@ -28,7 +28,7 @@ public class MultimediaDao extends AbstractDao{
     }
 
     public void removeMultimedia(Multimedia multimedia, User current){
-        return null;
+
     }
 
 }

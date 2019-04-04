@@ -20,8 +20,13 @@ public class Ticket extends Messages {
 
     public Ticket(String seccion) {
 
-        if(seccion != null ) {
+        // todo add message fields to constructor
+        super();
+
+        if (seccion != null) {
             this.seccion = seccion;
+        } else {
+            this.seccion = "";
         }
     }
 
