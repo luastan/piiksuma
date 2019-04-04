@@ -1,6 +1,10 @@
 package piiksuma.api.dao;
 
+import piiksuma.Event;
+import piiksuma.Reaction;
+
 import java.sql.Connection;
+import java.util.List;
 
 public class InteraccionesDao extends AbstractDao {
     public InteraccionesDao(Connection connection) {
