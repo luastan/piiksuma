@@ -1,5 +1,6 @@
 package piiksuma.api.dao;
 
+import piiksuma.Ticket;
 import piiksuma.User;
 
 import java.sql.Connection;
