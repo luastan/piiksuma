@@ -5,7 +5,7 @@ import piiksuma.database.MapperTable;
 
 @MapperTable(nombre = "tickets")
 
-public class Ticket extends Messages {
+public class Ticket extends Message {
 
     /* Attributes */
 
