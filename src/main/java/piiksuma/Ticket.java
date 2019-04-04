@@ -9,7 +9,8 @@ public class Ticket extends Message {
 
     /* Attributes */
     private String closeDate;
-
+    private String section;
+    private String textProblem;
     @MapperColumn
     private String seccion;
 
@@ -51,4 +52,6 @@ public class Ticket extends Message {
     public void setCloseDate(String closeDate) {
         this.closeDate = closeDate;
     }
+
+
 }
