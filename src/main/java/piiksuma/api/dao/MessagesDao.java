@@ -5,7 +5,7 @@ import piiksuma.User;
 
 import java.sql.Connection;
 
-public class gMessagesDao extends AbstractDao {
+public class MessagesDao extends AbstractDao {
 
     public MessagesDao(Connection connection) {
         super(connection);
