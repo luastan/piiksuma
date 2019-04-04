@@ -8,6 +8,7 @@ import piiksuma.database.MapperTable;
 public class Ticket extends Message {
 
     /* Attributes */
+    private String closeDate;
 
     @MapperColumn
     private String seccion;
@@ -28,6 +29,8 @@ public class Ticket extends Message {
         } else {
             this.seccion = "";
         }
+
+        closeDate = null;
     }
 
 
@@ -39,5 +42,13 @@ public class Ticket extends Message {
 
     public void setSeccion(String seccion) {
         this.seccion = seccion;
+    }
+
+    public String getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(String closeDate) {
+        this.closeDate = closeDate;
     }
 }
