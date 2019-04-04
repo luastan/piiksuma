@@ -2,8 +2,8 @@ package piiksuma.api.dao;
 
 import java.sql.Connection;
 
-public class InteraccionesDao extends AbstractDao {
-    public InteraccionesDao(Connection connection) {
+public class InteractionDao extends AbstractDao {
+    public InteractionDao(Connection connection) {
         super(connection);
     }
 
