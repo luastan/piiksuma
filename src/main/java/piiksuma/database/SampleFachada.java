@@ -76,7 +76,7 @@ public class SampleFachada {
         //(new QueryMapper<Usuario>(this.conexion)).definirEntidad(Usuario.class).insertar("usuario", usuario);
         (new InsertionMapper<Usuario>(this.conexion)).definirClase(Usuario.class).add(usuario).insertar();
     }
-    */
+*/
 
     public List<Integer> numList() {
         return new ArrayList<>();
