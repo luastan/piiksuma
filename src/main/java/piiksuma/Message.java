@@ -1,6 +1,11 @@
 package piiksuma;
 
+<<<<<<< HEAD:src/main/java/piiksuma/Message.java
 public class Message {
+=======
+public class Messages {
+
+>>>>>>> 895b8986f096272ada0f55df879f4cd3625f3930:src/main/java/piiksuma/Messages.java
     private String id;
     private String mensaje;
 

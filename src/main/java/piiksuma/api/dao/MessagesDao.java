@@ -1,6 +1,5 @@
 package piiksuma.api.dao;
 
-import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.User;
 

@@ -1,5 +1,8 @@
 package piiksuma.api.dao;
 
+import piiksuma.Multimedia;
+import piiksuma.User;
+
 import java.sql.Connection;
 
 public class MultimediaDao extends AbstractDao{
