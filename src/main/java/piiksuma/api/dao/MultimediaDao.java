@@ -12,7 +12,7 @@ public class MultimediaDao extends AbstractDao{
     public MultimediaDao(Connection connection) {
         super(connection);
     }
-
+/*
     public Multimedia addMultimedia(Multimedia multimedia, User current){
         return null;
     }
@@ -32,5 +32,5 @@ public class MultimediaDao extends AbstractDao{
     public void removeMultimedia(Multimedia multimedia, User current){
 
     }
-
+*/
 }

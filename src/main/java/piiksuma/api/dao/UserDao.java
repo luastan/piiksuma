@@ -11,7 +11,7 @@ public class UserDao extends AbstractDao{
     public UserDao(Connection connection) {
         super(connection);
     }
-
+/*
     public void removeUser(User user, User current){
 
     }
@@ -47,5 +47,5 @@ public class UserDao extends AbstractDao{
     public void unfollowUser(User user, User current){
 
     }
-
+*/
 }

@@ -20,6 +20,7 @@ public class SampleFachada {
         FileInputStream arqConfiguracion;
 
         try {
+            System.out.println(getClass().getResource("/baseDatos.properties").getPath());
             arqConfiguracion = new FileInputStream(getClass().getResource("/baseDatos.properties").getPath());
             configuracion.load(arqConfiguracion);
             arqConfiguracion.close();
