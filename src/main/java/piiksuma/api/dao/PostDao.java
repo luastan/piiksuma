@@ -17,7 +17,8 @@ public class PostDao extends AbstractDao {
 
 
     /* Methods */
-/*
+
+    
     public Post createPost(Post post, User user, User current) {
         return null;
     }
