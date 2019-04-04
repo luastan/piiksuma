@@ -53,5 +53,19 @@ public class Ticket extends Message {
         this.closeDate = closeDate;
     }
 
+    public String getSection() {
+        return section;
+    }
 
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getTextProblem() {
+        return textProblem;
+    }
+
+    public void setTextProblem(String textProblem) {
+        this.textProblem = textProblem;
+    }
 }
