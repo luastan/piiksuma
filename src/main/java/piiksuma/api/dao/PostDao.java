@@ -1,9 +1,11 @@
 package piiksuma.api.dao;
 
 import piiksuma.Hashtag;
+import piiksuma.Post;
 import piiksuma.User;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class PostDao extends AbstractDao {
 
