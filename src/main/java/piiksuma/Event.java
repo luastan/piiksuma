@@ -9,16 +9,48 @@ public class Event {
 
 
     public Event(String id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
+        if (id == null) {
+            this.id = "";
+        } else {
+            this.id = id;
+        }
+        if (nombre == null) {
+            this.nombre = "";
+        } else {
+            this.nombre = nombre;
+        }
     }
 
     public Event(String id, String description, String location, String date, String nombre) {
-        this.id = id;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-        this.nombre = nombre;
+        if (id == null) {
+            this.id = "";
+        } else {
+            this.id = id;
+        }
+        if (description == null) {
+            this.description = "";
+        } else {
+            this.description = description;
+        }
+        if (location == null) {
+            this.location = "";
+        } else {
+            this.location = location;
+        }
+        if (date == null) {
+            this.date = "";
+        } else {
+            this.date = date;
+        }
+        if (nombre == null) {
+            this.nombre = "";
+        } else {
+            this.nombre = nombre;
+        }
+    }
+
+    public Event(){
+
     }
 
     /*GETTERS*/
