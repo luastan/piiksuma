@@ -1,10 +1,11 @@
 package piiksuma.api.dao;
 
+import piiksuma.Ticket;
 import piiksuma.User;
 
 import java.sql.Connection;
 
-public class MessagesDao extends AbstractDao {
+public class gMessagesDao extends AbstractDao {
 
     public MessagesDao(Connection connection) {
         super(connection);
