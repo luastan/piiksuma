@@ -24,7 +24,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     public Ticket newTicket(Ticket ticker, User currentUser) {
-
+        return null;
     }
 
     public void replyTicket(Ticket ticker, User currentUser) {
