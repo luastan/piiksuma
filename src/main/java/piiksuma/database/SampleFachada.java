@@ -1,6 +1,7 @@
 package piiksuma.database;
 
 
+import com.sun.java.util.jar.pack.Package;
 import piiksuma.Usuario;
 
 import java.io.FileInputStream;
@@ -20,6 +21,7 @@ public class SampleFachada {
         FileInputStream arqConfiguracion;
 
         try {
+            System.out.println(getClass().getResource("/baseDatos.properties").getPath());
             arqConfiguracion = new FileInputStream(getClass().getResource("/baseDatos.properties").getPath());
             configuracion.load(arqConfiguracion);
             arqConfiguracion.close();

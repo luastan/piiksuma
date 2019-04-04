@@ -12,7 +12,7 @@ public class PostDao extends AbstractDao {
 
 
     /* Methods */
-
+/*
     public Post createPost(Post post, User user, User current) {
 
     }
@@ -51,5 +51,5 @@ public class PostDao extends AbstractDao {
 
     public Hashtag createHashtag(Hashtag hashtag, User current) {
 
-    }
+    }*/
 }
