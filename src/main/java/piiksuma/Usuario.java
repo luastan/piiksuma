@@ -4,7 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 @MapperTable(nombre = "users")
-public class User {
+public class Usuario {
 
     @MapperColumn
     private String name;
@@ -30,7 +30,7 @@ public class User {
     @MapperColumn
     private String email;
 
-    public User(String name, String id, String email) {
+    public Usuario(String name, String id, String email) {
         this.name = name;
         this.id = id;
         this.email = email;
@@ -39,7 +39,7 @@ public class User {
     /**
      * Necesario constructor vacío para que se pueda crear con reflección
      */
-    public User() {
+    public Usuario() {
     }
 
 
