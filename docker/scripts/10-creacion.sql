@@ -50,7 +50,7 @@ CREATE TABLE multimediaVideos
 */
 
 
-CREATE TABLE users
+CREATE TABLE usuarios
 (
     id                   text         not null primary key,
     nombre               varchar(50)  not null default '',

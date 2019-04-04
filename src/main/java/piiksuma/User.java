@@ -4,7 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 @MapperTable(nombre = "users")
-public class Usuario {
+public class User {
 
     @MapperColumn
     private String name;
@@ -20,7 +20,7 @@ public class Usuario {
     private String country;
     private String city;
     private String birthPlace;
-    private String birthdate;
+    private String birthday;
     private String registrationDate;
     private String deadDate;
     private String religion;
@@ -30,7 +30,7 @@ public class Usuario {
     @MapperColumn
     private String email;
 
-    public Usuario(String name, String id, String email) {
+    public User(String name, String id, String email) {
         this.name = name;
         this.id = id;
         this.email = email;
@@ -39,7 +39,7 @@ public class Usuario {
     /**
      * Necesario constructor vacío para que se pueda crear con reflección
      */
-    public Usuario() {
+    public User() {
     }
 
 
@@ -155,12 +155,12 @@ public class Usuario {
         this.birthPlace = birthPlace;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getRegistrationDate() {

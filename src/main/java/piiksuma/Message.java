@@ -1,10 +1,11 @@
 package piiksuma;
 
-public class Messages {
+public class Message {
+
     private String id;
     private String mensaje;
 
-    public Messages() {
+    public Message() {
     }
 
     public String getId() {
