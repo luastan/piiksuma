@@ -20,7 +20,7 @@ public class User {
     private String country;
     private String city;
     private String birthPlace;
-    private String birthdate;
+    private String birthday;
     private String registrationDate;
     private String deadDate;
     private String religion;
@@ -155,12 +155,12 @@ public class User {
         this.birthPlace = birthPlace;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getRegistrationDate() {

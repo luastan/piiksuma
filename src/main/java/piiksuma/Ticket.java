@@ -31,7 +31,7 @@ public class Ticket extends Message {
             this.seccion = "";
         }
 
-        closeDate = null;
+        closeDate = "";
     }
 
 
