@@ -1,6 +1,12 @@
 package piiksuma.api.dao;
 
-public class MultimediaDao {
+import java.sql.Connection;
+
+public class MultimediaDao extends AbstractDao{
+
+    public MultimediaDao(Connection connection) {
+        super(connection);
+    }
 
     public Multimedia addMultimedia(Multimedia multimedia, User current){
         return null;

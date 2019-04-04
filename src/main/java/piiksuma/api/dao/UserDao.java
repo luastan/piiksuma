@@ -1,6 +1,12 @@
 package piiksuma.api.dao;
 
-public class UserDao {
+import java.sql.Connection;
+
+public class UserDao extends AbstractDao{
+
+    public UserDao(Connection connection) {
+        super(connection);
+    }
 
     public void removeUser(User user, User current){
 
