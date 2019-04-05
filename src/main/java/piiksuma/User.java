@@ -3,16 +3,16 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-@MapperTable(nombre = "usuarios")
+@MapperTable(nombre = "piiUser")
 public class User {
 
-    @MapperColumn(columna = "nombre")
+    @MapperColumn
     private String name;
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String pass;
-    @MapperColumn(columna = "sexo")
+    @MapperColumn
     private String gender;
     private String bio;
     private String direction;
@@ -21,6 +21,7 @@ public class User {
     private String country;
     private String city;
     private String birthPlace;
+    @MapperColumn
     private String birthday;
     private String registrationDate;
     private String deadDate;

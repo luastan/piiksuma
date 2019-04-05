@@ -11,13 +11,13 @@ Authors:
     @OswaldOswin1
 
 Source Code:
-    https://github.com/luastan/piiksuma
+      https://github.com/luastan/piiksuma
 */
 
 
 /*
 
-    Multimedia
+      Multimedia
 
 */
 
@@ -25,19 +25,19 @@ CREATE TABLE multimedia
 (
     id         text primary key,
     hash       text not null,
-    resolucion text
+    resolution text
     -- uri varchar(10)
 );
 
 
 
-CREATE TABLE multimediaFotos
+CREATE TABLE multimediaImage
 (
     id text not null primary key references multimedia (id) on delete cascade on update cascade
 );
 
 
-CREATE TABLE multimediaVideos
+CREATE TABLE multimediaVideo
 (
     id text not null primary key references multimedia (id) on delete cascade on update cascade
 );
@@ -45,248 +45,264 @@ CREATE TABLE multimediaVideos
 
 /*
 
-    Usuarios
+      Usuarios
 
 */
 
 
-CREATE TABLE usuarios
+CREATE TABLE piiUser
 (
-  id                   text         primary key,
-  nombre               varchar(50)  not null default '',
-  pass                 varchar(256) not null,
-  sexo                 varchar(100) CHECK (sexo IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
-                                                    'helicoptero estrellado')),
-  descripcion          varchar(256),
-  domicilio            varchar(256),
-  email                varchar(50),
-  codigoPostal         varchar(50),
-  provincia            varchar(50),
-  pais                 varchar(50),
-  ciudad               varchar(50),
-  lugarNacimiento      varchar(50),
-  fechaNacimiento      timestamp,
-  fechaRegistro        timestamp             default now(),
-  fechaMuerte          timestamp,
-  religion             varchar(50),
-  situacionSentimental varchar(50),
-  trabajo              varchar(50),
+    id                 text primary key,
+    name               varchar(50)  not null default '',
+    pass               varchar(256) not null,
+    gender             varchar(100) CHECK (gender IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
+                                                      'helicoptero estrellado')),
+    description        varchar(256),
+    home               varchar(256),
+    email              varchar(50),
+    postalCode         varchar(50),
+    province           varchar(50),
+    country            varchar(50),
+    city               varchar(50),
+    birthplace         varchar(50),
+    birthdate          timestamp    not null,
+    registration_date  timestamp    not null default now(),
+    deathdate          timestamp,
+    religion           varchar(50),
+    emotionalSituation varchar(50),
+    job                varchar(50),
 
-  -- Aqui hay que pensar como va a funcionar por defecto
-  fotoPerfil           text references multimediaFotos (id) on delete set null on update cascade
+    -- Aqui hay que pensar como va a funcionar por defecto
+    profilePicture     text references multimediaImage (id) on delete set null on update cascade
 
 );
 
 
 
-CREATE TABLE administradores
+CREATE TABLE administrator
 (
-    id text primary key references usuarios (id) on delete set null on update cascade
+    id text primary key references piiUser (id) on delete set null on update cascade
 );
 
 
-CREATE TABLE cuentasAsociadas
+CREATE TABLE associatedAccount
 (
-    id      text primary key,
-    token   text,
-    usuario text,
+    id    text not null primary key,
+    token text,
+    usr   text,
 
-    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 
-CREATE TABLE telefonos
-(
-    prefijo  varchar(3),
-    telefono text,
-    usuario  text,
 
-    primary key (telefono, usuario, prefijo),
-    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+CREATE TABLE phone
+(
+    prefix varchar(3),
+    phone  text,
+    usr    text,
+
+    primary key (phone, usr, prefix),
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
+
 
 /*
 
-    Interacciones
+      Interacciones
 
 */
 
-CREATE TABLE seguirUsuario
+CREATE TABLE followUser
 (
-    seguido  text,
-    seguidor text,
+    followed text,
+    follower text,
 
-    primary key (seguido, seguidor),
-    foreign key (seguido) references usuarios (id) on delete cascade on update cascade,
-    foreign key (seguidor) references usuarios (id) on delete cascade on update cascade
+    primary key (followed, follower),
+    foreign key (followed) references piiUser (id) on delete cascade on update cascade,
+    foreign key (follower) references piiUser (id) on delete cascade on update cascade
 );
 
 
 
-CREATE TABLE mensajesPrivados
+CREATE TABLE privateMessage
 (
     id         text,
-    texto      text,
-    emisor     text,
-    receptor   text,
+    text       text,
+    sender     text,
+    receiver   text,
     multimedia text,
-    fecha      timestamp default now(),
+    date       timestamp default now(),
 
-    primary key (emisor, receptor, fecha, id),
-    foreign key (emisor) references usuarios (id) on delete cascade on update cascade,
-    foreign key (receptor) references usuarios (id) on delete cascade on update cascade,
+    primary key (sender, receiver, date, id),
+    foreign key (sender) references piiUser (id) on delete cascade on update cascade,
+    foreign key (receiver) references piiUser (id) on delete cascade on update cascade,
     foreign key (multimedia) references multimedia (id) on delete set null on update cascade
 );
 
 
-CREATE TABLE posts
-(
-    autor            text,
-    id               text,
-    fechaPublicacion timestamp default now() not null,
-    paapa            timestamp,
-    autorPaapa       text,
-    multimedia       text,
 
-    primary key (id)
+CREATE TABLE post
+(
+    author          text,
+    id              text,
+    publicationDate timestamp default now() not null,
+    sugarDaddy      text,
+    authorDaddy     text,
+    multimedia      text,
+
+    primary key (id, author),
+    foreign key(author) references piiUser(id),
+    foreign key(sugarDaddy, authorDaddy) references post(id, author),
+    foreign key(multimedia) references multimedia(id)
 );
 
 
 /*
 
-    Hashtags
+      Hashtags
 
 */
 
 
-CREATE TABLE hashtag (
-    nombre varchar(280) not null primary key
-);
-
-CREATE TABLE tenerHashtag
+CREATE TABLE hashtag
 (
-    hashtag   text,
-    post      text,
-
-    primary key (hashtag, post),
-    foreign key (post) references posts (id) on delete cascade on update cascade
+    name varchar(280) not null primary key
 );
 
 
-/*
-
-    Reacciones y Reposts
-
-*/
-
-
-CREATE TABLE reacciones
+CREATE TABLE ownHashtag
 (
-    tipoReaccion text,
-    post         text,
-    usuario      text,
-    primary key (post, usuario),
-    foreign key (post) references posts (id) on delete cascade on update cascade,
-    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
-);
-
-
-CREATE TABLE reposts
-(
+    hashtag text,
     post    text,
-    usuario text,
-    primary key (post, usuario),
-    foreign key (post) references posts (id) on delete cascade on update cascade,
-    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+    author  text,
+
+    primary key (hashtag, post, author),
+    foreign key (post, author) references post (id, author) on delete cascade on update cascade
 );
 
 
 /*
 
-    Eventos
+      Reacciones y Repost
 
 */
 
 
-CREATE TABLE eventos
+CREATE TABLE reaction
 (
-    id             text,
-    nombre         text not null default '',
-    descripcion    text not null default '',
-    localizacion   text not null default '',
-    fecha          timestamp,
-    usuarioCreador text,
+    reactionType text,
+    post         text,
+    usr          text,
+    author       text,
+
+    primary key (author, post, usr),
+    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+);
+
+
+
+CREATE TABLE repost
+(
+    post   text,
+    usr    text,
+    author text,
+    primary key (post, usr, author),
+    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+);
+
+
+
+/*
+
+      Eventos
+
+*/
+
+
+CREATE TABLE event
+(
+    id          text,
+    name        text not null default '',
+    description text not null default '',
+    location    text not null default '',
+    date        timestamp,
+    creatorUser text,
     primary key (id),
-    foreign key (usuarioCreador) references usuarios (id) on delete cascade on update cascade
+    foreign key (creatorUser) references piiUser (id) on delete cascade on update cascade
 );
 
-CREATE TABLE participarEvento
+
+
+CREATE TABLE participateEvent
 (
-    evento  text,
-    usuario text,
-    primary key (evento, usuario),
-    foreign key (evento) references eventos (id) on delete cascade on update cascade,
-    foreign key (usuario) references usuarios (id) on delete cascade on update cascade
+    event text,
+    usr   text,
+    primary key (event, usr),
+    foreign key (event) references event (id) on delete cascade on update cascade,
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 
 /*
 
-    Logros
+      Logros
 
 */
 
-CREATE TABLE logros
+CREATE TABLE achievement
 (
     id          text primary key,
-    nombre      varchar(25),
-    descripcion varchar(100)
+    name        varchar(25),
+    description varchar(100)
 );
 
 
-CREATE TABLE tenerLogros
+
+CREATE TABLE ownedAchievement
 (
-    logro            text,
-    usuario          text,
-    fechaAdquisicion timestamp not null default now(),
+    logro           text,
+    usr             text,
+    acquisitionDate timestamp not null default now(),
 
-    foreign key (logro) references logros (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    foreign key (usuario) references usuarios (id) ON DELETE CASCADE ON UPDATE CASCADE
+    foreign key (logro) references achievement (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key (usr) references piiUser (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 /*
 
-    Tickets
+      Tickets
 
 */
 
 
-CREATE TABLE tickets
+CREATE TABLE ticket
 (
-    id            text,
-    usuario       text,
-    seccion       text,
-    texto         text,
-    fechaCreacion timestamp not null default now(),
-    fechaCierre   timestamp,
-    adminCierre   text,
+    id           text,
+    usr          text,
+    section      text,
+    text         text,
+    creationDate timestamp not null default now(),
+    deadline     timestamp,
+    adminClosing text,
     primary key (id),
-    foreign key (usuario) references usuarios (id) on delete set null on update cascade ,
-    foreign key (adminCierre) references administradores (id) on delete set null on update cascade
+    foreign key (usr) references piiUser (id) on delete set null on update cascade,
+    foreign key (adminClosing) references administrator (id) on delete set null on update cascade
 );
 
 
-CREATE TABLE respuestasTicket
+
+CREATE TABLE ticketAnswer
 (
-    id               text,
-    ticket           text,
-    respuesta        text,
-    usuarioRespuesta text,
-    fecha            timestamp not null default now(),
+    id          text,
+    ticket      text,
+    answer      text,
+    usrResponse text,
+    date        timestamp not null default now(),
 
     primary key (id),
-    foreign key (ticket) references tickets (id),
-    foreign key (usuarioRespuesta) references usuarios (id) on delete set null on update cascade
+    foreign key (ticket) references ticket (id),
+    foreign key (usrResponse) references piiUser (id) on delete set null on update cascade
 );
-
