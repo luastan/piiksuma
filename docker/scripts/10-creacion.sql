@@ -52,29 +52,31 @@ CREATE TABLE multimediaVideos
 
 CREATE TABLE usuarios
 (
-    id                   text         not null primary key,
-    nombre               varchar(50)  not null default '',
-    pass                 varchar(256) not null,
-    sexo                 varchar(100) CHECK (sexo IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá')),
-    descripcion          varchar(256),
-    domicilio            varchar(256),
-    email                varchar(50),
-    codigoPostal         varchar(50),
-    provincia            varchar(50),
-    pais                 varchar(50),
-    ciudad               varchar(50),
-    lugarNacimiento      varchar(50),
-    fechaNacimiento      timestamp,
-    fechaRegistro        timestamp             default now(),
-    fechaMuerte          timestamp,
-    religion             varchar(50),
-    situacionSentimental varchar(50),
-    trabajo              varchar(50),
+  id                   text         primary key,
+  nombre               varchar(50)  not null default '',
+  pass                 varchar(256) not null,
+  sexo                 varchar(100) CHECK (sexo IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
+                                                    'helicoptero estrellado')),
+  descripcion          varchar(256),
+  domicilio            varchar(256),
+  email                varchar(50),
+  codigoPostal         varchar(50),
+  provincia            varchar(50),
+  pais                 varchar(50),
+  ciudad               varchar(50),
+  lugarNacimiento      varchar(50),
+  fechaNacimiento      timestamp,
+  fechaRegistro        timestamp             default now(),
+  fechaMuerte          timestamp,
+  religion             varchar(50),
+  situacionSentimental varchar(50),
+  trabajo              varchar(50),
 
-    -- Aqui hay que pensar como va a funcionar por defecto
-    fotoPerfil           text references multimediaFotos (id) on delete set null on update cascade
+  -- Aqui hay que pensar como va a funcionar por defecto
+  fotoPerfil           text references multimediaFotos (id) on delete set null on update cascade
 
 );
+
 
 
 CREATE TABLE administradores

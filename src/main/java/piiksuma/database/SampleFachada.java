@@ -82,4 +82,23 @@ public class SampleFachada {
     public List<Integer> numList() {
         return new ArrayList<>();
     }
+
+    /**
+     * //TODO borrar esto cuando ya no sea necesario
+     * Ejemplo para el uso de los mappers :)
+     */
+    public void meterUsuario(){
+        User usuario = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM usuarios where id=?").definirEntidad(User.class).definirParametros("id2").findFirst();
+
+        usuario.setId(usuario.getId()+"1");
+
+        new InsertionMapper<User>(this.conexion).add(usuario).definirClase(User.class).insertar();
+        System.out.println(usuario);
+
+        List<User> usuarios = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM usuarios where id LIKE '%'").definirEntidad(User.class).list();
+
+        for (User user : usuarios) {
+            System.out.println(user);
+        }
+    }
 }

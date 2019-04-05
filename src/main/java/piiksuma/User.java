@@ -3,15 +3,16 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-@MapperTable(nombre = "users")
+@MapperTable(nombre = "usuarios")
 public class User {
 
-    @MapperColumn
+    @MapperColumn(columna = "nombre")
     private String name;
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String pass;
+    @MapperColumn(columna = "sexo")
     private String gender;
     private String bio;
     private String direction;
@@ -201,5 +202,15 @@ public class User {
 
     public void setJob(String job) {
         this.job = job;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", pass='" + pass + '\'' +
+                ", gender='" + gender + '\'' +
+                '}';
     }
 }
