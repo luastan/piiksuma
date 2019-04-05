@@ -52,7 +52,7 @@ CREATE TABLE multimediaVideos
 
 CREATE TABLE usuarios
 (
-  id                   text         not null primary key,
+  id                   text         primary key,
   nombre               varchar(50)  not null default '',
   pass                 varchar(256) not null,
   sexo                 varchar(100) CHECK (sexo IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
