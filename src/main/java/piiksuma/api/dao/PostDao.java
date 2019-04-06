@@ -4,6 +4,7 @@ import piiksuma.Hashtag;
 import piiksuma.Message;
 import piiksuma.Post;
 import piiksuma.User;
+import piiksuma.database.QueryMapper;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -60,8 +61,21 @@ public class PostDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Function to search posts which have a specific text in it
+     * @param text given text to search
+     * @param currentUser current user logged in the app
+     * @return list of the posts which has the given text in it
+     */
     public List<Post> searchByText(String text, User currentUser){
-        List<Post> resultPosts=new ArrayList<>();
-        return null;
+        if(text==null){
+            //TODO lanzar excepciones oportunas o avisar al usuario etc...
+            return null;
+        }
+
+        List<Post> resultPosts=new QueryMapper<Post>(super.getConnection()).crearConsulta("SELECT * FROM post WHERE text LIKE ?")
+                                                                            .definirEntidad(Post.class).definirParametros("%" + text + "%").list();
+
+        return resultPosts;
     }
 }

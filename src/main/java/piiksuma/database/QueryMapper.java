@@ -13,7 +13,7 @@ import java.util.*;
  *
  * @param <T>
  */
-class QueryMapper<T> {
+public class QueryMapper<T> {
     private Connection conexion;
     private PreparedStatement statement;
     private Class<? extends T> mappedClass;
