@@ -146,6 +146,7 @@ CREATE TABLE post
 (
     author          text,
     id              text,
+    text	    text,
     publicationDate timestamp default now() not null,
     sugarDaddy      text,
     authorDaddy     text,

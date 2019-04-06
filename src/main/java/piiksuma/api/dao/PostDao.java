@@ -1,10 +1,12 @@
 package piiksuma.api.dao;
 
 import piiksuma.Hashtag;
+import piiksuma.Message;
 import piiksuma.Post;
 import piiksuma.User;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostDao extends AbstractDao {
@@ -55,6 +57,11 @@ public class PostDao extends AbstractDao {
     }
 
     public Hashtag createHashtag(Hashtag hashtag, User current) {
+        return null;
+    }
+
+    public List<Post> searchByText(String text, User currentUser){
+        List<Post> resultPosts=new ArrayList<>();
         return null;
     }
 }
