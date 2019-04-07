@@ -8,27 +8,35 @@ import piiksuma.database.MapperTable;
 public class Ticket extends Message {
 
     /* Attributes */
+    @MapperColumn(pkey = true)
+    private String id;
+    @MapperColumn(columna = "deadline")
     private String closeDate;
+    @MapperColumn(columna = "usr")
+    private String user;
+    @MapperColumn
     private String section;
+    @MapperColumn(columna = "text")
     private String textProblem;
     @MapperColumn
-    private String seccion;
-
+    private String creationDate;
+    @MapperColumn
+    private String adminClosing;
 
     /* Constructors */
 
     public Ticket() {
     }
 
-    public Ticket(String seccion) {
+    public Ticket(String section) {
 
         // todo add message fields to constructor
         super();
 
-        if (seccion != null) {
-            this.seccion = seccion;
+        if (section != null) {
+            this.section = section;
         } else {
-            this.seccion = "";
+            this.section = "";
         }
 
         closeDate = "";
@@ -37,12 +45,38 @@ public class Ticket extends Message {
 
     /* Getters and setters */
 
-    public String getSeccion() {
-        return seccion;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setSeccion(String seccion) {
-        this.seccion = seccion;
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getAdminClosing() {
+        return adminClosing;
+    }
+
+    public void setAdminClosing(String adminClosing) {
+        this.adminClosing = adminClosing;
     }
 
     public String getCloseDate() {
