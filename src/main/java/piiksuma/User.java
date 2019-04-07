@@ -14,21 +14,32 @@ public class User {
     private String pass;
     @MapperColumn
     private String gender;
+    @MapperColumn(columna = "description")
     private String bio;
+    @MapperColumn(columna = "home")
     private String direction;
+    @MapperColumn(columna = "postalCode")
     private String postCode;
+    @MapperColumn(columna = "province")
     private String state;
-    private String country;
-    private String city;
-    private String birthPlace;
     @MapperColumn
+    private String country;
+    @MapperColumn
+    private String city;
+    @MapperColumn(columna = "birthPlace")
+    private String birthPlace;
+    @MapperColumn(columna = "birthdate")
     private String birthday;
+    @MapperColumn(columna = "registration_date")
     private String registrationDate;
+    @MapperColumn(columna = "deathdate")
     private String deadDate;
+    @MapperColumn
     private String religion;
+    @MapperColumn(columna = "emotionalSituation")
     private String loveStatus;
+    @MapperColumn
     private String job;
-
     @MapperColumn
     private String email;
 
