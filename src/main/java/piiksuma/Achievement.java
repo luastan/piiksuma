@@ -1,8 +1,15 @@
 package piiksuma;
 
+import piiksuma.database.MapperColumn;
+import piiksuma.database.MapperTable;
+
+@MapperTable
 public class Achievement {
+    @MapperColumn(pkey = true)
     private String id;
+    @MapperColumn
     private String name;
+    @MapperColumn
     private String description;
 
     public Achievement() {

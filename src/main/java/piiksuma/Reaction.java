@@ -1,9 +1,17 @@
 package piiksuma;
 
+import piiksuma.database.MapperColumn;
+import piiksuma.database.MapperTable;
+
+@MapperTable
 public class Reaction {
+    @MapperColumn(columna = "usr")
     private User user;
+    @MapperColumn(columna = "author")
     private User owner;
+    @MapperColumn
     private Post post;
+    @MapperColumn
     private ReactionType reactionType;
 
     public Reaction() {

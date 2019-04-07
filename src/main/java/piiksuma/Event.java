@@ -1,11 +1,22 @@
 package piiksuma;
 
+import piiksuma.database.MapperColumn;
+import piiksuma.database.MapperTable;
+
+@MapperTable
 public class Event {
+    @MapperColumn(pkey = true)
     private String id;
+    @MapperColumn
     private String description;
+    @MapperColumn
     private String location;
+    @MapperColumn
     private String date;
-    private String nombre;
+    @MapperColumn
+    private String name;
+    @MapperColumn
+    private String creator;
 
 
     public Event(String id, String nombre) {
@@ -15,9 +26,9 @@ public class Event {
             this.id = id;
         }
         if (nombre == null) {
-            this.nombre = "";
+            this.name = "";
         } else {
-            this.nombre = nombre;
+            this.name = nombre;
         }
     }
 
@@ -43,9 +54,9 @@ public class Event {
             this.date = date;
         }
         if (nombre == null) {
-            this.nombre = "";
+            this.name = "";
         } else {
-            this.nombre = nombre;
+            this.name = nombre;
         }
     }
 
@@ -71,8 +82,12 @@ public class Event {
         return date;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
+    }
+
+    public String getCreator() {
+        return creator;
     }
 
     /*SETTERS*/
@@ -93,7 +108,11 @@ public class Event {
         this.date = date;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }
