@@ -5,14 +5,19 @@ import piiksuma.database.MapperTable;
 
 @MapperTable(nombre = "post")
 public class Post {
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, columna="author")
     private String postAuthor;
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String text;
+    @MapperColumn
     private String publicationDate;/*Date when the father post was creaetd*/
+    @MapperColumn
+    private String sugarDaddy;
+    @MapperColumn(columna = "authorDaddy")
     private String fatherPost;
+    @MapperColumn
     private String multimedia;
 
     public Post() {
