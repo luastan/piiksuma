@@ -13,10 +13,10 @@ import java.util.*;
  *
  * @param <T>
  */
-class QueryMapper<T> {
+public class QueryMapper<T> {
     private Connection conexion;
     private PreparedStatement statement;
-    private Class<? extends T> classy;
+    private Class<? extends T> mappedClass;
 
 
     /**
@@ -46,11 +46,11 @@ class QueryMapper<T> {
      * Imprescindible definir la clase a la que pertenecen los objetos
      * que devuelve la consulta si no es de escritura/modificacion
      *
-     * @param classy Clase a la que se mapea el resultado
+     * @param mappedClass Clase a la que se mapea el resultado
      * @return El propio mapper porque es un builder
      */
-    public QueryMapper<T> definirEntidad(Class<? extends T> classy) {
-        this.classy = classy;
+    public QueryMapper<T> definirEntidad(Class<? extends T> mappedClass) {
+        this.mappedClass = mappedClass;
         return this;
     }
 
@@ -80,18 +80,18 @@ class QueryMapper<T> {
      * Busca de forma automatica una clave foranea y la mapea
      *
      * @param clase   Clase correspondiente a la clave foranea
-     * @param pkValue Valor de la clave primaria
+     * @param pkObject Objeto que tienen un
      * @return Clase mapeada correspondiente a la tupla resultado de la clave
      * foranea. Si la clase indicada no tiene las anotaciones necesarias
      * devuelve un null
      */
-    private Object getFK(Class<?> clase, Object pkValue) {
+    private Object getFK(Class<?> clase, Object pkObject) {
         if (!clase.isAnnotationPresent(MapperTable.class)) {
             return null;
         }
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM ");
         // Se crea la base de la consulta:
-        // SELECT * FROM [TABLA] WHERE [PRIMARIA_TABLA]=pkValue;
+        // SELECT * FROM [TABLA] WHERE [PRIMARIA_TABLA]=pkObject;
         queryBuilder.append(clase.getAnnotation(MapperTable.class).nombre().equals("") ?
                 clase.getName() : clase.getAnnotation(MapperTable.class).nombre()).append(" ? WHERE ");
 
@@ -108,7 +108,7 @@ class QueryMapper<T> {
 
         // Devuelve
         return new QueryMapper<>(this.conexion)
-                .crearConsulta(queryBuilder.toString()).definirEntidad(clase).definirParametros(pkValue)
+                .crearConsulta(queryBuilder.toString()).definirEntidad(clase).definirParametros(pkObject)
                 .findFirst(false);
     }
 
@@ -134,7 +134,7 @@ class QueryMapper<T> {
      */
     public List<T> list(boolean useForeignKeys) {
         ArrayList<T> resultado = new ArrayList<>();
-        String nombreColumna = "";
+        String nombreColumna;
         HashSet<String> columnas = new HashSet<>();
         T elemento;
         Class<?> foreignClass;
@@ -148,8 +148,8 @@ class QueryMapper<T> {
             }
             while (set.next()) {
                 // Constructor y atributos con reflection
-                elemento = classy.getConstructor(new Class[]{}).newInstance();
-                for (Field field : classy.getDeclaredFields()) {
+                elemento = mappedClass.getConstructor(new Class[]{}).newInstance();
+                for (Field field : mappedClass.getDeclaredFields()) {
                     field.setAccessible(true);
                     if (field.isAnnotationPresent(MapperColumn.class)) {
                         nombreColumna = field.getAnnotation(MapperColumn.class).columna();

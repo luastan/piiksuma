@@ -9,8 +9,12 @@ public class Arranque {
 
         System.out.println("\n\n");
 
-        System.out.println(SampleFachada.getDb().usuarios());
+//        System.out.println(SampleFachada.getDb().usuarios());
         
+        System.out.println("\n\n");
+
+        SampleFachada.getDb().meterUsuario();
+
         System.out.println("\n\n");
     }
 }

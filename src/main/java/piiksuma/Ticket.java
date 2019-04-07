@@ -3,7 +3,7 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-@MapperTable(nombre = "tickets")
+@MapperTable(nombre = "ticket")
 
 public class Ticket extends Message {
 
