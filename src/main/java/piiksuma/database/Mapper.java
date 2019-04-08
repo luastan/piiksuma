@@ -46,71 +46,21 @@ public abstract class Mapper<T> {
     };
 
     /**
-     * Genera una lista con el resultado de la consulta mapeado
+     * Define la actualización que se hará a la base de datos
      *
-     * @param useForeignKeys Booleano que indica si se deben guardar las claves foraneas o no
-     * @return Lista de objetos mapeados
+     * @param update String con la actualización a realizar
+     * @return El propio mapper
      */
-    public List<T> list(boolean useForeignKeys) {
-        ArrayList<T> resultado = new ArrayList<>();
-        String nombreColumna;
-        HashSet<String> columnas = new HashSet<>();
-        T elemento;
-        Class<?> foreignClass;
+    public Mapper<T> createUpdate(String update){
         try {
-            /* Mapeado */
-            statement.execute();
-            ResultSet set = statement.getResultSet();
-
-            // Metadata parsing
-            if(set != null) {
-                for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
-                    columnas.add(set.getMetaData().getColumnName(i));
-                }
-
-                while (set.next()) {
-                    // Constructor y atributos con reflection
-                    elemento = mappedClass.getConstructor(new Class[]{}).newInstance();
-                    for (Field field : mappedClass.getDeclaredFields()) {
-                        field.setAccessible(true);
-                        if (field.isAnnotationPresent(MapperColumn.class)) {
-                            nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                            nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
-                            if (columnas.contains(nombreColumna)) {
-                                foreignClass = field.getAnnotation(MapperColumn.class).targetClass();
-                                // Comprueba si el objeto es una clase Custom
-                                if (useForeignKeys && foreignClass != Object.class &&
-                                        foreignClass.isAnnotationPresent(MapperColumn.class)) {
-                                    field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
-                                } else {
-                                    field.set(elemento, set.getObject(nombreColumna));
-                                }
-                            }
-                        }
-                    }
-                    resultado.add(elemento);
-                }
-            }
-            statement.close();
-
-            /* Excepciones */
-        } catch (SQLException e) {
-            // TODO: Tratar excepciones SQL
-            System.out.println("SQL MOVIDA");
-            e.printStackTrace();
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-            // TODO: Tratar excepciones Reflection
-            e.printStackTrace();
+            statement = connection.prepareStatement(update);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        return resultado;
+        return this;
     }
 
     public void executeUpdate() {
-        ArrayList<T> resultado = new ArrayList<>();
-        String nombreColumna;
-        HashSet<String> columnas = new HashSet<>();
-        T elemento;
-        Class<?> foreignClass;
         try {
             /* Mapeado */
             statement.execute();
@@ -121,16 +71,6 @@ public abstract class Mapper<T> {
             System.out.println("SQL MOVIDA");
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * Lista con el resultado de la consulta
-     *
-     * @return Lista de objetos mapeados con el tipo indicado
-     */
-    public List<T> list() {
-        return this.list(true);
     }
 
     /**
@@ -142,7 +82,7 @@ public abstract class Mapper<T> {
      * foranea. Si la clase indicada no tiene las anotaciones necesarias
      * devuelve un null
      */
-    private Object getFK(Class<?> clase, Object pkObject) {
+    protected Object getFK(Class<?> clase, Object pkObject) {
         if (!clase.isAnnotationPresent(MapperTable.class)) {
             return null;
         }
@@ -167,15 +107,6 @@ public abstract class Mapper<T> {
         return new QueryMapper<>(connection)
                 .createQuery(queryBuilder.toString()).defineClass(clase).defineParameters(pkObject)
                 .findFirst(false);
-    }
-
-    public Mapper<T> createQuery(String query){
-        try {
-            statement = connection.prepareStatement(query);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return this;
     }
 
     /**
