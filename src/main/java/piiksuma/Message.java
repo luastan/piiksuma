@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Timestamp;
+
 @MapperTable(nombre = "privateMessage")
 public class Message {
     @MapperColumn(pkey = true)
@@ -15,8 +17,8 @@ public class Message {
     private String receiver;
     @MapperColumn
     private String multimedia;
-    @MapperColumn(pkey = true)
-    private String date;
+    @MapperColumn(pkey = true, hasDefault = true)
+    private Timestamp date;
 
     public Message() {
     }
@@ -61,11 +63,11 @@ public class Message {
         this.multimedia = multimedia;
     }
 
-    public String getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 }

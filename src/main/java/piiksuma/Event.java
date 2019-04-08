@@ -7,13 +7,13 @@ import piiksuma.database.MapperTable;
 public class Event {
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(hasDefault = true)
     private String description;
-    @MapperColumn
+    @MapperColumn(hasDefault = true)
     private String location;
     @MapperColumn
     private String date;
-    @MapperColumn
+    @MapperColumn(hasDefault = true)
     private String name;
     @MapperColumn
     private String creator;
