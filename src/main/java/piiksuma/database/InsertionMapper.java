@@ -95,8 +95,6 @@ public class InsertionMapper<E> extends Mapper {
     }
 
 
-
-
     /**
      * Realiza la insercion de todos los elementos que se añadieron al mapper
      */
@@ -113,7 +111,6 @@ public class InsertionMapper<E> extends Mapper {
                     } else {
                         statement.setObject(i + 1, this.atributos.get(this.columnas.get(i)).get(insercion));
                     }
-
                 }
                 // Ejecutar
                 statement.execute();
