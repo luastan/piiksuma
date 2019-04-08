@@ -107,7 +107,8 @@ public class InsertionMapper<E> extends Mapper {
                 statement = connection.prepareStatement(this.query);  // Construir PreparedStatement
                 for (int i = 0; i < this.columnas.size(); i++) {  // Insertar datos
                     Object object = this.atributos.get(this.columnas.get(i)).get(insercion);
-                    if (object != null && this.atributos.get(this.columnas.get(i)).get(insercion).getClass().isAnnotationPresent(MapperTable.class)) {
+                    if (object != null && this.atributos.get(this.columnas.get(i)).get(insercion).getClass().
+                            isAnnotationPresent(MapperTable.class)) {
                         statement.setObject(i + 1, fkValue(this.atributos.get(this.columnas.get(i)).get(insercion)));
                     } else {
                         statement.setObject(i + 1, this.atributos.get(this.columnas.get(i)).get(insercion));
