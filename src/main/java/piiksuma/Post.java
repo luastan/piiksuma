@@ -15,8 +15,6 @@ public class Post {
     @MapperColumn
     private String text;
     @MapperColumn(hasDefault = true)
-    private String publicationDate;/*Date when the father post was creaetd*/
-    @MapperColumn
     private Timestamp publicationDate;/*Date when the father post was creaetd*/
     @MapperColumn
     private String sugarDaddy;
