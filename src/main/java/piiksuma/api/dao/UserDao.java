@@ -57,8 +57,24 @@ public class UserDao extends AbstractDao{
         return null;
     }
 
+    /**
+     * Function to get the user that meet with the specifications
+     * @param user user that contains the specification about the user to search
+     * @param current current user logged in the app
+     * @return user with all the information
+     */
     public User getUser(User user, User current){
-        return null;
+
+        if(user == null){
+            return null;
+        }
+
+        if(!user.checkPrimaryKey()){
+            return null;
+        }
+
+        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser " +
+                "WHERE id LIKE '?'").definirEntidad(User.class).definirParametros(user.getId()).findFirst();
     }
 
     /**
@@ -66,7 +82,7 @@ public class UserDao extends AbstractDao{
      * @param user user that contains the specification about the users to search
      * @param current current user logged in the app
      * @param limit maximum of users to return
-     * @return user with all the information
+     * @return users with all the information
      */
     public List<User> searchUser(User user, User current, Integer limit){
 
@@ -77,7 +93,7 @@ public class UserDao extends AbstractDao{
         if(limit <= 0){
             return new ArrayList<>();
         }
-        
+
         return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser " +
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").definirEntidad(User.class).definirParametros(
                 user.getId(), user.getName(), limit).list();

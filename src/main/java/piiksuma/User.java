@@ -234,7 +234,7 @@ public class User {
      */
     public boolean checkNotNull(){
         // Check that the primary keys are not null
-        if(getId() == null || getId().isEmpty()){
+        if(!checkPrimaryKey()){
             return false;
         }
 
@@ -244,6 +244,19 @@ public class User {
         }
 
         if(getBirthday() == null){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Function to check that the primary keys are not null
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey(){
+        // Check that the primary keys are not null
+        if(getId() == null || getId().isEmpty()){
             return false;
         }
 
