@@ -112,8 +112,6 @@ public class SampleFachada {
 
         List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
                 "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
-
-        usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser").defineClass(User.class).list();
         for (User user : usuarios) {
             System.out.println(user);
         }
