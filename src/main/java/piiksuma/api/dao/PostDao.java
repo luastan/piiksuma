@@ -168,9 +168,7 @@ public class PostDao extends AbstractDao {
             return null;
         }
 
-        List<Post> resultPosts=new QueryMapper<Post>(super.getConnection()).crearConsulta("SELECT * FROM post WHERE text LIKE ?")
-                                                                            .definirEntidad(Post.class).definirParametros("%" + text + "%").list();
-
-        return resultPosts;
+        return new QueryMapper<Post>(super.getConnection()).crearConsulta("SELECT * FROM post WHERE text LIKE ?")
+                                                .definirEntidad(Post.class).definirParametros("%" + text + "%").list();
     }
 }
