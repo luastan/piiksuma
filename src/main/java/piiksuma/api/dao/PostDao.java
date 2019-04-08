@@ -68,8 +68,6 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
 
 
-
-
     }
 
     public Post getPost(Post post, User user, User current) {
@@ -154,13 +152,31 @@ public class PostDao extends AbstractDao {
                 "LIKE UPPER(?)").defineClass(Post.class).defineParameters("%" + text + "%").list();
     }
 
+    /**
+     * Function that composes a user's feed; the following posts are included:
+     * - Posts made by followed users
+     * - Posts made by the user
+     * - The 20 most reacted to posts that are in the user's followed hashtags
+     *
+     * @param user        user whose feed will be retrieved
+     * @param currentUser user executing the query
+     * @return posts that make up the user's feed
+     */
     public List<Post> getFeed(User user, User currentUser) {
 
-        java.util.ArrayList<Post> resultado = new ArrayList<>();
+        java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
 
-        if (user == null) {
+        // We need to check that the given parameters are OK
+        if (user == null || currentUser == null) {
             return (null);
+        }
+
+        // A user can retrieve a user's feed in the following situations:
+        //  - The user is an admin
+        //  - The user is a common user and he's retrieving his own feed
+        if(currentUser.getType().equals(UserType.user) && !user.getEmail().equals(currentUser.getEmail())) {
+            return(null);
         }
 
         // Connect to the database
@@ -253,10 +269,12 @@ public class PostDao extends AbstractDao {
             stm.setString(5, user.getEmail());
 
             try {
+                // We execute the composed query
                 rs = stm.executeQuery();
 
+                // We store each result in a post
                 while (rs.next()) {
-                    resultado.add(new Post(rs.getString("author"), rs.getString("id"),
+                    result.add(new Post(rs.getString("author"), rs.getString("id"),
                             rs.getString("text"), rs.getTimestamp("publicationdate"),
                             rs.getString("sugardaddy"), rs.getString("authordaddy"),
                             rs.getString("multimedia")));
@@ -265,6 +283,7 @@ public class PostDao extends AbstractDao {
                 System.out.println(e.getMessage());
             } finally {
                 try {
+                    // We must close the prepared statement as it won't be used anymore
                     stm.close();
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
@@ -274,12 +293,13 @@ public class PostDao extends AbstractDao {
             System.out.println(e.getMessage());
         } finally {
             try {
+                // We also must close de connection to the database to free its resources
                 con.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        return(resultado);
+        return (result);
     }
 }
