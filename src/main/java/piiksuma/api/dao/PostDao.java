@@ -61,7 +61,16 @@ public class PostDao extends AbstractDao {
         if (post == null){
             return;
         }
+
         if (!post.checkPrimaryKey()){
+            return;
+        }
+
+        if(current == null){
+            return;
+        }
+
+        if(!current.getType().equals(UserType.administrator)){
             return;
         }
 
