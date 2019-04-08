@@ -37,7 +37,6 @@ public class DeleteMapper<T> extends Mapper{
      */
     public DeleteMapper<T> defineClass(Class<T> clase){
         this.mappedClass = clase;
-        this.elementsDelete = new ArrayList<>();
         return this;
     }
 
@@ -85,7 +84,7 @@ public class DeleteMapper<T> extends Mapper{
                 columnName = columnName.equals("") ? field.getName() : columnName;
 
                 // Se añade el nombre de la columna y se iguala al parámetro indicado
-                deleteBuilder.append(columnName).append(columnName).append(" = ? and ");
+                deleteBuilder.append(columnName).append(" = ? and ");
 
                 // Se añade el nombre de la columna al ArrayList de columnas
                 this.columnsName.add(columnName);
@@ -112,6 +111,8 @@ public class DeleteMapper<T> extends Mapper{
      * Elimina todos los objetos indicados
      */
     public void delete(){
+
+        prepareDelete();
         // Se llama a la función para preparar el borrado
         try {
             // Se recorren todos los objetos que se han añadido para el borrado
@@ -124,15 +125,10 @@ public class DeleteMapper<T> extends Mapper{
                     // Se obtiene la Field correspondiente del HashMap
                     statement.setObject(i + 1, this.attributes.get(this.columnsName.get(i)).get(object));
                 }
+                this.statement.executeUpdate();
             }
         } catch(SQLException | IllegalAccessException e){
             e.printStackTrace();
-        } finally {
-            try {
-                this.statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
