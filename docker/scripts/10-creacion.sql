@@ -65,7 +65,7 @@ CREATE TABLE piiUser
     job                varchar(50),
 
     -- Aqui hay que pensar como va a funcionar por defecto
-    profilePicture     text references multimediaImage (id)
+    profilePicture     text references multimediaImage (hash)
         on delete set null on update cascade
 );
 
