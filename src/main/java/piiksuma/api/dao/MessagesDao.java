@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.User;
+import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 
@@ -15,8 +16,21 @@ public class MessagesDao extends AbstractDao {
         super(connection);
     }
 
-    public void deleteMessage(Message privateMessage, User currentUser) {
-
+    /**
+     * This function allows to delete a message by an admin because the sender used unapropiated words or
+     * by the sender because he wants to do it
+     * @param message message to delete
+     * @param currentUser current user logged in the app
+     */
+    public void deleteMessage(Message message, User currentUser) {
+        if(message==null){
+            return;
+        }
+        if(currentUser==null){
+            return;
+        }
+        //We delete the message from the system
+        new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
 
     public void modifyMessage(Message privateMessage, User currentUser) {
