@@ -102,4 +102,12 @@ public class Ticket extends Message {
     public void setTextProblem(String textProblem) {
         this.textProblem = textProblem;
     }
+
+    public boolean checkPrimaryKey(){
+
+        if(id==null){
+            return false;
+        }
+        return true;
+    }
 }
