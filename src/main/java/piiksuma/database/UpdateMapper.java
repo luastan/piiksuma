@@ -55,12 +55,6 @@ public class UpdateMapper<T> extends Mapper<T> {
     }
 
     @Override
-    public UpdateMapper<T> createQuery(String query) {
-        super.createQuery(query);
-        return this;
-    }
-
-    @Override
     public UpdateMapper<T> defineParameters(Object... parametros) {
         super.defineParameters(parametros);
         return this;

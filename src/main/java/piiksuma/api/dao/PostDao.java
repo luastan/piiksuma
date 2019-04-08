@@ -53,24 +53,36 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).add(post).definirClase(Post.class).insertar();
     }
 
-    public Post updatePost(Post post, User user, User current) {
+    public Post updatePost(Post post, User current) {
         return null;
     }
 
-    public void removePost(Post post, User user, User current) {
-        if (post == null) {
+    /**
+     * Function that remove a post to the database
+     * @param post post to remove to the database with the creator
+     * @param current current user logged in app
+     */
+    public void removePost(Post post, User current) {
+        if (post == null){
             return;
         }
-        if (!post.checkPrimaryKey()) {
+
+        if (!post.checkPrimaryKey()){
+            return;
+        }
+
+        if(current == null){
+            return;
+        }
+
+        if(!current.getType().equals(UserType.administrator)){
             return;
         }
 
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
-
-
     }
 
-    public Post getPost(Post post, User user, User current) {
+    public Post getPost(Post post, User current) {
         return null;
     }
 
@@ -86,7 +98,7 @@ public class PostDao extends AbstractDao {
         return null;
     }
 
-    public void removeRepost(Post repost, User user, User current) {
+    public void removeRepost(Post repost, User current) {
 
 
     }

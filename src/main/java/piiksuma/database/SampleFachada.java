@@ -33,9 +33,9 @@ public class SampleFachada {
             usuario.setProperty("user", configuracion.getProperty("usuario"));
             usuario.setProperty("password", configuracion.getProperty("clave"));
 
-            conexion = java.sql.DriverManager.getConnection("jdbc:"+gestor+"://"+
-                            configuracion.getProperty("servidor")+":"+
-                            configuracion.getProperty("puerto")+"/"+
+            conexion = java.sql.DriverManager.getConnection("jdbc:" + gestor + "://" +
+                            configuracion.getProperty("servidor") + ":" +
+                            configuracion.getProperty("puerto") + "/" +
                             configuracion.getProperty("baseDatos"),
                     usuario);
         } catch (Exception ex) {
@@ -46,6 +46,7 @@ public class SampleFachada {
     static {
         db = new SampleFachada();
     }
+
     public static SampleFachada getDb() {
         return db;
     }
@@ -59,7 +60,6 @@ public class SampleFachada {
         return (new QueryMapper<User>(this.conexion)).createQuery("SELECT * FROM piiUser;").
                 defineClass(User.class).list();
     }
-
 
 
     public List<Map<String, Object>> test() {
@@ -89,7 +89,7 @@ public class SampleFachada {
      * //TODO borrar esto cuando ya no sea necesario
      * Ejemplo para el uso de los mappers :)
      */
-    public void meterUsuario(){
+    public void meterUsuario() {
 
         User usuario = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email LIKE ?")
                 .defineClass(User.class).defineParameters("email").findFirst();
@@ -104,16 +104,14 @@ public class SampleFachada {
 
         new InsertionMapper<User>(this.conexion).add(newUsuario).definirClase(User.class).insertar();
         new InsertionMapper<User>(this.conexion).add(newUsuario2).definirClase(User.class).insertar();
-        System.out.println(usuario);
 
         new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
 
-        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createQuery(
-                "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Cardama").executeUpdate();
+        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createUpdate(
+                "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Goldar").executeUpdate();
 
         List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
-                "LIKE ?").defineParameters("email%").defineClass(User.class).list();
-
+                "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
         for (User user : usuarios) {
             System.out.println(user);
         }
