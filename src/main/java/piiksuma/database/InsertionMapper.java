@@ -13,8 +13,7 @@ import java.util.*;
  *
  * @param <E> Clase de los objetos que se van a insertar
  */
-public class InsertionMapper<E> extends Mapper {
-    private Class<E> clase;
+public class InsertionMapper<E> extends Mapper<E> {
     private List<E> inserciones;
     private String query;
     private ArrayList<String> columnas;
@@ -32,14 +31,14 @@ public class InsertionMapper<E> extends Mapper {
 
     /**
      * Define la clase de los elementos que se están insertando
-     * @param clase Clase de los elementos que se van a insertar
-     * @return Instancia del propio IsertionMApper
+     * @param mappedClass Clase de los elementos que se van a insertar
+     * @return Instancia del propio InsertionMapper
      */
-    public InsertionMapper<E> definirClase(Class<E> clase) {
-        this.clase = clase;
+    @Override
+    public InsertionMapper<E> defineClass(Class<? extends E> mappedClass) {
+        super.defineClass(mappedClass);
         return this;
     }
-
 
     /**
      * Añade un objeto para insertarlo
@@ -72,10 +71,10 @@ public class InsertionMapper<E> extends Mapper {
     private void prepareQuery() {
         String nombreColumna;
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO ")
-                .append(clase.getAnnotation(MapperTable.class).nombre()).append("(");
+                .append(mappedClass.getAnnotation(MapperTable.class).nombre()).append("(");
 
         // Fetching de atributos a insertar
-        for (Field field : clase.getDeclaredFields()) {
+        for (Field field : mappedClass.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(MapperColumn.class) && !field.getAnnotation(MapperColumn.class).hasDefault()) {
                 nombreColumna = field.getAnnotation(MapperColumn.class).columna();
@@ -98,7 +97,7 @@ public class InsertionMapper<E> extends Mapper {
     /**
      * Realiza la insercion de todos los elementos que se añadieron al mapper
      */
-    public void insertar() {
+    public void insert() {
         PreparedStatement statement = null;
         // Peparar la sentencia
         prepareQuery();

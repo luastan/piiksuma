@@ -47,7 +47,7 @@ public class UserDao extends AbstractDao{
         }
 
         // Insertion is done with the user data passed by parameter
-        new InsertionMapper<User>(super.getConnection()).add(user).definirClase(User.class).insertar();
+        new InsertionMapper<User>(super.getConnection()).add(user).defineClass(User.class).insert();
     }
 
     public void updateUser(User user, User current){

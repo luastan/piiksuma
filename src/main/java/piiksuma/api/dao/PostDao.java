@@ -50,7 +50,7 @@ public class PostDao extends AbstractDao {
             return;
         }
 
-        new InsertionMapper<Post>(super.getConnection()).add(post).definirClase(Post.class).insertar();
+        new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
     public Post updatePost(Post post, User current) {

@@ -102,8 +102,8 @@ public class SampleFachada {
         newUsuario2.setPass("hola2");
         newUsuario2.setBirthday(Timestamp.from(Instant.now()));
 
-        new InsertionMapper<User>(this.conexion).add(newUsuario).definirClase(User.class).insertar();
-        new InsertionMapper<User>(this.conexion).add(newUsuario2).definirClase(User.class).insertar();
+        new InsertionMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).insert();
+        new InsertionMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).insert();
 
         new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
 
