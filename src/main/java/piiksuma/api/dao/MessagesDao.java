@@ -62,9 +62,22 @@ public class MessagesDao extends AbstractDao {
 
     }
 
-    public void replyTicket(Ticket ticket, User currentUser) {
+    /**
+     * The admin replys a ticket which has to be on the message, it means that message.getTicket() cant be null
+     * @param ticket el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
+     * @param message reply from the admin to the user who create the ticket
+     * @param currentUser current user loged in the app
+     */
+    public void replyTicket(Ticket ticket, Message message, User currentUser) {
 
-        //TODO para insertar en ticketAnswer con el mapper no se como hacerlo
+        if(message==null){
+            return;
+        }
+        if(!message.checkPrimaryKey() || message.getTicket()==null){
+            return;
+        }
+
+        new InsertionMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).insert();
     }
 
     public void closeTicket(Ticket ticket, User currentUser) {

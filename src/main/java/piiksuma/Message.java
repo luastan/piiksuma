@@ -19,6 +19,8 @@ public class Message {
     private String multimedia;
     @MapperColumn(pkey = true, hasDefault = true)
     private Timestamp date;
+    @MapperColumn
+    private String ticket;
 
     public Message() {
     }
@@ -69,5 +71,20 @@ public class Message {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
+    }
+
+    public boolean checkPrimaryKey(){
+        if(id==null || sender ==null || receiver==null){
+            return false;
+        }
+        return true;
     }
 }
