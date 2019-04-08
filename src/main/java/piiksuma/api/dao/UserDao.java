@@ -70,8 +70,8 @@ public class UserDao extends AbstractDao{
             return null;
         }
 
-        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser " +
-                "WHERE id LIKE '?'").definirEntidad(User.class).definirParametros(user.getId()).findFirst();
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
+                "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getId()).findFirst();
     }
 
     /**
@@ -91,8 +91,8 @@ public class UserDao extends AbstractDao{
             return new ArrayList<>();
         }
 
-        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser " +
-                "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").definirEntidad(User.class).definirParametros(
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
+                "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
                 user.getId(), user.getName(), limit).list();
     }
 
@@ -105,8 +105,8 @@ public class UserDao extends AbstractDao{
             return null;
         }
 
-        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser "+
-                "Where id = ? and pass = ?" ).definirEntidad(User.class).definirParametros(user.getId(),user.getPass()).findFirst();
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser "+
+                "Where id = ? and pass = ?" ).defineClass(User.class).defineParameters(user.getId(),user.getPass()).findFirst();
     }
 
     public void createAchievement(Achievement achievement, User current){

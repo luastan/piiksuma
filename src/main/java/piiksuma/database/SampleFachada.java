@@ -56,8 +56,8 @@ public class SampleFachada {
 
 
     public List<User> usuarios() {
-        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").
-                definirEntidad(User.class).list();
+        return (new QueryMapper<User>(this.conexion)).createQuery("SELECT * FROM piiUser;").
+                defineClass(User.class).list();
     }
 
 
@@ -65,7 +65,7 @@ public class SampleFachada {
     public List<Map<String, Object>> test() {
 
 
-        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").mapList();
+        return (new QueryMapper<Object>(this.conexion)).createQuery("SELECT * FROM piiUser;").mapList();
     }
 /*
 
@@ -91,8 +91,8 @@ public class SampleFachada {
      */
     public void meterUsuario(){
 
-        User usuario = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM piiUser where email LIKE ?")
-                .definirEntidad(User.class).definirParametros("email").findFirst();
+        User usuario = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email LIKE ?")
+                .defineClass(User.class).defineParameters("email").findFirst();
 
         User newUsuario = new User("Fran", "Cardama", "francardama@gmail.com");
         newUsuario.setPass("hola1");
@@ -108,8 +108,11 @@ public class SampleFachada {
 
         new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
 
-        List<User> usuarios = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM piiUser where email " +
-                "LIKE ?").definirParametros("email%").definirEntidad(User.class).list();
+        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createQuery(
+                "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Cardama").executeUpdate();
+
+        List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                "LIKE ?").defineParameters("email%").defineClass(User.class).list();
 
         for (User user : usuarios) {
             System.out.println(user);

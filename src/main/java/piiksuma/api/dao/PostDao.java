@@ -4,7 +4,6 @@ import piiksuma.*;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
-import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
 import java.util.List;
@@ -112,8 +111,8 @@ public class PostDao extends AbstractDao {
             return null;
         }
 
-        return new QueryMapper<Hashtag>(super.getConnection()).crearConsulta("SELECT * FROM hashtag " +
-                "WHERE name LIKE '?'").definirEntidad(Hashtag.class).definirParametros(hashtag.getName()).findFirst();
+        return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
+                "WHERE name LIKE '?'").defineClass(Hashtag.class).defineParameters(hashtag.getName()).findFirst();
     }
 
     /**
@@ -127,8 +126,8 @@ public class PostDao extends AbstractDao {
             return null;
         }
 
-        return new QueryMapper<Hashtag>(super.getConnection()).crearConsulta("SELECT * FROM hashtag " +
-                "WHERE name LIKE '%?%'").definirEntidad(Hashtag.class).definirParametros(hashtag.getName()).list();
+        return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
+                "WHERE name LIKE '%?%'").defineClass(Hashtag.class).defineParameters(hashtag.getName()).list();
     }
 
     /**
@@ -143,7 +142,7 @@ public class PostDao extends AbstractDao {
             return null;
         }
 
-        return new QueryMapper<Post>(super.getConnection()).crearConsulta("SELECT * FROM post WHERE UPPER(text) " +
-                "LIKE UPPER(?)").definirEntidad(Post.class).definirParametros("%" + text + "%").list();
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE UPPER(text) " +
+                "LIKE UPPER(?)").defineClass(Post.class).defineParameters("%" + text + "%").list();
     }
 }

@@ -8,15 +8,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class UpdateMapper<T> extends Mapper {
+public class UpdateMapper<T> extends Mapper<T> {
     private Class<T> clase;
     private List<T> elementsUpdate;
     String update;
     private ArrayList<String> columnsName;
     private HashMap<String, Field> attributes;
-
-    // Clase mappeada
-    private Class<? extends T> mappedClass;
 
     public UpdateMapper(Connection connection) {
         super(connection);
@@ -31,8 +28,9 @@ public class UpdateMapper<T> extends Mapper {
      * @param clase clase de los elementos que se van a actualizar
      * @return instancia del propio UpdateMapper
      */
-    public UpdateMapper<T> defineClass(Class<T> clase){
-        this.mappedClass = clase;
+    @Override
+    public UpdateMapper<T> defineClass(Class<? extends T> clase){
+        super.defineClass(clase);
         return this;
     }
 
@@ -56,12 +54,16 @@ public class UpdateMapper<T> extends Mapper {
         return this;
     }
 
-    /**
-     * Extrae las claves primarias para realizar
-     */
-    private void prepareUpdate(){
-
+    @Override
+    public UpdateMapper<T> createQuery(String query) {
+        super.createQuery(query);
+        return this;
     }
 
+    @Override
+    public UpdateMapper<T> defineParameters(Object... parametros) {
+        super.defineParameters(parametros);
+        return this;
+    }
 
 }
