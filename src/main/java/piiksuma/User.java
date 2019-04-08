@@ -32,7 +32,7 @@ public class User {
     private String birthPlace;
     @MapperColumn(columna = "birthdate")
     private Timestamp birthday;
-    @MapperColumn(columna = "registration_date")
+    @MapperColumn(columna = "registrationDate")
     private Timestamp registrationDate;
     @MapperColumn(columna = "deathdate")
     private Timestamp deadDate;
@@ -247,7 +247,7 @@ public class User {
             return false;
         }
 
-        return true;
+        return getRegistrationDate() != null;
     }
 
     /**
