@@ -3,6 +3,9 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+
 @MapperTable(nombre = "post")
 public class Post {
     @MapperColumn(pkey = true, columna="author")
@@ -12,7 +15,7 @@ public class Post {
     @MapperColumn
     private String text;
     @MapperColumn
-    private String publicationDate;/*Date when the father post was creaetd*/
+    private Timestamp publicationDate;/*Date when the father post was creaetd*/
     @MapperColumn
     private String sugarDaddy;
     @MapperColumn(columna = "authorDaddy")
@@ -24,7 +27,7 @@ public class Post {
 
     }
 
-    public Post(String postAuthor, String publicationDate) {
+    public Post(String postAuthor, Timestamp publicationDate) {
 
         if (postAuthor == null) {
             this.postAuthor = "";
@@ -33,13 +36,23 @@ public class Post {
         }
 
         if (publicationDate == null) {
-            this.publicationDate = "";
+            this.publicationDate = null;
         } else {
             this.publicationDate = publicationDate;
         }
 
         this.fatherPost = "";
         this.multimedia = "";
+    }
+
+    public Post(String postAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy, String fatherPost, String multimedia) {
+        this.postAuthor = postAuthor;
+        this.id = id;
+        this.text = text;
+        this.publicationDate = publicationDate;
+        this.sugarDaddy = sugarDaddy;
+        this.fatherPost = fatherPost;
+        this.multimedia = multimedia;
     }
 
     public String getId() {
@@ -58,11 +71,11 @@ public class Post {
         this.text = text;
     }
 
-    public String getPublicationDate() {
+    public Timestamp getPublicationDate() {
         return publicationDate;
     }
 
-    public void setPublicationDate(String publicationDate) {
+    public void setPublicationDate(Timestamp publicationDate) {
         this.publicationDate = publicationDate;
     }
 
