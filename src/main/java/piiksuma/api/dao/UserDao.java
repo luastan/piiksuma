@@ -100,6 +100,15 @@ public class UserDao extends AbstractDao{
         return null;
     }
 
+    public User login(User user, User current){
+        if (user == null){
+            return null;
+        }
+
+        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser "+
+                "Where id = ? and pass = ?" ).definirEntidad(User.class).definirParametros(user.getId(),user.getPass()).findFirst();
+    }
+
     public void createAchievement(Achievement achievement, User current){
     }
 
