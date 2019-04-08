@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.*;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
 import java.util.List;
@@ -52,6 +53,13 @@ public class PostDao extends AbstractDao {
     }
 
     public void removePost(Post post, User user, User current) {
+        if (post == null){
+            return;
+        }
+        if (!post.checkPrimaryKey()){
+            return;
+        }
+
 
     }
 
