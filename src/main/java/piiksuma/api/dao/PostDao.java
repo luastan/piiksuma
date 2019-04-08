@@ -1,6 +1,7 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
+import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
@@ -60,6 +61,10 @@ public class PostDao extends AbstractDao {
             return;
         }
 
+        new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
+
+
+
 
     }
 
@@ -80,6 +85,7 @@ public class PostDao extends AbstractDao {
     }
 
     public void removeRepost(Post repost, User user, User current) {
+
 
     }
 
