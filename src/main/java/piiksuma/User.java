@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Timestamp;
+
 @MapperTable(nombre = "piiUser")
 public class User {
 
@@ -29,11 +31,11 @@ public class User {
     @MapperColumn(columna = "birthPlace")
     private String birthPlace;
     @MapperColumn(columna = "birthdate")
-    private String birthday;
+    private Timestamp birthday;
     @MapperColumn(columna = "registration_date")
-    private String registrationDate;
+    private Timestamp registrationDate;
     @MapperColumn(columna = "deathdate")
-    private String deadDate;
+    private Timestamp deadDate;
     @MapperColumn
     private String religion;
     @MapperColumn(columna = "emotionalSituation")
@@ -178,27 +180,27 @@ public class User {
         this.birthPlace = birthPlace;
     }
 
-    public String getBirthday() {
+    public Timestamp getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Timestamp birthday) {
         this.birthday = birthday;
     }
 
-    public String getRegistrationDate() {
+    public Timestamp getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
+    public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
     }
 
-    public String getDeadDate() {
+    public Timestamp getDeadDate() {
         return deadDate;
     }
 
-    public void setDeadDate(String deadDate) {
+    public void setDeadDate(Timestamp deadDate) {
         this.deadDate = deadDate;
     }
 
@@ -241,7 +243,7 @@ public class User {
             return false;
         }
 
-        if(getBirthday() == null || getBirthday().isEmpty()){
+        if(getBirthday() == null){
             return false;
         }
 

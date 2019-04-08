@@ -29,7 +29,7 @@ public class PostDao extends AbstractDao {
      */
     public Post createPost(Post post, User user, User current) {
 
-        if(post == null){1
+        if(post == null){
             return null;
         }
 
