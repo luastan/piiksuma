@@ -65,6 +65,6 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(User currentUser) {
 
-        return new QueryMapper<Ticket>(super.getConnection()).crearConsulta("SELECT * FROM ticket WHERE deadline is NULL").definirEntidad(Ticket.class).list();
+        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is NULL").defineClass(Ticket.class).list();
     }
 }

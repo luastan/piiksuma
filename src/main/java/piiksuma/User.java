@@ -10,7 +10,7 @@ public class User {
 
     @MapperColumn
     private String name;
-    @MapperColumn(pkey = true)
+    @MapperColumn
     private String id;
     @MapperColumn
     private String pass;
@@ -32,7 +32,7 @@ public class User {
     private String birthPlace;
     @MapperColumn(columna = "birthdate")
     private Timestamp birthday;
-    @MapperColumn(columna = "registrationDate")
+    @MapperColumn(columna = "registrationDate", hasDefault = true)
     private Timestamp registrationDate;
     @MapperColumn(columna = "deathdate")
     private Timestamp deadDate;
@@ -42,7 +42,7 @@ public class User {
     private String loveStatus;
     @MapperColumn
     private String job;
-    @MapperColumn
+    @MapperColumn(pkey = true)
     private String email;
     private UserType type;
 
@@ -256,7 +256,7 @@ public class User {
      */
     public boolean checkPrimaryKey(){
         // Check that the primary keys are not null
-        if(getId() == null || getId().isEmpty()){
+        if(getEmail() == null || getEmail().isEmpty()){
             return false;
         }
 

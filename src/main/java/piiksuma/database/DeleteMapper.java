@@ -9,15 +9,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class DeleteMapper<T> extends Mapper{
-    private PreparedStatement statement;
+public class DeleteMapper<T> extends Mapper<T>{
     private List<T> elementsDelete;
     private String deleteUpdate;
     private ArrayList<String> columnsName;
     private HashMap<String, Field> attributes;
-
-    // Clase mappeada
-    private Class<? extends T> mappedClass;
 
     /**
      * @param connection Conexión a la base de datos
@@ -35,8 +31,9 @@ public class DeleteMapper<T> extends Mapper{
      * @param clase Clase de los elementos que se van a insertar
      * @return instancia del propio DeleteMapper
      */
-    public DeleteMapper<T> defineClass(Class<T> clase){
-        this.mappedClass = clase;
+    @Override
+    public DeleteMapper<T> defineClass(Class<? extends T> clase){
+        super.defineClass(clase);
         return this;
     }
 

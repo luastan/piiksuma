@@ -5,6 +5,8 @@ import piiksuma.User;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +56,8 @@ public class SampleFachada {
 
 
     public List<User> usuarios() {
-        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").
-                definirEntidad(User.class).list();
+        return (new QueryMapper<User>(this.conexion)).createQuery("SELECT * FROM piiUser;").
+                defineClass(User.class).list();
     }
 
 
@@ -63,7 +65,7 @@ public class SampleFachada {
     public List<Map<String, Object>> test() {
 
 
-        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").mapList();
+        return (new QueryMapper<Object>(this.conexion)).createQuery("SELECT * FROM piiUser;").mapList();
     }
 /*
 
@@ -88,17 +90,29 @@ public class SampleFachada {
      * Ejemplo para el uso de los mappers :)
      */
     public void meterUsuario(){
-        User usuario = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM piiUser where id=?")
-                .definirEntidad(User.class).definirParametros("id2").findFirst();
 
-        usuario.setId(usuario.getId()+"1");
-        new InsertionMapper<User>(this.conexion).add(usuario).definirClase(User.class).insertar();
+        User usuario = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email LIKE ?")
+                .defineClass(User.class).defineParameters("email").findFirst();
+
+        User newUsuario = new User("Fran", "Cardama", "francardama@gmail.com");
+        newUsuario.setPass("hola1");
+        newUsuario.setBirthday(Timestamp.from(Instant.now()));
+
+        User newUsuario2 = new User("Alvaro", "Goldar", "alvarogoldard@gmail.com");
+        newUsuario2.setPass("hola2");
+        newUsuario2.setBirthday(Timestamp.from(Instant.now()));
+
+        new InsertionMapper<User>(this.conexion).add(newUsuario).definirClase(User.class).insertar();
+        new InsertionMapper<User>(this.conexion).add(newUsuario2).definirClase(User.class).insertar();
         System.out.println(usuario);
 
-        new DeleteMapper<User>(this.conexion).add(usuario).defineClass(User.class).delete();
+        new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
 
-        List<User> usuarios = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM piiUser where id " +
-                "LIKE '%'").definirEntidad(User.class).list();
+        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createQuery(
+                "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Cardama").executeUpdate();
+
+        List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                "LIKE ?").defineParameters("email%").defineClass(User.class).list();
 
         for (User user : usuarios) {
             System.out.println(user);
