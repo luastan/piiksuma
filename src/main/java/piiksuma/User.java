@@ -42,11 +42,13 @@ public class User {
     private String job;
     @MapperColumn
     private String email;
+    private UserType type;
 
     public User(String name, String id, String email) {
         this.name = name;
         this.id = id;
         this.email = email;
+        this.type = UserType.user;
     }
 
     /**
@@ -62,6 +64,14 @@ public class User {
 
     public void setNombre(String name) {
         this.name = name;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
     }
 
     public String getIdUsuario() {
