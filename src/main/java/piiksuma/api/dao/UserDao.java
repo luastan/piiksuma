@@ -4,8 +4,10 @@ import piiksuma.Achievement;
 import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.database.InsertionMapper;
+import piiksuma.database.QueryMapper;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao extends AbstractDao{
@@ -57,6 +59,28 @@ public class UserDao extends AbstractDao{
 
     public User getUser(User user, User current){
         return null;
+    }
+
+    /**
+     * Function to get the users that meet with the specifications
+     * @param user user that contains the specification about the users to search
+     * @param current current user logged in the app
+     * @param limit maximum of users to return
+     * @return user with all the information
+     */
+    public List<User> searchUser(User user, User current, Integer limit){
+
+        if(user == null){
+            return null;
+        }
+
+        if(limit <= 0){
+            return new ArrayList<>();
+        }
+        
+        return new QueryMapper<User>(super.getConnection()).crearConsulta("SELECT * FROM piiUser " +
+                "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").definirEntidad(User.class).definirParametros(
+                user.getId(), user.getName(), limit).list();
     }
 
     public List<Achievement> getAchievement(User user, User current){
