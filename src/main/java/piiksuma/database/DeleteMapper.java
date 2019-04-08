@@ -125,6 +125,7 @@ public class DeleteMapper<T> extends Mapper{
                     // Se obtiene la Field correspondiente del HashMap
                     statement.setObject(i + 1, this.attributes.get(this.columnsName.get(i)).get(object));
                 }
+
                 this.statement.executeUpdate();
             }
         } catch(SQLException | IllegalAccessException e){

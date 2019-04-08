@@ -90,7 +90,8 @@ public class SampleFachada {
     public void meterUsuario(){
         User usuario = new QueryMapper<User>(this.conexion).crearConsulta("SELECT * FROM piiUser where id=?").definirEntidad(User.class).definirParametros("id2").findFirst();
 
-        //new InsertionMapper<User>(this.conexion).add(usuario).definirClase(User.class).insertar();
+        usuario.setId(usuario.getId()+"1");
+        new InsertionMapper<User>(this.conexion).add(usuario).definirClase(User.class).insertar();
         System.out.println(usuario);
 
         new DeleteMapper<User>(this.conexion).add(usuario).defineClass(User.class).delete();
