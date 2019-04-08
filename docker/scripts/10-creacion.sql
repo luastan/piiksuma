@@ -98,6 +98,25 @@ CREATE TABLE associatedAccount
 
 
 /*
+      Tickets
+*/
+
+CREATE TABLE ticket
+(
+    id           text,
+    usr          text      not null,
+    section      text      not null,
+    text         text      not null,
+    creationDate timestamp not null default now(),
+    deadline     timestamp, -- todo añadir
+    adminClosing text,
+    primary key (id),
+    foreign key (usr) references piiUser (email) on delete set null on update cascade,
+    foreign key (adminClosing) references administrator (id) on delete set null on update cascade
+);
+
+
+/*
       Interacciones
 */
 
@@ -211,9 +230,9 @@ CREATE TABLE followHashtag
 
     primary key (piiUser, hashtag),
     foreign key (piiUser) references piiUser (email)
-        on delete cascade on delete cascade,
+        on delete cascade on update cascade,
     foreign key (hashtag) references hashtag (name)
-        on delete cascade on delete cascade
+        on delete cascade on update cascade
 );
 
 
@@ -291,25 +310,6 @@ CREATE TABLE ownAchievement
 
     foreign key (logro) references achievement (id) ON DELETE CASCADE ON UPDATE CASCADE,
     foreign key (usr) references piiUser (email) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
-/*
-      Tickets
-*/
-
-CREATE TABLE ticket
-(
-    id           text,
-    usr          text      not null,
-    section      text      not null,
-    text         text      not null,
-    creationDate timestamp not null default now(),
-    deadline     timestamp, -- todo añadir
-    adminClosing text,
-    primary key (id),
-    foreign key (usr) references piiUser (email) on delete set null on update cascade,
-    foreign key (adminClosing) references administrator (id) on delete set null on update cascade
 );
 
 
