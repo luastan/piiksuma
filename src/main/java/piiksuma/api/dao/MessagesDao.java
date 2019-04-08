@@ -33,18 +33,19 @@ public class MessagesDao extends AbstractDao {
      * @param currentUser current user logged
      * @return the ticket which has been inserted
      */
-    public Ticket newTicket(Ticket ticket, User currentUser) {
+    public void newTicket(Ticket ticket, User currentUser) {
 
         if (ticket == null) {
             //TODO handle with exceptions
-            return null;
+            return;
+        }
+
+        if(!ticket.checkPrimaryKey()){
+            return;
         }
 
         new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
 
-        Ticket ticketInserted = new QueryMapper<Ticket>(super.getConnection()).crearConsulta(" SELECT * FROM ticket WHERE id=?").definirEntidad(Ticket.class).definirParametros(ticket.getId()).findFirst();
-
-        return ticketInserted;
     }
 
     public void replyTicket(Ticket ticket, User currentUser) {
@@ -64,9 +65,6 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(User currentUser) {
 
-        //We check for the tickets which haven´t been already closed
-        List<Ticket> tickets = new QueryMapper<Ticket>(super.getConnection()).crearConsulta("SELECT * FROM ticket WHERE deadline is NULL").definirEntidad(Ticket.class).list();
-
-        return tickets;
+        return new QueryMapper<Ticket>(super.getConnection()).crearConsulta("SELECT * FROM ticket WHERE deadline is NULL").definirEntidad(Ticket.class).list();
     }
 }
