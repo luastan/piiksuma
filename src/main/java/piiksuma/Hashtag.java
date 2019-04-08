@@ -34,4 +34,30 @@ public class Hashtag {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull(){
+        // Check that the primary keys are not null
+        if(!checkPrimaryKey()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Function to check that the primary keys are not null
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey(){
+        // Check that the primary keys are not null
+        if(getName() == null || getName().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -124,6 +124,40 @@ public class PostDao extends AbstractDao {
     }
 
     /**
+     * Function to get the hashtag that meet with the specifications
+     * @param hashtag hashtag that contains the specification about the hashtag to search
+     * @param current current user logged in the app
+     * @return hashtag with all the information
+     */
+    public Hashtag getHashtag(Hashtag hashtag, User current){
+        if(hashtag == null){
+            return null;
+        }
+
+        if(!hashtag.checkPrimaryKey()){
+            return null;
+        }
+
+        return new QueryMapper<Hashtag>(super.getConnection()).crearConsulta("SELECT * FROM hashtag " +
+                "WHERE name LIKE '?'").definirEntidad(Hashtag.class).definirParametros(hashtag.getName()).findFirst();
+    }
+
+    /**
+     * Function to get the hashtags that meet with the specifications
+     * @param hashtag hashtag that contains the specification about the hashtags to search
+     * @param current current user logged in the app
+     * @return hashtags with all the information
+     */
+    public List<Hashtag> searchHashtag(Hashtag hashtag, User current){
+        if(hashtag == null){
+            return null;
+        }
+
+        return new QueryMapper<Hashtag>(super.getConnection()).crearConsulta("SELECT * FROM hashtag " +
+                "WHERE name LIKE '%?%'").definirEntidad(Hashtag.class).definirParametros(hashtag.getName()).list();
+    }
+
+    /**
      * Function to search posts which have a specific text in it
      * @param text given text to search
      * @param currentUser current user logged in the app
