@@ -161,7 +161,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE UPPER(text) " +
-                "LIKE UPPER(?)").defineClass(Post.class).defineParameters("%" + text + "%").list();
+                "LIKE UPPER(?) LIMIT 30").defineClass(Post.class).defineParameters("%" + text + "%").list();
     }
 
     /**
