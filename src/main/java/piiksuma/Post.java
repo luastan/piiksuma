@@ -108,7 +108,7 @@ public class Post {
             return false;
         }
 
-        return true;
+        return(text != null && !text.isEmpty());
     }
 
     /**
