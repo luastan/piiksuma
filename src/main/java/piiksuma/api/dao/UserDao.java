@@ -26,35 +26,32 @@ public class UserDao extends AbstractDao{
      * @param current current user logged in the app
      * @return user passed by parameter
      */
-    public User createUser(User user, User current){
+    public void createUser(User user, User current){
 
         if(current == null){
-            return null;
+            return;
         }
 
         // Check that the current user is an administrator
         if(current.getType().equals(UserType.user)){
-            return null;
+            return;
         }
 
         if(user == null){
-            return null;
+            return;
         }
 
         // Check that the primary keys are not null
         if(!user.checkNotNull()){
-            return null;
+            return;
         }
 
         // Insertion is done with the user data passed by parameter
         new InsertionMapper<User>(super.getConnection()).add(user).definirClase(User.class).insertar();
-
-        // TODO debería devolver el usuario con la fecha actual que le añadió la base de datos?
-        return user;
     }
 
-    public User updateUser(User user, User current){
-        return null;
+    public void updateUser(User user, User current){
+
     }
 
     /**
@@ -103,8 +100,7 @@ public class UserDao extends AbstractDao{
         return null;
     }
 
-    public Achievement createAchievement(Achievement achievement, User current){
-        return null;
+    public void createAchievement(Achievement achievement, User current){
     }
 
     public Achievement unlockAchievement(Achievement achievement, User current){

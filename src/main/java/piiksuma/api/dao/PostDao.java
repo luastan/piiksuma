@@ -1,6 +1,7 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
+import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 
 import java.sql.Connection;
@@ -21,69 +22,31 @@ public class PostDao extends AbstractDao {
 
     /**
      * Function that add the post to the database
-     * @param post post to add to the database
-     * @param user user that create the post
+     * @param post post to add to the database with the creator
      * @param current current user logged in the app
      * @return post passed by parameter
      */
-    public Post createPost(Post post, User user, User current) {
+    public void createPost(Post post, User current) {
 
         if(post == null){
-            return null;
-        }
-
-        if(user == null){
-            return null;
+            return;
         }
 
         if(current == null){
-            return null;
+            return;
         }
 
         // Check that the current user is an administrator
         if(current.getType().equals(UserType.user)){
-            return null;
-        }
-
-        // Check that the user satisfies with the restrictions
-        if(!user.checkNotNull()){
-            return null;
+            return;
         }
 
         // Check that the post satisfies with the restrictions
         if(!post.checkNotNull()){
-            return null;
+            return;
         }
 
-        // Get connection
-        Connection con = super.getConnection();
-        PreparedStatement stmPost = null;
-
-        try{
-            // Prepare insertion
-            stmPost = con.prepareStatement("insert into post(author, id, text, sugarDaddy, authorDaddy, " +
-                    "multimedia) values(?,?,?,?,?,?)");
-
-            // Set attributes
-            stmPost.setString(1, user.getId());
-            stmPost.setString(2, post.getId());
-            stmPost.setString(3, post.getText());
-            stmPost.setString(4, post.getSugarDaddy());
-            stmPost.setString(5, post.getFatherPost());
-            stmPost.setString(6, post.getMultimedia());
-
-            stmPost.executeUpdate();
-        } catch(SQLException e){
-            e.printStackTrace();
-        } finally {
-            try {
-                stmPost.close();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }
-        }
-
-        return post;
+        new InsertionMapper<Post>(super.getConnection()).add(post).definirClase(Post.class).insertar();
     }
 
     public Post updatePost(Post post, User user, User current) {
