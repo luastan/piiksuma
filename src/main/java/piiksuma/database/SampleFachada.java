@@ -54,7 +54,7 @@ public class SampleFachada {
 
 
     public List<User> usuarios() {
-        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").
+        return (new QueryMapper<User>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").
                 definirEntidad(User.class).list();
     }
 
@@ -63,7 +63,7 @@ public class SampleFachada {
     public List<Map<String, Object>> test() {
 
 
-        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM usuarios;").mapList();
+        return (new QueryMapper<Object>(this.conexion)).crearConsulta("SELECT * FROM piiUser;").mapList();
     }
 /*
 
