@@ -31,7 +31,7 @@ public class UserDao extends AbstractDao{
         }
 
         // Check that the current user is an administrator
-        if(current.getType().equals(UserType.administrator)){
+        if(current.getType().equals(UserType.user)){
             return null;
         }
 
@@ -40,7 +40,7 @@ public class UserDao extends AbstractDao{
         }
 
         // Check that the primary keys are not null
-        if(!user.checkPrimaryKeys()){
+        if(!user.checkNotNull()){
             return null;
         }
 

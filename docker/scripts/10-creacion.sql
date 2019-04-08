@@ -146,17 +146,18 @@ CREATE TABLE post
 (
     author          text,
     id              text,
-    text	    text,
+    text            text,
     publicationDate timestamp default now() not null,
     sugarDaddy      text,
     authorDaddy     text,
     multimedia      text,
 
     primary key (id, author),
-    foreign key(author) references piiUser(id),
-    foreign key(sugarDaddy, authorDaddy) references post(id, author),
-    foreign key(multimedia) references multimedia(id)
+    foreign key (author) references piiUser (id),
+    foreign key (sugarDaddy, authorDaddy) references post (id, author),
+    foreign key (multimedia) references multimedia (id)
 );
+
 
 
 /*

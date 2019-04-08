@@ -227,15 +227,16 @@ public class User {
     }
 
     /**
-     * Function to check that the primary keys are not null
-     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     * Function to check that the attributes with restriction 'not null' are not null
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKeys(){
+    public boolean checkNotNull(){
         // Check that the primary keys are not null
         if(getId() == null || getId().isEmpty()){
             return false;
         }
 
+        // Check the attributes with restriction 'not null'
         if(getPass() == null || getPass().isEmpty()){
             return false;
         }

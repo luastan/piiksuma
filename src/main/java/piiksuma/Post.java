@@ -74,6 +74,14 @@ public class Post {
         this.fatherPost = fatherPost;
     }
 
+    public String getSugarDaddy() {
+        return sugarDaddy;
+    }
+
+    public void setSugarDaddy(String sugarDaddy) {
+        this.sugarDaddy = sugarDaddy;
+    }
+
     public String getPostAuthor() {
         return postAuthor;
     }
@@ -89,6 +97,24 @@ public class Post {
     public void setMultimedia(String multimedia) {
         this.multimedia = multimedia;
     }
+
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull(){
+        // Check that the primary keys are not null
+        if(getId() == null || getId().isEmpty()){
+            return false;
+        }
+
+        if(getPostAuthor() == null || getPostAuthor().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
+
 
     public String toString() {
         return "Post{" +

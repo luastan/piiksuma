@@ -1,12 +1,11 @@
 package piiksuma.api.dao;
 
-import piiksuma.Hashtag;
-import piiksuma.Message;
-import piiksuma.Post;
-import piiksuma.User;
+import piiksuma.*;
 import piiksuma.database.QueryMapper;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,71 @@ public class PostDao extends AbstractDao {
 
     /* Methods */
 
+    /**
+     * Function that add the post to the database
+     * @param post post to add to the database
+     * @param user user that create the post
+     * @param current current user logged in the app
+     * @return post passed by parameter
+     */
     public Post createPost(Post post, User user, User current) {
-        return null;
+
+        if(post == null){1
+            return null;
+        }
+
+        if(user == null){
+            return null;
+        }
+
+        if(current == null){
+            return null;
+        }
+
+        // Check that the current user is an administrator
+        if(current.getType().equals(UserType.user)){
+            return null;
+        }
+
+        // Check that the user satisfies with the restrictions
+        if(!user.checkNotNull()){
+            return null;
+        }
+
+        // Check that the post satisfies with the restrictions
+        if(!post.checkNotNull()){
+            return null;
+        }
+
+        // Get connection
+        Connection con = super.getConnection();
+        PreparedStatement stmPost = null;
+
+        try{
+            // Prepare insertion
+            stmPost = con.prepareStatement("insert into post(author, id, text, sugarDaddy, authorDaddy, " +
+                    "multimedia) values(?,?,?,?,?,?)");
+
+            // Set attributes
+            stmPost.setString(1, user.getId());
+            stmPost.setString(2, post.getId());
+            stmPost.setString(3, post.getText());
+            stmPost.setString(4, post.getSugarDaddy());
+            stmPost.setString(5, post.getFatherPost());
+            stmPost.setString(6, post.getMultimedia());
+
+            stmPost.executeUpdate();
+        } catch(SQLException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                stmPost.close();
+            } catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return post;
     }
 
     public Post updatePost(Post post, User user, User current) {
