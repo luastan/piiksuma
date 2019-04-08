@@ -18,6 +18,12 @@ public class UserDao extends AbstractDao{
 
     }
 
+    /**
+     * Function to add a new user in the database
+     * @param user user to enter in the database
+     * @param current current user logged in the app
+     * @return user passed by parameter
+     */
     public User createUser(User user, User current){
 
         if(current == null){
@@ -30,25 +36,18 @@ public class UserDao extends AbstractDao{
         }
 
         if(user == null){
-            // TODO excepciones
             return null;
         }
 
         // Check that the primary keys are not null
-        if(user.getId() == null || user.getId().isEmpty()){
+        if(!user.checkPrimaryKeys()){
             return null;
         }
 
-        if(user.getPass() == null || user.getPass().isEmpty()){
-            return null;
-        }
-
-        if(user.getBirthday() == null || user.getBirthday().isEmpty()){
-            return null;
-        }
-
-        // Insertion is done with the user data passed by param
+        // Insertion is done with the user data passed by parameter
         new InsertionMapper<User>(super.getConnection()).add(user).definirClase(User.class).insertar();
+
+        // TODO debería devolver el usuario con la fecha actual que le añadió la base de datos?
         return user;
     }
 

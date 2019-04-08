@@ -226,6 +226,27 @@ public class User {
         this.job = job;
     }
 
+    /**
+     * Function to check that the primary keys are not null
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKeys(){
+        // Check that the primary keys are not null
+        if(getId() == null || getId().isEmpty()){
+            return false;
+        }
+
+        if(getPass() == null || getPass().isEmpty()){
+            return false;
+        }
+
+        if(getBirthday() == null || getBirthday().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public String toString() {
         return "User{" +
