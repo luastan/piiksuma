@@ -220,7 +220,13 @@ public class QueryMapper<T> extends Mapper{
      * @return Primer elemento devuelto por el ResultSet
      */
     public T findFirst(boolean useForeignkeys) {
-        return list(useForeignkeys).get(0);
+        List<T> result = list(useForeignkeys);
+
+        if(result == null || result.isEmpty()){
+            return null;
+        }
+
+        return result.get(0);
     }
 
 

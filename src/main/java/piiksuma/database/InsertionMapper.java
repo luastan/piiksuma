@@ -77,7 +77,7 @@ public class InsertionMapper<E> extends Mapper {
         // Fetching de atributos a insertar
         for (Field field : clase.getDeclaredFields()) {
             field.setAccessible(true);
-            if (field.isAnnotationPresent(MapperColumn.class)) {
+            if (field.isAnnotationPresent(MapperColumn.class) && !field.getAnnotation(MapperColumn.class).hasDefault()) {
                 nombreColumna = field.getAnnotation(MapperColumn.class).columna();
                 nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
                 queryBuilder.append(nombreColumna).append(",");

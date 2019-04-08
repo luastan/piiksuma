@@ -11,5 +11,6 @@ import java.lang.reflect.Type;
 public @interface MapperColumn {
     String columna() default "";
     boolean pkey() default false;
+    boolean hasDefault() default false;
     Class<?> targetClass() default Object.class;
 }

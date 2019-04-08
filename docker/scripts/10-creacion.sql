@@ -45,6 +45,7 @@ CREATE TABLE multimediaVideo
 
 CREATE TABLE piiUser
 (
+    id                 text not null unique,
     email              text primary key,
     name               varchar(50)  not null,
     pass               varchar(256) not null,
@@ -58,7 +59,7 @@ CREATE TABLE piiUser
     city               varchar(50),
     birthplace         varchar(50),
     birthdate          timestamp    not null,
-    registrationDate   timestamp    not null default now(),
+    registrationDate   timestamp    default now() not null,
     deathdate          timestamp,
     religion           varchar(50),
     emotionalSituation varchar(50),
