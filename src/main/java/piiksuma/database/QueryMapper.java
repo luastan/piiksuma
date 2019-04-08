@@ -13,8 +13,7 @@ import java.util.*;
  *
  * @param <T>
  */
-public class QueryMapper<T> {
-    private Connection conexion;
+public class QueryMapper<T> extends Mapper{
     private PreparedStatement statement;
     private Class<? extends T> mappedClass;
 
@@ -23,7 +22,7 @@ public class QueryMapper<T> {
      * @param conexion Conexion a la base de datos
      */
     public QueryMapper(Connection conexion) {
-        this.conexion = conexion;
+        super(conexion);
     }
 
     /**
@@ -34,7 +33,7 @@ public class QueryMapper<T> {
      */
     public QueryMapper<T> crearConsulta(String consulta) {
         try {
-            statement = conexion.prepareStatement(consulta);
+            statement = super.connection.prepareStatement(consulta);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -107,7 +106,7 @@ public class QueryMapper<T> {
         ).append("=?");  // Para usar la clave primaria en el WHERE
 
         // Devuelve
-        return new QueryMapper<>(this.conexion)
+        return new QueryMapper<>(super.connection)
                 .crearConsulta(queryBuilder.toString()).definirEntidad(clase).definirParametros(pkObject)
                 .findFirst(false);
     }
