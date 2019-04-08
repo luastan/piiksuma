@@ -23,7 +23,7 @@ CREATE TABLE multimedia
 (
     hash       text primary key,
     resolution text not null,
-    uri varchar(10)
+    uri        varchar(10)
 );
 
 CREATE TABLE multimediaImage
@@ -57,8 +57,8 @@ CREATE TABLE piiUser
     country            varchar(50),
     city               varchar(50),
     birthplace         varchar(50),
-    birthdate          timestamp not null,
-    registrationDate   timestamp not null default now(),
+    birthdate          timestamp    not null,
+    registrationDate   timestamp    not null default now(),
     deathdate          timestamp,
     religion           varchar(50),
     emotionalSituation varchar(50),
@@ -76,13 +76,13 @@ CREATE TABLE phone
     usr    text,
 
     primary key (phone, usr, prefix),
-    foreign key (usr) references piiUser(email)
+    foreign key (usr) references piiUser (email)
         on delete cascade on update cascade
 );
 
 CREATE TABLE administrator
 (
-    id text primary key references piiUser(email)
+    id text primary key references piiUser (email)
         on delete set null on update cascade
 );
 
@@ -92,7 +92,7 @@ CREATE TABLE associatedAccount
     token text, -- todo vamos a meter el token al final?
     usr   text,
 
-    foreign key (usr) references piiUser(email)
+    foreign key (usr) references piiUser (email)
         on delete cascade on update cascade
 );
 
@@ -107,33 +107,33 @@ CREATE TABLE followUser
     follower text,
 
     primary key (followed, follower),
-    foreign key (followed) references piiUser(email)
+    foreign key (followed) references piiUser (email)
         on delete cascade on update cascade,
-    foreign key (follower) references piiUser(email)
+    foreign key (follower) references piiUser (email)
         on delete cascade on update cascade
 );
 
 CREATE TABLE silenceUser
 (
-    usr         text,
-    silenced    text,
+    usr      text,
+    silenced text,
 
-    primary key(usr, silenced),
-    foreign key (usr) references piiUser(email)
+    primary key (usr, silenced),
+    foreign key (usr) references piiUser (email)
         on delete cascade on update cascade,
-    foreign key (silenced) references piiUser(email)
+    foreign key (silenced) references piiUser (email)
         on delete cascade on update cascade
 );
 
 CREATE TABLE blockUser
 (
-    usr         text,
-    blocked     text,
+    usr     text,
+    blocked text,
 
-    primary key(usr, blocked),
-    foreign key (usr) references piiUser(email)
+    primary key (usr, blocked),
+    foreign key (usr) references piiUser (email)
         on delete cascade on update cascade,
-    foreign key (blocked) references piiUser(email)
+    foreign key (blocked) references piiUser (email)
         on delete cascade on update cascade
 );
 
@@ -141,29 +141,29 @@ CREATE TABLE message
 (
     id         text,
     sender     text,
-    text       text not null,
+    text       text      not null,
     date       timestamp not null default now(),
     multimedia text,
     ticket     text,
 
     primary key (sender, id),
-    foreign key (sender) references piiUser(email)
+    foreign key (sender) references piiUser (email)
         on delete cascade on update cascade,
-    foreign key (multimedia) references multimedia (id)
+    foreign key (multimedia) references multimedia (hash)
         on delete set null on update cascade,
-    foreign key (ticket) references ticket(id)
+    foreign key (ticket) references ticket (id)
 );
 
 CREATE TABLE receiveMessage
 (
-    message     text,
-    sender      text,
-    receiver    text,
+    message  text,
+    sender   text,
+    receiver text,
 
     primary key (message, sender, receiver),
-    foreign key (message, sender) references message(id, sender)
+    foreign key (message, sender) references message (id, sender)
         on delete cascade on update cascade,
-    foreign key (receiver) references piiUser(email)
+    foreign key (receiver) references piiUser (email)
         on delete cascade on update cascade
 );
 
@@ -171,16 +171,16 @@ CREATE TABLE post
 (
     author          text,
     id              text,
-    text            text not null,
+    text            text                    not null,
     publicationDate timestamp default now() not null,
     sugarDaddy      text,
     authorDaddy     text,
     multimedia      text,
 
     primary key (id, author),
-    foreign key (author) references piiUser(email),
+    foreign key (author) references piiUser (email),
     foreign key (sugarDaddy, authorDaddy) references post (id, author),
-    foreign key (multimedia) references multimedia (id)
+    foreign key (multimedia) references multimedia (hash)
 );
 
 
@@ -206,13 +206,13 @@ CREATE TABLE ownHashtag
 
 CREATE TABLE followHashtag
 (
-    piiUser    text,
-    hashtag    text,
+    piiUser text,
+    hashtag text,
 
     primary key (piiUser, hashtag),
-    foreign key (piiUser) references piiUser(email)
+    foreign key (piiUser) references piiUser (email)
         on delete cascade on delete cascade,
-    foreign key (hashtag) references hashtag(name)
+    foreign key (hashtag) references hashtag (name)
         on delete cascade on delete cascade
 );
 
@@ -230,7 +230,7 @@ CREATE TABLE react
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser(email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (email) on delete cascade on update cascade
 );
 
 CREATE TABLE repost
@@ -240,7 +240,7 @@ CREATE TABLE repost
     author text,
     primary key (post, usr, author),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser(email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (email) on delete cascade on update cascade
 );
 
 
@@ -252,13 +252,13 @@ CREATE TABLE event
 (
     id          text,
     name        text not null default '',
-    description text default '',
-    location    text default '',
+    description text          default '',
+    location    text          default '',
     date        timestamp,
     creatorUser text not null,
 
     primary key (id),
-    foreign key (creatorUser) references piiUser(email) on delete cascade on update cascade
+    foreign key (creatorUser) references piiUser (email) on delete cascade on update cascade
 );
 
 CREATE TABLE participateEvent
@@ -268,7 +268,7 @@ CREATE TABLE participateEvent
 
     primary key (event, usr),
     foreign key (event) references event (id) on delete cascade on update cascade,
-    foreign key (usr) references piiUser(email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (email) on delete cascade on update cascade
 );
 
 
@@ -279,7 +279,7 @@ CREATE TABLE participateEvent
 CREATE TABLE achievement
 (
     id          text primary key,
-    name        varchar(25) not null,
+    name        varchar(25)  not null,
     description varchar(100) not null
 );
 
@@ -290,7 +290,7 @@ CREATE TABLE ownAchievement
     acquisitionDate timestamp not null default now(),
 
     foreign key (logro) references achievement (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    foreign key (usr) references piiUser(email) ON DELETE CASCADE ON UPDATE CASCADE
+    foreign key (usr) references piiUser (email) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -301,14 +301,14 @@ CREATE TABLE ownAchievement
 CREATE TABLE ticket
 (
     id           text,
-    usr          text not null,
-    section      text not null,
-    text         text not null,
+    usr          text      not null,
+    section      text      not null,
+    text         text      not null,
     creationDate timestamp not null default now(),
     deadline     timestamp, -- todo añadir
     adminClosing text,
     primary key (id),
-    foreign key (usr) references piiUser(email) on delete set null on update cascade,
+    foreign key (usr) references piiUser (email) on delete set null on update cascade,
     foreign key (adminClosing) references administrator (id) on delete set null on update cascade
 );
 
@@ -317,21 +317,21 @@ CREATE TABLE ticket
         Notifications
  */
 
- CREATE TABLE notification
- (
-     id           text primary key,
-     creationDate timestamp not null default now(),
-     content      text not null,
- );
+CREATE TABLE notification
+(
+    id           text primary key,
+    creationDate timestamp not null default now(),
+    content      text      not null
+);
 
- CREATE TABLE haveNotification
- (
-    notification    text,
-    usr             text,
+CREATE TABLE haveNotification
+(
+    notification text,
+    usr          text,
 
-    primary key (notification, user),
-    foreign key (notification) references notification(id)
+    primary key (notification, usr),
+    foreign key (notification) references notification (id)
         on delete cascade on update cascade,
-    foreign key (usr) references piiUser(email)
+    foreign key (usr) references piiUser (email)
         on delete cascade on update cascade
- );
+);
