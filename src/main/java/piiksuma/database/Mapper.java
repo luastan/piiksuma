@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
+ * Common functionality between all the Mapper Classes.
  * @param <T> Mapped class type. Used to check asigments when returning query
  *           results.
  *

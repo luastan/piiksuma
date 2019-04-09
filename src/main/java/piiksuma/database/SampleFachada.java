@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Used as an example while building the software
+ */
 public class SampleFachada {
     private static SampleFachada db;
     private Connection conexion;
