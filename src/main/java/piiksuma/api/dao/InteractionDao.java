@@ -49,7 +49,7 @@ public class InteractionDao extends AbstractDao {
     }
 
     /**
-     * THis function adds a notification to a user to advice him
+     * This function adds a notification to a user to advice him
      * @param notification notification that we want the user to see
      * @param user user that we want to notify
      * @param currentUser current user logged in the app

@@ -45,10 +45,10 @@ CREATE TABLE multimediaVideo
 
 CREATE TABLE piiUser
 (
-    id                 text not null unique,
+    id                 text                    not null unique,
     email              text primary key,
-    name               varchar(50)  not null,
-    pass               varchar(256) not null,
+    name               varchar(50)             not null,
+    pass               varchar(256)            not null,
     gender             varchar(100) CHECK (gender IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
                                                       'helicoptero estrellado')),
     description        varchar(256),
@@ -58,8 +58,8 @@ CREATE TABLE piiUser
     country            varchar(50),
     city               varchar(50),
     birthplace         varchar(50),
-    birthdate          timestamp    not null,
-    registrationDate   timestamp    default now() not null,
+    birthdate          timestamp               not null,
+    registrationDate   timestamp default now() not null,
     deathdate          timestamp,
     religion           varchar(50),
     emotionalSituation varchar(50),
