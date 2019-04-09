@@ -276,11 +276,8 @@ public class User {
      */
     public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if (getEmail() == null || getEmail().isEmpty()) {
-            return false;
-        }
+        return getEmail() != null && !getEmail().isEmpty();
 
-        return true;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function allows to delete a message by an admin because the sender used unapropiated words or
+     * This function allows to delete a message by an admin because the sender used unappropiated words or
      * by the sender because he wants to do it
      *
      * @param message     message to delete
@@ -67,7 +67,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * The admin replys a ticket which has to be on the message, it means that message.getTicket() cant be null
+     * The admin replies a ticket which has to be on the message, it means that message.getTicket() cant be null
      *
      * @param ticket      el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
      * @param message     reply from the admin to the user who create the ticket

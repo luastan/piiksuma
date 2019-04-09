@@ -58,8 +58,8 @@ public class InteractionDao extends AbstractDao {
         Connection con;
         PreparedStatement stmtNotification;
 
-        //We check that the given objects are not null and the primary keys are correct
-        if(notification==null || user==null){
+        //We check that the given objects are not null and that the primary keys are correct
+        if(notification==null || user==null) {
             return;
         }
         if(!user.checkPrimaryKey() || !notification.checkPrimaryKey()){

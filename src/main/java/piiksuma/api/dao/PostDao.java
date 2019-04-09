@@ -181,7 +181,7 @@ public class PostDao extends AbstractDao {
         ResultSet rs;
 
         // We need to check that the given parameters are OK
-        if (user == null || currentUser == null) {
+        if (user == null || currentUser == null || user.checkPrimaryKey() || currentUser.checkPrimaryKey()) {
             return (null);
         }
 
