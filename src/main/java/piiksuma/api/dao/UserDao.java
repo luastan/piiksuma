@@ -5,6 +5,7 @@ import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -100,6 +101,12 @@ public class UserDao extends AbstractDao{
         return null;
     }
 
+
+    /**
+    * Function to login in the app
+    * @param user user that contains the specification about the users to search
+    * @param current current user logged in the app
+    */
     public User login(User user, User current){
         if (user == null){
             return null;
@@ -107,6 +114,23 @@ public class UserDao extends AbstractDao{
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser "+
                 "Where id = ? and pass = ?" ).defineClass(User.class).defineParameters(user.getId(),user.getPass()).findFirst();
+    }
+
+    /**
+     * Function to login in the app
+     * @param user user that contains the specification about the users to search
+     * @param current current user logged in the app
+     */
+    public void administratePersonalData(User user, User current){
+        if (user == null){
+            return;
+        }
+
+        new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).createUpdate("UPDATE piiUser SET id = ? , email = ? , name = ? , pass = ? , "+
+            "gender = ? , description = ? , home = ? , postalCode = ? , province = ? , country = ? , city = ? , birthplace = ? , birthdate = ? , registrationDate = ? , "+
+                "deathdate = ? , religion = ? , emotionalSituation = ? , job = ? , profilePicture = ? where id = ?").defineParameters(user.getId(),user.getEmail(),
+                user.getName(),user.getPass(),user.getGender(),user.getd);
+
     }
 
     public void createAchievement(Achievement achievement, User current){
