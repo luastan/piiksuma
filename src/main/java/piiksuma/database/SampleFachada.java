@@ -102,31 +102,38 @@ public class SampleFachada {
         newUsuario2.setPass("hola2");
         newUsuario2.setBirthday(Timestamp.from(Instant.now()));
 
-        new InsertionMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).insert();
-        new InsertionMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).insert();
+        // Se insertan ambos usuarios en la base de datos
+        new InsertionMapper<User>(this.conexion).addAll(newUsuario, newUsuario2).defineClass(User.class).insert();
+        System.out.println("Se han insertado los siguientes usuarios: " + newUsuario.getId() + ", " +
+                newUsuario2.getId());
+        imprimirUsuarios();
 
         new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
+        System.out.println("Se ha borrado el id: " + newUsuario.getId());
+        imprimirUsuarios();
 
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createUpdate(
                 "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Goldar").executeUpdate();
 
+        System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
+        imprimirUsuarios();
+
+        // Modificación nueva a partir de una clase
+        // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
+        // todos los atributos. Si queréis actualizar algo en concreto podéis ejecutar la consulta con .executeUpdate()
+        newUsuario2.setId("Goldar223");
+        newUsuario2.setGender("helicoptero apache");
+        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
+        System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
+        imprimirUsuarios();
+
+    }
+
+    public void imprimirUsuarios(){
         List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
                 "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
         for (User user : usuarios) {
             System.out.println(user);
         }
-
-        // Modificación nueva a partir de una clase
-        // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
-        // todos los atributos. Si queréis actualizar algo en concreto podéis ejecutar la consulta con .executeUpdate()
-        newUsuario2.setId("Goldar22");
-        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
-
-        usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
-                "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
-        for (User user : usuarios) {
-            System.out.println(user);
-        }
-
     }
 }
