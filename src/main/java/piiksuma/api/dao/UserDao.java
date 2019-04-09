@@ -104,11 +104,17 @@ public class UserDao extends AbstractDao{
 
     /**
     * Function to login in the app
-    * @param user user that contains the specification about the users to search
-    * @param current current user logged in the app
+     *
+     * @ param user user that contains the specification about the users to search
+     * @ param current current user logged in the app
+     * @ return the user find in the database
     */
     public User login(User user, User current){
         if (user == null){
+            return null;
+        }
+
+        if(!user.checkPrimaryKey()){
             return null;
         }
 
@@ -118,19 +124,20 @@ public class UserDao extends AbstractDao{
 
     /**
      * Function to login in the app
-     * @param user user that contains the specification about the users to search
-     * @param current current user logged in the app
+     *
+     * @ param user user that contains the specification about the users to search
+     * @ param current current user logged in the app
      */
     public void administratePersonalData(User user, User current){
         if (user == null){
             return;
         }
 
-        new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).createUpdate("UPDATE piiUser SET id = ? , email = ? , name = ? , pass = ? , "+
-            "gender = ? , description = ? , home = ? , postalCode = ? , province = ? , country = ? , city = ? , birthplace = ? , birthdate = ? , registrationDate = ? , "+
-                "deathdate = ? , religion = ? , emotionalSituation = ? , job = ? , profilePicture = ? where id = ?").defineParameters(user.getId(),user.getEmail(),
-                user.getName(),user.getPass(),user.getGender(),user.getBio());
+        if (!user.checkPrimaryKey()){
+            return;
+        }
 
+        new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }
 
     public void createAchievement(Achievement achievement, User current){
