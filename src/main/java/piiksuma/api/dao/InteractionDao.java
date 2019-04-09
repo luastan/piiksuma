@@ -1,7 +1,7 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
-import piiksuma.api.Notification;
+import piiksuma.Notification;
 import piiksuma.database.InsertionMapper;
 
 import java.sql.Connection;

@@ -54,6 +54,21 @@ public class User {
     }
 
     /**
+     * Constructor for testing -> removeUser
+     *
+     * @param name
+     * @param id
+     * @param email
+     * @param type  Test if user is of type Admin
+     */
+    public User(String id, String email, String pass, UserType type) {
+        this.id = id;
+        this.email = email;
+        this.pass = pass;
+        this.type = type;
+    }
+
+    /**
      * Necesario constructor vacío para que se pueda crear con reflección
      */
     public User() {
@@ -230,20 +245,21 @@ public class User {
 
     /**
      * Function to check that the attributes with restriction 'not null' are not null
+     *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
+    public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if(!checkPrimaryKey()){
+        if (!checkPrimaryKey()) {
             return false;
         }
 
         // Check the attributes with restriction 'not null'
-        if(getPass() == null || getPass().isEmpty()){
+        if (getPass() == null || getPass().isEmpty()) {
             return false;
         }
 
-        if(getBirthday() == null){
+        if (getBirthday() == null) {
             return false;
         }
 
@@ -252,11 +268,12 @@ public class User {
 
     /**
      * Function to check that the primary keys are not null
+     *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
+    public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if(getEmail() == null || getEmail().isEmpty()){
+        if (getEmail() == null || getEmail().isEmpty()) {
             return false;
         }
 

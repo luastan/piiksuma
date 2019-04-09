@@ -1,4 +1,4 @@
-package piiksuma.api;
+package piiksuma;
 
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
