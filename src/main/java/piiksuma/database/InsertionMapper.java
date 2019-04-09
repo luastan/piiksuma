@@ -8,10 +8,18 @@ import java.util.*;
 
 
 /**
- * Wrapper de conexion a la base de datos. Permite insertar datos sin necesidad
- * de construir sentencias SQL a mano.
+ * Database conection and data insertion wrapper. Performs insertions from
+ * given objects without actually specifying SQL sentences.
+ * @param <E> Mapped class type. Used to check asigments when returning query
+ *           results.
  *
- * @param <E> Clase de los objetos que se van a insertar
+ * @author luastan
+ * @author CardamaS99
+ * @author danimf99
+ * @author alvrogd
+ * @author OswaldOswin1
+ * @author Marcos-marpin
+ *
  */
 public class InsertionMapper<E> extends Mapper<E> {
     private List<E> inserciones;
@@ -30,9 +38,10 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Define la clase de los elementos que se están insertando
-     * @param mappedClass Clase de los elementos que se van a insertar
-     * @return Instancia del propio InsertionMapper
+     * Defines the Class of the insertions
+     *
+     * @param mappedClass Class corresponding the elements to be inserted
+     * @return The IsertionMapper instance
      */
     @Override
     public InsertionMapper<E> defineClass(Class<? extends E> mappedClass) {
@@ -41,10 +50,10 @@ public class InsertionMapper<E> extends Mapper<E> {
     }
 
     /**
-     * Añade un objeto para insertarlo
+     * Adds an object to be inserted
      *
-     * @param objeto Objeto que se quiere insertar
-     * @return El propio insertionMapper
+     * @param objeto Object to be inserted
+     * @return The current InsertionMapper instance
      */
     public InsertionMapper<E> add(E objeto) {
         inserciones.add(objeto);
@@ -53,7 +62,7 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Añade múltiples objetos para insertarlos
+     * Adds multiple objects to the insertion tool
      *
      * @param objetos Objetos que se quieren insertar
      * @return El propio insertionMapper
@@ -65,15 +74,16 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Extrae los atributos que serán insertados en la base de datos y genera
-     * el esqueleto de la sentencia SQL correspondiente para insertarlos
+     *
+     * Extracts the atributes and fields to be inserted into the database and
+     * generates the corresponding SQL sentence base for the insertions
      */
     private void prepareQuery() {
         String nombreColumna;
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO ")
                 .append(mappedClass.getAnnotation(MapperTable.class).nombre()).append("(");
 
-        // Fetching de atributos a insertar
+        // Fetches all the fields to be mapped
         for (Field field : mappedClass.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(MapperColumn.class) && !field.getAnnotation(MapperColumn.class).hasDefault()) {
@@ -84,9 +94,10 @@ public class InsertionMapper<E> extends Mapper<E> {
                 this.atributos.put(nombreColumna, field);
             }
         }
-        queryBuilder.deleteCharAt(queryBuilder.length() - 1);  // Borra la última coma
+        queryBuilder.deleteCharAt(queryBuilder.length() - 1);   // Deletes last comma ","
         queryBuilder.append(") VALUES (?");
-        for (int i = 0; i < this.atributos.size() - 1; i++) {  // Ya se pone un ? antes por eso se resta 1
+        for (int i = 0; i < this.atributos.size() - 1; i++) {   // as there's a ? before, it's necessary to decrement the
+                                                                // size by one
             queryBuilder.append(",?");
         }
         queryBuilder.append(");");
@@ -95,16 +106,16 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Realiza la insercion de todos los elementos que se añadieron al mapper
+     * Inserts all the given elements into the database
      */
     public void insert() {
         PreparedStatement statement = null;
-        // Peparar la sentencia
+        // Pepares the query
         prepareQuery();
         try {
             for (E insercion : this.inserciones) {
-                statement = connection.prepareStatement(this.query);  // Construir PreparedStatement
-                for (int i = 0; i < this.columnas.size(); i++) {  // Insertar datos
+                statement = connection.prepareStatement(this.query);    // Instances the preparedStatement
+                for (int i = 0; i < this.columnas.size(); i++) {        // Inserts the data
                     Object object = this.atributos.get(this.columnas.get(i)).get(insercion);
                     if (object != null && this.atributos.get(this.columnas.get(i)).get(insercion).getClass().
                             isAnnotationPresent(MapperTable.class)) {
@@ -126,8 +137,10 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Devuelve un Map que sirve como plantilla para s
-     * @return Map con la estructura para insertar datos
+     * Generates a Map to be used as a template in custom insertions performed
+     * by the custom insertion mapper.
+     *
+     * @return Map template
      */
     public static Map<String, Object> customInsertionTemplate() {
         HashMap<String, Object> insertionTemplate = new HashMap<>();
@@ -140,31 +153,32 @@ public class InsertionMapper<E> extends Mapper<E> {
     }
 
     /**
-     * Genera las sentencias necesarias para insertar los elementos colocados
-     * en un mapa con la siguiente extructura:
+     * Automatically inserts values indicated by a list containing maps with
+     * the following structure:
      *
      * {
-     *     "table" : "Nombre de la tabla",
+     *     "table" : "Table name",
      *     "set" : [
      *          {
-     *              "nombre columna" : "valor"
+     *              "Column name" : "value"
      *          },
      *          {
-     *              "nombre columna" : "valor puede ser un numero y no String"
+     *              "Column name that has an Integer" : 445
      *          }
      *     ],
      *     "where" : [
      *          {
-     *              "nombre columna" : "valor"
+     *              "Column name" : "value"
      *          },
      *          {
-     *              "nombre columna" : "valor"
+     *              "Column name" : "value"
      *          }
      *     ]
      * }
      *
      *
-     * @param insertions Lista de hashmaps con la estructura exeplicada
+     * @param insertions Map list to be used as a guide to perform the
+     *                   insertions
      */
     public void customInsertion(List<Map<String, Object>> insertions) {
 
