@@ -11,6 +11,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * @param <T> Mapped class type. Used to check asigments when returning query
+ *           results.
+ *
+ * @author luastan
+ * @author CardamaS99
+ * @author danimf99
+ * @author alvrogd
+ * @author OswaldOswin1
+ * @author Marcos-marpin
+ *
+ */
 public abstract class Mapper<T> {
     protected Connection connection;
     protected PreparedStatement statement;
@@ -29,12 +41,13 @@ public abstract class Mapper<T> {
     }
 
     /**
-     * Extrae el valor de la clave primaria de un objeto dado
+     * Extracts the Primary Key value from a given object
      *
-     * @param forKeyObject Objeto que corresponde con la clave foranea
-     * @return Valor de la clave primaria del objeto
-     * @throws IllegalAccessException No se pudo acceder al atributo
-     * correspondiente a la clave primaria que referencia la clave foranea
+     * @param forKeyObject Object to be extracted the value from. Normally
+     *                     corresponding to a foreign key object
+     * @return Object's Primary Key value
+     * @throws IllegalAccessException In case of being unable to grab the field
+     * value
      */
     protected Object fkValue(Object forKeyObject) throws IllegalAccessException {
         Field fkField = Arrays.stream(forKeyObject.getClass().getDeclaredFields())
@@ -46,10 +59,10 @@ public abstract class Mapper<T> {
     };
 
     /**
-     * Define la actualización que se hará a la base de datos
+     * Allows an update to be specified whith SQL.
      *
-     * @param update String con la actualización a realizar
-     * @return El propio mapper
+     * @param update String with the SQL code to be used in the update
+     * @return The current Mapper instance
      */
     public Mapper<T> createUpdate(String update){
         try {
@@ -60,6 +73,9 @@ public abstract class Mapper<T> {
         return this;
     }
 
+    /**
+     * Executes the update whith the previously asigned parameters.
+     */
     public void executeUpdate() {
         try {
             /* Mapeado */
@@ -74,25 +90,30 @@ public abstract class Mapper<T> {
     }
 
     /**
-     * Busca de forma automatica una clave foranea y la mapea
+     * Queries a foreign key and maps it automatically
      *
-     * @param clase   Clase correspondiente a la clave foranea
-     * @param pkObject Objeto que tienen un
-     * @return Clase mapeada correspondiente a la tupla resultado de la clave
-     * foranea. Si la clase indicada no tiene las anotaciones necesarias
-     * devuelve un null
+     * @param clase Class to be looped over
+     * @param pkObject Object used as a parameter within the query to find
+     *                 the tuple in the database
+     * @return Mapped instance from the query result set. When the class isn't
+     * annotated with {@link MapperTable MapperTable} returns null.
      */
     protected Object getFK(Class<?> clase, Object pkObject) {
         if (!clase.isAnnotationPresent(MapperTable.class)) {
             return null;
         }
+
+        // TODO: Check if pkObject is an instance of the class and throw
+        // exceptions
+
+        // Base query
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM ");
-        // Se crea la base de la consulta:
-        // SELECT * FROM [TABLA] WHERE [PRIMARIA_TABLA]=pkObject;
+        // Query will end up looking somewhat like this
+        // SELECT * FROM [TABLE] WHERE [PRIMARY_KEY]=pkObject;
         queryBuilder.append(clase.getAnnotation(MapperTable.class).nombre().equals("") ?
                 clase.getName() : clase.getAnnotation(MapperTable.class).nombre()).append(" ? WHERE ");
 
-        // Consigue el Field que corresponde con la clave primaria
+        // Finds the field which is anotaded as Primary Key
         Field fkField = Arrays.stream(clase.getDeclaredFields())
                 .filter(field ->
                         field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey())
@@ -101,20 +122,19 @@ public abstract class Mapper<T> {
         queryBuilder.append(
                 fkField.getAnnotation(MapperColumn.class).columna().equals("") ?
                         fkField.getName() : fkField.getAnnotation(MapperColumn.class).columna()
-        ).append("=?");  // Para usar la clave primaria en el WHERE
+        ).append("=?");  // ? used to insert it on the where clause
 
-        // Devuelve
+        // Returns the mapped instance with
         return new QueryMapper<>(connection)
                 .createQuery(queryBuilder.toString()).defineClass(clase).defineParameters(pkObject)
                 .findFirst(false);
     }
 
     /**
-     * Imprescindible definir la clase a la que pertenecen los objetos
-     * que devuelve la consulta si no es de escritura/modificacion
+     * Defines the Class to be used when mapping the subsequent query results
      *
-     * @param mappedClass Clase a la que se mapea el resultado
-     * @return El propio mapper porque es un builder
+     * @param mappedClass Class for the results to be mapped to
+     * @return The mapper instance
      */
     public Mapper<T> defineClass(Class<? extends T> mappedClass){
         this.mappedClass = mappedClass;
@@ -122,11 +142,11 @@ public abstract class Mapper<T> {
     }
 
     /**
-     * Permite definir parametros en caso de que la consulta los requiera
+     * Defines the parameters to be inserted in the {@link PreparedStatement PreparedStatement}
      *
-     * @param parametros Lista de parametros que se pasan al prepared statement
-     *                   en orden
-     * @return El propio mapper
+     * @param parametros Parameter list to be inserted in the {@link Mapper#statement statement}
+     *                   in the same order as the parametes where passed
+     * @return The mapper instance
      */
     public Mapper<T> defineParameters(Object... parametros) {
         Object param;
