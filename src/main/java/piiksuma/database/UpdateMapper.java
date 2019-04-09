@@ -13,14 +13,12 @@ import java.util.List;
 public class UpdateMapper<T> extends Mapper<T> {
     private Class<T> clase;
     private List<T> elementsUpdate;
-    String update;
     private ArrayList<String> columnNames;
     private HashMap<String, Field> attributes;
 
     public UpdateMapper(Connection connection) {
         super(connection);
         this.elementsUpdate = new ArrayList<>();
-        this.update = "";
         this.columnNames = new ArrayList<>();
         this.attributes = new HashMap<>();
     }
