@@ -115,5 +115,18 @@ public class SampleFachada {
         for (User user : usuarios) {
             System.out.println(user);
         }
+
+        // Modificación nueva a partir de una clase
+        // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
+        // todos los atributos. Si queréis actualizar algo en concreto podéis ejecutar la consulta con .executeUpdate()
+        newUsuario2.setId("Goldar22");
+        new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
+
+        usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
+        for (User user : usuarios) {
+            System.out.println(user);
+        }
+
     }
 }
