@@ -6,6 +6,7 @@ import piiksuma.User;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
 import java.util.List;
@@ -19,22 +20,26 @@ public class MessagesDao extends AbstractDao {
     /**
      * This function allows to delete a message by an admin because the sender used unapropiated words or
      * by the sender because he wants to do it
-     * @param message message to delete
+     *
+     * @param message     message to delete
      * @param currentUser current user logged in the app
      */
     public void deleteMessage(Message message, User currentUser) {
-        if(message==null){
+        if (message == null) {
             return;
         }
-        if(currentUser==null){
+        if (currentUser == null) {
             return;
         }
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
 
-    public void modifyMessage(Message privateMessage, User currentUser) {
+    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) {
 
+        if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
+            new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
+        }
     }
 
     public void sendMessage(Message privateMessage, User currentUser) {
@@ -42,8 +47,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     *
-     * @param ticket ticket to insert
+     * @param ticket      ticket to insert
      * @param currentUser current user logged
      * @return the ticket which has been inserted
      */
@@ -54,7 +58,7 @@ public class MessagesDao extends AbstractDao {
             return;
         }
 
-        if(!ticket.checkPrimaryKey()){
+        if (!ticket.checkPrimaryKey()) {
             return;
         }
 
@@ -64,16 +68,17 @@ public class MessagesDao extends AbstractDao {
 
     /**
      * The admin replys a ticket which has to be on the message, it means that message.getTicket() cant be null
-     * @param ticket el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
-     * @param message reply from the admin to the user who create the ticket
+     *
+     * @param ticket      el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
+     * @param message     reply from the admin to the user who create the ticket
      * @param currentUser current user loged in the app
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser) {
 
-        if(message==null){
+        if (message == null) {
             return;
         }
-        if(!message.checkPrimaryKey() || message.getTicket()==null){
+        if (!message.checkPrimaryKey() || message.getTicket() == null) {
             return;
         }
 
