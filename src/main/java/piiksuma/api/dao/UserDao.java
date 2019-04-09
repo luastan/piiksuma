@@ -129,7 +129,7 @@ public class UserDao extends AbstractDao{
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).createUpdate("UPDATE piiUser SET id = ? , email = ? , name = ? , pass = ? , "+
             "gender = ? , description = ? , home = ? , postalCode = ? , province = ? , country = ? , city = ? , birthplace = ? , birthdate = ? , registrationDate = ? , "+
                 "deathdate = ? , religion = ? , emotionalSituation = ? , job = ? , profilePicture = ? where id = ?").defineParameters(user.getId(),user.getEmail(),
-                user.getName(),user.getPass(),user.getGender(),user.getd);
+                user.getName(),user.getPass(),user.getGender(),user.getBio());
 
     }
 
