@@ -40,8 +40,8 @@ public class PostDao extends AbstractDao {
             return;
         }
 
-        // Check that the current user is an administrator
-        if (current.getType().equals(UserType.user)) {
+        // Check that the current user is the creator of the post
+        if (!post.getPostAuthor().equals(current.getEmail())) {
             return;
         }
 
