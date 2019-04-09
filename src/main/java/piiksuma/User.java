@@ -61,11 +61,14 @@ public class User {
      * @param email
      * @param type  Test if user is of type Admin
      */
-    public User(String id, String email, String pass, UserType type) {
+    public User(String id, String name, String email, String pass, UserType type) {
         this.id = id;
+        this.name = name;
         this.email = email;
         this.pass = pass;
         this.type = type;
+        this.birthday = new Timestamp(System.currentTimeMillis());
+
     }
 
     /**
@@ -288,5 +291,11 @@ public class User {
                 ", pass='" + pass + '\'' +
                 ", gender='" + gender + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        User user = (User) obj;
+        return this.email.equals(user.email);
     }
 }

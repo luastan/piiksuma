@@ -1,6 +1,7 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
+import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
@@ -19,7 +20,9 @@ public class UserDao extends AbstractDao {
     }
 
     public void removeUser(User user, User current) {
-
+        if (user.equals(current) || current.getType() == UserType.administrator) {
+            new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
+        }
     }
 
     /**
