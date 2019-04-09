@@ -116,4 +116,8 @@ public class SampleFachada {
             System.out.println(user);
         }
     }
+
+    public Connection getConexion() {
+        return conexion;
+    }
 }
