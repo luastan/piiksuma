@@ -81,7 +81,7 @@ public class InteractionDao extends AbstractDao {
             System.out.println(e.getMessage());
         } finally {
             try {
-                // We also must close de connection to the database to free its resources
+                // We must also close de connection to the database to free its resources
                 con.close();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
