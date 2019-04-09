@@ -9,6 +9,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Database deletions wrapper
+ * @param <T> Mapped class type. Used to check asigments on the mapped class
+ *
+ * @author luastan
+ * @author CardamaS99
+ * @author danimf99
+ * @author alvrogd
+ * @author OswaldOswin1
+ * @author Marcos-marpin
+ *
+ */
 public class DeleteMapper<T> extends Mapper<T>{
     private List<T> elementsDelete;
     private String deleteUpdate;
@@ -16,7 +29,7 @@ public class DeleteMapper<T> extends Mapper<T>{
     private HashMap<String, Field> attributes;
 
     /**
-     * @param connection Conexión a la base de datos
+     * @param connection Database conection
      */
     public DeleteMapper(Connection connection) {
         super(connection);
@@ -27,9 +40,10 @@ public class DeleteMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Define la clase de los elementos que se están borrando
-     * @param clase Clase de los elementos que se van a insertar
-     * @return instancia del propio DeleteMapper
+     * Defines the class representing the elements to be deleted
+     *
+     * @param clase Class to be mapped
+     * @return Delete Mapper instance
      */
     @Override
     public DeleteMapper<T> defineClass(Class<? extends T> clase){
@@ -38,9 +52,11 @@ public class DeleteMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Añade un objeto para borrarlo
-     * @param object objeto que se quiere eliminar
-     * @return instancia del propio DeleteMapper
+     * Adds an object to be deleted. It does not get deleted until {@link DeleteMapper#delete()}
+     * method gets executed
+     *
+     * @param object Object to be deleted
+     * @return DeleteMapper instance
      */
     public DeleteMapper<T> add(T object){
         this.elementsDelete.add(object);
@@ -48,9 +64,10 @@ public class DeleteMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Añade múltiples objetos para borrarlos
-     * @param objects objetos que se quieren borrar
-     * @return instancia del propio DeleteMapper
+     * Adds multiple obkects to the deletion pool. Check {@link DeleteMapper#add(Object)}
+     *
+     * @param objects Objects to be deleted
+     * @return DeleteMapper instance
      */
     public DeleteMapper<T> addAll(T... objects){
         this.elementsDelete.addAll(Arrays.asList(objects));
@@ -58,46 +75,43 @@ public class DeleteMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Extrae las claves primarias y genera la sentencia SQL correspondiente de borrado
+     * Extracts the primary keys and genterates the corresponding SQL code
      */
     private void prepareDelete(){
         String columnName;
 
-        // StringBuilder para la eliminación. Se obtiene el nombre de la relación de la base de datos asociada
-        // a la clase mapeada
+        // SQL code base. Needed info gets extracted from the mapped class
         StringBuilder deleteBuilder = new StringBuilder("DELETE FROM ")
                 .append(mappedClass.getAnnotation(MapperTable.class).nombre()).append(" WHERE ");
 
-        // Se recorren los atributos de la clase mapeada
+        // Loops over all the fields from the Mapped class
         for (Field field : mappedClass.getDeclaredFields()) {
-            // Se hace el atributo accesible
+            // Allows access from reflection
             field.setAccessible(true);
-            // Se comprueba que haya una anotación del Mapper en ese atributo y que sea una primary key
+            // Performs the mapping only on the annotated classes
             if(field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()){
-                // Se obtiene el nombre de la columna
+                // Column name extraction
+                // On empty / default column name specification uses the field name
                 columnName = field.getAnnotation(MapperColumn.class).columna();
-
-                // En caso de que el nombre de la columna esté vacío se utiliza el del atributo
                 columnName = columnName.equals("") ? field.getName() : columnName;
 
-                // Se añade el nombre de la columna y se iguala al parámetro indicado
+                // Adds check conditions on every primary key
                 deleteBuilder.append(columnName).append(" = ? and ");
 
-                // Se añade el nombre de la columna al ArrayList de columnas
+                // Column names and Class fields get stored to be used later on the deletion
                 this.columnsName.add(columnName);
-
-                // Se añade el field al HashMap en función del nombre de la columna
                 this.attributes.put(columnName, field);
             }
         }
 
-        // Borra el último and añadido
+        // Crops the deleteBuilder in order to get rid of the residual "and" added after each WHERE condition
         deleteBuilder.delete(deleteBuilder.length()-4, deleteBuilder.length());
 
-        // Se añade al atributo deleteUpdate la consulta de eliminación
+        // Stores the SQL code to be executed
         deleteUpdate = deleteBuilder.toString();
 
         try{
+            // TODO: This code seems redundant to me. It gets lost on the delete() method
             this.statement = super.connection.prepareStatement(deleteUpdate);
         } catch(SQLException ex){
             ex.printStackTrace();
@@ -105,24 +119,22 @@ public class DeleteMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Elimina todos los objetos indicados
+     * Deletes all the objects on the deletion pool
      */
     public void delete(){
+        prepareDelete();  // Builds the statement
 
-        prepareDelete();
-        // Se llama a la función para preparar el borrado
         try {
-            // Se recorren todos los objetos que se han añadido para el borrado
+            // Loops over the deletion pool deleting each object
             for(T object : this.elementsDelete){
-                // Se prepara el borrado
+                // Statement gets created
                 this.statement = connection.prepareStatement(this.deleteUpdate);
-
-                // Se recorre el nombre de los atributos que son claves primaria
+                // Inserts all the primary key atributes previously extracted into the statement
                 for(int i = 0; i < this.columnsName.size(); i++){
-                    // Se obtiene la Field correspondiente del HashMap
                     statement.setObject(i + 1, this.attributes.get(this.columnsName.get(i)).get(object));
                 }
 
+                // Deletion gets performed
                 this.statement.executeUpdate();
             }
         } catch(SQLException | IllegalAccessException e){
