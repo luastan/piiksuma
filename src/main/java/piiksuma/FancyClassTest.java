@@ -1,6 +1,6 @@
 package piiksuma;
 
-import piiksuma.database.FachadaBDD;
+import piiksuma.database.SampleFachada;
 
 import java.util.List;
 
@@ -16,6 +16,6 @@ public class FancyClassTest {
     }
 
     public List<Integer> returnsFromFachadaBDD() {
-        return FachadaBDD.getDb().numList();
+        return SampleFachada.getDb().numList();
     }
 }
