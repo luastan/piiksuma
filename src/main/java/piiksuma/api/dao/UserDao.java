@@ -123,9 +123,9 @@ public class UserDao extends AbstractDao{
     }
 
     /**
-     * Function to login in the app
+     * Function to insert or update personal data in the user profile
      *
-     * @ param user user that contains the specification about the users to search
+     * @ param user user that is going to be modificated
      * @ param current current user logged in the app
      */
     public void administratePersonalData(User user, User current){

@@ -58,9 +58,10 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function that remove a post to the database
-     * @param post post to remove to the database with the creator
-     * @param current current user logged in app
+     * Function that removes a post to the database
+     *
+     * @ param post post to remove to the database with the creator
+     * @ param current current user logged in app
      */
     public void removePost(Post post, User current) {
         if (post == null){
