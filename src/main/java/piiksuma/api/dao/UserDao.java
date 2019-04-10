@@ -19,6 +19,11 @@ public class UserDao extends AbstractDao {
         super(connection);
     }
 
+    /**
+     * Function to remove a user from the database
+     * @param user user to remove
+     * @param current current user logged in the app
+     */
     public void removeUser(User user, User current) {
         if (user.equals(current) || current.getType() == UserType.administrator) {
             new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
@@ -29,19 +34,8 @@ public class UserDao extends AbstractDao {
      * Function to add a new user in the database
      *
      * @param user    user to enter in the database
-     * @param current current user logged in the app
-     * @return user passed by parameter
      */
-    public void createUser(User user, User current) {
-
-        if (current == null) {
-            return;
-        }
-
-        // Check that the current user is an administrator
-        if (current.getType().equals(UserType.user)) {
-            return;
-        }
+    public void createUser(User user) {
 
         if (user == null) {
             return;
@@ -85,11 +79,10 @@ public class UserDao extends AbstractDao {
      * Function to get the users that meet with the specifications
      *
      * @param user    user that contains the specification about the users to search
-     * @param current current user logged in the app
      * @param limit   maximum of users to return
      * @return users with all the information
      */
-    public List<User> searchUser(User user, User current, Integer limit) {
+    public List<User> searchUser(User user, Integer limit) {
 
         if (user == null) {
             return null;
@@ -97,6 +90,10 @@ public class UserDao extends AbstractDao {
 
         if (limit <= 0) {
             return new ArrayList<>();
+        }
+
+        if(!user.checkPrimaryKey()){
+            return null;
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
