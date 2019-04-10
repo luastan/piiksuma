@@ -140,6 +140,15 @@ public class SampleFachada {
         }
     }
 
+    /**
+     *
+     */
+    public void mapaSample() {
+        List<Map<String, Object>> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                "LIKE ?").defineParameters("%gmail.com").mapList();
+        usuarios.forEach(System.out::println);
+    }
+
     public Connection getConexion() {
         return conexion;
     }

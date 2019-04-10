@@ -291,8 +291,21 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        User user = (User) obj;
-        return this.email.equals(user.email);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (!getId().equals(user.getId())) return false;
+        return getEmail().equals(user.getEmail());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getEmail().hashCode();
+        return result;
     }
 }
