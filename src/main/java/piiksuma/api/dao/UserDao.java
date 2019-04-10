@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class UserDao extends AbstractDao {
 
@@ -75,8 +76,8 @@ public class UserDao extends AbstractDao {
     /**
      * Function to get the users that match with the specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
-     * @param limit   maximum of users to return
+     * @param user  user that contains the requirements that will be applied in the search
+     * @param limit maximum of users to return
      * @return users that meet the given information
      */
     public List<User> searchUser(User user, Integer limit) {
@@ -89,7 +90,7 @@ public class UserDao extends AbstractDao {
             return new ArrayList<>();
         }
 
-        if(!user.checkPrimaryKey()){
+        if (!user.checkPrimaryKey()) {
             return null;
         }
 
@@ -163,75 +164,72 @@ public class UserDao extends AbstractDao {
      */
     public Statistics getUserStatistics(User user) throws SQLException {
         Statistics statistics = new Statistics();
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        String query;
-        //TODO HACE ESTO CON LOS MAPPER
-        // Query 1
-        query = "SELECT count(reactiontype) FROM react WHERE author LIKE ? AND reactiontype LIKE ?";
-        preparedStatement = super.getConnection().prepareStatement(query);
 
-        preparedStatement.setString(1, user.getEmail());
-        for (ReactionType reation : ReactionType.values()) {
-            preparedStatement.setString(2, reation.toString());
-            resultSet = preparedStatement.executeQuery();
-
-            if (!resultSet.next()) {
-                continue;
-            }
-
-            switch (reation) {
-                case LikeIt:
-                    statistics.setMaxLikeIt(resultSet.getInt(1));
-                    break;
-                case HateIt:
-                    statistics.setMaxHateIt(resultSet.getInt(1));
-                    break;
-                case LoveIt:
-                    statistics.setMaxLoveIt(resultSet.getInt(1));
-                    break;
-                case MakesMeAngry:
-                    statistics.setMaxMakesMeAngry(resultSet.getInt(1));
-                    break;
-            }
-            resultSet.close();
+        if (user == null) {
+            return null;
         }
-
-        // Query 2
-        query = "SELECT count(followed) FROM followuser WHERE follower LIKE ?";
-        preparedStatement = super.getConnection().prepareStatement(query);
-        preparedStatement.setString(1, user.getEmail());
-
-        resultSet = preparedStatement.executeQuery();
-
-        if (resultSet.next()) {
-            statistics.setFollowing(resultSet.getInt(1));
+        if (!user.checkPrimaryKey()) {
+            return null;
         }
+        List<Map<String, Object>> estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                //Query to take the number of followers the given user has
+                "SELECT count(follower) AS followers \n" +
+                        "FROM followuser \n" +
+                        "WHERE followed LIKE ? \n").defineParameters(user.getEmail()).mapList();
 
-        // Query 35
-        query = "SELECT count(follower) FROM followuser WHERE followed LIKE ?";
-        preparedStatement = super.getConnection().prepareStatement(query);
-        preparedStatement.setString(1, user.getEmail());
+        statistics.setFollowers((Long) estatistics.get(0).get("followers"));
 
-        resultSet = preparedStatement.executeQuery();
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "\n" +//Query to take the number of users that the user follows
+                        "SELECT count(followed) AS followed \n" +
+                        "FROM followuser \n" +
+                        "WHERE follower LIKE ? \n").defineParameters(user.getEmail()).mapList();
 
-        if (resultSet.next()) {
-            statistics.setFollowers(resultSet.getInt(1));
-        }
-        // Query 4
+        statistics.setFollowing((Long) estatistics.get(0).get("followed"));
 
-        query = "SELECT count(followed) FROM followuser AS him WHERE follower LIKE ? AND " +
-                "EXISTS(SELECT FROM followuser WHERE followed LIKE  ? AND follower LIKE him.followed)";
-        preparedStatement = super.getConnection().prepareStatement(query);
-        preparedStatement.setString(1, user.getEmail());
-        preparedStatement.setString(2, user.getEmail());
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "\n" +//Query to take the number of users that followback the given user
+                        "WITH followerstable AS( SELECT * \n" +
+                        "FROM followuser \n" +
+                        "WHERE followed LIKE ? ),\n" +
+                        "\n" +
+                        "followedtable AS( SELECT * \n" +
+                        "FROM followuser \n" +
+                        "WHERE follower LIKE ? )\n" +
+                        "\n" +
+                        "SELECT COUNT(*) AS followback " +
+                        "FROM followedtable, followerstable " +
+                        "WHERE followedtable.followed=followerstable.follower").defineParameters(user.getEmail()).mapList();
 
-        resultSet = preparedStatement.executeQuery();
+        statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 
-        if (resultSet.next()) {
-            statistics.setFollowBack(resultSet.getInt(1));
-        }
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "SELECT count(reactiontype) AS reaction " +
+                        "FROM react " +
+                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(user.getEmail()).mapList();
 
+        statistics.setMaxLikeIt((Long) estatistics.get(0).get("reaction"));
+
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "SELECT count(reactiontype) AS reaction " +
+                        "FROM react " +
+                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(user.getEmail()).mapList();
+
+        statistics.setMaxLoveIt((Long) estatistics.get(0).get("reaction"));
+
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "SELECT count(reactiontype) AS reaction " +
+                        "FROM react " +
+                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(user.getEmail()).mapList();
+
+        statistics.setMaxHateIt((Long) estatistics.get(0).get("reaction"));
+
+        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
+                "SELECT count(reactiontype) AS reaction " +
+                        "FROM react " +
+                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(user.getEmail()).mapList();
+
+        statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
 
         return statistics;
     }

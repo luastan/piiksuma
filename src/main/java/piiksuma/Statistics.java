@@ -2,13 +2,13 @@ package piiksuma;
 
 public class Statistics {
     private User owner;
-    private int maxLikeIt;
-    private int maxLoveIt;
-    private int maxHateIt;
-    private int maxMakesMeAngry;
-    private int following;
-    private int followers;
-    private int followBack;
+    private long maxLikeIt;
+    private long maxLoveIt;
+    private long maxHateIt;
+    private long maxMakesMeAngry;
+    private long following;
+    private long followers;
+    private long followBack;
 
     public User getOwner() {
         return owner;
@@ -18,59 +18,59 @@ public class Statistics {
         this.owner = owner;
     }
 
-    public int getMaxLikeIt() {
+    public long getMaxLikeIt() {
         return maxLikeIt;
     }
 
-    public void setMaxLikeIt(int maxLikeIt) {
+    public void setMaxLikeIt(long maxLikeIt) {
         this.maxLikeIt = maxLikeIt;
     }
 
-    public int getMaxLoveIt() {
+    public long getMaxLoveIt() {
         return maxLoveIt;
     }
 
-    public void setMaxLoveIt(int maxLoveIt) {
+    public void setMaxLoveIt(long maxLoveIt) {
         this.maxLoveIt = maxLoveIt;
     }
 
-    public int getMaxHateIt() {
+    public long getMaxHateIt() {
         return maxHateIt;
     }
 
-    public void setMaxHateIt(int maxHateIt) {
+    public void setMaxHateIt(long maxHateIt) {
         this.maxHateIt = maxHateIt;
     }
 
-    public int getMaxMakesMeAngry() {
+    public long getMaxMakesMeAngry() {
         return maxMakesMeAngry;
     }
 
-    public void setMaxMakesMeAngry(int maxMakesMeAngry) {
+    public void setMaxMakesMeAngry(long maxMakesMeAngry) {
         this.maxMakesMeAngry = maxMakesMeAngry;
     }
 
-    public int getFollowing() {
+    public long getFollowing() {
         return following;
     }
 
-    public void setFollowing(int following) {
+    public void setFollowing(long following) {
         this.following = following;
     }
 
-    public int getFollowers() {
+    public long getFollowers() {
         return followers;
     }
 
-    public void setFollowers(int followers) {
+    public void setFollowers(long followers) {
         this.followers = followers;
     }
 
-    public int getFollowBack() {
+    public long getFollowBack() {
         return followBack;
     }
 
-    public void setFollowBack(int followBack) {
+    public void setFollowBack(long followBack) {
         this.followBack = followBack;
     }
 }
