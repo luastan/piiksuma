@@ -104,10 +104,10 @@ public class UserDao extends AbstractDao {
 
 
     /**
-     * Function to login in the app
+     * Function to login into the app; it will try to find a user that meets the given keys
      *
-     * @param user user that contains the specification about the users to search
-     * @return the user found in the database
+     * @param user user whose primary fields will be used in the search
+     * @return user from database that meets the required attributes
      */
     public User login(User user) {
         if (user == null) {
@@ -123,7 +123,7 @@ public class UserDao extends AbstractDao {
     }
 
     /**
-     * Function to insert or update personal data in the user profile
+     * Function to insert or to update personal data in the user profile
      *
      * @param user user that is going to be modified
      */
@@ -157,8 +157,8 @@ public class UserDao extends AbstractDao {
     /**
      * Function that returns the statistics of the given user
      *
-     * @param user user about who we want to know his statistics
-     * @return all the information that we want in the stats
+     * @param user user about whose statistics we want to know
+     * @return computed statistics
      * @throws SQLException
      */
     public Statistics getUserStatistics(User user) throws SQLException {
