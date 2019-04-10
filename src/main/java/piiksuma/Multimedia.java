@@ -68,8 +68,13 @@ public class Multimedia {
         this.uri = uri;
     }
 
-    public boolean checkPrimaryKey(){
-        if(hash==null || hash.isEmpty()){
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey() {
+        if (hash == null || hash.isEmpty()) {
             return false;
         }
         return true;
@@ -77,7 +82,7 @@ public class Multimedia {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(!(o instanceof Multimedia)) return false;
+        if (!(o instanceof Multimedia)) return false;
 
         Multimedia multimedia = (Multimedia) o;
 

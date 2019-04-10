@@ -60,7 +60,7 @@ public class Event {
         }
     }
 
-    public Event(){
+    public Event() {
 
     }
 
@@ -114,6 +114,18 @@ public class Event {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey() {
+        if (id == null || id.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     @Override
