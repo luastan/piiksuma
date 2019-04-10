@@ -22,12 +22,9 @@ public class UserDao extends AbstractDao {
     /**
      * Function to remove a user from the database
      * @param user user to remove
-     * @param current current user logged in the app
      */
-    public void removeUser(User user, User current) {
-        if (user.equals(current) || current.getType() == UserType.administrator) {
-            new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
-        }
+    public void removeUser(User user) {
+        new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
     }
 
     /**
@@ -50,7 +47,7 @@ public class UserDao extends AbstractDao {
         new InsertionMapper<User>(super.getConnection()).add(user).defineClass(User.class).insert();
     }
 
-    public void updateUser(User user, User current) {
+    public void updateUser(User user) {
 
     }
 
@@ -58,10 +55,9 @@ public class UserDao extends AbstractDao {
      * Function to get the user that meet with the specifications
      *
      * @param user    user that contains the specification about the user to search
-     * @param current current user logged in the app
      * @return user with all the information
      */
-    public User getUser(User user, User current) {
+    public User getUser(User user) {
 
         if (user == null) {
             return null;
@@ -101,7 +97,7 @@ public class UserDao extends AbstractDao {
                 user.getId(), user.getName(), limit).list();
     }
 
-    public List<Achievement> getAchievement(User user, User current) {
+    public List<Achievement> getAchievement(User user) {
         return null;
     }
 
@@ -149,11 +145,11 @@ public class UserDao extends AbstractDao {
         return null;
     }
 
-    public void followUser(User user, User current) {
+    public void followUser(User followed, User follower) {
 
     }
 
-    public void unfollowUser(User user, User current) {
+    public void unfollowUser(User followed, User follower) {
 
     }
 

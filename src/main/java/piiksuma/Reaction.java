@@ -5,11 +5,11 @@ import piiksuma.database.MapperTable;
 
 @MapperTable
 public class Reaction {
-    @MapperColumn(columna = "usr")
+    @MapperColumn(columna = "usr", pkey = true)
     private User user;
-    @MapperColumn(columna = "author")
+    @MapperColumn(columna = "author", pkey = true)
     private User owner;
-    @MapperColumn
+    @MapperColumn(pkey = true)
     private Post post;
     @MapperColumn
     private ReactionType reactionType;
@@ -54,5 +54,41 @@ public class Reaction {
 
     public void setReactionType(ReactionType reactionType) {
         this.reactionType = reactionType;
+    }
+
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     *
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull() {
+        // Check that the primary keys are not null
+        if (!checkPrimaryKey()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Function to check that the primary keys are not null
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey() {
+        // Check that the primary keys are not null
+        return getOwner() != null && getUser() != null && getPost() != null;
+
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (!(o instanceof Reaction)) return false;
+
+        Reaction reaction = (Reaction) o;
+
+        return (reaction.getOwner().equals(getOwner()) && reaction.getPost().equals(getPost()) &&
+                reaction.getUser().equals(getUser()));
     }
 }

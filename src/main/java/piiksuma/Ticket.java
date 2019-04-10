@@ -5,7 +5,7 @@ import piiksuma.database.MapperTable;
 
 @MapperTable(nombre = "ticket")
 
-public class Ticket extends Message {
+public class Ticket{
 
     /* Attributes */
     @MapperColumn(pkey = true)
@@ -30,9 +30,6 @@ public class Ticket extends Message {
 
     public Ticket(String section) {
 
-        // todo add message fields to constructor
-        super();
-
         if (section != null) {
             this.section = section;
         } else {
@@ -44,13 +41,10 @@ public class Ticket extends Message {
 
 
     /* Getters and setters */
-
-    @Override
     public String getId() {
         return id;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -118,7 +112,11 @@ public class Ticket extends Message {
 
         Ticket ticket = (Ticket) o;
 
+
         return getId().equals(ticket.getId());
+
+
+ 
 
     }
 }
