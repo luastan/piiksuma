@@ -112,6 +112,11 @@ public class Ticket{
 
         Ticket ticket = (Ticket) o;
 
-        return ticket.getId().equals(getId());
+
+        return getId().equals(ticket.getId());
+
+
+ 
+
     }
 }

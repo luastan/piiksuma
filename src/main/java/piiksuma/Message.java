@@ -87,4 +87,15 @@ public class Message {
         }
         return true;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Message)) return false;
+
+        Message message = (Message) o;
+
+        return getId().equals(message.getId());
+
+    }
 }
