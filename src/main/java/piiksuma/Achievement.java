@@ -44,4 +44,28 @@ public class Achievement {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey() {
+        if (id == null || id.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Achievement)) return false;
+
+        Achievement achievement = (Achievement) o;
+
+        return getId().equals(achievement.getId());
+
+    }
 }

@@ -81,10 +81,26 @@ public class Message {
         this.ticket = ticket;
     }
 
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
     public boolean checkPrimaryKey(){
         if(id==null || sender ==null || receiver==null){
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Message)) return false;
+
+        Message message = (Message) o;
+
+        return getId().equals(message.getId());
+
     }
 }

@@ -19,29 +19,21 @@ public class UserDao extends AbstractDao {
         super(connection);
     }
 
-    public void removeUser(User user, User current) {
-        if (user.equals(current) || current.getType() == UserType.administrator) {
-            new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
-        }
+    /**
+     * Function to remove a user from the database
+     *
+     * @param user user to remove
+     */
+    public void removeUser(User user) {
+        new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
     }
 
     /**
      * Function to add a new user in the database
      *
      * @param user    user to enter in the database
-     * @param current current user logged in the app
-     * @return user passed by parameter
      */
-    public void createUser(User user, User current) {
-
-        if (current == null) {
-            return;
-        }
-
-        // Check that the current user is an administrator
-        if (current.getType().equals(UserType.user)) {
-            return;
-        }
+    public void createUser(User user) {
 
         if (user == null) {
             return;
@@ -56,7 +48,7 @@ public class UserDao extends AbstractDao {
         new InsertionMapper<User>(super.getConnection()).add(user).defineClass(User.class).insert();
     }
 
-    public void updateUser(User user, User current) {
+    public void updateUser(User user) {
 
     }
 
@@ -64,10 +56,9 @@ public class UserDao extends AbstractDao {
      * Function to get the user that meet with the specifications
      *
      * @param user    user that contains the specification about the user to search
-     * @param current current user logged in the app
      * @return user with all the information
      */
-    public User getUser(User user, User current) {
+    public User getUser(User user) {
 
         if (user == null) {
             return null;
@@ -85,11 +76,10 @@ public class UserDao extends AbstractDao {
      * Function to get the users that meet with the specifications
      *
      * @param user    user that contains the specification about the users to search
-     * @param current current user logged in the app
      * @param limit   maximum of users to return
      * @return users with all the information
      */
-    public List<User> searchUser(User user, User current, Integer limit) {
+    public List<User> searchUser(User user, Integer limit) {
 
         if (user == null) {
             return null;
@@ -99,12 +89,16 @@ public class UserDao extends AbstractDao {
             return new ArrayList<>();
         }
 
+        if(!user.checkPrimaryKey()){
+            return null;
+        }
+
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
                 user.getId(), user.getName(), limit).list();
     }
 
-    public List<Achievement> getAchievement(User user, User current) {
+    public List<Achievement> getAchievement(User user) {
         return null;
     }
 
@@ -112,11 +106,10 @@ public class UserDao extends AbstractDao {
     /**
      * Function to login in the app
      *
-     * @ param user user that contains the specification about the users to search
-     * @ param current current user logged in the app
-     * @ return the user find in the database
+     * @param user user that contains the specification about the users to search
+     * @return the user find in the database
      */
-    public User login(User user, User current) {
+    public User login(User user) {
         if (user == null) {
             return null;
         }
@@ -132,10 +125,9 @@ public class UserDao extends AbstractDao {
     /**
      * Function to insert or update personal data in the user profile
      *
-     * @ param user user that is going to be modificated
-     * @ param current current user logged in the app
+     * @param user user that is going to be modificated
      */
-    public void administratePersonalData(User user, User current) {
+    public void administratePersonalData(User user) {
         if (user == null) {
             return;
         }
@@ -147,27 +139,34 @@ public class UserDao extends AbstractDao {
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }
 
-    public void createAchievement(Achievement achievement, User current) {
+    public void createAchievement(Achievement achievement) {
     }
 
-    public Achievement unlockAchievement(Achievement achievement, User current) {
+    public Achievement unlockAchievement(Achievement achievement) {
         return null;
     }
 
-    public void followUser(User user, User current) {
+    public void followUser(User followed, User follower) {
 
     }
 
-    public void unfollowUser(User user, User current) {
+    public void unfollowUser(User followed, User follower) {
 
     }
 
-    Statistics getUserStatistics(User user, User current) throws SQLException {
+    /**
+     * Function that returns the statistics of the given user
+     *
+     * @param user user we want to know his statistics
+     * @return all the information that we want in the stats
+     * @throws SQLException
+     */
+    public Statistics getUserStatistics(User user) throws SQLException {
         Statistics statistics = new Statistics();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String query;
-
+        //TODO HACE ESTO CON LOS MAPPER
         // Query 1
         query = "SELECT count(reactiontype) FROM react WHERE author LIKE ? AND reactiontype LIKE ?";
         preparedStatement = super.getConnection().prepareStatement(query);

@@ -43,49 +43,57 @@ public class InteractionDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Inserts a new notification on a user
+     *
+     * @param notification given notification to the user
+     * @param currentUser  current user logged into the app
+     */
     public void createNotification(Notification notification, User currentUser) {
 
         new InsertionMapper<Notification>(super.getConnection()).add(notification).defineClass(Notification.class).insert();
     }
 
     /**
-     * This function adds a notification to a user to advice him
+     * This function associates a notification with a user
+     *
      * @param notification notification that we want the user to see
-     * @param user user that we want to notify
-     * @param currentUser current user logged in the app
+     * @param user         user that we want to notify
+     * @param currentUser  current user logged into the app
      */
     public void notifyUser(Notification notification, User user, User currentUser) {
         Connection con;
         PreparedStatement stmtNotification;
 
-        //We check that the given objects are not null and that the primary keys are correct
-        if(notification==null || user==null) {
+        // We check that the given objects are not null and that the primary keys are correct
+        if (notification == null || user == null) {
             return;
         }
-        if(!user.checkPrimaryKey() || !notification.checkPrimaryKey()){
+        if (!user.checkPrimaryKey() || !notification.checkPrimaryKey()) {
             return;
         }
+
 
         con = super.getConnection();
 
         try {
-            //We insert the data on haveNotification to notify the user
+            // We insert the data on haveNotification to notify the user
             stmtNotification = con.prepareStatement("INSERT INTO haveNotification (notification,usr) VALUES (?,?)");
-            //Set the parameters
+            // Set the parameters
             stmtNotification.setString(1, notification.getId());
             stmtNotification.setString(2, user.getEmail());
 
-            stmtNotification.executeUpdate();
+            try {
+                stmtNotification.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                // We need to close the statement before exiting the function
+                stmtNotification.close();
+            }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                // We must also close de connection to the database to free its resources
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
         }
     }
 }

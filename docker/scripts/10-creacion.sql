@@ -309,8 +309,8 @@ CREATE TABLE ownAchievement
     usr             text,
     acquisitionDate timestamp not null default now(),
 
-    foreign key (logro) references achievement (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    foreign key (usr) references piiUser (email) ON DELETE CASCADE ON UPDATE CASCADE
+    foreign key (logro) references achievement (id) on delete cascade on update cascade,
+    foreign key (usr) references piiUser (email) on delete cascade on update cascade
 );
 
 
