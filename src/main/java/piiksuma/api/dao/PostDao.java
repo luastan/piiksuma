@@ -26,7 +26,7 @@ public class PostDao extends AbstractDao {
     /**
      * Function that adds the post into the database
      *
-     * @param post    post to add tino the database with the creator
+     * @param post    post to add, with its creator, into the database
      * @param current current user logged in the app
      *
      */
@@ -113,7 +113,7 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to get the hashtag that meet with the specifications
+     * Function to get the hashtag that match with the specifications
      *
      * @param hashtag hashtag that contains the specification about the hashtag to search
      * @param current current user logged in the app
@@ -133,7 +133,7 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to get the hashtags that meet with the specifications
+     * Function to get the hashtags that match with the specifications
      *
      * @param hashtag hashtag that contains the specification about the hashtags to search
      * @param current current user logged in the app
@@ -153,7 +153,7 @@ public class PostDao extends AbstractDao {
      *
      * @param text        given text to search
      * @param currentUser current user logged in the app
-     * @return list of the posts which has the given text in it
+     * @return list of the posts which have the given text in it
      */
     public List<Post> searchByText(String text, User currentUser) {
         if (text == null) {
