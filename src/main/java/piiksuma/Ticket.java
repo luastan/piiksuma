@@ -115,8 +115,5 @@ public class Ticket{
 
         return getId().equals(ticket.getId());
 
-
- 
-
     }
 }

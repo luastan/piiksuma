@@ -56,6 +56,13 @@ public class MessagesDao extends AbstractDao {
         }
     }
 
+    /**
+     * This function sends a private message to another user in the app
+     *
+     * @param privateMessage message to be sent
+     * @param currentUser current user logged into the app
+     */
+
     public void sendMessage(Message privateMessage, User currentUser) {
 
     }

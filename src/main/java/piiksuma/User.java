@@ -72,8 +72,9 @@ public class User {
     }
 
     /**
-     * Necesario constructor vacío para que se pueda crear con reflección
+     * A empty constructor is needed to be created by reflexion
      */
+
     public User() {
     }
 
