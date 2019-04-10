@@ -1,7 +1,9 @@
 package piiksuma.api;
 
+import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 
@@ -35,6 +37,18 @@ public class InsertionFacade {
 
     }
 
+
+    /**
+     * Saves a new Post into the database
+     *
+     * @param post        New Post
+     * @param currentUser Current user using the application
+     * @throws PiikDatabaseException Duplicated keys and null values that shoudn't be
+     * @throws PiikInvalidParameters Given post or currentUser are invalid
+     */
+    public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+
+    }
 
 
     /* MLTIMEDIA related methods */

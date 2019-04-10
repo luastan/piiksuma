@@ -1,5 +1,7 @@
 package piiksuma.api;
 
+import piiksuma.api.dao.*;
+
 import java.sql.Connection;
 
 
@@ -18,6 +20,13 @@ public class ApiFacade {
     private SearchFacade searchFacade;
     private SystemFacade systemFacade;
 
+    // Helpful when implementing unit tests
+    private PostDao postDao;
+    private UserDao userDao;
+    private MultimediaDao multimediaDao;
+    private MessagesDao messagesDao;
+    private InteractionDao interactionDao;
+
     static {
         entrypoint = new ApiFacade();
     }
@@ -32,6 +41,12 @@ public class ApiFacade {
         deletionFacade = new DeletionFacade(this);
         searchFacade = new SearchFacade(this);
         systemFacade = new SystemFacade(this);
+
+        postDao = new PostDao(connection);
+        userDao = new UserDao(connection);
+        multimediaDao = new MultimediaDao(connection);
+        messagesDao = new MessagesDao(connection);
+        interactionDao = new InteractionDao(connection);
     }
 
     public static ApiFacade getEntrypoint() {
@@ -80,5 +95,49 @@ public class ApiFacade {
 
     public void setSystemFacade(SystemFacade systemFacade) {
         this.systemFacade = systemFacade;
+    }
+
+    public static String getPathConfig() {
+        return PATH_CONFIG;
+    }
+
+    public PostDao getPostDao() {
+        return postDao;
+    }
+
+    public void setPostDao(PostDao postDao) {
+        this.postDao = postDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public MultimediaDao getMultimediaDao() {
+        return multimediaDao;
+    }
+
+    public void setMultimediaDao(MultimediaDao multimediaDao) {
+        this.multimediaDao = multimediaDao;
+    }
+
+    public MessagesDao getMessagesDao() {
+        return messagesDao;
+    }
+
+    public void setMessagesDao(MessagesDao messagesDao) {
+        this.messagesDao = messagesDao;
+    }
+
+    public InteractionDao getInteractionDao() {
+        return interactionDao;
+    }
+
+    public void setInteractionDao(InteractionDao interactionDao) {
+        this.interactionDao = interactionDao;
     }
 }
