@@ -10,6 +10,7 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesDao extends AbstractDao {
@@ -131,14 +132,21 @@ public class MessagesDao extends AbstractDao {
      * This function allows the admins to retrieve the current unresolved tickets
      *
      * @param currentUser current user logged in the app
+     * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(User currentUser) {
+    public List<Ticket> getAdminTickets(User currentUser, Integer limit) {
 
         if (!currentUser.getType().equals(UserType.administrator)){
             return null;
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is NULL").defineClass(Ticket.class).list();
+        if(limit == null || limit <= 0)
+        {
+            return new ArrayList<>();
+        }
+
+        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
+                "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
     }
 }

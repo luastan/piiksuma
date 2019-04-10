@@ -136,33 +136,47 @@ public class PostDao extends AbstractDao {
      * Function to get the hashtags that match with the specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
+     * @param limit maximum number of tickets to retrieve
      * @param current current user logged into the app
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, User current) {
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) {
         if (hashtag == null) {
             return null;
         }
 
+        if(limit == null || limit <= 0)
+        {
+            return new ArrayList<>();
+        }
+
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
-                "WHERE name LIKE '%?%'").defineClass(Hashtag.class).defineParameters(hashtag.getName()).list();
+                "WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
+                limit).list();
     }
 
     /**
-     * Function to search the posts which contain a given text
+     * Function to search the posts which contain a given text, ordered by descending publication date
      *
      * @param text        text to be searched
+     * @param limit maximum number of tickets to retrieve
      * @param currentUser current user logged into the app
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, User currentUser) {
+    public List<Post> searchByText(String text, Integer limit, User currentUser) {
         if (text == null) {
             //TODO lanzar excepciones oportunas o avisar al usuario etc...
             return null;
         }
 
+        if(limit == null || limit <= 0)
+        {
+            return new ArrayList<>();
+        }
+
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE UPPER(text) " +
-                "LIKE UPPER(?) LIMIT 30").defineClass(Post.class).defineParameters("%" + text + "%").list();
+                "LIKE UPPER(?) ORDER BY publicationDate DESC LIMIT ?").defineClass(Post.class).defineParameters(
+                        "%" + text + "%", limit).list();
     }
 
     /**
