@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.User;
+import piiksuma.UserType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -31,6 +32,11 @@ public class MessagesDao extends AbstractDao {
         if (currentUser == null) {
             return;
         }
+
+        if (currentUser.getType().equals(UserType.administrator)) {
+            return;
+        }
+
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
@@ -49,7 +55,6 @@ public class MessagesDao extends AbstractDao {
     /**
      * @param ticket      ticket to insert
      * @param currentUser current user logged
-     * @return the ticket which has been inserted
      */
     public void newTicket(Ticket ticket, User currentUser) {
 
@@ -62,6 +67,10 @@ public class MessagesDao extends AbstractDao {
             return;
         }
 
+        if (!ticket.getUser().equals(currentUser)){
+            return;
+        }
+
         new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
 
     }
@@ -69,7 +78,7 @@ public class MessagesDao extends AbstractDao {
     /**
      * The admin replies a ticket which has to be on the message, it means that message.getTicket() cant be null
      *
-     * @param ticket      el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
+     * @param ticket      the ticket is not necessary actually, we have to check if the ticket is in the message          el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
      * @param message     reply from the admin to the user who create the ticket
      * @param currentUser current user loged in the app
      */

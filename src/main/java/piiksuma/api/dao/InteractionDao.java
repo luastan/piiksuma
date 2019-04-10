@@ -67,6 +67,7 @@ public class InteractionDao extends AbstractDao {
             return;
         }
 
+
         con = super.getConnection();
 
         try {
