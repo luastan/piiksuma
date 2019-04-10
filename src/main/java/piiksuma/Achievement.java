@@ -44,4 +44,15 @@ public class Achievement {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Achievement)) return false;
+
+        Achievement achievement = (Achievement) o;
+
+        return getId().equals(achievement.getId());
+
+    }
 }

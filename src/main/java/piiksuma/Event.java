@@ -115,4 +115,15 @@ public class Event {
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+
+        Event event = (Event) o;
+
+        return getId().equals(event.getId());
+
+    }
 }

@@ -60,4 +60,15 @@ public class Hashtag {
 
         return true;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Hashtag)) return false;
+
+        Hashtag hashtag = (Hashtag) o;
+
+        return getName().equals(hashtag.getName());
+
+    }
 }

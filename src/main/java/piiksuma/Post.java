@@ -151,12 +151,14 @@ public class Post {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
+
         if (this == o) return true;
         if (!(o instanceof Post)) return false;
 
         Post post = (Post) o;
 
         return post.getPostAuthor().equals(getPostAuthor()) && post.getId().equals(getId());
+
     }
 }
