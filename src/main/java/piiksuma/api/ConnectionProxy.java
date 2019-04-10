@@ -18,7 +18,7 @@ public class ConnectionProxy {
     /**
      * Basic and unique constructor. Instantiates the connection reading the parameters from a .properties file
      *
-     * @param connectionPath Path where the properties file can be located
+     * @param connectionPath Path where the properties file is located
      */
     public ConnectionProxy(String connectionPath) {
         Properties config = new Properties();
