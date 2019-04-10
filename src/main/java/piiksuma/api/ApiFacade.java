@@ -6,7 +6,7 @@ import java.sql.Connection;
 
 
 /**
- * Singleton Class used as an etryPoint to te system backend. Holds the
+ * Singleton Class used as an entryPoint to the system backend. Holds the
  * different facades and serves them statically
  */
 public class ApiFacade {
@@ -32,8 +32,7 @@ public class ApiFacade {
     }
 
     /**
-     * Private instance. It instanciates the connection to the database and the
-     * different Facades
+     * Private instance. It instantiates the connection to the database and the different Facades
      */
     private ApiFacade() {
         connection = new ConnectionProxy(PATH_CONFIG).getConnection();

@@ -30,8 +30,8 @@ public class InsertionFacade {
      * Adds a new user to the database
      *
      * @param newUser User to be inserted into the database
-     * @throws PiikDatabaseException User already exists or It has invalid
-     *                               parameters such as null values or non unique values on primary keys
+     * @throws PiikDatabaseException User already exists or it has invalid parameters such as null values or non unique
+     *                               values on primary keys
      */
     public void createUser(User newUser) throws PiikDatabaseException {
 
@@ -39,11 +39,11 @@ public class InsertionFacade {
 
 
     /**
-     * Saves a new Post into the database
+     * Inserts a new Post into the database
      *
      * @param post        New Post
      * @param currentUser Current user using the application
-     * @throws PiikDatabaseException Duplicated keys and null values that shoudn't be
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
