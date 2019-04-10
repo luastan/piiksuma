@@ -19,7 +19,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function allows to delete a message by an admin because the sender used unappropiated words or
+     * This function allows to delete a message by an admin because the sender used inappropriated words or
      * by the sender because he wants to do it
      *
      * @param message     message to delete
@@ -42,8 +42,8 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function replaces the oldMessage saved on the database by the new one because the user wanted
-     * to modify it or an admin wanted to censor the content
+     * This function replaces the oldMessage saved on the database by the new one because the user want
+     * to modify it or an admin want to censor the content
      *
      * @param oldMessage message to be replaced
      * @param newMessage message to be inserted
@@ -96,8 +96,8 @@ public class MessagesDao extends AbstractDao {
      * The admin replies a ticket which has to be on the message, it means that message.getTicket() cant be null
      *
      * @param ticket      the ticket is not necessary actually, we have to check if the ticket is in the message
-     * @param message     reply from the admin to the user who create the ticket
-     * @param currentUser current user loged in the app
+     * @param message     reply from the admin to the user who has created the ticket
+     * @param currentUser current user logged in the app
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser) {
 
@@ -114,6 +114,13 @@ public class MessagesDao extends AbstractDao {
         new InsertionMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).insert();
     }
 
+    /**
+     * The admin close the ticket between him and a user
+     *
+     * @param ticket      the ticket which is going to be closed
+     * @param currentUser current user logged in the app
+     */
+
     public void closeTicket(Ticket ticket, User currentUser) {
 
     }
@@ -122,7 +129,7 @@ public class MessagesDao extends AbstractDao {
      * This function is for giving the admins the tickets to reply
      *
      * @param currentUser current user logged in the app
-     * @return the list of all the tickets which havent been closed
+     * @return the list of all the tickets which haven't been closed
      */
     public List<Ticket> getAdminTickets(User currentUser) {
 

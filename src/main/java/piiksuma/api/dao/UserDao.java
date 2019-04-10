@@ -29,7 +29,7 @@ public class UserDao extends AbstractDao {
     }
 
     /**
-     * Function to add a new user in the database
+     * Function to add a new user into the database
      *
      * @param user    user to enter in the database
      */
@@ -53,7 +53,7 @@ public class UserDao extends AbstractDao {
     }
 
     /**
-     * Function to get the user that meet with the specifications
+     * Function to get the user that match with the specifications
      *
      * @param user    user that contains the specification about the user to search
      * @return user with all the information
@@ -73,7 +73,7 @@ public class UserDao extends AbstractDao {
     }
 
     /**
-     * Function to get the users that meet with the specifications
+     * Function to get the users that match with the specifications
      *
      * @param user    user that contains the specification about the users to search
      * @param limit   maximum of users to return
@@ -107,7 +107,7 @@ public class UserDao extends AbstractDao {
      * Function to login in the app
      *
      * @param user user that contains the specification about the users to search
-     * @return the user find in the database
+     * @return the user found in the database
      */
     public User login(User user) {
         if (user == null) {
@@ -125,7 +125,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function to insert or update personal data in the user profile
      *
-     * @param user user that is going to be modificated
+     * @param user user that is going to be modified
      */
     public void administratePersonalData(User user) {
         if (user == null) {
@@ -157,7 +157,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function that returns the statistics of the given user
      *
-     * @param user user we want to know his statistics
+     * @param user user about who we want to know his statistics
      * @return all the information that we want in the stats
      * @throws SQLException
      */

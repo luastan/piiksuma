@@ -46,7 +46,7 @@ public class InteractionDao extends AbstractDao {
     /**
      * Inserts a new notification on a user
      *
-     * @param notification given notification to the user
+     * @param notification notification given to the user
      * @param currentUser  current user logged into the app
      */
     public void createNotification(Notification notification, User currentUser) {
