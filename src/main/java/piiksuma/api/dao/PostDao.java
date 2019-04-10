@@ -24,7 +24,7 @@ public class PostDao extends AbstractDao {
     /* Methods */
 
     /**
-     * Function that adds the post into the database
+     * Function that adds a post into the database
      *
      * @param post    post to add, with its creator, into the database
      * @param current current user logged in the app
@@ -61,7 +61,7 @@ public class PostDao extends AbstractDao {
      * Function that removes a post from the database
      *
      * @param post post to remove from the database
-     * @param current current user logged in app
+     * @param current current user logged into the app
      */
     public void removePost(Post post, User current) {
         if (post == null){
@@ -75,7 +75,7 @@ public class PostDao extends AbstractDao {
         if(current == null){
             return;
         }
-        //We check if the current user is an admin or is the author of the post
+        // We check if the current user is an admin or the post's author
         if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
         }
@@ -113,11 +113,11 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to get the hashtag that match with the specifications
+     * Function to get the hashtag that matchs with the given specifications
      *
-     * @param hashtag hashtag that contains the specification about the hashtag to search
-     * @param current current user logged in the app
-     * @return hashtag with all the information
+     * @param hashtag hashtag whose properties will be used in the search
+     * @param current current user logged into the app
+     * @return hashtag that matches the given information
      */
     public Hashtag getHashtag(Hashtag hashtag, User current) {
         if (hashtag == null) {
@@ -135,9 +135,9 @@ public class PostDao extends AbstractDao {
     /**
      * Function to get the hashtags that match with the specifications
      *
-     * @param hashtag hashtag that contains the specification about the hashtags to search
-     * @param current current user logged in the app
-     * @return hashtags with all the information
+     * @param hashtag hashtag whose properties will be used in the search
+     * @param current current user logged into the app
+     * @return hashtags that match the given information
      */
     public List<Hashtag> searchHashtag(Hashtag hashtag, User current) {
         if (hashtag == null) {
@@ -149,11 +149,11 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to search the posts which have a specific text in it
+     * Function to search the posts which contain a given text
      *
-     * @param text        given text to search
-     * @param currentUser current user logged in the app
-     * @return list of the posts which have the given text in it
+     * @param text        text to be searched
+     * @param currentUser current user logged into the app
+     * @return list of the posts which contain the given text
      */
     public List<Post> searchByText(String text, User currentUser) {
         if (text == null) {
