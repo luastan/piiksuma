@@ -52,4 +52,15 @@ public class Notification {
         }
         return true;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Notification)) return false;
+
+        Notification notification = (Notification) o;
+
+        return getId().equals(notification.getId());
+
+    }
 }

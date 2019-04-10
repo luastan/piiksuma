@@ -110,4 +110,15 @@ public class Ticket extends Message {
         }
         return true;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ticket)) return false;
+
+        Ticket ticket = (Ticket) o;
+
+        return getId().equals(ticket.getId());
+
+    }
 }

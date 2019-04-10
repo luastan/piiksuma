@@ -149,4 +149,15 @@ public class Post {
                 " Author:" + '\'' + this.postAuthor + '\'' + "}";
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Post)) return false;
+
+        Post post = (Post) o;
+
+        return getId().equals(post.getId());
+
+    }
 }

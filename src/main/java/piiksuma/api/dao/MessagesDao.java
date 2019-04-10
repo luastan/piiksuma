@@ -106,6 +106,10 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(User currentUser) {
 
+        if (!currentUser.getType().equals(UserType.administrator)){
+            return null;
+        }
+
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is NULL").defineClass(Ticket.class).list();
     }
 }
