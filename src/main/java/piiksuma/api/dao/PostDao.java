@@ -304,13 +304,6 @@ public class PostDao extends AbstractDao {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                // We also must close de connection to the database to free its resources
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
         }
 
         return (result);
