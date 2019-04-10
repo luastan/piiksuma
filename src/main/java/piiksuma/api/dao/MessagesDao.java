@@ -53,6 +53,8 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
+     * A new ticket, created by a user, is insersted into the database
+     *
      * @param ticket      ticket to insert
      * @param currentUser current user logged
      */
@@ -88,6 +90,9 @@ public class MessagesDao extends AbstractDao {
             return;
         }
         if (!message.checkPrimaryKey() || message.getTicket() == null) {
+            return;
+        }
+        if(!ticket.getId().equals(message.getTicket())){
             return;
         }
 

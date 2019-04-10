@@ -75,8 +75,8 @@ public class PostDao extends AbstractDao {
         if(current == null){
             return;
         }
-
-        if(!current.getType().equals(UserType.administrator)){
+        //We check if the current user is an admin or is the author of the post
+        if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
         }
 

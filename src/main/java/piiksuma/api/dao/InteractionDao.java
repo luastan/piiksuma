@@ -43,6 +43,12 @@ public class InteractionDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Inserts a new notification on a user
+     *
+     * @param notification given notification to the user
+     * @param currentUser  current user logged into the app
+     */
     public void createNotification(Notification notification, User currentUser) {
 
         new InsertionMapper<Notification>(super.getConnection()).add(notification).defineClass(Notification.class).insert();
