@@ -31,7 +31,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function to add a new user into the database
      *
-     * @param user    user to enter in the database
+     * @param user user to insert into the database
      */
     public void createUser(User user) {
 
@@ -44,7 +44,7 @@ public class UserDao extends AbstractDao {
             return;
         }
 
-        // Insertion is done with the user data passed by parameter
+        // Insertion is done with the given user data, which is passed by parameter
         new InsertionMapper<User>(super.getConnection()).add(user).defineClass(User.class).insert();
     }
 
@@ -53,10 +53,10 @@ public class UserDao extends AbstractDao {
     }
 
     /**
-     * Function to get the user that match with the specifications
+     * Function to get the user that matches the given specifications
      *
-     * @param user    user that contains the specification about the user to search
-     * @return user with all the information
+     * @param user user that contains the requirements that will be applied in the search
+     * @return user that meets the given information
      */
     public User getUser(User user) {
 
@@ -75,9 +75,9 @@ public class UserDao extends AbstractDao {
     /**
      * Function to get the users that match with the specifications
      *
-     * @param user    user that contains the specification about the users to search
+     * @param user user that contains the requirements that will be applied in the search
      * @param limit   maximum of users to return
-     * @return users with all the information
+     * @return users that meet the given information
      */
     public List<User> searchUser(User user, Integer limit) {
 
@@ -85,7 +85,7 @@ public class UserDao extends AbstractDao {
             return null;
         }
 
-        if (limit <= 0) {
+        if (limit == null || limit <= 0) {
             return new ArrayList<>();
         }
 
