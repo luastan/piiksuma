@@ -5,7 +5,7 @@ import piiksuma.database.MapperTable;
 
 @MapperTable
 public class Notification {
-    @MapperColumn
+    @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String creationDate;
@@ -46,10 +46,35 @@ public class Notification {
         this.content = content;
     }
 
-    public boolean checkPrimaryKey(){
-        if(id==null || id.isEmpty()){
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull(){
+        // Check that the primary keys are not null
+        if(!checkPrimaryKey()){
             return false;
         }
-        return true;
+
+        return getContent() != null && !getContent().isEmpty();
+    }
+
+    /**
+     * Function to check that the primary keys are not null
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    public boolean checkPrimaryKey(){
+        // Check that the primary keys are not null
+        return(getId() != null && !getId().isEmpty());
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (!(o instanceof Notification)) return false;
+
+        Notification notification = (Notification) o;
+
+        return notification.getId().equals(getId());
     }
 }
