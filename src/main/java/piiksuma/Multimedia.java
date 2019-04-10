@@ -1,11 +1,17 @@
 package piiksuma;
 
+import piiksuma.database.MapperColumn;
+import piiksuma.database.MapperTable;
+
+@MapperTable
 public class Multimedia {
 
     /* Attributes */
-
+    @MapperColumn(pkey = true)
     private String hash;
+    @MapperColumn
     private String resolution;
+    @MapperColumn
     private String uri;
 
 
@@ -16,19 +22,19 @@ public class Multimedia {
     }
 
     public Multimedia(String hash, String resolution, String uri) {
-        if( hash != null ) {
+        if (hash != null) {
             this.hash = hash;
         } else {
             this.hash = "";
         }
 
-        if(resolution != null) {
+        if (resolution != null) {
             this.resolution = resolution;
         } else {
             this.resolution = "";
         }
 
-        if(uri != null) {
+        if (uri != null) {
             this.uri = uri;
         } else {
             this.uri = "";
@@ -37,7 +43,7 @@ public class Multimedia {
 
 
     /* Getters and setters */
-    
+
     public String getHash() {
         return hash;
     }
@@ -60,5 +66,22 @@ public class Multimedia {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public boolean checkPrimaryKey(){
+        if(hash==null || hash.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if(!(o instanceof Multimedia)) return false;
+
+        Multimedia multimedia = (Multimedia) o;
+
+        return hash.equals(multimedia.hash);
+
     }
 }
