@@ -24,11 +24,11 @@ public class PostDao extends AbstractDao {
     /* Methods */
 
     /**
-     * Function that add the post to the database
+     * Function that adds the post into the database
      *
-     * @param post    post to add to the database with the creator
+     * @param post    post to add tino the database with the creator
      * @param current current user logged in the app
-     * @return post passed by parameter
+     *
      */
     public void createPost(Post post, User current) {
 
@@ -45,7 +45,7 @@ public class PostDao extends AbstractDao {
             return;
         }
 
-        // Check that the post satisfies with the restrictions
+        // Check that the post satisfies the restrictions
         if (!post.checkNotNull()) {
             return;
         }
@@ -58,10 +58,10 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function that removes a post to the database
+     * Function that removes a post from the database
      *
-     * @ param post post to remove to the database with the creator
-     * @ param current current user logged in app
+     * @param post post to remove from the database
+     * @param current current user logged in app
      */
     public void removePost(Post post, User current) {
         if (post == null){
@@ -149,7 +149,7 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to search posts which have a specific text in it
+     * Function to search the posts which have a specific text in it
      *
      * @param text        given text to search
      * @param currentUser current user logged in the app

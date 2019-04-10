@@ -23,7 +23,7 @@ public class MessagesDao extends AbstractDao {
      * by the sender because he wants to do it
      *
      * @param message     message to delete
-     * @param currentUser current user logged in the app
+     * @param currentUser current user logged into the app
      */
     public void deleteMessage(Message message, User currentUser) {
         if (message == null) {
@@ -41,6 +41,14 @@ public class MessagesDao extends AbstractDao {
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
 
+    /**
+     * This function replaces the oldMessage saved on the database by the new one because the user wanted
+     * to modify it or an admin wanted to censor the content
+     *
+     * @param oldMessage message to be replaced
+     * @param newMessage message to be inserted
+     * @param currentUser current user logged into the app
+     */
     public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) {
 
         if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
@@ -53,7 +61,7 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * A new ticket, created by a user, is insersted into the database
+     * A new ticket, created by a user, is inserted into the database
      *
      * @param ticket      ticket to insert
      * @param currentUser current user logged
@@ -80,7 +88,7 @@ public class MessagesDao extends AbstractDao {
     /**
      * The admin replies a ticket which has to be on the message, it means that message.getTicket() cant be null
      *
-     * @param ticket      the ticket is not necessary actually, we have to check if the ticket is in the message          el ticket no haría falta la verdad, si ya lo tenemos en mensaje hay que mirarlo
+     * @param ticket      the ticket is not necessary actually, we have to check if the ticket is in the message
      * @param message     reply from the admin to the user who create the ticket
      * @param currentUser current user loged in the app
      */

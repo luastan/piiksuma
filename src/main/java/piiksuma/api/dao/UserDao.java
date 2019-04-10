@@ -21,6 +21,7 @@ public class UserDao extends AbstractDao {
 
     /**
      * Function to remove a user from the database
+     *
      * @param user user to remove
      */
     public void removeUser(User user) {
@@ -153,12 +154,19 @@ public class UserDao extends AbstractDao {
 
     }
 
+    /**
+     * Function that returns the statistics of the given user
+     *
+     * @param user user we want to know his statistics
+     * @return all the information that we want in the stats
+     * @throws SQLException
+     */
     public Statistics getUserStatistics(User user) throws SQLException {
         Statistics statistics = new Statistics();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String query;
-
+        //TODO HACE ESTO CON LOS MAPPER
         // Query 1
         query = "SELECT count(reactiontype) FROM react WHERE author LIKE ? AND reactiontype LIKE ?";
         preparedStatement = super.getConnection().prepareStatement(query);
