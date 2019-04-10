@@ -109,11 +109,10 @@ public class UserDao extends AbstractDao {
     /**
      * Function to login in the app
      *
-     * @ param user user that contains the specification about the users to search
-     * @ param current current user logged in the app
-     * @ return the user find in the database
+     * @param user user that contains the specification about the users to search
+     * @return the user find in the database
      */
-    public User login(User user, User current) {
+    public User login(User user) {
         if (user == null) {
             return null;
         }
@@ -129,10 +128,9 @@ public class UserDao extends AbstractDao {
     /**
      * Function to insert or update personal data in the user profile
      *
-     * @ param user user that is going to be modificated
-     * @ param current current user logged in the app
+     * @param user user that is going to be modificated
      */
-    public void administratePersonalData(User user, User current) {
+    public void administratePersonalData(User user) {
         if (user == null) {
             return;
         }
@@ -144,10 +142,10 @@ public class UserDao extends AbstractDao {
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }
 
-    public void createAchievement(Achievement achievement, User current) {
+    public void createAchievement(Achievement achievement) {
     }
 
-    public Achievement unlockAchievement(Achievement achievement, User current) {
+    public Achievement unlockAchievement(Achievement achievement) {
         return null;
     }
 
@@ -159,7 +157,7 @@ public class UserDao extends AbstractDao {
 
     }
 
-    Statistics getUserStatistics(User user, User current) throws SQLException {
+    public Statistics getUserStatistics(User user) throws SQLException {
         Statistics statistics = new Statistics();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
