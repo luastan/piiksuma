@@ -147,6 +147,7 @@ public class SearchFacade {
      * @return posts that make up the user's feed
      */
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikForbiddenException {
+
         if(user.equals(current)){
             return parentFacade.getPostDao().getFeed(user, limit);
         } else {
@@ -174,7 +175,24 @@ public class SearchFacade {
 
     /* INTERACTION related methods */
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current){
+    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) {
         return parentFacade.getInteractionDao().getPostReaction(post);
+    }
+
+    /**
+     * Retrieves the notifications that a user has received
+     *
+     * @param user user whose notifications will be retrieved
+     * @param current current user
+     * @return found notifications
+     */
+    public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException {
+
+        // A user's notifications can be retrieved by an user or by an admin
+        if(!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+            throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
+        }
+
+        return parentFacade.getInteractionDao().getNotifications(user);
     }
 }

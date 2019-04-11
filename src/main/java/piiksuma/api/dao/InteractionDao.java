@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.*;
 import piiksuma.Notification;
 import piiksuma.database.InsertionMapper;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
@@ -120,5 +121,22 @@ public class InteractionDao extends AbstractDao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * Retrieves the notifications that a user has received
+     *
+     * @param user user whose notifications will be retrieved
+     * @return found notifications
+     */
+    public List<Notification> getNotifications(User user) throws PiikDatabaseException {
+
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.id, n.creationDate, " +
+                "n.content FROM notification as n, haveNotification as h WHERE n.id = h.notification AND h.usr = " +
+                "?").defineParameters(user.getEmail()).list();
     }
 }
