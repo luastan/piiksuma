@@ -16,23 +16,23 @@ public class InteractionDao extends AbstractDao {
         super(connection);
     }
 
-    public void removeEvent(Event e, User current) {
+    public void removeEvent(Event e) {
 
     }
 
-    public void removeReaction(Reaction reaction, User current) {
+    public void removeReaction(Reaction reaction) {
 
     }
 
-    public Event updateEvent(Event event, User current) {
+    public Event updateEvent(Event event) {
         return null;
     }
 
-    public void react(Reaction reaction, User current) {
+    public void react(Reaction reaction) {
 
     }
 
-    public Event createEvent(Event event, User current) {
+    public Event createEvent(Event event) {
         return null;
     }
 
@@ -40,7 +40,7 @@ public class InteractionDao extends AbstractDao {
         return null;
     }
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) {
+    public HashMap<ReactionType, Integer> getPostReaction(Post post) {
         return null;
     }
 
@@ -48,9 +48,8 @@ public class InteractionDao extends AbstractDao {
      * Inserts a new notification on a user
      *
      * @param notification notification given to the user
-     * @param currentUser  current user logged into the app
      */
-    public void createNotification(Notification notification, User currentUser) {
+    public void createNotification(Notification notification) {
 
         new InsertionMapper<Notification>(super.getConnection()).add(notification).defineClass(Notification.class).insert();
     }
@@ -60,16 +59,21 @@ public class InteractionDao extends AbstractDao {
      *
      * @param notification notification that we want the user to see
      * @param user         user that we want to notify
-     * @param currentUser  current user logged into the app
      */
-    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException {
+    public void notifyUser(Notification notification, User user) throws PiikDatabaseException {
+
         Connection con;
         PreparedStatement stmtNotification;
 
         // We check that the given objects are not null and that the primary keys are correct
-        if (notification == null || user == null || !user.checkPrimaryKey() || !notification.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(User, Notification) Primary key constraints failed");
+        if (notification == null || !notification.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(notification) Primary key constraints failed");
         }
+
+        if (user == null  || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
 
         con = super.getConnection();
 
