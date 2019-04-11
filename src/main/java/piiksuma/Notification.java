@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
 public class Notification {
     @MapperColumn(pkey = true)
@@ -71,11 +73,13 @@ public class Notification {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Notification)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Notification that = (Notification) o;
+        return id.equals(that.id);
+    }
 
-        Notification notification = (Notification) o;
-
-        return getId().equals(notification.getId());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

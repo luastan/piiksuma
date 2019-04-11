@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
 public class Reaction {
     @MapperColumn(columna = "usr", pkey = true)
@@ -82,13 +84,17 @@ public class Reaction {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Reaction)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Reaction reaction = (Reaction) o;
+        return user.equals(reaction.user) &&
+                owner.equals(reaction.owner) &&
+                post.equals(reaction.post);
+    }
 
-        return (reaction.getOwner().equals(getOwner()) && reaction.getPost().equals(getPost()) &&
-                reaction.getUser().equals(getUser()));
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, owner, post);
     }
 }
