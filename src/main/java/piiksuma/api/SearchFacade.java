@@ -86,11 +86,11 @@ public class SearchFacade {
     }
 
     public List<Post> getPost(Hashtag hashtag, User current) {
-        return null;
+        return parentFacade.getPostDao().getPost(hashtag);
     }
 
     public List<Post> getPost(User user, User current) {
-        return null;
+        return parentFacade.getPostDao().getPost(user);
     }
 
     /* MESSAGE related methods */
