@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.util.Collection;
@@ -71,25 +72,26 @@ public class DeletionFacadeTest extends FacadeTest {
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void removeUserDistinctAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.removeUser(adminUser2, adminUser);
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void removeUserValidNeedsPass() throws PiikInvalidParameters, PiikDatabaseException {
+        System.out.println("Password should be requested again when deleting current user");
         deletionFacade.removeUser(normalUserNoPass, normalUser);
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void removeUserLoggedNeedsPass() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.removeUser(normalUser, normalUserNoPass);
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void removeUserNoPassAtAll() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.removeUser(normalUserNoPass, normalUserNoPass);
     }
@@ -102,14 +104,14 @@ public class DeletionFacadeTest extends FacadeTest {
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikDatabaseException.class)
     public void removeUserInvalidAtribsDeleter() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(normalUser, emptyUser);
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikDatabaseException.class)
     public void removeUserInvalidAtribsDeleterSameInstance() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(emptyUser, emptyUser);
@@ -124,19 +126,11 @@ public class DeletionFacadeTest extends FacadeTest {
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void removeUserEmptyNoTypeItself() throws PiikInvalidParameters, PiikDatabaseException {
         emptyAdmin.setType(UserType.administrator);
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(normalUserNoPass, normalUserNoPass);
-    }
-
-
-    @Test(expected = PiikInvalidParameters.class)
-    public void removeUserEmptyNoTypeAdmin() throws PiikInvalidParameters, PiikDatabaseException {
-        emptyAdmin.setType(UserType.administrator);
-        doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
-        deletionFacade.removeUser(normalUserNoPass, adminUser);
     }
 
 
@@ -158,6 +152,13 @@ public class DeletionFacadeTest extends FacadeTest {
     public void removeUserValidAdminItself() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.removeUser(adminUser, adminUser);
     }
+
+
+    @Test
+    public void removeUserNoPassAdmin() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.removeUser(normalUserNoPass, adminUser);
+    }
+
 
     /* Unfollow User */
 

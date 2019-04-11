@@ -5,18 +5,20 @@ import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.api.dao.*;
 
+import static org.mockito.Mockito.mock;
+
 public class FacadeTest {
 
     @Mock
-    protected UserDao mockedUserDao;
+    protected UserDao mockedUserDao = mock(UserDao.class);
     @Mock
-    protected PostDao mockedPostDao;
+    protected PostDao mockedPostDao = mock(PostDao.class);
     @Mock
-    protected InteractionDao mockedInteractionDao;
+    protected InteractionDao mockedInteractionDao = mock(InteractionDao.class);
     @Mock
-    protected MultimediaDao mockedMultimediaDao;
+    protected MultimediaDao mockedMultimediaDao = mock(MultimediaDao.class);
     @Mock
-    protected MessagesDao mockedMessagesDao;
+    protected MessagesDao mockedMessagesDao = mock(MessagesDao.class);
 
 
     protected UserDao oldUserDao;
