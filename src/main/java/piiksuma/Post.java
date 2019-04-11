@@ -5,6 +5,7 @@ import piiksuma.database.MapperTable;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @MapperTable(nombre = "post")
 public class Post {
@@ -152,13 +153,15 @@ public class Post {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
-        if (!(o instanceof Post)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
+        return postAuthor.equals(post.postAuthor) &&
+                id.equals(post.id);
+    }
 
-        return post.getPostAuthor().equals(getPostAuthor()) && post.getId().equals(getId());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(postAuthor, id);
     }
 }

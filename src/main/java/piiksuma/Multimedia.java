@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
 public class Multimedia {
 
@@ -80,13 +82,16 @@ public class Multimedia {
         return true;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Multimedia)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Multimedia that = (Multimedia) o;
+        return hash.equals(that.hash);
+    }
 
-        Multimedia multimedia = (Multimedia) o;
-
-        return hash.equals(multimedia.hash);
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash);
     }
 }
