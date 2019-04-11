@@ -46,6 +46,13 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
+
+    /**
+     * Function to update the text content of the post
+     * @param post
+     * @throws PiikDatabaseException
+     */
+
     public void updatePost(Post post) throws  PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
