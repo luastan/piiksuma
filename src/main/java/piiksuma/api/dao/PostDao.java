@@ -38,10 +38,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // Check that the current user is the creator of the post
         if (!post.getPostAuthor().equals(current.getEmail())) {
             return;
         }
+        */
 
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
@@ -87,11 +89,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // We check if the current user is an admin or the post's author
         if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
         }
-
+        */
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
