@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
 public class Achievement {
     @MapperColumn(pkey = true)
@@ -61,11 +63,13 @@ public class Achievement {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Achievement)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Achievement that = (Achievement) o;
+        return id.equals(that.id);
+    }
 
-        Achievement achievement = (Achievement) o;
-
-        return getId().equals(achievement.getId());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

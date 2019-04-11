@@ -30,7 +30,7 @@ public class MessagesDao extends AbstractDao {
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
 
@@ -52,11 +52,11 @@ public class MessagesDao extends AbstractDao {
      */
     public void modifyMessage(Message oldMessage, Message newMessage) throws PiikDatabaseException {
 
-        if(oldMessage == null || !oldMessage.checkPrimaryKey()) {
+        if(oldMessage == null || !oldMessage.checkNotNull()) {
             throw new PiikDatabaseException("(oldMessage) Primary key constraints failed");
         }
 
-        if(newMessage == null || !newMessage.checkPrimaryKey()) {
+        if(newMessage == null || !newMessage.checkNotNull()) {
             throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
         }
 
@@ -71,8 +71,11 @@ public class MessagesDao extends AbstractDao {
      * @param privateMessage message to be sent
      */
 
-    public void sendMessage(Message privateMessage) {
+    public void sendMessage(Message privateMessage) throws PiikDatabaseException {
 
+        if (privateMessage == null || !privateMessage.checkNotNull()) {
+            throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
+        }
     }
 
     /**
@@ -82,7 +85,7 @@ public class MessagesDao extends AbstractDao {
      */
     public void newTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if( ticket == null || !currentUser.checkPrimaryKey()) {
+        if( ticket == null || !ticket.checkNotNull()) {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
@@ -103,17 +106,14 @@ public class MessagesDao extends AbstractDao {
      */
     public void replyTicket(Ticket ticket, Message message) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkPrimaryKey()) {
+        if (ticket == null || !ticket.checkNotNull()) {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
 
-        if (!message.checkPrimaryKey() || message.getTicket() == null) {
-            return;
-        }
         if(!ticket.getId().equals(message.getTicket())){
             return;
         }
@@ -122,13 +122,16 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * The admin closes, marking it as "resolved"
+     * The admin closes a ticket, marking it as "resolved"
      *
      * @param ticket      the ticket which is going to be closed
      */
 
-    public void closeTicket(Ticket ticket) {
+    public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
+        if (ticket == null || !ticket.checkNotNull()) {
+            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
+        }
     }
 
     /**

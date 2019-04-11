@@ -39,7 +39,7 @@ public class InsertionFacadeTest {
 
     private User normalUser = new User("nombre", "id", "mail@gmail.com", "pass", UserType.user);
     private User distinctEmailUser = new User("nombre", "id", "masssil@gmail.com", "pass", UserType.user);
-    private User distinctIdUser = new User("nombre", "idssss", "ma@gmail.com", "pass", UserType.user);
+    private User distinctIdUser = new User("nombre", "idsss", "ma@gmail.com", "pass", UserType.user);
     private User normalUser2 = new User("nombre2", "id2", "mail@gmail.com2", "pass", UserType.user);
     private User adminUser = new User("nombre", "id", "mail@gmail.com", "pass", UserType.administrator);
     private User noPassUser = new User("nombre", "id", "mail@gmail.com");
