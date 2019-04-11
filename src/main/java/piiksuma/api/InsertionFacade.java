@@ -58,6 +58,9 @@ public class InsertionFacade {
 
     /* MLTIMEDIA related methods */
 
+    public Multimedia addMultimedia(Multimedia multimedia){
+        return parentFacade.getMultimediaDao().addMultimedia(multimedia);
+    }
 
 
     /* POST related methods */
@@ -154,7 +157,7 @@ public class InsertionFacade {
         }
 
         if (!currentUser.getType().equals(UserType.administrator)){
-            throw new PiikForbiddenException("(user) User not allowed to this action");
+            throw new PiikForbiddenException("The user is not an administrator");
         }
         parentFacade.getInteractionDao().createNotification(notification);
     }
