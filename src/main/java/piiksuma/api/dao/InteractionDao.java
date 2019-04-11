@@ -54,16 +54,7 @@ public class InteractionDao extends AbstractDao {
 
         return null;
     }
-
-    public List<Reaction> getPostReaction(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        return null;
-    }
-
+    
     public HashMap<ReactionType, Integer> getPostReaction(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkPrimaryKey()) {

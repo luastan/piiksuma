@@ -37,7 +37,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeUser(User user, User currentUser) throws PiikForbiddenException, PiikDatabaseException, PiikInvalidParameters {
-
+        parentFacade.getUserDao().removeUser(user);
     }
 
     /**
@@ -50,7 +50,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters The currentUser is null
      */
     public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-
+        parentFacade.getUserDao().unfollowUser(followed, follower);
     }
 
     /* MLTIMEDIA related methods */
@@ -65,7 +65,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeMultimedia(Multimedia multimedia, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-
+        parentFacade.getMultimediaDao().removeMultimedia(multimedia);
     }
 
     /* POST related methods */
@@ -80,7 +80,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removePost(Post post, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-
+        parentFacade.getPostDao().removePost(post, currentUser);//TODO quitar el current user del dao
     }
 
     /**
@@ -93,7 +93,7 @@ public class DeletionFacade {
      * @throws SQLException
      */
     public void removeRePost(Post repost, User currentUser) throws PiikDatabaseException, PiikForbiddenException, SQLException {
-
+        parentFacade.getPostDao().removeRepost(repost, currentUser);//TODO quitar el current user del dao
     }
 
     /* MESSAGE related methods */
@@ -108,7 +108,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void deleteMessage(Message message, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-
+        parentFacade.getMessagesDao().deleteMessage(message);
     }
 
     /* INTERACTION related methods */
@@ -123,7 +123,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeEvent(Event e, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-
+        parentFacade.getInteractionDao().removeEvent(e);
     }
 
     /**
@@ -136,7 +136,7 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeReaction(Reaction reaction, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-
+        parentFacade.getInteractionDao().removeReaction(reaction);
     }
 
 }
