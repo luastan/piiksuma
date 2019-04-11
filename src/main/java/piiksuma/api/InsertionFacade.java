@@ -1,7 +1,6 @@
 package piiksuma.api;
 
-import piiksuma.Post;
-import piiksuma.User;
+import piiksuma.*;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -38,6 +37,17 @@ public class InsertionFacade {
     }
 
 
+
+
+
+
+    /* MLTIMEDIA related methods */
+
+
+
+    /* POST related methods */
+
+
     /**
      * Inserts a new Post into the database
      *
@@ -51,18 +61,62 @@ public class InsertionFacade {
     }
 
 
-    /* MLTIMEDIA related methods */
-
-
-
-    /* POST related methods */
 
 
 
     /* MESSAGE related methods */
 
 
+    /**
+     * A new ticket, created by a user, is inserted into the database
+     *
+     * @param ticket      ticket to insert
+     * @param currentUser current user logged
+     */
+    public void newTicket(Ticket ticket, User currentUser){
+
+    }
+
+
+    /**
+     * An user replies a ticket by creating a message that will be associated to it; therefore, message.getTicket()
+     * cannot be null
+     *
+     * @param ticket      the ticket is not necessary actually, we just have to check if the ticket is in the message
+     * @param message     reply to be added to the ticket
+     * @param currentUser current user logged into the app
+     */
+    public void replyTicket(Ticket ticket, Message message, User currentUser){
+
+    }
+
 
     /* INTERACTION related methods */
+
+
+
+
+    /**
+     * Inserts a new notification on a user
+     *
+     * @param notification notification given to the user
+     * @param currentUser  current user logged into the app
+     */
+    public void createNotification(Notification notification, User currentUser){
+
+    }
+
+
+    /**
+     * This function associates a notification with a user
+     *
+     * @param notification notification that we want the user to see
+     * @param user         user that we want to notify
+     * @param currentUser  current user logged into the app
+     */
+
+    public void notifyUser(Notification notification, User user, User currentUser){
+
+    }
 
 }
