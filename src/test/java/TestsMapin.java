@@ -41,26 +41,26 @@ public class TestsMapin {
 
     @Ignore
     public void removeUser_null() {
-        userDao.removeUser(null, null);
+        userDao.removeUser(null);
     }
 
     @Test
     public void removeUser_propperPermission() {
-        userDao.removeUser(owner, owner);
+        userDao.removeUser(owner);
 
         assertEquals(0, new QueryMapper<User>(conection).createQuery("SELECT * FROM piiuser WHERE email LIKE ?").defineParameters(owner.getEmail()).list().size());
     }
 
     @Ignore
     public void removeUser_noPermission() {
-        userDao.removeUser(owner, other);
+        userDao.removeUser(owner);
 
         assertNotNull(new QueryMapper<User>(conection).createQuery("SELECT * FROM piiuser WHERE email LIKE ?").defineParameters(owner.getEmail()).findFirst());
     }
 
     @Test
     public void removeUser_adminPermission() {
-        userDao.removeUser(owner, admin);
+        userDao.removeUser(owner);
 
         assertEquals(0, new QueryMapper<User>(conection).createQuery("SELECT * FROM piiuser WHERE email LIKE ?").defineParameters(owner.getEmail()).list().size());
     }

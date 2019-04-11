@@ -127,13 +127,18 @@ public class UserDao extends AbstractDao {
      * Function to insert or to update personal data in the user profile
      *
      * @param user user that is going to be modified
+     * @param current current user logged into the app
      */
-    public void administratePersonalData(User user) {
+    public void administratePersonalData(User user, User currentUser) {
         if (user == null) {
             return;
         }
 
         if (!user.checkPrimaryKey()) {
+            return;
+        }
+
+        if(!user.equals(currentUser)) {
             return;
         }
 
