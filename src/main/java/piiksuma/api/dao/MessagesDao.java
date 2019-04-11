@@ -10,6 +10,7 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesDao extends AbstractDao {
@@ -19,8 +20,9 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function allows to delete a message by an admin because the sender used inappropriated words or
-     * by the sender because he wants to do it
+     * This function allows deleting a message:
+     *  - An admin decides to delete it because the sender has used unappropriated words
+     *  - The sender wants to delete it
      *
      * @param message     message to delete
      * @param currentUser current user logged into the app
@@ -33,7 +35,8 @@ public class MessagesDao extends AbstractDao {
             return;
         }
 
-        if (currentUser.getType().equals(UserType.administrator)) {
+        if (!currentUser.getType().equals(UserType.administrator) &&
+                !currentUser.getEmail().equals(message.getSender())) {
             return;
         }
 
@@ -42,8 +45,8 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function replaces the oldMessage saved on the database by the new one because the user want
-     * to modify it or an admin want to censor the content
+     * This function replaces the oldMessage saved in the database by the new one because the user wants
+     * to modify it or because an admin wants to censor the content
      *
      * @param oldMessage message to be replaced
      * @param newMessage message to be inserted
@@ -93,11 +96,12 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * The admin replies a ticket which has to be on the message, it means that message.getTicket() cant be null
+     * An user replies a ticket by creating a message that will be associated to it; therefore, message.getTicket()
+     * cannot be null
      *
-     * @param ticket      the ticket is not necessary actually, we have to check if the ticket is in the message
-     * @param message     reply from the admin to the user who has created the ticket
-     * @param currentUser current user logged in the app
+     * @param ticket      the ticket is not necessary actually, we just have to check if the ticket is in the message
+     * @param message     reply to be added to the ticket
+     * @param currentUser current user logged into the app
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser) {
 
@@ -115,10 +119,10 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * The admin close the ticket between him and a user
+     * The admin closes, marking it as "resolved"
      *
      * @param ticket      the ticket which is going to be closed
-     * @param currentUser current user logged in the app
+     * @param currentUser current user logged into the app
      */
 
     public void closeTicket(Ticket ticket, User currentUser) {
@@ -126,17 +130,24 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * This function is for giving the admins the tickets to reply
+     * This function allows the admins to retrieve the current unresolved tickets
      *
      * @param currentUser current user logged in the app
+     * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(User currentUser) {
+    public List<Ticket> getAdminTickets(User currentUser, Integer limit) {
 
         if (!currentUser.getType().equals(UserType.administrator)){
             return null;
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is NULL").defineClass(Ticket.class).list();
+        if(limit == null || limit <= 0)
+        {
+            return new ArrayList<>();
+        }
+
+        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
+                "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
     }
 }

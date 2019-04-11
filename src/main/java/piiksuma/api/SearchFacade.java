@@ -3,6 +3,7 @@ package piiksuma.api;
 import java.sql.Connection;
 
 public class SearchFacade {
+
     private ApiFacade parentFacade;
 
     public SearchFacade(ApiFacade parentFacade) {
