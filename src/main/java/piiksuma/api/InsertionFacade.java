@@ -94,6 +94,18 @@ public class InsertionFacade {
         return parentFacade.getPostDao().createHashtag(hashtag);
     }
 
+    /**
+     * Function to archive a post privately by an user
+     * @param post post to be archived
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     */
+    public void archivePost(Post post,User user,User currentUser) throws PiikDatabaseException{
+        if (currentUser == null || !currentUser.checkPrimaryKey() || !user.equals(currentUser) ) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        parentFacade.getPostDao().archivePost(post,user);
+    }
+
 
     /* MESSAGE related methods */
 
