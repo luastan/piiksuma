@@ -18,7 +18,6 @@ public class ApiFacade {
     private InsertionFacade insertionFacade;
     private DeletionFacade deletionFacade;
     private SearchFacade searchFacade;
-    private SystemFacade systemFacade;
 
     // Helpful when implementing unit tests
     private PostDao postDao;
@@ -39,7 +38,6 @@ public class ApiFacade {
         insertionFacade = new InsertionFacade(this);
         deletionFacade = new DeletionFacade(this);
         searchFacade = new SearchFacade(this);
-        systemFacade = new SystemFacade(this);
 
         postDao = new PostDao(connection);
         userDao = new UserDao(connection);
@@ -86,14 +84,6 @@ public class ApiFacade {
 
     public void setSearchFacade(SearchFacade searchFacade) {
         this.searchFacade = searchFacade;
-    }
-
-    public SystemFacade getSystemFacade() {
-        return systemFacade;
-    }
-
-    public void setSystemFacade(SystemFacade systemFacade) {
-        this.systemFacade = systemFacade;
     }
 
     public static String getPathConfig() {

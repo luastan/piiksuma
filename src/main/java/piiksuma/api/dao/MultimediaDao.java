@@ -12,25 +12,25 @@ public class MultimediaDao extends AbstractDao{
     public MultimediaDao(Connection connection) {
         super(connection);
     }
-/*
-    public Multimedia addMultimedia(Multimedia multimedia, User current){
+
+    public Multimedia addMultimedia(Multimedia multimedia){
         return null;
     }
 
-    public Multimedia existsMultimedia(Multimedia multimedia, User current){
+    public Multimedia existsMultimedia(Multimedia multimedia){
         return null;
     }
 
-    public Integer numPostMultimedia(Multimedia multimedia, User current){
+    public Integer numPostMultimedia(Multimedia multimedia){
         return null;
     }
 
-    public List<Post> postWithMultimedia(Multimedia multimedia, User current){
+    public List<Post> postWithMultimedia(Multimedia multimedia){
         return null;
     }
 
-    public void removeMultimedia(Multimedia multimedia, User current){
+    public void removeMultimedia(Multimedia multimedia){
 
     }
-*/
+
 }
