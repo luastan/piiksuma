@@ -33,4 +33,5 @@ public class FacadeTest {
     protected User adminUser = new User("nombre", "id", "mail@gmail.com", "pass", UserType.administrator);
     protected User adminUser2 = new User("nombre", "id", "lol@gmail.com", "pass", UserType.administrator);
     protected User emptyUser = new User();
+    protected User emptyAdmin = new User();
 }
