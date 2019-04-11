@@ -18,21 +18,21 @@ public class InteractionDao extends AbstractDao {
 
     public void removeEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
     }
 
     public void removeReaction(Reaction reaction) throws PiikDatabaseException {
 
-        if (reaction == null || !reaction.checkPrimaryKey()) {
+        if (reaction == null || !reaction.checkNotNull()) {
             throw new PiikDatabaseException("(reaction) Primary key constraints failed");
         }
     }
 
     public Event updateEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
 
@@ -41,14 +41,14 @@ public class InteractionDao extends AbstractDao {
 
     public void react(Reaction reaction) throws PiikDatabaseException {
 
-        if (reaction == null || !reaction.checkPrimaryKey()) {
+        if (reaction == null || !reaction.checkNotNull()) {
             throw new PiikDatabaseException("(reaction) Primary key constraints failed");
         }
     }
 
     public Event createEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
 
@@ -57,7 +57,7 @@ public class InteractionDao extends AbstractDao {
 
     public HashMap<ReactionType, Integer> getPostReaction(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
@@ -71,7 +71,7 @@ public class InteractionDao extends AbstractDao {
      */
     public void createNotification(Notification notification) throws PiikDatabaseException {
 
-        if (notification == null || !notification.checkPrimaryKey()) {
+        if (notification == null || !notification.checkNotNull()) {
             throw new PiikDatabaseException("(notification) Primary key constraints failed");
         }
 
@@ -90,11 +90,11 @@ public class InteractionDao extends AbstractDao {
         PreparedStatement stmtNotification;
 
         // We check that the given objects are not null and that the primary keys are correct
-        if (notification == null || !notification.checkPrimaryKey()) {
+        if (notification == null || !notification.checkNotNull()) {
             throw new PiikDatabaseException("(notification) Primary key constraints failed");
         }
 
-        if (user == null  || !user.checkPrimaryKey()) {
+        if (user == null  || !user.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
