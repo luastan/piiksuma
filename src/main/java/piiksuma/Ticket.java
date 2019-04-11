@@ -3,9 +3,11 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable(nombre = "ticket")
 
-public class Ticket{
+public class Ticket {
 
     /* Attributes */
     @MapperColumn(pkey = true)
@@ -97,9 +99,9 @@ public class Ticket{
         this.textProblem = textProblem;
     }
 
-    public boolean checkPrimaryKey(){
+    public boolean checkPrimaryKey() {
 
-        if(id==null){
+        if (id == null) {
             return false;
         }
         return true;
@@ -108,12 +110,13 @@ public class Ticket{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Ticket)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
+        return id.equals(ticket.id);
+    }
 
-
-        return getId().equals(ticket.getId());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

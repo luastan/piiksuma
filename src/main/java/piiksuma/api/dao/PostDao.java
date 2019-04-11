@@ -83,15 +83,15 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
-    public Post getPost(Post post, User current) {
+    public Post getPost(Post post) {
         return null;
     }
 
-    public List<Post> getPost(Hashtag hashtag, User current) {
+    public List<Post> getPost(Hashtag hashtag) {
         return null;
     }
 
-    public List<Post> getPost(User user, User current) {
+    public List<Post> getPost(User user) {
         return null;
     }
 
@@ -116,10 +116,9 @@ public class PostDao extends AbstractDao {
      * Function to get the hashtag that matchs with the given specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
-     * @param current current user logged into the app
      * @return hashtag that matches the given information
      */
-    public Hashtag getHashtag(Hashtag hashtag, User current) {
+    public Hashtag getHashtag(Hashtag hashtag) {
         if (hashtag == null) {
             return null;
         }
@@ -137,10 +136,9 @@ public class PostDao extends AbstractDao {
      *
      * @param hashtag hashtag whose properties will be used in the search
      * @param limit maximum number of tickets to retrieve
-     * @param current current user logged into the app
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) {
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) {
         if (hashtag == null) {
             return null;
         }
@@ -160,10 +158,9 @@ public class PostDao extends AbstractDao {
      *
      * @param text        text to be searched
      * @param limit maximum number of tickets to retrieve
-     * @param currentUser current user logged into the app
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, Integer limit, User currentUser) {
+    public List<Post> searchByText(String text, Integer limit) {
         if (text == null) {
             //TODO lanzar excepciones oportunas o avisar al usuario etc...
             return null;
@@ -186,24 +183,16 @@ public class PostDao extends AbstractDao {
      * - The 20 most reacted to posts that are in the user's followed hashtags
      *
      * @param user        user whose feed will be retrieved
-     * @param currentUser user executing the query
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user, User currentUser) {
+    public List<Post> getFeed(User user) {
 
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
 
         // We need to check that the given parameters are OK
-        if (user == null || currentUser == null || user.checkPrimaryKey() || currentUser.checkPrimaryKey()) {
+        if (user == null || user.checkPrimaryKey()) {
             return (null);
-        }
-
-        // A user can retrieve a user's feed in the following situations:
-        //  - The user is an admin
-        //  - The user is a common user and he's retrieving his own feed
-        if(currentUser.getType().equals(UserType.user) && !user.getEmail().equals(currentUser.getEmail())) {
-            return(null);
         }
 
         // Connect to the database

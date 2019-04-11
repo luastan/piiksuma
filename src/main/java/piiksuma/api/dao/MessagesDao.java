@@ -8,6 +8,8 @@ import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
+import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -25,14 +27,11 @@ public class MessagesDao extends AbstractDao {
      *  - The sender wants to delete it
      *
      * @param message     message to delete
-     * @param currentUser current user logged into the app
      */
-    public void deleteMessage(Message message, User currentUser) {
-        if (message == null) {
-            return;
-        }
-        if (currentUser == null) {
-            return;
+    public void deleteMessage(Message message) throws PiikDatabaseException {
+
+        if (message == null || !message.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
 
         if (!currentUser.getType().equals(UserType.administrator) &&
@@ -50,9 +49,16 @@ public class MessagesDao extends AbstractDao {
      *
      * @param oldMessage message to be replaced
      * @param newMessage message to be inserted
-     * @param currentUser current user logged into the app
      */
-    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) {
+    public void modifyMessage(Message oldMessage, Message newMessage) throws PiikDatabaseException {
+
+        if(oldMessage == null || !oldMessage.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(oldMessage) Primary key constraints failed");
+        }
+
+        if(newMessage == null || !newMessage.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
+        }
 
         if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
             new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
@@ -63,28 +69,24 @@ public class MessagesDao extends AbstractDao {
      * This function sends a private message to another user in the app
      *
      * @param privateMessage message to be sent
-     * @param currentUser current user logged into the app
      */
 
-    public void sendMessage(Message privateMessage, User currentUser) {
+    public void sendMessage(Message privateMessage) throws PiikDatabaseException {
 
+        if (privateMessage == null || !privateMessage.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
+        }
     }
 
     /**
      * A new ticket, created by a user, is inserted into the database
      *
      * @param ticket      ticket to insert
-     * @param currentUser current user logged
      */
-    public void newTicket(Ticket ticket, User currentUser) {
+    public void newTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null) {
-            //TODO handle with exceptions
-            return;
-        }
-
-        if (!ticket.checkPrimaryKey()) {
-            return;
+        if( ticket == null || !currentUser.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
         if (!ticket.getUser().equals(currentUser)){
@@ -101,16 +103,17 @@ public class MessagesDao extends AbstractDao {
      *
      * @param ticket      the ticket is not necessary actually, we just have to check if the ticket is in the message
      * @param message     reply to be added to the ticket
-     * @param currentUser current user logged into the app
      */
-    public void replyTicket(Ticket ticket, Message message, User currentUser) {
+    public void replyTicket(Ticket ticket, Message message) throws PiikDatabaseException {
 
-        if (message == null) {
-            return;
+        if (ticket == null || !ticket.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
-        if (!message.checkPrimaryKey() || message.getTicket() == null) {
-            return;
+
+        if (message == null || !message.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
+
         if(!ticket.getId().equals(message.getTicket())){
             return;
         }
@@ -119,24 +122,25 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * The admin closes, marking it as "resolved"
+     * The admin closes a ticket, marking it as "resolved"
      *
      * @param ticket      the ticket which is going to be closed
-     * @param currentUser current user logged into the app
      */
 
-    public void closeTicket(Ticket ticket, User currentUser) {
+    public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
+        if (ticket == null || !ticket.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
+        }
     }
 
     /**
      * This function allows the admins to retrieve the current unresolved tickets
      *
-     * @param currentUser current user logged in the app
      * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(User currentUser, Integer limit) {
+    public List<Ticket> getAdminTickets(Integer limit) throws PiikInvalidParameters {
 
         if (!currentUser.getType().equals(UserType.administrator)){
             return null;
@@ -144,7 +148,7 @@ public class MessagesDao extends AbstractDao {
 
         if(limit == null || limit <= 0)
         {
-            return new ArrayList<>();
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
