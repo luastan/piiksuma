@@ -54,7 +54,7 @@ public class InteractionDao extends AbstractDao {
 
         return null;
     }
-    
+
     public HashMap<ReactionType, Integer> getPostReaction(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {

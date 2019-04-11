@@ -99,6 +99,11 @@ public class Ticket {
         this.textProblem = textProblem;
     }
 
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
     public boolean checkPrimaryKey() {
 
         if (id == null) {
@@ -106,6 +111,33 @@ public class Ticket {
         }
         return true;
     }
+
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     *
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull() {
+        // Check that the primary keys are not null
+        if (!checkPrimaryKey()) {
+            return false;
+        }
+
+        if(getTextProblem() == null || getTextProblem().isEmpty()){
+            return false;
+        }
+
+        if(getSection() == null || getSection().isEmpty()){
+            return false;
+        }
+        
+        if(getUser() == null || getUser().isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
+
 
     @Override
     public boolean equals(Object o) {
