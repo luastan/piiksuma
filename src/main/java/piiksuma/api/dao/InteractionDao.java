@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.*;
 import piiksuma.Notification;
 import piiksuma.database.InsertionMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,18 +62,14 @@ public class InteractionDao extends AbstractDao {
      * @param user         user that we want to notify
      * @param currentUser  current user logged into the app
      */
-    public void notifyUser(Notification notification, User user, User currentUser) {
+    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException {
         Connection con;
         PreparedStatement stmtNotification;
 
         // We check that the given objects are not null and that the primary keys are correct
-        if (notification == null || user == null) {
-            return;
+        if (notification == null || user == null || !user.checkPrimaryKey() || !notification.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(User, Notification) Primary key constraints failed");
         }
-        if (!user.checkPrimaryKey() || !notification.checkPrimaryKey()) {
-            return;
-        }
-
 
         con = super.getConnection();
 
