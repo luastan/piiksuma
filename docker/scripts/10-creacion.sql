@@ -21,20 +21,20 @@ Source Code:
 
 CREATE TABLE multimedia
 (
-    hash       text primary key,
-    resolution text not null,
-    uri        varchar(10)
+    hash       varchar(256) primary key,
+    resolution varchar(10) not null,
+    uri        varchar(50)
 );
 
 CREATE TABLE multimediaImage
 (
-    hash text not null primary key references multimedia (hash)
+    hash varchar(256) not null primary key references multimedia (hash)
         on delete cascade on update cascade
 );
 
 CREATE TABLE multimediaVideo
 (
-    hash text not null primary key references multimedia (hash)
+    hash varchar(256) not null primary key references multimedia (hash)
         on delete cascade on update cascade
 );
 
@@ -45,36 +45,35 @@ CREATE TABLE multimediaVideo
 
 CREATE TABLE piiUser
 (
-    id                 text                    not null unique,
-    email              text primary key,
-    name               varchar(50)             not null,
+    id                 varchar(32)             not null unique,
+    email              varchar(35) primary key,
+    name               varchar(35)             not null,
     pass               varchar(256)            not null,
-    gender             varchar(100) CHECK (gender IN ('hombre', 'mujer', 'helicoptero apache', 'ojalá',
-                                                      'helicoptero estrellado')),
+    gender             char(1) CHECK (gender IN ('H', 'M', 'O')),
     description        varchar(256),
-    home               varchar(256),
-    postalCode         varchar(50),
-    province           varchar(50),
-    country            varchar(50),
-    city               varchar(50),
-    birthplace         varchar(50),
+    home               varchar(20),
+    postalCode         varchar(5),
+    province           varchar(30),
+    country            varchar(30),
+    city               varchar(30),
+    birthplace         varchar(30),
     birthdate          timestamp               not null,
     registrationDate   timestamp default now() not null,
     deathdate          timestamp,
-    religion           varchar(50),
-    emotionalSituation varchar(50),
-    job                varchar(50),
+    religion           varchar(20),
+    emotionalSituation varchar(20),
+    job                varchar(35),
 
     -- Aqui hay que pensar como va a funcionar por defecto
-    profilePicture     text references multimediaImage (hash)
+    profilePicture     varchar(32) references multimediaImage (hash)
         on delete set null on update cascade
 );
 
 CREATE TABLE phone
 (
     prefix varchar(3), -- todo actualizar los demás
-    phone  text,
-    usr    text,
+    phone  varchar(9),
+    usr    varchar(32),
 
     primary key (phone, usr, prefix),
     foreign key (usr) references piiUser (email)
@@ -83,15 +82,15 @@ CREATE TABLE phone
 
 CREATE TABLE administrator
 (
-    id text primary key references piiUser (email)
+    id varchar(32) primary key references piiUser (email)
         on delete set null on update cascade
 );
 
 CREATE TABLE associatedAccount
 (
-    id    text not null primary key,
-    token text, -- todo vamos a meter el token al final?
-    usr   text,
+    id    varchar(32) not null primary key,
+    token varchar(128), -- todo vamos a meter el token al final?
+    usr   varchar(32),
 
     foreign key (usr) references piiUser (email)
         on delete cascade on update cascade
@@ -104,13 +103,13 @@ CREATE TABLE associatedAccount
 
 CREATE TABLE ticket
 (
-    id           text,
-    usr          text      not null,
-    section      text      not null,
-    text         text      not null,
-    creationDate timestamp not null default now(),
+    id           varchar(32),
+    usr          varchar(32)  not null,
+    section      varchar(20)  not null,
+    text         varchar(200) not null,
+    creationDate timestamp    not null default now(),
     deadline     timestamp, -- todo añadir
-    adminClosing text,
+    adminClosing varchar(32),
     primary key (id),
     foreign key (usr) references piiUser (email) on delete set null on update cascade,
     foreign key (adminClosing) references administrator (id) on delete set null on update cascade
@@ -123,8 +122,8 @@ CREATE TABLE ticket
 
 CREATE TABLE followUser
 (
-    followed text,
-    follower text,
+    followed varchar(32),
+    follower varchar(32),
 
     primary key (followed, follower),
     foreign key (followed) references piiUser (email)
@@ -135,8 +134,8 @@ CREATE TABLE followUser
 
 CREATE TABLE silenceUser
 (
-    usr      text,
-    silenced text,
+    usr      varchar(32),
+    silenced varchar(32),
 
     primary key (usr, silenced),
     foreign key (usr) references piiUser (email)
@@ -147,8 +146,8 @@ CREATE TABLE silenceUser
 
 CREATE TABLE blockUser
 (
-    usr     text,
-    blocked text,
+    usr     varchar(32),
+    blocked varchar(32),
 
     primary key (usr, blocked),
     foreign key (usr) references piiUser (email)
@@ -159,12 +158,12 @@ CREATE TABLE blockUser
 
 CREATE TABLE message
 (
-    id         text,
-    sender     text,
-    text       text      not null,
-    date       timestamp not null default now(),
-    multimedia text,
-    ticket     text,
+    id         varchar(32),
+    sender     varchar(32),
+    text       varchar(200) not null,
+    date       timestamp    not null default now(),
+    multimedia varchar(32),
+    ticket     varchar(32),
 
     primary key (sender, id),
     foreign key (sender) references piiUser (email)
@@ -176,9 +175,9 @@ CREATE TABLE message
 
 CREATE TABLE receiveMessage
 (
-    message  text,
-    sender   text,
-    receiver text,
+    message  varchar(32),
+    sender   varchar(32),
+    receiver varchar(32),
 
     primary key (message, sender, receiver),
     foreign key (message, sender) references message (id, sender)
@@ -189,13 +188,13 @@ CREATE TABLE receiveMessage
 
 CREATE TABLE post
 (
-    author          text,
-    id              text,
-    text            text                    not null,
+    author          varchar(32),
+    id              varchar(32),
+    text            varchar(256)            not null,
     publicationDate timestamp default now() not null,
-    sugarDaddy      text,
-    authorDaddy     text,
-    multimedia      text,
+    sugarDaddy      varchar(32),
+    authorDaddy     varchar(32),
+    multimedia      varchar(32),
 
     primary key (id, author),
     foreign key (author) references piiUser (email),
@@ -210,15 +209,15 @@ CREATE TABLE post
 
 CREATE TABLE hashtag
 (
-    name varchar(280) not null primary key
+    name varchar(256) not null primary key
 );
 
 
 CREATE TABLE ownHashtag
 (
-    hashtag text,
-    post    text,
-    author  text,
+    hashtag varchar(256),
+    post    varchar(32),
+    author  varchar(32),
 
     primary key (hashtag, post, author),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade
@@ -226,8 +225,8 @@ CREATE TABLE ownHashtag
 
 CREATE TABLE followHashtag
 (
-    piiUser text,
-    hashtag text,
+    piiUser varchar(32),
+    hashtag varchar(256),
 
     primary key (piiUser, hashtag),
     foreign key (piiUser) references piiUser (email)
@@ -243,10 +242,10 @@ CREATE TABLE followHashtag
 
 CREATE TABLE react
 (
-    reactionType text not null,
-    post         text,
-    usr          text,
-    author       text,
+    reactionType varchar(8) not null,
+    post         varchar(32),
+    usr          varchar(32),
+    author       varchar(32),
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
@@ -255,9 +254,9 @@ CREATE TABLE react
 
 CREATE TABLE repost
 (
-    post   text,
-    usr    text,
-    author text,
+    post   varchar(32),
+    usr    varchar(32),
+    author varchar(32),
     primary key (post, usr, author),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
     foreign key (usr) references piiUser (email) on delete cascade on update cascade
@@ -270,12 +269,12 @@ CREATE TABLE repost
 
 CREATE TABLE event
 (
-    id          text,
-    name        text not null default '',
-    description text          default '',
-    location    text          default '',
+    id          varchar(32),
+    name        varchar(50) not null default '',
+    description varchar(200)         default '',
+    location    varchar(50)          default '',
     date        timestamp,
-    creatorUser text not null,
+    creatorUser varchar(32) not null,
 
     primary key (id),
     foreign key (creatorUser) references piiUser (email) on delete cascade on update cascade
@@ -283,8 +282,8 @@ CREATE TABLE event
 
 CREATE TABLE participateEvent
 (
-    event text,
-    usr   text,
+    event varchar(32),
+    usr   varchar(32),
 
     primary key (event, usr),
     foreign key (event) references event (id) on delete cascade on update cascade,
@@ -298,15 +297,15 @@ CREATE TABLE participateEvent
 
 CREATE TABLE achievement
 (
-    id          text primary key,
-    name        varchar(25)  not null,
-    description varchar(100) not null
+    id          varchar(32) primary key,
+    name        varchar(20) not null,
+    description varchar(70) not null
 );
 
 CREATE TABLE ownAchievement
 (
-    logro           text,
-    usr             text,
+    logro           varchar(32),
+    usr             varchar(32),
     acquisitionDate timestamp not null default now(),
 
     foreign key (logro) references achievement (id) on delete cascade on update cascade,
@@ -320,15 +319,15 @@ CREATE TABLE ownAchievement
 
 CREATE TABLE notification
 (
-    id           text primary key,
-    creationDate timestamp not null default now(),
-    content      text      not null
+    id           varchar(32) primary key,
+    creationDate timestamp    not null default now(),
+    content      varchar(200) not null
 );
 
 CREATE TABLE haveNotification
 (
-    notification text,
-    usr          text,
+    notification varchar(32),
+    usr          varchar(32),
 
     primary key (notification, usr),
     foreign key (notification) references notification (id)

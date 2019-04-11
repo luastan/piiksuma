@@ -3,6 +3,8 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
 public class Hashtag {
 
@@ -64,11 +66,13 @@ public class Hashtag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Hashtag)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Hashtag hashtag = (Hashtag) o;
+        return name.equals(hashtag.name);
+    }
 
-        return getName().equals(hashtag.getName());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

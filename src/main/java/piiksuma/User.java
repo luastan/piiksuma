@@ -4,10 +4,12 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
 public class User {
-
+    @MapperColumn(pkey = true)
+    private String email;
     @MapperColumn
     private String name;
     @MapperColumn
@@ -42,8 +44,6 @@ public class User {
     private String loveStatus;
     @MapperColumn
     private String job;
-    @MapperColumn(pkey = true)
-    private String email;
     private UserType type;
 
     public User(String name, String id, String email) {
@@ -294,19 +294,13 @@ public class User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-
-        if (!getId().equals(user.getId())) return false;
-        return getEmail().equals(user.getEmail());
-
+        return email.equals(user.email);
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getEmail().hashCode();
-        return result;
+        return Objects.hash(email);
     }
 }

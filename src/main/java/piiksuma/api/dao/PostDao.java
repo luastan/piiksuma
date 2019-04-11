@@ -183,9 +183,10 @@ public class PostDao extends AbstractDao {
      * - The 20 most reacted to posts that are in the user's followed hashtags
      *
      * @param user        user whose feed will be retrieved
+     * @param limit limit of the posts
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user) {
+    public List<Post> getFeed(User user, Integer limit) {
 
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
@@ -271,7 +272,7 @@ public class PostDao extends AbstractDao {
                     "    -- one\n" +
                     "    GROUP BY candidates.author, candidates.id\n" +
                     "    ORDER BY COUNT (r.reactiontype) DESC\n" +
-                    "    LIMIT 20)\n" +
+                    "    LIMIT ?)\n" +
                     "\n" +
                     ") as results\n" +
                     "\n" +
@@ -283,6 +284,7 @@ public class PostDao extends AbstractDao {
             stm.setString(3, user.getEmail());
             stm.setString(4, user.getEmail());
             stm.setString(5, user.getEmail());
+            stm.setInt(6, limit);
 
             try {
                 // We execute the composed query

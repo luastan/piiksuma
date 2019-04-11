@@ -4,6 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @MapperTable(nombre = "privateMessage")
 public class Message {
@@ -96,11 +97,13 @@ public class Message {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Message)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
+        return id.equals(message.id);
+    }
 
-        return getId().equals(message.getId());
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
