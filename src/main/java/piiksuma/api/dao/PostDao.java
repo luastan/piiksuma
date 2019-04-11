@@ -395,4 +395,18 @@ public class PostDao extends AbstractDao {
 
         return (result);
     }
+
+    public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters {
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
+
+        return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class).createQuery("SELECT COUNT(*) as count " +
+                "FROM ownHashtag " +
+                "GROUP BY hashtag " +
+                "ORDER BY count DESC " +
+                "LIMIT ?").defineParameters(limit).list();
+
+    }
 }

@@ -172,6 +172,10 @@ public class SearchFacade {
         return parentFacade.getPostDao().getArchivedPosts(user);
     }
 
+    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikInvalidParameters{
+        return parentFacade.getPostDao().getTrendingTopics(limit);
+    }
+
     /* MESSAGE related methods */
 
     /**
@@ -192,7 +196,7 @@ public class SearchFacade {
 
     /* INTERACTION related methods */
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) {
+    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) throws PiikDatabaseException {
         return parentFacade.getInteractionDao().getPostReaction(post);
     }
 
