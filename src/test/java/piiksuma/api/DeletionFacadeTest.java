@@ -118,18 +118,15 @@ public class DeletionFacadeTest extends FacadeTest {
     }
 
 
-    @Test(expected = PiikDatabaseException.class)
+    @Test(expected = PiikInvalidParameters.class)
     public void removeUserEmptyAdminDeleter() throws PiikInvalidParameters, PiikDatabaseException {
         emptyAdmin.setType(UserType.administrator);
-        doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(normalUser, emptyAdmin);
     }
 
 
     @Test(expected = PiikForbiddenException.class)
     public void removeUserEmptyNoTypeItself() throws PiikInvalidParameters, PiikDatabaseException {
-        emptyAdmin.setType(UserType.administrator);
-        doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(normalUserNoPass, normalUserNoPass);
     }
 
@@ -206,24 +203,61 @@ public class DeletionFacadeTest extends FacadeTest {
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void unfollowUserNoPermission() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.unfollowUser(normalUser, normalUser2, normalUser);
     }
 
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void unfollowUserNoPermissionAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.unfollowUser(normalUser, adminUser, normalUser);
     }
 
-    @Test(expected = PiikInvalidParameters.class)
+    @Test(expected = PiikForbiddenException.class)
     public void unfollowUserNoPermissionAdminAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         deletionFacade.unfollowUser(normalUser, adminUser2, adminUser);
     }
 
 
     // Invalid Database
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyFollowed() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, normalUser);
+        deletionFacade.unfollowUser(emptyUser, normalUser, normalUser);
+    }
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyFollower() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(normalUser, emptyUser);
+        deletionFacade.unfollowUser(normalUser, emptyUser, normalUser);
+    }
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyBoth() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, emptyUser);
+        deletionFacade.unfollowUser(emptyUser, emptyUser, normalUser);
+    }
+
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyFollowedAdmin() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, normalUser);
+        deletionFacade.unfollowUser(emptyUser, normalUser, adminUser);
+    }
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyFollowerAdmin() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(normalUser, emptyUser);
+        deletionFacade.unfollowUser(normalUser, emptyUser, adminUser);
+    }
+
+    @Test(expected = PiikDatabaseException.class)
+    public void unfollowUserEmptyBothAdmin() throws PiikInvalidParameters, PiikDatabaseException {
+        doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, emptyUser);
+        deletionFacade.unfollowUser(emptyUser, emptyUser, adminUser);
+    }
 
 
     // Valid
