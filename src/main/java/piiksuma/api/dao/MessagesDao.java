@@ -35,7 +35,8 @@ public class MessagesDao extends AbstractDao {
             return;
         }
 
-        if (currentUser.getType().equals(UserType.administrator)) {
+        if (!currentUser.getType().equals(UserType.administrator) &&
+                !currentUser.getEmail().equals(message.getSender())) {
             return;
         }
 
