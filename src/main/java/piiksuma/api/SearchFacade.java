@@ -1,6 +1,8 @@
 package piiksuma.api;
 
 import piiksuma.*;
+import piiksuma.exceptions.PiikForbiddenException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -75,7 +77,7 @@ public class SearchFacade {
         return parentFacade.getMultimediaDao().numPostMultimedia(multimedia);
     }
 
-    public List<Post> postWithMultimedia(Multimedia multimedia){
+    public List<Post> postWithMultimedia(Multimedia multimedia, User current){
         return parentFacade.getMultimediaDao().postWithMultimedia(multimedia);
     }
 
@@ -91,6 +93,56 @@ public class SearchFacade {
 
     public List<Post> getPost(User user, User current) {
         return parentFacade.getPostDao().getPost(user);
+    }
+
+    /**
+     * Function to get the hashtag that matchs with the given specifications
+     *
+     * @param hashtag hashtag whose properties will be used in the search
+     * @return hashtag that matches the given information
+     */
+    public Hashtag getHashtag(Hashtag hashtag, User current) {
+        return parentFacade.getPostDao().getHashtag(hashtag);
+    }
+
+    /**
+     * Function to get the hashtags that match with the specifications
+     *
+     * @param hashtag hashtag whose properties will be used in the search
+     * @param limit maximum number of tickets to retrieve
+     * @return hashtags that match the given information
+     */
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) {
+        return parentFacade.getPostDao().searchHashtag(hashtag, limit);
+    }
+
+    /**
+     * Function to search the posts which contain a given text, ordered by descending publication date
+     *
+     * @param text        text to be searched
+     * @param limit maximum number of tickets to retrieve
+     * @return list of the posts which contain the given text
+     */
+    public List<Post> searchByText(String text, Integer limit, User current) {
+        return parentFacade.getPostDao().searchByText(text, limit);
+    }
+
+    /**
+     * Function that composes a user's feed; the following posts are included:
+     * - Posts made by followed users
+     * - Posts made by the user
+     * - The 20 most reacted to posts that are in the user's followed hashtags
+     *
+     * @param user        user whose feed will be retrieved
+     * @param limit limit of the posts
+     * @return posts that make up the user's feed
+     */
+    public List<Post> getFeed(User user, Integer limit, User current) throws PiikForbiddenException {
+        if(user.equals(current)){
+            return parentFacade.getPostDao().getFeed(user, limit);
+        } else {
+            throw new PiikForbiddenException("The current user doesn't match the given user");
+        }
     }
 
     /* MESSAGE related methods */
