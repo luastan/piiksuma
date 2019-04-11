@@ -60,6 +60,15 @@ public class Achievement {
         return true;
     }
 
+    public boolean checkNotNull(){
+        if(!checkPrimaryKey()){
+            return false;
+        }
+        if(name==null || name.isEmpty()){
+            return false;
+        }
+        return true;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

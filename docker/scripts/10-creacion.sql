@@ -237,8 +237,19 @@ CREATE TABLE followHashtag
 
 
 /*
-      Reacciones y Repost
+      Archivado, Reacciones y Repost
 */
+
+CREATE TABLE archivePost
+(
+    post         varchar(32),
+    usr          varchar(32),
+    author       varchar(32),
+
+    primary key (author, post, usr),
+    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
+    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+);
 
 CREATE TABLE react
 (

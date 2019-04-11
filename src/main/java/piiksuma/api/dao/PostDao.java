@@ -4,6 +4,7 @@ import piiksuma.*;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -37,21 +38,44 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // Check that the current user is the creator of the post
         if (!post.getPostAuthor().equals(current.getEmail())) {
             return;
         }
+        */
 
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
-    public Post updatePost(Post post) {
+
+    /**
+     * Function to update the text content of the post
+     * @param post post to be updated
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     */
+
+    public void updatePost(Post post) throws  PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        return null;
+        new UpdateMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).update();
+    }
+
+    /**
+     * Function to archive a post privately by an user
+     * @param post post to be archived
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     */
+    public void archivePost(Post post,User user) throws PiikDatabaseException {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
+        new QueryMapper<Post>(super.getConnection()).createQuery("INSERT into archivePost values (?,?,?)").defineClass(Post.class).defineParameters(post.getId(),user.getId(),post.getPostAuthor()).executeUpdate();
     }
 
     /**
@@ -65,11 +89,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // We check if the current user is an admin or the post's author
         if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
         }
-
+        */
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -98,6 +123,22 @@ public class PostDao extends AbstractDao {
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves the posts that a user has archived
+     *
+     * @param user user whose archived posts will be retrieved
+     * @return found posts
+     */
+    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
+
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivePost as a" +
+                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
     }
 
     public Post repost(Post repost, User userRepost, Post post, User userPost) throws PiikDatabaseException {
@@ -356,5 +397,20 @@ public class PostDao extends AbstractDao {
         }
 
         return (result);
+    }
+
+    public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters {
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
+
+        return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
+                .createQuery("SELECT hashtag, COUNT(*) as count " +
+                "FROM ownHashtag " +
+                "GROUP BY hashtag " +
+                "ORDER BY count DESC " +
+                "LIMIT ?").defineParameters(limit).list();
+
     }
 }

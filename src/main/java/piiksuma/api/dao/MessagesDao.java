@@ -35,10 +35,10 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
 
-        if (!currentUser.getType().equals(UserType.administrator) &&
+        /*if (!currentUser.getType().equals(UserType.administrator) &&
                 !currentUser.getEmail().equals(message.getSender())) {
             return;
-        }
+        }*/
 
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
@@ -61,9 +61,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
         }
 
-        if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
+        /*if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
             new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
-        }
+        }*/
     }
 
     /**º
@@ -93,9 +93,13 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
+<<<<<<< HEAD
         if (!ticket.getUser().equals(currentUser)) {
+=======
+        /*if (!ticket.getUser().equals(currentUser)){
+>>>>>>> 4d4de6870c633b9a1c874815521e1a6a0a126b95
             return;
-        }
+        }*/
 
         new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
 
@@ -146,9 +150,13 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikInvalidParameters {
 
+<<<<<<< HEAD
         if (!currentUser.getType().equals(UserType.administrator)) {
+=======
+        /*if (!currentUser.getType().equals(UserType.administrator)){
+>>>>>>> 4d4de6870c633b9a1c874815521e1a6a0a126b95
             return null;
-        }
+        }*/
 
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters("(limit) must be greater than 0");

@@ -17,33 +17,8 @@ import java.util.Collection;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-public class InsertionFacadeTest {
+public class InsertionFacadeTest extends FacadeTest {
 
-    @Mock
-    UserDao mockedUserDao;
-    @Mock
-    PostDao mockedPostDao;
-    @Mock
-    InteractionDao mockedInteractionDao;
-    @Mock
-    MultimediaDao mockedMultimediaDao;
-    @Mock
-    MessagesDao mockedMessagesDao;
-
-
-    private UserDao oldUserDao;
-    private PostDao oldPostDao;
-    private InteractionDao oldInteractionDao;
-    private MultimediaDao oldMultimediaDao;
-    private MessagesDao oldMessagesDao;
-
-    private User normalUser = new User("nombre", "id", "mail@gmail.com", "pass", UserType.user);
-    private User distinctEmailUser = new User("nombre", "id", "masssil@gmail.com", "pass", UserType.user);
-    private User distinctIdUser = new User("nombre", "idsss", "ma@gmail.com", "pass", UserType.user);
-    private User normalUser2 = new User("nombre2", "id2", "mail@gmail.com2", "pass", UserType.user);
-    private User adminUser = new User("nombre", "id", "mail@gmail.com", "pass", UserType.administrator);
-    private User noPassUser = new User("nombre", "id", "mail@gmail.com");
-    private User emptyUser = new User();
 
 
     @Before
@@ -72,7 +47,7 @@ public class InsertionFacadeTest {
 
     @Test
     public void createUser() throws PiikDatabaseException {
-        ApiFacade.getEntrypoint().getInsertionFacade().createUser(normalUser);
+        //ApiFacade.getEntrypoint().getInsertionFacade().createUser(normalUser);
     }
 
     @Test

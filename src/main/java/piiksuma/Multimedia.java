@@ -82,6 +82,17 @@ public class Multimedia {
         return true;
     }
 
+    public boolean checkNotNull(){
+        if(!checkPrimaryKey()){
+            return false;
+        }
+        if(uri==null || uri.isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
