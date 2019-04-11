@@ -4,6 +4,7 @@ import piiksuma.*;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -45,13 +46,13 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
-    public Post updatePost(Post post) {
+    public void updatePost(Post post) throws  PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        return null;
+        new UpdateMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).update();
     }
 
     /**
