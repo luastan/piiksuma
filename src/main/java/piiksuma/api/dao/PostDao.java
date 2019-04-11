@@ -67,13 +67,13 @@ public class PostDao extends AbstractDao {
      * @param post post to be archived
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void archivePost(Post post) throws PiikDatabaseException {
+    public void archivePost(Post post,User user) throws PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
+        new QueryMapper<Post>(super.getConnection()).createQuery("INSERT into archivePost values (?,?,?)").defineClass(Post.class).defineParameters(post.getId(),user.getId(),post.getPostAuthor()).executeUpdate();
     }
 
     /**

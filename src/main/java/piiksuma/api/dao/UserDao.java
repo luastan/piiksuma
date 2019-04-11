@@ -83,7 +83,7 @@ public class UserDao extends AbstractDao {
      */
     public List<User> searchUser(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
@@ -99,7 +99,7 @@ public class UserDao extends AbstractDao {
 
     public List<Achievement> getAchievement(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
@@ -115,7 +115,7 @@ public class UserDao extends AbstractDao {
      */
     public User login(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
@@ -130,7 +130,7 @@ public class UserDao extends AbstractDao {
      */
     public void administratePersonalData(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
@@ -143,14 +143,14 @@ public class UserDao extends AbstractDao {
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
 
-        if (achievement == null || !achievement.checkNotNull()) {
+        if (achievement == null || !achievement.checkPrimaryKey()) {
             throw new PiikDatabaseException("(achievement) Primary key constraints failed");
         }
     }
 
     public Achievement unlockAchievement(Achievement achievement) throws PiikDatabaseException {
 
-        if (achievement == null || !achievement.checkNotNull()) {
+        if (achievement == null || !achievement.checkPrimaryKey()) {
             throw new PiikDatabaseException("(achievement) Primary key constraints failed");
         }
 
@@ -159,11 +159,11 @@ public class UserDao extends AbstractDao {
 
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkNotNull()) {
+        if (followed == null || !followed.checkPrimaryKey()) {
             throw new PiikDatabaseException("(followed) Primary key constraints failed");
         }
 
-        if (follower == null || !follower.checkNotNull()) {
+        if (follower == null || !follower.checkPrimaryKey()) {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
 
@@ -171,11 +171,11 @@ public class UserDao extends AbstractDao {
 
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkNotNull()) {
+        if (followed == null || !followed.checkPrimaryKey()) {
             throw new PiikDatabaseException("(followed) Primary key constraints failed");
         }
 
-        if (follower == null || !follower.checkNotNull()) {
+        if (follower == null || !follower.checkPrimaryKey()) {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
     }
@@ -189,7 +189,7 @@ public class UserDao extends AbstractDao {
     public Statistics getUserStatistics(User user) throws PiikDatabaseException {
         Statistics statistics = new Statistics();
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
