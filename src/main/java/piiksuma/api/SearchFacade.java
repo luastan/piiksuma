@@ -155,6 +155,23 @@ public class SearchFacade {
         }
     }
 
+    /**
+     * Retrieves the posts that a user has archived
+     *
+     * @param user user whose archived posts will be retrieved
+     * @param current current user
+     * @return found posts
+     */
+    public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException {
+
+        // A user's archived posts can be retrieved by an user or by an admin
+        if(!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+            throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried archived posts");
+        }
+
+        return parentFacade.getPostDao().getArchivedPosts(user);
+    }
+
     /* MESSAGE related methods */
 
     /**

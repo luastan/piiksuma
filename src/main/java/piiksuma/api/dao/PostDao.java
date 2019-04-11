@@ -108,6 +108,22 @@ public class PostDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Retrieves the posts that a user has archived
+     *
+     * @param user user whose archived posts will be retrieved
+     * @return found posts
+     */
+    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
+
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivePost as a" +
+                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
+    }
+
     public Post repost(Post repost, User userRepost, Post post, User userPost) throws PiikDatabaseException {
 
         if (repost == null || !repost.checkNotNull()) {
