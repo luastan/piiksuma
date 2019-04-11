@@ -130,6 +130,21 @@ public class Event {
         return true;
     }
 
+    public boolean checkNotNull(){
+        if(!checkPrimaryKey()){
+            return false;
+        }
+
+        if(creator==null || creator.isEmpty()){
+            return false;
+        }
+
+        if(this.name==null || name.isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
