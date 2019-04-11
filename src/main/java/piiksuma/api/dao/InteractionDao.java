@@ -36,10 +36,6 @@ public class InteractionDao extends AbstractDao {
         return null;
     }
 
-    public List<Reaction> getPostReaction(Post post) {
-        return null;
-    }
-
     public HashMap<ReactionType, Integer> getPostReaction(Post post) {
         return null;
     }
