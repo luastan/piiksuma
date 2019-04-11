@@ -14,8 +14,6 @@ public class Message {
     private String text;
     @MapperColumn(pkey = true)
     private String sender;
-    @MapperColumn(pkey = true)
-    private String receiver;
     @MapperColumn
     private String multimedia;
     @MapperColumn(pkey = true, hasDefault = true)
@@ -50,14 +48,6 @@ public class Message {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
     public String getMultimedia() {
         return multimedia;
     }
@@ -88,9 +78,27 @@ public class Message {
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
     public boolean checkPrimaryKey(){
-        if(id==null || sender ==null || receiver==null){
+        if(id==null || sender ==null){
             return false;
         }
+        return true;
+    }
+
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     *
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    public boolean checkNotNull() {
+        // Check that the primary keys are not null
+        if (!checkPrimaryKey()) {
+            return false;
+        }
+
+        if(getText() == null || getText().isEmpty()){
+            return false;
+        }
+
         return true;
     }
 

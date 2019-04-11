@@ -1,11 +1,13 @@
 package piiksuma.api;
 
 import piiksuma.*;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchFacade {
@@ -37,7 +39,8 @@ public class SearchFacade {
      * @param current current user
      * @return users that meet the given information
      */
-    public List<User> searchUser(User user, User current, Integer limit){
+    public List<User> searchUser(User user, User current, Integer limit) throws PiikInvalidParameters,
+            PiikDatabaseException {
         return parentFacade.getUserDao().searchUser(user, limit);
     }
 
@@ -45,9 +48,10 @@ public class SearchFacade {
      * Function to get the user that matches the given specifications
      *
      * @param user user that contains the requirements that will be applied in the search
+     * @param current current user
      * @return user that meets the given information
      */
-    public User getUser(User user, User current){
+    public User getUser(User user, User current) throws PiikDatabaseException {
         return parentFacade.getUserDao().getUser(user);
     }
 
@@ -55,15 +59,16 @@ public class SearchFacade {
      * Function that returns the statistics of the given user
      *
      * @param user user about whose statistics we want to know
+     * @param current current user
      * @return computed statistics
      * @throws SQLException
      */
 
-    public Statistics getUserStatistics(User user, User current) throws SQLException{
+    public Statistics getUserStatistics(User user, User current) throws SQLException, PiikDatabaseException {
         return parentFacade.getUserDao().getUserStatistics(user);
     }
 
-    public List<Achievement> getAchievement(User user, User current){
+    public List<Achievement> getAchievement(User user, User current) throws PiikDatabaseException {
         return parentFacade.getUserDao().getAchievement(user);
     }
 
@@ -99,6 +104,7 @@ public class SearchFacade {
      * Function to get the hashtag that matchs with the given specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
+     * @param current current user
      * @return hashtag that matches the given information
      */
     public Hashtag getHashtag(Hashtag hashtag, User current) {
@@ -110,6 +116,7 @@ public class SearchFacade {
      *
      * @param hashtag hashtag whose properties will be used in the search
      * @param limit maximum number of tickets to retrieve
+     * @param current current user
      * @return hashtags that match the given information
      */
     public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) {
@@ -121,6 +128,7 @@ public class SearchFacade {
      *
      * @param text        text to be searched
      * @param limit maximum number of tickets to retrieve
+     * @param current current user
      * @return list of the posts which contain the given text
      */
     public List<Post> searchByText(String text, Integer limit, User current) {
@@ -135,6 +143,7 @@ public class SearchFacade {
      *
      * @param user        user whose feed will be retrieved
      * @param limit limit of the posts
+     * @param current current user
      * @return posts that make up the user's feed
      */
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikForbiddenException {
@@ -147,9 +156,25 @@ public class SearchFacade {
 
     /* MESSAGE related methods */
 
+    /**
+     * This function allows the admins to retrieve the current unresolved tickets
+     *
+     * @param limit maximum number of tickets to retrieve
+     * @param current current user
+     * @return the list of all the tickets which haven't been closed
+     */
+    public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikForbiddenException {
+        if(!current.getType().equals(UserType.administrator)){
+            throw new PiikForbiddenException("The current user isn't an administrator");
+        }
+
+        return parentFacade.getMessagesDao().getAdminTickets(limit);
+    }
 
 
     /* INTERACTION related methods */
 
-
+    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current){
+        return parentFacade.getInteractionDao().getPostReaction(post);
+    }
 }
