@@ -66,7 +66,8 @@ public class MessagesDao extends AbstractDao {
         }*/
     }
 
-    /**º
+    /**
+     * º
      * This function sends a private message to another user in the app
      *
      * @param message message to be sent
@@ -93,13 +94,8 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
-<<<<<<< HEAD
-        if (!ticket.getUser().equals(currentUser)) {
-=======
-        /*if (!ticket.getUser().equals(currentUser)){
->>>>>>> 4d4de6870c633b9a1c874815521e1a6a0a126b95
-            return;
-        }*/
+        //  if (!ticket.getUser().equals(currentUser)) {
+        //  }
 
         new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
 
@@ -150,13 +146,9 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikInvalidParameters {
 
-<<<<<<< HEAD
-        if (!currentUser.getType().equals(UserType.administrator)) {
-=======
-        /*if (!currentUser.getType().equals(UserType.administrator)){
->>>>>>> 4d4de6870c633b9a1c874815521e1a6a0a126b95
-            return null;
-        }*/
+        // if (!currentUser.getType().equals(UserType.administrator)) {
+
+        // }
 
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters("(limit) must be greater than 0");
