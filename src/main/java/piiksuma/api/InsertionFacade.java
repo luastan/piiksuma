@@ -33,7 +33,16 @@ public class InsertionFacade {
      *                               values on primary keys
      */
     public void createUser(User newUser) throws PiikDatabaseException {
+            parentFacade.getUserDao().createUser(newUser);
+    }
 
+
+    public void createAchievement(Achievement achievement) {
+        parentFacade.getUserDao().createAchievement(achievement);
+    }
+
+    public void followUser(User followed, User follower) {
+        parentFacade.getUserDao().followUser(followed,follower);
     }
 
 
@@ -53,7 +62,17 @@ public class InsertionFacade {
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        parentFacade.getPostDao().createPost(post,currentUser);
+    }
 
+    /**
+     * Inserts a new Hashtag into the database
+     * @param hashtag hashtag to insrt
+     * @param current current user logged
+     * @return the hashtag created
+     */
+    public Hashtag createHashtag(Hashtag hashtag, User current){
+        return parentFacade.getPostDao().createHashtag(hashtag,current);
     }
 
 
@@ -67,7 +86,7 @@ public class InsertionFacade {
      * @param currentUser current user logged
      */
     public void newTicket(Ticket ticket, User currentUser){
-
+        parentFacade.getMessagesDao().newTicket(ticket,currentUser);
     }
 
 
@@ -80,13 +99,22 @@ public class InsertionFacade {
      * @param currentUser current user logged into the app
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser){
+        parentFacade.getMessagesDao().replyTicket(ticket,message,currentUser);
+    }
 
+    /**
+     * This function sends a private message to another user in the app
+     *
+     * @param privateMessage message to be sent
+     * @param currentUser current user logged into the app
+     */
+
+    public void sendMessage(Message privateMessage, User currentUser) {
+        parentFacade.getMessagesDao().sendMessage(privateMessage,currentUser);
     }
 
 
     /* INTERACTION related methods */
-
-
 
 
     /**
@@ -96,8 +124,9 @@ public class InsertionFacade {
      * @param currentUser  current user logged into the app
      */
     public void createNotification(Notification notification, User currentUser){
-
+        parentFacade.getInteractionDao().createNotification(notification,currentUser);
     }
+
 
 
     /**
@@ -108,8 +137,13 @@ public class InsertionFacade {
      * @param currentUser  current user logged into the app
      */
 
-    public void notifyUser(Notification notification, User user, User currentUser){
-
+    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException {
+        parentFacade.getInteractionDao().notifyUser(notification,user,currentUser);
     }
+
+    public Event createEvent(Event event, User current) {
+        return parentFacade.getInteractionDao().createEvent(event,current);
+    }
+
 
 }
