@@ -37,10 +37,6 @@ public class InsertionFacade {
     }
 
 
-
-
-
-
     /* MLTIMEDIA related methods */
 
 
@@ -59,9 +55,6 @@ public class InsertionFacade {
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
     }
-
-
-
 
 
     /* MESSAGE related methods */
