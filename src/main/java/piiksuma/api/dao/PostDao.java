@@ -405,7 +405,8 @@ public class PostDao extends AbstractDao {
             throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
-        return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class).createQuery("SELECT COUNT(*) as count " +
+        return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
+                .createQuery("SELECT hashtag, COUNT(*) as count " +
                 "FROM ownHashtag " +
                 "GROUP BY hashtag " +
                 "ORDER BY count DESC " +
