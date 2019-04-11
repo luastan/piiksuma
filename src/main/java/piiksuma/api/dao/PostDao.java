@@ -4,6 +4,8 @@ import piiksuma.*;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,26 +29,16 @@ public class PostDao extends AbstractDao {
      * Function that adds a post into the database
      *
      * @param post    post to add, with its creator, into the database
-     * @param current current user logged in the app
      *
      */
-    public void createPost(Post post, User current) {
+    public void createPost(Post post) throws PiikDatabaseException {
 
-        if (post == null) {
-            return;
-        }
-
-        if (current == null) {
-            return;
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
         // Check that the current user is the creator of the post
         if (!post.getPostAuthor().equals(current.getEmail())) {
-            return;
-        }
-
-        // Check that the post satisfies the restrictions
-        if (!post.checkNotNull()) {
             return;
         }
 
@@ -61,20 +53,13 @@ public class PostDao extends AbstractDao {
      * Function that removes a post from the database
      *
      * @param post post to remove from the database
-     * @param current current user logged into the app
      */
-    public void removePost(Post post, User current) {
-        if (post == null){
-            return;
+    public void removePost(Post post) throws PiikDatabaseException {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        if (!post.checkPrimaryKey()){
-            return;
-        }
-
-        if(current == null){
-            return;
-        }
         // We check if the current user is an admin or the post's author
         if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
@@ -83,32 +68,88 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
-    public Post getPost(Post post) {
+    public Post getPost(Post post) throws PiikDatabaseException {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
         return null;
     }
 
-    public List<Post> getPost(Hashtag hashtag) {
+    public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
+
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
+
         return null;
     }
 
-    public List<Post> getPost(User user) {
+    public List<Post> getPost(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         return null;
     }
 
-    public Post repost(Post repost, User userRepost, Post post, User userPost, User current) {
+    public Post repost(Post repost, User userRepost, Post post, User userPost) throws PiikDatabaseException {
+
+        if (repost == null || !repost.checkNotNull()) {
+            throw new PiikDatabaseException("(repost) Primary key constraints failed");
+        }
+
+        if (userRepost== null || !userRepost.checkNotNull()) {
+            throw new PiikDatabaseException("(userRepost) Primary key constraints failed");
+        }
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
+        if (userPost == null || !userPost.checkNotNull()) {
+            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
+        }
+
         return null;
     }
 
-    public void removeRepost(Post repost, User current) {
+    public void removeRepost(Post repost) throws PiikDatabaseException {
 
-
+        if (repost == null || !repost.checkNotNull()) {
+            throw new PiikDatabaseException("(repost) Primary key constraints failed");
+        }
     }
 
-    public Post reply(Post reply, User userReply, Post post, User userPost, User current) {
+    public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
+
+        if (reply == null || !reply.checkNotNull()) {
+            throw new PiikDatabaseException("(reply) Primary key constraints failed");
+        }
+
+        if (userReply== null || !userReply.checkNotNull()) {
+            throw new PiikDatabaseException("(userReply) Primary key constraints failed");
+        }
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
+        if (userPost == null || !userPost.checkNotNull()) {
+            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
+        }
+
         return null;
     }
 
-    public Hashtag createHashtag(Hashtag hashtag, User current) {
+    public Hashtag createHashtag(Hashtag hashtag) throws PiikDatabaseException {
+
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
+
         return null;
     }
 
@@ -118,13 +159,10 @@ public class PostDao extends AbstractDao {
      * @param hashtag hashtag whose properties will be used in the search
      * @return hashtag that matches the given information
      */
-    public Hashtag getHashtag(Hashtag hashtag) {
-        if (hashtag == null) {
-            return null;
-        }
+    public Hashtag getHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (!hashtag.checkPrimaryKey()) {
-            return null;
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
         }
 
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
@@ -138,14 +176,15 @@ public class PostDao extends AbstractDao {
      * @param limit maximum number of tickets to retrieve
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) {
-        if (hashtag == null) {
-            return null;
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
         }
 
         if(limit == null || limit <= 0)
         {
-            return new ArrayList<>();
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
@@ -160,15 +199,15 @@ public class PostDao extends AbstractDao {
      * @param limit maximum number of tickets to retrieve
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, Integer limit) {
-        if (text == null) {
-            //TODO lanzar excepciones oportunas o avisar al usuario etc...
-            return null;
+    public List<Post> searchByText(String text, Integer limit) throws PiikInvalidParameters {
+
+        if (text == null || text.isEmpty()) {
+            throw new PiikInvalidParameters("(text) is empty");
         }
 
         if(limit == null || limit <= 0)
         {
-            return new ArrayList<>();
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE UPPER(text) " +
@@ -186,14 +225,14 @@ public class PostDao extends AbstractDao {
      * @param limit limit of the posts
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user, Integer limit) {
+    public List<Post> getFeed(User user, Integer limit) throws PiikDatabaseException {
 
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
 
         // We need to check that the given parameters are OK
-        if (user == null || user.checkPrimaryKey()) {
-            return (null);
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
         // Connect to the database
