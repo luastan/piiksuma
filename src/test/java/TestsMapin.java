@@ -46,7 +46,7 @@ public class TestsMapin {
 
     @Test
     public void removeUser_propperPermission() {
-        userDao.removeUser(owner);
+     //   userDao.removeUser(owner);
 
         assertEquals(0, new QueryMapper<User>(conection).createQuery("SELECT * FROM piiuser WHERE email LIKE ?").defineParameters(owner.getEmail()).list().size());
     }

@@ -107,11 +107,13 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return id.equals(message.id);
+        return id.equals(message.id) &&
+                sender.equals(message.sender) &&
+                date.equals(message.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, sender, date);
     }
 }
