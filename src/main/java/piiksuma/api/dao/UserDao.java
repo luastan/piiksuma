@@ -134,9 +134,9 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        if(!user.equals(currentUser)) {
+        /*if(!user.equals(currentUser)) {
             return;
-        }
+        }*/
 
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }

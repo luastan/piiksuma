@@ -34,10 +34,10 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
 
-        if (!currentUser.getType().equals(UserType.administrator) &&
+        /*if (!currentUser.getType().equals(UserType.administrator) &&
                 !currentUser.getEmail().equals(message.getSender())) {
             return;
-        }
+        }*/
 
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
@@ -60,9 +60,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
         }
 
-        if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
+        /*if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
             new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
-        }
+        }*/
     }
 
     /**
@@ -89,9 +89,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
-        if (!ticket.getUser().equals(currentUser)){
+        /*if (!ticket.getUser().equals(currentUser)){
             return;
-        }
+        }*/
 
         new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
 
@@ -142,9 +142,9 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikInvalidParameters {
 
-        if (!currentUser.getType().equals(UserType.administrator)){
+        /*if (!currentUser.getType().equals(UserType.administrator)){
             return null;
-        }
+        }*/
 
         if(limit == null || limit <= 0)
         {

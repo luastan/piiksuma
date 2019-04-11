@@ -38,10 +38,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // Check that the current user is the creator of the post
         if (!post.getPostAuthor().equals(current.getEmail())) {
             return;
         }
+        */
 
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
@@ -87,11 +89,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
+        /*
         // We check if the current user is an admin or the post's author
         if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
             return;
         }
-
+        */
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -394,5 +397,19 @@ public class PostDao extends AbstractDao {
         }
 
         return (result);
+    }
+
+    public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters {
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
+
+        return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class).createQuery("SELECT COUNT(*) as count " +
+                "FROM ownHashtag " +
+                "GROUP BY hashtag " +
+                "ORDER BY count DESC " +
+                "LIMIT ?").defineParameters(limit).list();
+
     }
 }

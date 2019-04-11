@@ -88,15 +88,15 @@ public class SearchFacade {
 
     /* POST related methods */
 
-    public Post getPost(Post post, User current) {
+    public Post getPost(Post post, User current) throws PiikDatabaseException {
         return parentFacade.getPostDao().getPost(post);
     }
 
-    public List<Post> getPost(Hashtag hashtag, User current) {
+    public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException {
         return parentFacade.getPostDao().getPost(hashtag);
     }
 
-    public List<Post> getPost(User user, User current) {
+    public List<Post> getPost(User user, User current) throws PiikDatabaseException {
         return parentFacade.getPostDao().getPost(user);
     }
 
@@ -107,7 +107,7 @@ public class SearchFacade {
      * @param current current user
      * @return hashtag that matches the given information
      */
-    public Hashtag getHashtag(Hashtag hashtag, User current) {
+    public Hashtag getHashtag(Hashtag hashtag, User current) throws PiikDatabaseException {
         return parentFacade.getPostDao().getHashtag(hashtag);
     }
 
@@ -119,7 +119,7 @@ public class SearchFacade {
      * @param current current user
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) {
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
         return parentFacade.getPostDao().searchHashtag(hashtag, limit);
     }
 
@@ -131,7 +131,7 @@ public class SearchFacade {
      * @param current current user
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, Integer limit, User current) {
+    public List<Post> searchByText(String text, Integer limit, User current) throws PiikInvalidParameters {
         return parentFacade.getPostDao().searchByText(text, limit);
     }
 
@@ -146,7 +146,7 @@ public class SearchFacade {
      * @param current current user
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user, Integer limit, User current) throws PiikForbiddenException {
+    public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException {
 
         if(user.equals(current)){
             return parentFacade.getPostDao().getFeed(user, limit);
@@ -172,6 +172,10 @@ public class SearchFacade {
         return parentFacade.getPostDao().getArchivedPosts(user);
     }
 
+    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikInvalidParameters{
+        return parentFacade.getPostDao().getTrendingTopics(limit);
+    }
+
     /* MESSAGE related methods */
 
     /**
@@ -192,7 +196,7 @@ public class SearchFacade {
 
     /* INTERACTION related methods */
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) {
+    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) throws PiikDatabaseException {
         return parentFacade.getInteractionDao().getPostReaction(post);
     }
 
