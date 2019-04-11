@@ -83,15 +83,15 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
-    public Post getPost(Post post, User current) {
+    public Post getPost(Post post) {
         return null;
     }
 
-    public List<Post> getPost(Hashtag hashtag, User current) {
+    public List<Post> getPost(Hashtag hashtag) {
         return null;
     }
 
-    public List<Post> getPost(User user, User current) {
+    public List<Post> getPost(User user) {
         return null;
     }
 
