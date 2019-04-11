@@ -49,8 +49,8 @@ public class PostDao extends AbstractDao {
 
     /**
      * Function to update the text content of the post
-     * @param post
-     * @throws PiikDatabaseException
+     * @param post post to be updated
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
 
     public void updatePost(Post post) throws  PiikDatabaseException {
@@ -60,6 +60,20 @@ public class PostDao extends AbstractDao {
         }
 
         new UpdateMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).update();
+    }
+
+    /**
+     * Function to archive a post privately by an user
+     * @param post post to be archived
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     */
+    public void archivePost(Post post) throws PiikDatabaseException {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
+        new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
     /**

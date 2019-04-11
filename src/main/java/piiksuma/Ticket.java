@@ -130,7 +130,7 @@ public class Ticket {
         if(getSection() == null || getSection().isEmpty()){
             return false;
         }
-        
+
         if(getUser() == null || getUser().isEmpty()){
             return false;
         }
