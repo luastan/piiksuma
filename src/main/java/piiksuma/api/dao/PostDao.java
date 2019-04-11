@@ -45,7 +45,12 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
     }
 
-    public Post updatePost(Post post, User current) {
+    public Post updatePost(Post post) {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
         return null;
     }
 
