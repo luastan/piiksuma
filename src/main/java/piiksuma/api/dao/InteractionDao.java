@@ -87,40 +87,19 @@ public class InteractionDao extends AbstractDao {
      */
     public void notifyUser(Notification notification, User user) throws PiikDatabaseException {
 
-        Connection con;
-        PreparedStatement stmtNotification;
 
         // We check that the given objects are not null and that the primary keys are correct
         if (notification == null || !notification.checkNotNull()) {
             throw new PiikDatabaseException("(notification) Primary key constraints failed");
         }
 
-        if (user == null  || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
+        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO haveNotification (notification,usr) " +
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getEmail()).executeUpdate();
 
-        con = super.getConnection();
-
-        try {
-            // We insert the data on haveNotification to notify the user
-            stmtNotification = con.prepareStatement("INSERT INTO haveNotification (notification,usr) VALUES (?,?)");
-            // Set the parameters
-            stmtNotification.setString(1, notification.getId());
-            stmtNotification.setString(2, user.getEmail());
-
-            try {
-                stmtNotification.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            } finally {
-                // We need to close the statement before exiting the function
-                stmtNotification.close();
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     /**
@@ -131,12 +110,12 @@ public class InteractionDao extends AbstractDao {
      */
     public List<Notification> getNotifications(User user) throws PiikDatabaseException {
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
                 "haveNotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
-                        user.getEmail()).list();
+                user.getEmail()).list();
     }
 }
