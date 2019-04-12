@@ -77,7 +77,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function to get the users that match with the specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
+     * @param user  user that contains the requirements that will be applied in the search
      * @param limit maximum of users to return
      * @return users that meet the given information
      */
@@ -87,8 +87,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        if(limit == null || limit <= 0)
-        {
+        if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
@@ -167,8 +166,18 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
 
+        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO followuser(followed,follower) " +
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
+
     }
 
+    /**
+     * Function to unfollow a user
+     *
+     * @param followed User to be unfollowed
+     * @param follower User that wants to unfollow the followed user
+     * @throws PiikDatabaseException
+     */
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
@@ -178,6 +187,48 @@ public class UserDao extends AbstractDao {
         if (follower == null || !follower.checkPrimaryKey()) {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
+
+        new QueryMapper<Object>(super.getConnection()).createQuery("DELETE FROM followUser " +
+                "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
+    }
+
+    /**
+     * Function to block a user
+     *
+     * @param blockedUser User to be blocked
+     * @param user        User that wants to block the other user
+     * @throws PiikDatabaseException
+     */
+    public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
+
+        if (blockedUser == null || !blockedUser.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(blockedUser) Primary key constraints failed");
+        }
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO blockUser(usr,blocked) " +
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), blockedUser.getEmail()).executeUpdate();
+    }
+
+    /**
+     * Function to silence a user
+     *
+     * @param silencedUser User to be silenced
+     * @param user         User that wants to silence the other user
+     * @throws PiikDatabaseException
+     */
+    public void silenceUser(User silencedUser, User user) throws PiikDatabaseException {
+        if (silencedUser == null || !silencedUser.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(silencedUser) Primary key constraints failed");
+        }
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO silenceUser(usr,silenced) " +
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), silencedUser.getEmail()).executeUpdate();
     }
 
     /**
