@@ -5,17 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runners.Parameterized;
+import piiksuma.Multimedia;
 import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.util.Collection;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DeletionFacadeTest extends FacadeTest {
 
@@ -101,6 +102,7 @@ public class DeletionFacadeTest extends FacadeTest {
     public void removeUserInvalidAtribs() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(emptyUser, adminUser);
+        verify(mockedUserDao).removeUser(emptyUser);
     }
 
 
@@ -108,6 +110,7 @@ public class DeletionFacadeTest extends FacadeTest {
     public void removeUserInvalidAtribsDeleter() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(normalUser, emptyUser);
+        verify(mockedUserDao).removeUser(emptyUser);
     }
 
 
@@ -115,6 +118,7 @@ public class DeletionFacadeTest extends FacadeTest {
     public void removeUserInvalidAtribsDeleterSameInstance() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(emptyUser);
         deletionFacade.removeUser(emptyUser, emptyUser);
+        verify(mockedUserDao).removeUser(emptyUser);
     }
 
 
@@ -226,18 +230,21 @@ public class DeletionFacadeTest extends FacadeTest {
     public void unfollowUserEmptyFollowed() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, normalUser);
         deletionFacade.unfollowUser(emptyUser, normalUser, normalUser);
+        verify(mockedUserDao).unfollowUser(emptyUser, normalUser);
     }
 
     @Test(expected = PiikDatabaseException.class)
     public void unfollowUserEmptyFollower() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(normalUser, emptyUser);
         deletionFacade.unfollowUser(normalUser, emptyUser, normalUser);
+        verify(mockedUserDao).unfollowUser(normalUser, emptyUser);
     }
 
     @Test(expected = PiikDatabaseException.class)
     public void unfollowUserEmptyBoth() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, emptyUser);
         deletionFacade.unfollowUser(emptyUser, emptyUser, normalUser);
+        verify(mockedUserDao).unfollowUser(emptyUser, emptyUser);
     }
 
 
@@ -245,18 +252,32 @@ public class DeletionFacadeTest extends FacadeTest {
     public void unfollowUserEmptyFollowedAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, normalUser);
         deletionFacade.unfollowUser(emptyUser, normalUser, adminUser);
+        verify(mockedUserDao).unfollowUser(emptyUser, normalUser);
     }
 
     @Test(expected = PiikDatabaseException.class)
     public void unfollowUserEmptyFollowerAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(normalUser, emptyUser);
         deletionFacade.unfollowUser(normalUser, emptyUser, adminUser);
+        verify(mockedUserDao).unfollowUser(normalUser, emptyUser);
     }
 
     @Test(expected = PiikDatabaseException.class)
     public void unfollowUserEmptyBothAdmin() throws PiikInvalidParameters, PiikDatabaseException {
         doThrow(PiikDatabaseException.class).when(mockedUserDao).unfollowUser(emptyUser, emptyUser);
         deletionFacade.unfollowUser(emptyUser, emptyUser, adminUser);
+        verify(mockedUserDao).unfollowUser(emptyUser, emptyUser);
+    }
+
+    @Test(expected = PiikForbiddenException.class)
+    public void unfollowUserReversed() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.unfollowUser(normalUser, normalUser2, normalUser);
+    }
+
+
+    @Test(expected = PiikForbiddenException.class)
+    public void unfollowUserAdminAdminUnvalid() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.unfollowUser(normalUser, adminUser2, adminUser);
     }
 
 
@@ -264,8 +285,41 @@ public class DeletionFacadeTest extends FacadeTest {
 
     @Test
     public void unfollowUser() throws PiikInvalidParameters, PiikDatabaseException {
-        deletionFacade.unfollowUser(normalUser, normalUser2, normalUser);
+        deletionFacade.unfollowUser(normalUser, normalUser2, normalUser2);
     }
+
+    @Test
+    public void unfollowUserAdmin() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.unfollowUser(normalUser, normalUser2, adminUser);
+    }
+
+
+    @Test
+    public void unfollowUserAdminAdminValid() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.unfollowUser(normalUser, adminUser, adminUser);
+    }
+
+
+    /* Multimedia */
+
+    @Test(expected = PiikInvalidParameters.class)
+    public void removeMultimediaNullNull() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.removeMultimedia(null, null);
+    }
+
+    @Test(expected = PiikInvalidParameters.class)
+    public void removeMultimediaNullValid() throws PiikInvalidParameters, PiikDatabaseException {
+        deletionFacade.removeMultimedia(null, adminUser);
+    }
+
+    @Test(expected = PiikDatabaseException.class)
+    public void removeMultimediaEmptyValid() throws PiikInvalidParameters, PiikDatabaseException {
+        Multimedia multimedia = new Multimedia();
+        doThrow(PiikDatabaseException.class).when(mockedMultimediaDao).removeMultimedia(multimedia);
+        deletionFacade.removeMultimedia(multimedia, adminUser);
+        verify(mockedMultimediaDao).removeMultimedia(multimedia);
+    }
+
 
     @Test
     public void removeMultimedia() {

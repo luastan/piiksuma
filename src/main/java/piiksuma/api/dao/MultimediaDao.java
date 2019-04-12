@@ -3,6 +3,7 @@ package piiksuma.api.dao;
 import piiksuma.Multimedia;
 import piiksuma.Post;
 import piiksuma.User;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MultimediaDao extends AbstractDao{
         return null;
     }
 
-    public void removeMultimedia(Multimedia multimedia){
+    public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
 
     }
 

@@ -284,10 +284,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", pass='" + pass + '\'' +
-                ", gender='" + gender + '\'' +
+                ", type='" + this.type + '\'' +
                 '}';
     }
 

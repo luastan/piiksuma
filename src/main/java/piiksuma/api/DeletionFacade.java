@@ -41,6 +41,7 @@ public class DeletionFacade {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().removeUser(user);
+        //System.out.println("lol");
     }
 
     /**

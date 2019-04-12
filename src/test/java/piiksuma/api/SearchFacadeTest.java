@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class InsertionFacadeTest extends FacadeTest {
+public class SearchFacadeTest extends FacadeTest {
 
     @Before
     public void setUp() throws Exception {
@@ -32,6 +32,7 @@ public class InsertionFacadeTest extends FacadeTest {
         ApiFacade.getEntrypoint().setMessagesDao(oldMessagesDao);
     }
 
+
     @Test
     public void getConnection() {
     }
@@ -41,54 +42,78 @@ public class InsertionFacadeTest extends FacadeTest {
     }
 
     @Test
-    public void createUser() {
+    public void searchUser() {
     }
 
     @Test
-    public void createAchievement() {
+    public void getUser() {
     }
 
     @Test
-    public void followUser() {
+    public void getUserStatistics() {
     }
 
     @Test
-    public void addMultimedia() {
+    public void getAchievement() {
     }
 
     @Test
-    public void createPost() {
+    public void existsMultimedia() {
     }
 
     @Test
-    public void createHashtag() {
+    public void numPostMultimedia() {
     }
 
     @Test
-    public void archivePost() {
+    public void postWithMultimedia() {
     }
 
     @Test
-    public void newTicket() {
+    public void getPost() {
     }
 
     @Test
-    public void replyTicket() {
+    public void getPost1() {
     }
 
     @Test
-    public void sendMessage() {
+    public void getPost2() {
     }
 
     @Test
-    public void createNotification() {
+    public void getHashtag() {
     }
 
     @Test
-    public void notifyUser() {
+    public void searchHashtag() {
     }
 
     @Test
-    public void createEvent() {
+    public void searchByText() {
+    }
+
+    @Test
+    public void getFeed() {
+    }
+
+    @Test
+    public void getArchivedPosts() {
+    }
+
+    @Test
+    public void getTrendingTopics() {
+    }
+
+    @Test
+    public void getAdminTickets() {
+    }
+
+    @Test
+    public void getPostReaction() {
+    }
+
+    @Test
+    public void getNotifications() {
     }
 }
