@@ -66,7 +66,7 @@ public class SearchFacadeUserTest extends FacadeTest {
     }
 
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Expected: {3} - In: {0}, {1}, {2}")
     public static Collection<Object[]> data() {
         ArrayList<Object[]> tests = new ArrayList<>();
         for (Object user : new Object[]{normalUser, adminUser}) {
