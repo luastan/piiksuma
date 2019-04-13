@@ -313,4 +313,29 @@ public class UserDao extends AbstractDao {
 
         return statistics;
     }
+
+    /**
+     * Retrieves userType from a desired user
+     *
+     * @param user User whose type wants to be known
+     * @return UserType
+     */
+    public UserType getUserType(User user) throws PiikDatabaseException {
+        return getUserType(user.getEmail());
+    }
+
+    /**
+     * Retrieves userType from a desired user
+     *
+     * @param email Email from the desired user
+     * @return UserType
+     * @throws PiikDatabaseException When null values are passed as parameters
+     */
+    public UserType getUserType(String email) throws PiikDatabaseException {
+        if (email == null) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        // TODO: Query the database and return the user type
+        return null;
+    }
 }

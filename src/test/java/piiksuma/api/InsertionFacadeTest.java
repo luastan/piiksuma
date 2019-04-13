@@ -11,6 +11,7 @@ import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikForbiddenException;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class InsertionFacadeTest extends FacadeTest {
 
@@ -47,11 +48,13 @@ public class InsertionFacadeTest extends FacadeTest {
 
     @Test(expected = PiikForbiddenException.class)
     public void createAchievementNormalUser() throws PiikException {
+        when(mockedUserDao.getUserType(normalUser.getEmail())).thenReturn(normalUser.getType());
         insertionFacade.createAchievement(new Achievement(), normalUser);
     }
 
     @Test()
     public void createAchievementAdminUser() throws PiikException {
+        when(mockedUserDao.getUserType(adminUser.getEmail())).thenReturn(adminUser.getType());
         insertionFacade.createAchievement(new Achievement(), adminUser);
     }
 

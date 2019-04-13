@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(value = Parameterized.class)
 public class InsertionFacadeTestParameterized extends FacadeTest {
@@ -37,7 +38,7 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
         this.expectedException = expectedException;
     }
 
-    @Parameters(name = "In: {0}, {1}, {2} - Expected: {3}")
+    @Parameters(name = "Expected: {3} - In: {0}, {1}, {2}")
     public static Collection<Object[]> data() {
         ArrayList<Object[]> tests = new ArrayList<>();
 
@@ -90,6 +91,13 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
         ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
         ApiFacade.getEntrypoint().setMultimediaDao(mockedMultimediaDao);
         ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
+        if (current != null && unaltered != null && altered != null) {
+            if (current.getEmail() != null && unaltered.getEmail() != null && altered.getEmail() != null) {
+                when(mockedUserDao.getUserType(current.getEmail())).thenReturn(current.getType());
+                when(mockedUserDao.getUserType(unaltered.getEmail())).thenReturn(unaltered.getType());
+                when(mockedUserDao.getUserType(altered.getEmail())).thenReturn(altered.getType());
+            }
+        }
     }
 
     @After

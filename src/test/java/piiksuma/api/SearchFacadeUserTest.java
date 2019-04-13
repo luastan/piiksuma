@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SearchFacadeTest extends FacadeTest {
+public class SearchFacadeUserTest extends FacadeTest {
 
     @Before
     public void setUp() throws Exception {

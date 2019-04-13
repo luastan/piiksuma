@@ -34,7 +34,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         this.expectedException = expectedException;
     }
 
-    @Parameters(name = "In: {0}, {1}, {2} - Expected: {3}")
+    @Parameters(name = "Expected: {3} - In: {0}, {1}, {2}")
     public static Collection<Object[]> data() {
 
         ArrayList<Object[]> testParams = new ArrayList<>();
@@ -113,6 +113,13 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
     @Before
     public void setUp() throws Exception {
         doNothing().when(mockedUserDao).removeUser(altered);
+        if (current != null && unaltered != null && altered != null) {
+            if (current.getEmail() != null && unaltered.getEmail() != null && altered.getEmail() != null) {
+                when(mockedUserDao.getUserType(current.getEmail())).thenReturn(current.getType());
+                when(mockedUserDao.getUserType(unaltered.getEmail())).thenReturn(unaltered.getType());
+                when(mockedUserDao.getUserType(altered.getEmail())).thenReturn(altered.getType());
+            }
+        }
     }
 
     /* USER */
@@ -141,6 +148,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
             }
             try {
                 ApiFacade.getEntrypoint().setUserDao(mockedUserDao);
+
                 doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(altered);
                 deletionFacade.removeUser(altered, current);
             } catch (PiikDatabaseException db) {
