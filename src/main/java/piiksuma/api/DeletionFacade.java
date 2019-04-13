@@ -40,7 +40,7 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkPrimaryKey()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.getType().equals(UserType.administrator) && !currentUser.getEmail().equals(user.getEmail())) {
+        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(user.getEmail())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().removeUser(user);
