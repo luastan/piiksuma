@@ -156,6 +156,13 @@ public class UserDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Function to follow a user
+     *
+     * @param followed User to be followed
+     * @param follower User who follows
+     * @throws PiikDatabaseException
+     */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
@@ -175,7 +182,7 @@ public class UserDao extends AbstractDao {
      * Function to unfollow a user
      *
      * @param followed User to be unfollowed
-     * @param follower User that wants to unfollow the followed user
+     * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
@@ -196,7 +203,7 @@ public class UserDao extends AbstractDao {
      * Function to block a user
      *
      * @param blockedUser User to be blocked
-     * @param user        User that wants to block the other user
+     * @param user        User who wants to block the other user
      * @throws PiikDatabaseException
      */
     public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
@@ -216,7 +223,7 @@ public class UserDao extends AbstractDao {
      * Function to silence a user
      *
      * @param silencedUser User to be silenced
-     * @param user         User that wants to silence the other user
+     * @param user         User who wants to silence the other user
      * @throws PiikDatabaseException
      */
     public void silenceUser(User silencedUser, User user) throws PiikDatabaseException {

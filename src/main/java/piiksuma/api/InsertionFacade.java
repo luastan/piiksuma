@@ -41,25 +41,32 @@ public class InsertionFacade {
     }
 
 
-    public void createAchievement(Achievement achievement,User currentUser) throws PiikDatabaseException {
+    public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
         parentFacade.getUserDao().createAchievement(achievement);
     }
 
-    public void followUser(User followed, User follower,User currentUser) throws PiikDatabaseException {
+    /**
+     * Function to follow a user
+     *
+     * @param followed User to be followed
+     * @param follower User who follows
+     * @throws PiikDatabaseException
+     */
+    public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull() || !follower.equals(currentUser)) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-        parentFacade.getUserDao().followUser(followed,follower);
+        parentFacade.getUserDao().followUser(followed, follower);
     }
 
 
     /* MLTIMEDIA related methods */
 
-    public Multimedia addMultimedia(Multimedia multimedia){
-        if (multimedia == null || multimedia.checkNotNull()){
+    public Multimedia addMultimedia(Multimedia multimedia) {
+        if (multimedia == null || multimedia.checkNotNull()) {
             return null;
         }
         return parentFacade.getMultimediaDao().addMultimedia(multimedia);
@@ -77,7 +84,7 @@ public class InsertionFacade {
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
-    public void createPost(Post post, User currentUser) throws PiikDatabaseException{
+    public void createPost(Post post, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -86,11 +93,12 @@ public class InsertionFacade {
 
     /**
      * Inserts a new Hashtag into the database
-     * @param hashtag hashtag to insrt
+     *
+     * @param hashtag     hashtag to insrt
      * @param currentUser current user logged
      * @return the hashtag created
      */
-    public Hashtag createHashtag(Hashtag hashtag, User currentUser) throws  PiikDatabaseException{
+    public Hashtag createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -99,14 +107,15 @@ public class InsertionFacade {
 
     /**
      * Function to archive a post privately by an user
+     *
      * @param post post to be archived
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void archivePost(Post post,User user,User currentUser) throws PiikDatabaseException{
-        if (currentUser == null || !currentUser.checkNotNull() || !user.equals(currentUser) ) {
+    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException {
+        if (currentUser == null || !currentUser.checkNotNull() || !user.equals(currentUser)) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-        parentFacade.getPostDao().archivePost(post,user);
+        parentFacade.getPostDao().archivePost(post, user);
     }
 
 
@@ -135,21 +144,21 @@ public class InsertionFacade {
      * @param message     reply to be added to the ticket
      * @param currentUser current user logged into the app
      */
-    public void replyTicket(Ticket ticket, Message message, User currentUser) throws  PiikDatabaseException{
+    public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-        parentFacade.getMessagesDao().replyTicket(ticket,message);
+        parentFacade.getMessagesDao().replyTicket(ticket, message);
     }
 
     /**
      * This function sends a private message to another user in the app
      *
      * @param privateMessage message to be sent
-     * @param currentUser current user logged into the app
+     * @param currentUser    current user logged into the app
      */
 
-    public void sendMessage(Message privateMessage, User currentUser) throws  PiikDatabaseException{
+    public void sendMessage(Message privateMessage, User currentUser) throws PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -171,12 +180,11 @@ public class InsertionFacade {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        if (!currentUser.getType().equals(UserType.administrator)){
+        if (!currentUser.getType().equals(UserType.administrator)) {
             throw new PiikForbiddenException("The user is not an administrator");
         }
         parentFacade.getInteractionDao().createNotification(notification);
     }
-
 
 
     /**
@@ -191,7 +199,7 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-        parentFacade.getInteractionDao().notifyUser(notification,user);
+        parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
     public Event createEvent(Event event, User currentUser) throws PiikDatabaseException {
