@@ -85,17 +85,6 @@ public class PostDao extends AbstractDao {
      * @param post post to remove from the database
      */
     public void removePost(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        /*
-        // We check if the current user is an admin or the post's author
-        if(!current.getType().equals(UserType.administrator) && !post.getFatherPost().equals(current.getEmail())){
-            return;
-        }
-        */
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -261,6 +250,20 @@ public class PostDao extends AbstractDao {
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
                 "WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
                 limit).list();
+    }
+
+    /**
+     * Lets a user follow a hashtag
+     *
+     * @param hashtag     hashtag to follow
+     * @param currentUser user in the application
+     */
+    public void followHastag(Hashtag hashtag, User currentUser) {
+        new QueryMapper<Hashtag>(super.getConnection()).
+                createQuery("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
+                        "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
+                defineClass(Hashtag.class).
+                defineParameters(hashtag.getName(), currentUser.getEmail(), hashtag.getName()).executeUpdate();
     }
 
     /**

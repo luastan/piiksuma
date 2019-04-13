@@ -3,7 +3,6 @@ package piiksuma.api.dao;
 import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.User;
-import piiksuma.UserType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -12,7 +11,6 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesDao extends AbstractDao {
@@ -30,15 +28,10 @@ public class MessagesDao extends AbstractDao {
      * @param message message to delete
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
-
+        // Check new message
         if (message == null || !message.checkNotNull()) {
-            throw new PiikDatabaseException("(message) Primary key constraints failed");
+            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
         }
-
-        /*if (!currentUser.getType().equals(UserType.administrator) &&
-                !currentUser.getEmail().equals(message.getSender())) {
-            return;
-        }*/
 
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
@@ -53,17 +46,19 @@ public class MessagesDao extends AbstractDao {
      */
     public void modifyMessage(Message oldMessage, Message newMessage) throws PiikDatabaseException {
 
-        if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikDatabaseException("(oldMessage) Primary key constraints failed");
-        }
+        new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
 
-        if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
-        }
+    }
 
-        /*if (currentUser.getEmail().compareTo(oldMessage.getSender()) == 0) {
-            new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
-        }*/
+    /**
+     * Allows the user to read his messages
+     *
+     * @param currentUser user in the apliccation
+     * @return list of messages for the user
+     */
+    public List<Message> readMessages(User currentUser) {
+        return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE reciever = ? ").
+                defineClass(Message.class).defineParameters(currentUser.getEmail()).list();
     }
 
     /**

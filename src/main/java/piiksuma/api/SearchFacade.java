@@ -34,8 +34,8 @@ public class SearchFacade {
     /**
      * Function to gt the users that match with the specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
-     * @param limit maximum of users to return
+     * @param user    user that contains the requirements that will be applied in the search
+     * @param limit   maximum of users to return
      * @param current current user
      * @return users that meet the given information
      */
@@ -47,7 +47,7 @@ public class SearchFacade {
     /**
      * Function to get the user that matches the given specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
+     * @param user    user that contains the requirements that will be applied in the search
      * @param current current user
      * @return user that meets the given information
      */
@@ -58,7 +58,7 @@ public class SearchFacade {
     /**
      * Function that returns the statistics of the given user
      *
-     * @param user user about whose statistics we want to know
+     * @param user    user about whose statistics we want to know
      * @param current current user
      * @return computed statistics
      * @throws SQLException
@@ -74,15 +74,15 @@ public class SearchFacade {
 
     /* MULTIMEDIA related methods */
 
-    public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters{
+    public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
         return parentFacade.getMultimediaDao().existsMultimedia(multimedia);
     }
 
-    public Integer numPostMultimedia(Multimedia multimedia, User current)  throws PiikInvalidParameters{
+    public Integer numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
         return parentFacade.getMultimediaDao().numPostMultimedia(multimedia);
     }
 
-    public List<Post> postWithMultimedia(Multimedia multimedia, User current)  throws PiikInvalidParameters{
+    public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
         return parentFacade.getMultimediaDao().postWithMultimedia(multimedia);
     }
 
@@ -96,7 +96,7 @@ public class SearchFacade {
         return parentFacade.getPostDao().getPost(hashtag);
     }
 
-    public List<Post> getPost(User user, User current) throws PiikDatabaseException , PiikInvalidParameters {
+    public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         return parentFacade.getPostDao().getPost(user);
     }
 
@@ -115,7 +115,7 @@ public class SearchFacade {
      * Function to get the hashtags that match with the specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
-     * @param limit maximum number of tickets to retrieve
+     * @param limit   maximum number of tickets to retrieve
      * @param current current user
      * @return hashtags that match the given information
      */
@@ -126,8 +126,8 @@ public class SearchFacade {
     /**
      * Function to search the posts which contain a given text, ordered by descending publication date
      *
-     * @param text        text to be searched
-     * @param limit maximum number of tickets to retrieve
+     * @param text    text to be searched
+     * @param limit   maximum number of tickets to retrieve
      * @param current current user
      * @return list of the posts which contain the given text
      */
@@ -141,14 +141,14 @@ public class SearchFacade {
      * - Posts made by the user
      * - The 20 most reacted to posts that are in the user's followed hashtags
      *
-     * @param user        user whose feed will be retrieved
-     * @param limit limit of the posts
+     * @param user    user whose feed will be retrieved
+     * @param limit   limit of the posts
      * @param current current user
      * @return posts that make up the user's feed
      */
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if(user.equals(current)){
+        if (user.equals(current)) {
             return parentFacade.getPostDao().getFeed(user, limit);
         } else {
             throw new PiikForbiddenException("The current user doesn't match the given user");
@@ -158,21 +158,21 @@ public class SearchFacade {
     /**
      * Retrieves the posts that a user has archived
      *
-     * @param user user whose archived posts will be retrieved
+     * @param user    user whose archived posts will be retrieved
      * @param current current user
      * @return found posts
      */
     public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
         // A user's archived posts can be retrieved by an user or by an admin
-        if(!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+        if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried archived posts");
         }
 
         return parentFacade.getPostDao().getArchivedPosts(user);
     }
 
-    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikInvalidParameters, PiikInvalidParameters{
+    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikInvalidParameters, PiikInvalidParameters {
         return parentFacade.getPostDao().getTrendingTopics(limit);
     }
 
@@ -181,16 +181,31 @@ public class SearchFacade {
     /**
      * This function allows the admins to retrieve the current unresolved tickets
      *
-     * @param limit maximum number of tickets to retrieve
+     * @param limit   maximum number of tickets to retrieve
      * @param current current user
      * @return the list of all the tickets which haven't been closed
      */
     public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikForbiddenException {
-        if(!current.getType().equals(UserType.administrator)){
+        if (!current.getType().equals(UserType.administrator)) {
             throw new PiikForbiddenException("The current user isn't an administrator");
         }
 
         return parentFacade.getMessagesDao().getAdminTickets(limit);
+    }
+
+    /**
+     * Allows the user to read his messages
+     *
+     * @param currentUser current user in the aplication
+     * @return Messages for the user
+     * @throws PiikDatabaseException Thrown if null is encountered in currentUser
+     */
+    public List<Message> readMessages(User currentUser) throws PiikDatabaseException {
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+        }
+        return parentFacade.getMessagesDao().readMessages(currentUser);
     }
 
 
@@ -203,14 +218,14 @@ public class SearchFacade {
     /**
      * Retrieves the notifications that a user has received
      *
-     * @param user user whose notifications will be retrieved
+     * @param user    user whose notifications will be retrieved
      * @param current current user
      * @return found notifications
      */
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
         // A user's notifications can be retrieved by an user or by an admin
-        if(!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+        if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
         }
 

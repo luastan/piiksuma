@@ -137,11 +137,16 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void deleteMessage(Message message, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkPrimaryKey()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
         }
+        if (message == null || !message.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'message' can not be null");
+        }
+        // Permision check
         if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(message.getSender())) {
-            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+            throw new PiikForbiddenException("You do not have the required permissions");
         }
         parentFacade.getMessagesDao().deleteMessage(message);
     }

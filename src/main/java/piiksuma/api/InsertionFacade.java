@@ -106,6 +106,25 @@ public class InsertionFacade {
     }
 
     /**
+     * Lets a user follow a hashtag
+     *
+     * @param hashtag     hashtag to follow
+     * @param currentUser user in the apliccation
+     * @throws PiikDatabaseException Thrown if null is encountered in currentUser, hashtag
+     */
+    public void followHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException {
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+        }
+        // Null check
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'hashtag' can not be null");
+        }
+        parentFacade.getPostDao().followHastag(hashtag, currentUser);
+    }
+
+    /**
      * Function to archive a post privately by an user
      *
      * @param post post to be archived
@@ -164,6 +183,33 @@ public class InsertionFacade {
         }
         parentFacade.getMessagesDao().sendMessage(privateMessage);
     }
+
+    /**
+     * This function modifies a message already sent to another user
+     *
+     * @param oldMessage  old message
+     * @param newMessage  new message
+     * @param currentUser logged User
+     * @throws PiikDatabaseException Thrown if null is encountered in currentUser, oldMessage, newMessage
+     */
+    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException {
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+        }
+        if (oldMessage == null || !oldMessage.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'oldMessage' can not be null");
+        }
+        if (newMessage == null || !newMessage.checkNotNull()) {
+            throw new PiikDatabaseException("Parameter 'newMessage' can not be null");
+        }
+        // Permision check
+        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(oldMessage.getSender())) {
+            throw new PiikForbiddenException("You do not have the required permissions");
+        }
+        parentFacade.getMessagesDao().modifyMessage(oldMessage, newMessage);
+    }
+
 
 
     /* INTERACTION related methods */
