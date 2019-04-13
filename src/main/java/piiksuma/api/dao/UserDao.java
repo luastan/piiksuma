@@ -333,9 +333,15 @@ public class UserDao extends AbstractDao {
      */
     public UserType getUserType(String email) throws PiikDatabaseException {
         if (email == null) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException("(user) email can't be null");
         }
-        // TODO: Query the database and return the user type
-        return null;
+        if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT email FROM piiuser where email=?")
+                .defineParameters(email).defineClass(User.class).list(false).size() > 0)) {
+            throw new PiikDatabaseException("(user) User does not exist");
+        }
+
+        return new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM administrator where id=?")
+                .defineParameters(email).defineClass(User.class).list(false).size() > 0 ?
+                UserType.administrator : UserType.user;
     }
 }

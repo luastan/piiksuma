@@ -44,6 +44,8 @@ public class User {
     private String loveStatus;
     @MapperColumn
     private String job;
+    @MapperColumn(columna = "")
+    private String stringType;
     private UserType type;
 
     public User(String name, String id, String email) {
