@@ -55,7 +55,7 @@ public class InsertionFacade {
      * @param follower User who follows
      * @throws PiikDatabaseException
      */
-    public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException {
+    public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull() || !follower.equals(currentUser)) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -84,7 +84,7 @@ public class InsertionFacade {
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
-    public void createPost(Post post, User currentUser) throws PiikDatabaseException {
+    public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -111,7 +111,7 @@ public class InsertionFacade {
      * @param post post to be archived
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException {
+    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull() || !user.equals(currentUser)) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -128,7 +128,7 @@ public class InsertionFacade {
      * @param ticket      ticket to insert
      * @param currentUser current user logged
      */
-    public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException {
+    public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -144,7 +144,7 @@ public class InsertionFacade {
      * @param message     reply to be added to the ticket
      * @param currentUser current user logged into the app
      */
-    public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException {
+    public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -158,7 +158,7 @@ public class InsertionFacade {
      * @param currentUser    current user logged into the app
      */
 
-    public void sendMessage(Message privateMessage, User currentUser) throws PiikDatabaseException {
+    public void sendMessage(Message privateMessage, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -175,7 +175,7 @@ public class InsertionFacade {
      * @param notification notification given to the user
      * @param currentUser  current user logged into the app
      */
-    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikForbiddenException {
+    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
@@ -195,7 +195,7 @@ public class InsertionFacade {
      * @param currentUser  current user logged into the app
      */
 
-    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException {
+    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }

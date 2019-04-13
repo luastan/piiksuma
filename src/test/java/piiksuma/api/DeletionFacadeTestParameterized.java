@@ -17,7 +17,7 @@ import java.util.Collection;
 import static org.mockito.Mockito.*;
 
 @RunWith(value = Parameterized.class)
-public class DeletionFacadeTestParametrized extends FacadeTest {
+public class DeletionFacadeTestParameterized extends FacadeTest {
 
 
     private User altered;
@@ -27,7 +27,7 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
 
     private static DeletionFacade deletionFacade = ApiFacade.getEntrypoint().getDeletionFacade();
 
-    public DeletionFacadeTestParametrized(User altered, User unaltered, User current, Object expectedException) {
+    public DeletionFacadeTestParameterized(User altered, User unaltered, User current, Object expectedException) {
         this.altered = altered;
         this.unaltered = unaltered;
         this.current = current;
@@ -69,8 +69,8 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
         Object[][] forbidden = {
                 {adminUser, normalUser, adminUser2, PiikForbiddenException.class},
                 {adminUser, adminUser, adminUser2, PiikForbiddenException.class},
-                {normalUser, normalUser2, normalUser2, PiikInvalidParameters.class},
-                {adminUser, normalUser2, normalUser2, PiikInvalidParameters.class}
+                {normalUser, normalUser2, normalUser2, PiikForbiddenException.class},
+                {adminUser, normalUser2, normalUser2, PiikForbiddenException.class}
         };
         testParams.addAll(Arrays.asList(forbidden));
 
