@@ -40,20 +40,16 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) The parameter is null");
         }
-        if (!user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
+
         if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(user.getEmail())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getUserDao().removeUser(user);
-        //System.out.println("lol");
     }
 
     /**
@@ -69,29 +65,23 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (followed == null || !followed.checkNotNull()) {
             throw new PiikInvalidParameters("(followedUser) The parameter is null");
         }
-        if (!followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followedUser) Primary key constraints failed");
-        }
+
         if (follower == null || follower.checkNotNull()) {
             throw new PiikInvalidParameters("(followedUser) The parameter is null");
         }
-        if (!follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followerUser) Primary key constraints failed");
-        }
-        //The current user has to be the follower user
+
+        // The current user has to be the follower user
         if (!currentUser.getEmail().equals(follower.getEmail())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().unfollowUser(followed, follower);
     }
 
-    /* MLTIMEDIA related methods */
+    /* MULTIMEDIA related methods */
 
     /**
      * Function to remove multimedia from the database
@@ -106,15 +96,15 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (multimedia == null || multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!multimedia.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
+
+        if (!currentUser.checkAdministrator()) {
+            throw new PiikForbiddenException("(currentUser) You need to be an admin to delete media from the database");
         }
+
         parentFacade.getMultimediaDao().removeMultimedia(multimedia);
     }
 
@@ -133,18 +123,15 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (post == null || !post.checkNotNull()) {
             throw new PiikInvalidParameters("(post) The parameter is null");
         }
-        if (!post.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
+
         if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(post.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getPostDao().removePost(post);
     }
 
@@ -161,18 +148,15 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (repost == null || !repost.checkNotNull()) {
             throw new PiikInvalidParameters("(repost) The parameter is null");
         }
-        if (!repost.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(repost) Primary key constraints failed");
-        }
+
         if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(repost.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getPostDao().removeRepost(repost);
     }
 
@@ -192,19 +176,16 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (message == null || !message.checkNotNull()) {
             throw new PiikInvalidParameters("Parameter 'message' can not be null");
         }
-        if (!message.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(message) Primary key constraints failed");
-        }
-        // Permision check
+
+        // Permission check
         if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(message.getSender())) {
             throw new PiikForbiddenException("You do not have the required permissions");
         }
+
         parentFacade.getMessagesDao().deleteMessage(message);
     }
 
@@ -223,18 +204,15 @@ public class DeletionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (e == null || e.checkNotNull()) {
             throw new PiikInvalidParameters("(event) The parameter is null");
         }
-        if (!e.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(event) Primary key constraints failed");
-        }
+
         if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(e.getCreator())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getInteractionDao().removeEvent(e);
     }
 
@@ -244,24 +222,20 @@ public class DeletionFacade {
      * @param reaction    Reaction to be deleted
      * @param currentUser Current user logged into the app
      * @throws PiikDatabaseException  The user has null values or non unique values on primary keys
-     * @throws PiikForbiddenException The curretUser is not the author of the reaction
+     * @throws PiikForbiddenException The currentUser is not the author of the reaction
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeReaction(Reaction reaction, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         if (reaction == null || !reaction.checkNotNull()) {
             throw new PiikInvalidParameters("(reaction) The parameter is null");
         }
-        if(!reaction.checkPrimaryKey()){
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
-        //We only allow the user who created the reaction to delete it
-        if (!currentUser.getEmail().equals(reaction.getUser())) {
+
+        // We only allow the user who created the reaction to delete or an admin
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(reaction.getUser())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getInteractionDao().removeReaction(reaction);
