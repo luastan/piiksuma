@@ -33,17 +33,20 @@ public class InsertionFacade {
      * @throws PiikDatabaseException User already exists or it has invalid parameters such as null values or non unique
      *                               values on primary keys
      */
-    public void createUser(User newUser, User currentUser) throws PiikDatabaseException {
+    public void createUser(User newUser, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getUserDao().createUser(newUser);
     }
 
 
-    public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException {
+    public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+        if (!currentUser.getType().equals(UserType.administrator)){
+            throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().createAchievement(achievement);
     }
@@ -56,8 +59,11 @@ public class InsertionFacade {
      * @throws PiikDatabaseException
      */
     public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull() || !follower.equals(currentUser)) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+        if (!follower.equals(currentUser)){
+            throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().followUser(followed, follower);
     }
@@ -65,9 +71,9 @@ public class InsertionFacade {
 
     /* MLTIMEDIA related methods */
 
-    public Multimedia addMultimedia(Multimedia multimedia) {
+    public Multimedia addMultimedia(Multimedia multimedia) throws PiikInvalidParameters{
         if (multimedia == null || multimedia.checkNotNull()) {
-            return null;
+            throw new PiikInvalidParameters("(multimedia) The parameter is null");
         }
         return parentFacade.getMultimediaDao().addMultimedia(multimedia);
     }
@@ -86,7 +92,7 @@ public class InsertionFacade {
      */
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getPostDao().createPost(post);
     }
@@ -98,9 +104,9 @@ public class InsertionFacade {
      * @param currentUser current user logged
      * @return the hashtag created
      */
-    public Hashtag createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException {
+    public Hashtag createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         return parentFacade.getPostDao().createHashtag(hashtag);
     }
@@ -112,14 +118,14 @@ public class InsertionFacade {
      * @param currentUser user in the apliccation
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, hashtag
      */
-    public void followHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException {
+    public void followHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         // Null check
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'hashtag' can not be null");
+            throw new PiikInvalidParameters("(hashtag) The parameter is null");
         }
         parentFacade.getPostDao().followHastag(hashtag, currentUser);
     }
@@ -131,8 +137,11 @@ public class InsertionFacade {
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
     public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull() || !user.equals(currentUser)) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+        if (!user.equals(currentUser)){
+            throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getPostDao().archivePost(post, user);
     }
@@ -149,7 +158,7 @@ public class InsertionFacade {
      */
     public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getMessagesDao().newTicket(ticket);
     }
@@ -165,7 +174,7 @@ public class InsertionFacade {
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getMessagesDao().replyTicket(ticket, message);
     }
@@ -179,7 +188,7 @@ public class InsertionFacade {
 
     public void sendMessage(Message privateMessage, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getMessagesDao().sendMessage(privateMessage);
     }
@@ -192,16 +201,16 @@ public class InsertionFacade {
      * @param currentUser logged User
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, oldMessage, newMessage
      */
-    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException {
+    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'oldMessage' can not be null");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'newMessage' can not be null");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         // Permision check
         if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(oldMessage.getSender())) {
@@ -223,7 +232,7 @@ public class InsertionFacade {
      */
     public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
         if (!currentUser.getType().equals(UserType.administrator)) {
@@ -243,14 +252,14 @@ public class InsertionFacade {
 
     public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
-    public Event createEvent(Event event, User currentUser) throws PiikDatabaseException {
+    public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         return parentFacade.getInteractionDao().createEvent(event);
     }
