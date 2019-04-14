@@ -27,12 +27,7 @@ public class MessagesDao extends AbstractDao {
      *
      * @param message message to delete
      */
-    public void deleteMessage(Message message) throws PiikDatabaseException {
-
-        if (message == null || !message.checkNotNull()) {
-            throw new PiikDatabaseException("(message) Primary key constraints failed");
-        }
-
+    public void deleteMessage(Message message) {
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
@@ -44,16 +39,7 @@ public class MessagesDao extends AbstractDao {
      * @param oldMessage message to be replaced
      * @param newMessage message to be inserted
      */
-    public void modifyMessage(Message oldMessage, Message newMessage) throws PiikDatabaseException {
-
-        if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikDatabaseException("(oldMessage) Primary key constraints failed");
-        }
-
-        if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
-        }
-
+    public void modifyMessage(Message oldMessage, Message newMessage) {
         new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
 
     }
@@ -64,12 +50,7 @@ public class MessagesDao extends AbstractDao {
      * @param user user whose messages will be retrieved
      * @return list of messages for the user
      */
-    public List<Message> readMessages(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
+    public List<Message> readMessages(User user) {
         return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE reciever = ? ").
                 defineClass(Message.class).defineParameters(user.getEmail()).list();
     }

@@ -293,10 +293,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters("(oldMessage) The parameter is null");
         }
         if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters("(newMessage) The parameter is null");
         }
         // Permision check
         if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(oldMessage.getSender())) {

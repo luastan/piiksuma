@@ -83,12 +83,7 @@ public class PostDao extends AbstractDao {
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
+    public void removePost(Post post) {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -266,16 +261,7 @@ public class PostDao extends AbstractDao {
      * @param hashtag hashtag to follow
      * @param user    user who will follow the given hashtag
      */
-    public void followHastag(Hashtag hashtag, User user) throws PiikDatabaseException {
-
-        if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
-        }
-
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
+    public void followHastag(Hashtag hashtag, User user) {
         new InsertionMapper<Hashtag>(super.getConnection()).
                 createUpdate("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
                         "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
