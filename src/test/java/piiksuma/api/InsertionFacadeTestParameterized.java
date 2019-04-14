@@ -58,6 +58,7 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
             tests.addAll(Arrays.asList(invalid));
         }
 
+        // altered, unaltered, current
 
         Object[][] forbidden = {
                 {adminUser, normalUser, adminUser2, PiikForbiddenException.class},
@@ -66,7 +67,7 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
                 {adminUser, normalUser2, normalUser2, PiikForbiddenException.class}
         };
         tests.addAll(Arrays.asList(forbidden));
-
+        /*
         Object[][] valid = {
                 {normalUser, normalUser, adminUser, null},
                 {adminUser, adminUser2, adminUser, null},
@@ -74,7 +75,7 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
                 {normalUser, normalUser2, normalUser, null},
         };
         tests.addAll(Arrays.asList(valid));
-
+        */
         return tests;
     }
 
@@ -118,7 +119,7 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
         } else if (expectedException == PiikInvalidParameters.class) {
             try {
                 insertionFacade.followUser(unaltered, altered, current);
-                fail("Expected exception PiikInvalidParameters");
+                fail();
             } catch (PiikInvalidParameters ignore) {
             }
         } else if (expectedException == PiikForbiddenException.class) {
@@ -271,6 +272,10 @@ public class InsertionFacadeTestParameterized extends FacadeTest {
             return;
         } else if (expectedException == PiikInvalidParameters.class) {
             if (altered != null && current != null) {
+                return;
+            }
+
+            if (current.getType() == UserType.user) {
                 return;
             }
             try {

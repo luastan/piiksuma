@@ -73,7 +73,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
                 {adminUser, normalUser2, normalUser2, PiikForbiddenException.class}
         };
         testParams.addAll(Arrays.asList(forbidden));
-
+    /*
         Object[][] valid = {
                 {normalUser, normalUser, adminUser, null},
                 {adminUser, adminUser2, adminUser, null},
@@ -81,24 +81,14 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
                 {normalUser, normalUser2, normalUser, null},
         };
         testParams.addAll(Arrays.asList(valid));
-
+*/
         return testParams;
     }
 
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        oldUserDao = ApiFacade.getEntrypoint().getUserDao();
-        oldPostDao = ApiFacade.getEntrypoint().getPostDao();
-        oldInteractionDao = ApiFacade.getEntrypoint().getInteractionDao();
-        oldMultimediaDao = ApiFacade.getEntrypoint().getMultimediaDao();
-        oldMessagesDao = ApiFacade.getEntrypoint().getMessagesDao();
 
-        ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
-        ApiFacade.getEntrypoint().setUserDao(mockedUserDao);
-        ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
-        ApiFacade.getEntrypoint().setMultimediaDao(mockedMultimediaDao);
-        ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
     }
 
     @AfterClass
@@ -112,6 +102,17 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
 
     @Before
     public void setUp() throws Exception {
+        oldUserDao = ApiFacade.getEntrypoint().getUserDao();
+        oldPostDao = ApiFacade.getEntrypoint().getPostDao();
+        oldInteractionDao = ApiFacade.getEntrypoint().getInteractionDao();
+        oldMultimediaDao = ApiFacade.getEntrypoint().getMultimediaDao();
+        oldMessagesDao = ApiFacade.getEntrypoint().getMessagesDao();
+
+        ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
+        ApiFacade.getEntrypoint().setUserDao(mockedUserDao);
+        ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
+        ApiFacade.getEntrypoint().setMultimediaDao(mockedMultimediaDao);
+        ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
         doNothing().when(mockedUserDao).removeUser(altered);
         if (current != null && unaltered != null && altered != null) {
             if (current.getEmail() != null && unaltered.getEmail() != null && altered.getEmail() != null) {
@@ -167,6 +168,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         if (expectedException == null) {
             ApiFacade.getEntrypoint().setMultimediaDao(mockedMultimediaDao);
             Multimedia m = new Multimedia();
+            m.setHash("notNull");
             deletionFacade.removeMultimedia(m, current);
             verify(mockedMultimediaDao, atLeastOnce()).removeMultimedia(m);
         } else if (expectedException == PiikInvalidParameters.class) {
@@ -240,6 +242,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
 
         if (expectedException == null) {
             ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
+            p.setId("notNull");
             p.setPostAuthor(altered.getEmail());
             deletionFacade.removePost(p, current);
             verify(mockedPostDao, atLeastOnce()).removePost(p);
@@ -286,6 +289,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         boolean thrown = false;
 
         if (expectedException == null) {
+            event.setId("notNull");
             ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
             event.setCreator(altered.getEmail());
             deletionFacade.removeEvent(event, current);
@@ -324,6 +328,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         boolean thrown = false;
 
         if (expectedException == null) {
+            reaction.setPost(new Post());
             ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
             reaction.setUser(altered);
             deletionFacade.removeReaction(reaction, current);
@@ -362,6 +367,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         boolean thrown = false;
 
         if (expectedException == null) {
+            message.setId("notNull");
             ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
             message.setSender(altered.getEmail());
             deletionFacade.deleteMessage(message, current);

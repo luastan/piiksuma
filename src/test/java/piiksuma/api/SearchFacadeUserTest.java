@@ -5,12 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import piiksuma.Hashtag;
-import piiksuma.Multimedia;
-import piiksuma.Post;
-import piiksuma.User;
+import piiksuma.*;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
+import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.util.ArrayList;
@@ -18,8 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(value = Parameterized.class)
 public class SearchFacadeUserTest extends FacadeTest {
@@ -66,7 +63,7 @@ public class SearchFacadeUserTest extends FacadeTest {
     }
 
 
-    @Parameterized.Parameters(name = "Expected: {3} - In: {0}, {1}, {2}")
+    @Parameterized.Parameters(name = "Expected: {3} - Subject :{0} - Current: {1} - Limit {2}")
     public static Collection<Object[]> data() {
         ArrayList<Object[]> tests = new ArrayList<>();
         for (Object user : new Object[]{normalUser, adminUser}) {
@@ -78,6 +75,7 @@ public class SearchFacadeUserTest extends FacadeTest {
             }));
         }
 
+        /*
         tests.addAll(Arrays.asList(new Object[][]{
                 {normalUser, normalUser, 10, null},
                 {normalUser, normalUser2, 10, null},
@@ -89,7 +87,7 @@ public class SearchFacadeUserTest extends FacadeTest {
                 {adminUser, adminUser, 10, null},
                 {adminUser, adminUser2, 10, null}
         }));
-
+        */
 
         return tests;
     }
@@ -98,7 +96,7 @@ public class SearchFacadeUserTest extends FacadeTest {
     public void searchUser() throws PiikException {
         if (exception == null) {
             searchFacade.searchUser(subject, current, limiter);
-            verify(mockedUserDao).searchUser(subject, limiter);
+            verify(mockedUserDao, atLeastOnce()).searchUser(subject, limiter);
         } else {
             try {
                 searchFacade.searchUser(subject, current, limiter);
@@ -115,7 +113,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getUser(subject, current);
-            verify(mockedUserDao).getUser(subject);
+            verify(mockedUserDao, atLeastOnce()).getUser(subject);
         } else {
             try {
                 searchFacade.getUser(subject, current);
@@ -132,7 +130,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getUserStatistics(subject, current);
-            verify(mockedUserDao).getUserStatistics(subject);
+            verify(mockedUserDao, atLeastOnce()).getUserStatistics(subject);
         } else {
             try {
                 searchFacade.getUserStatistics(subject, current);
@@ -149,7 +147,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getAchievement(subject, current);
-            verify(mockedUserDao).getAchievement(subject);
+            verify(mockedUserDao, atLeastOnce()).getAchievement(subject);
         } else {
             try {
                 searchFacade.getAchievement(subject, current);
@@ -164,9 +162,11 @@ public class SearchFacadeUserTest extends FacadeTest {
             return;
         }
         Multimedia multimedia = new Multimedia();
+
         if (exception == null) {
+            multimedia.setHash("NotNull");
             searchFacade.existsMultimedia(multimedia, current);
-            verify(mockedMultimediaDao).existsMultimedia(multimedia);
+            verify(mockedMultimediaDao, atLeastOnce()).existsMultimedia(multimedia);
         } else {
             try {
                 searchFacade.existsMultimedia(subject == null ? null : multimedia, current);
@@ -182,8 +182,9 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Multimedia multimedia = new Multimedia();
         if (exception == null) {
+            multimedia.setHash("NotNull");
             searchFacade.numPostMultimedia(multimedia, current);
-            verify(mockedMultimediaDao).numPostMultimedia(multimedia);
+            verify(mockedMultimediaDao, atLeastOnce()).numPostMultimedia(multimedia);
         } else {
             try {
                 searchFacade.numPostMultimedia(subject == null ? null : multimedia, current);
@@ -199,8 +200,9 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Multimedia multimedia = new Multimedia();
         if (exception == null) {
+            multimedia.setHash("NotNull");
             searchFacade.postWithMultimedia(multimedia, current);
-            verify(mockedMultimediaDao).postWithMultimedia(multimedia);
+            verify(mockedMultimediaDao, atLeastOnce()).postWithMultimedia(multimedia);
         } else {
             try {
                 searchFacade.postWithMultimedia(subject == null ? null : multimedia, current);
@@ -216,8 +218,10 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Post post = new Post();
         if (exception == null) {
+            post.setId("NotNull");
+            post.setPostAuthor(subject.getEmail());
             searchFacade.getPost(post, current);
-            verify(mockedPostDao).getPost(post);
+            verify(mockedPostDao, atLeastOnce()).getPost(post);
         } else {
             try {
                 searchFacade.getPost(subject == null ? null : post, current);
@@ -234,7 +238,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getPost(subject, current);
-            verify(mockedPostDao).getPost(subject);
+            verify(mockedPostDao, atLeastOnce()).getPost(subject);
         } else {
             try {
                 searchFacade.getPost(subject, current);
@@ -250,8 +254,9 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Hashtag hashtag = new Hashtag();
         if (exception == null) {
+            hashtag.setName("NotNull");
             searchFacade.getPost(hashtag, current);
-            verify(mockedPostDao).getPost(hashtag);
+            verify(mockedPostDao, atLeastOnce()).getPost(hashtag);
         } else {
             try {
                 searchFacade.getPost(hashtag, current);
@@ -267,8 +272,9 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Hashtag hashtag = new Hashtag();
         if (exception == null) {
+            hashtag.setName("NotNull");
             searchFacade.getHashtag(hashtag, current);
-            verify(mockedPostDao).getHashtag(hashtag);
+            verify(mockedPostDao, atLeastOnce()).getHashtag(hashtag);
         } else {
             try {
                 searchFacade.getHashtag(hashtag, current);
@@ -281,8 +287,9 @@ public class SearchFacadeUserTest extends FacadeTest {
     public void searchHashtag() throws PiikException {
         Hashtag hashtag = new Hashtag();
         if (exception == null) {
+            hashtag.setName("NotNull");
             searchFacade.searchHashtag(hashtag, limiter, current);
-            verify(mockedPostDao).searchHashtag(hashtag, limiter);
+            verify(mockedPostDao, atLeastOnce()).searchHashtag(hashtag, limiter);
         } else {
             try {
                 searchFacade.searchHashtag(hashtag, limiter, current);
@@ -296,7 +303,7 @@ public class SearchFacadeUserTest extends FacadeTest {
         String text = "QUEEERY";
         if (exception == null) {
             searchFacade.searchByText(text, limiter, current);
-            verify(mockedPostDao).searchByText(text, limiter);
+            verify(mockedPostDao, atLeastOnce()).searchByText(text, limiter);
         } else {
             try {
                 searchFacade.searchByText(text, limiter, current);
@@ -309,7 +316,7 @@ public class SearchFacadeUserTest extends FacadeTest {
     public void getFeed() throws PiikException {
         if (exception == null) {
             searchFacade.getFeed(subject, limiter, current);
-            verify(mockedPostDao).getFeed(subject, limiter);
+            verify(mockedPostDao, atLeastOnce()).getFeed(subject, limiter);
         } else {
             try {
                 searchFacade.getFeed(subject, limiter, current);
@@ -326,7 +333,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getArchivedPosts(subject, current);
-            verify(mockedPostDao).getArchivedPosts(subject);
+            verify(mockedPostDao, atLeastOnce()).getArchivedPosts(subject);
         } else {
             try {
                 searchFacade.getArchivedPosts(subject, current);
@@ -339,7 +346,7 @@ public class SearchFacadeUserTest extends FacadeTest {
     public void getTrendingTopics() throws PiikException {
         if (exception == null) {
             searchFacade.getTrendingTopics(limiter, current);
-            verify(mockedPostDao).getTrendingTopics(limiter);
+            verify(mockedPostDao, atLeastOnce()).getTrendingTopics(limiter);
         } else {
             try {
                 if (subject == null) {
@@ -354,16 +361,33 @@ public class SearchFacadeUserTest extends FacadeTest {
     @Test
     public void getAdminTickets() throws PiikException {
         if (exception == null) {
-            searchFacade.getAdminTickets(limiter, current);
-            verify(mockedMessagesDao).getAdminTickets(limiter);
-        } else {
-            try {
-                if (subject == null) {
+            if (mockedUserDao.getUserType(current) == UserType.user) {
+                try {
+                    searchFacade.getAdminTickets(limiter, current);
+                    fail();
+                } catch (PiikForbiddenException ignore) {
                     return;
                 }
+            }
+            searchFacade.getAdminTickets(limiter, current);
+        } else {
+            if (subject == null) {
+                return;
+            }
+            if (current.getType() == UserType.user) {
+                try {
+                    searchFacade.getAdminTickets(limiter, current);
+                    fail();
+                } catch (PiikForbiddenException ignore) {
+                }
+                return;
+            }
+            try {
                 searchFacade.getAdminTickets(limiter, current);
                 fail();
-            } catch (PiikInvalidParameters ignore) {}
+            } catch (PiikInvalidParameters ignore) {
+            }
+
         }
     }
 
@@ -374,8 +398,10 @@ public class SearchFacadeUserTest extends FacadeTest {
         }
         Post post = new Post();
         if (exception == null) {
+            post.setId("NotNull");
+            post.setPostAuthor(subject.getEmail());
             searchFacade.getPostReaction(post, current);
-            verify(mockedInteractionDao).getPostReaction(post);
+            verify(mockedInteractionDao, atLeastOnce()).getPostReaction(post);
         } else {
             try {
                 searchFacade.getPostReaction(subject == null ? null : post, current);
@@ -392,7 +418,7 @@ public class SearchFacadeUserTest extends FacadeTest {
 
         if (exception == null) {
             searchFacade.getNotifications(subject, current);
-            verify(mockedInteractionDao).getNotifications(subject);
+            verify(mockedInteractionDao, atLeastOnce()).getNotifications(subject);
         } else {
             try {
                 searchFacade.getNotifications(subject, current);
