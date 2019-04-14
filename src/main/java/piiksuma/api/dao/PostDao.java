@@ -290,25 +290,25 @@ public class PostDao extends AbstractDao {
                     "-- We obtain the followed users just for convenience\n" +
                     "WITH followedUsers AS (\n" +
                     "    SELECT followed\n" +
-                    "    FROM followuser\n" +
+                    "    FROM followUser\n" +
                     "    WHERE follower = ?\n" +
                     "),\n" +
                     "-- We obtain the hashtags followed by the user just for convenience\n" +
                     "followedHashtags AS (\n" +
                     "    SELECT hashtag\n" +
-                    "    FROM followhashtag\n" +
+                    "    FROM followHashtag\n" +
                     "    WHERE piiuser = ?\n" +
                     "),\n" +
                     "-- We obtain the blocked and silenced users to filter out their posts\n" +
                     "filteredUsers AS (\n" +
                     "    SELECT blocked\n" +
-                    "    FROM blockuser\n" +
+                    "    FROM blockUser\n" +
                     "    WHERE usr = ?\n" +
                     "\n" +
                     "    UNION\n" +
                     "\n" +
                     "    SELECT silenced\n" +
-                    "    FROM silenceuser\n" +
+                    "    FROM silenceUser\n" +
                     "    WHERE usr = ?\n" +
                     ")\n" +
                     "\n" +
