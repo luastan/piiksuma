@@ -303,15 +303,6 @@ public class PostDao extends AbstractDao {
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
 
-        // We need to check that the given parameters are OK
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
-
         // Connect to the database
         Connection con = getConnection();
 

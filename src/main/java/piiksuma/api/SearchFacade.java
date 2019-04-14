@@ -151,16 +151,16 @@ public class SearchFacade {
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(current == null){
-            throw new  PiikInvalidParameters("(current) can't be null");
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
         }
 
-        if(!current.checkPrimaryKey()){
-            throw new PiikDatabaseException("(current) primary keys can't be null");
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) can not be null");
         }
 
-        if(user == null){
-            throw new PiikInvalidParameters("(user) can't be null");
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         if (user.equals(current) || current.getType().equals(UserType.administrator)) {
