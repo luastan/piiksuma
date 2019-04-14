@@ -151,12 +151,12 @@ public class SearchFacade {
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(current == null || !current.checkNotNull()) {
-            throw new  PiikInvalidParameters("(current) can not be null");
-        }
-
         if(user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) can not be null");
+        }
+
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
         }
 
         if (limit == null || limit <= 0) {
@@ -239,7 +239,15 @@ public class SearchFacade {
      */
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        // A user's notifications can be retrieved by an user or by an admin
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) can not be null");
+        }
+
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
+        }
+
+        // A user's notifications can be retrieved by the user or by an admin
         if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
         }
