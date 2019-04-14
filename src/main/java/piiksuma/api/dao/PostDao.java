@@ -123,10 +123,6 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivePost as a" +
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
     }
@@ -303,15 +299,6 @@ public class PostDao extends AbstractDao {
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
 
-        // We need to check that the given parameters are OK
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
-
         // Connect to the database
         Connection con = getConnection();
 
@@ -321,25 +308,25 @@ public class PostDao extends AbstractDao {
                     "-- We obtain the followed users just for convenience\n" +
                     "WITH followedUsers AS (\n" +
                     "    SELECT followed\n" +
-                    "    FROM followuser\n" +
+                    "    FROM followUser\n" +
                     "    WHERE follower = ?\n" +
                     "),\n" +
                     "-- We obtain the hashtags followed by the user just for convenience\n" +
                     "followedHashtags AS (\n" +
                     "    SELECT hashtag\n" +
-                    "    FROM followhashtag\n" +
+                    "    FROM followHashtag\n" +
                     "    WHERE piiuser = ?\n" +
                     "),\n" +
                     "-- We obtain the blocked and silenced users to filter out their posts\n" +
                     "filteredUsers AS (\n" +
                     "    SELECT blocked\n" +
-                    "    FROM blockuser\n" +
+                    "    FROM blockUser\n" +
                     "    WHERE usr = ?\n" +
                     "\n" +
                     "    UNION\n" +
                     "\n" +
                     "    SELECT silenced\n" +
-                    "    FROM silenceuser\n" +
+                    "    FROM silenceUser\n" +
                     "    WHERE usr = ?\n" +
                     ")\n" +
                     "\n" +
@@ -414,17 +401,17 @@ public class PostDao extends AbstractDao {
                             rs.getString("multimedia")));
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                throw new PiikDatabaseException(e.getMessage());
             } finally {
                 try {
                     // We must close the prepared statement as it won't be used anymore
                     stm.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    throw new PiikDatabaseException(e.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new PiikDatabaseException(e.getMessage());
         }
 
         return (result);

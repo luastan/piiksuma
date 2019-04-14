@@ -110,10 +110,6 @@ public class InteractionDao extends AbstractDao {
      */
     public List<Notification> getNotifications(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
                 "haveNotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
                 user.getEmail()).list();

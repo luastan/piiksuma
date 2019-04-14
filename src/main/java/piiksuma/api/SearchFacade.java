@@ -160,16 +160,16 @@ public class SearchFacade {
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(current == null){
-            throw new  PiikInvalidParameters("(current) can't be null");
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) can not be null");
         }
 
-        if(!current.checkPrimaryKey()){
-            throw new PiikDatabaseException("(current) primary keys can't be null");
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
         }
 
-        if(user == null){
-            throw new PiikInvalidParameters("(user) can't be null");
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         if (user.equals(current) || current.getType().equals(UserType.administrator)) {
@@ -187,6 +187,14 @@ public class SearchFacade {
      * @return found posts
      */
     public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) can not be null");
+        }
+
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
+        }
 
         // A user's archived posts can be retrieved by an user or by an admin
         if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
@@ -248,7 +256,15 @@ public class SearchFacade {
      */
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        // A user's notifications can be retrieved by an user or by an admin
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) can not be null");
+        }
+
+        if(current == null || !current.checkNotNull()) {
+            throw new  PiikInvalidParameters("(current) can not be null");
+        }
+
+        // A user's notifications can be retrieved by the user or by an admin
         if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
         }
