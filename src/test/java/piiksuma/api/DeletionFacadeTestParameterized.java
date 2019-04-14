@@ -4,12 +4,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import piiksuma.Multimedia;
-import piiksuma.Post;
-import piiksuma.User;
-import piiksuma.UserType;
+import piiksuma.*;
 import piiksuma.api.dao.MultimediaDao;
 import piiksuma.api.dao.PostDao;
 import piiksuma.api.dao.UserDao;
@@ -22,7 +17,7 @@ import java.util.Collection;
 import static org.mockito.Mockito.*;
 
 @RunWith(value = Parameterized.class)
-public class DeletionFacadeTestParametrized extends FacadeTest {
+public class DeletionFacadeTestParameterized extends FacadeTest {
 
 
     private User altered;
@@ -32,14 +27,14 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
 
     private static DeletionFacade deletionFacade = ApiFacade.getEntrypoint().getDeletionFacade();
 
-    public DeletionFacadeTestParametrized(User altered, User unaltered, User current, Object expectedException) {
+    public DeletionFacadeTestParameterized(User altered, User unaltered, User current, Object expectedException) {
         this.altered = altered;
         this.unaltered = unaltered;
         this.current = current;
         this.expectedException = expectedException;
     }
 
-    @Parameters(name = "In: {0}, {1}, {2} - Expected: {3}")
+    @Parameters(name = "Expected: {3} - In: {0}, {1}, {2}")
     public static Collection<Object[]> data() {
 
         ArrayList<Object[]> testParams = new ArrayList<>();
@@ -74,8 +69,8 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
         Object[][] forbidden = {
                 {adminUser, normalUser, adminUser2, PiikForbiddenException.class},
                 {adminUser, adminUser, adminUser2, PiikForbiddenException.class},
-                {normalUser, normalUser2, normalUser2, PiikInvalidParameters.class},
-                {adminUser, normalUser2, normalUser2, PiikInvalidParameters.class}
+                {normalUser, normalUser2, normalUser2, PiikForbiddenException.class},
+                {adminUser, normalUser2, normalUser2, PiikForbiddenException.class}
         };
         testParams.addAll(Arrays.asList(forbidden));
 
@@ -118,7 +113,16 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
     @Before
     public void setUp() throws Exception {
         doNothing().when(mockedUserDao).removeUser(altered);
+        if (current != null && unaltered != null && altered != null) {
+            if (current.getEmail() != null && unaltered.getEmail() != null && altered.getEmail() != null) {
+                when(mockedUserDao.getUserType(current.getEmail())).thenReturn(current.getType());
+                when(mockedUserDao.getUserType(unaltered.getEmail())).thenReturn(unaltered.getType());
+                when(mockedUserDao.getUserType(altered.getEmail())).thenReturn(altered.getType());
+            }
+        }
     }
+
+    /* USER */
 
     @Test
     public void removeUserTest() throws PiikException {
@@ -143,7 +147,8 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
                 return;
             }
             try {
-                ApiFacade.getEntrypoint().setUserDao(Mockito.mock(UserDao.class));
+                ApiFacade.getEntrypoint().setUserDao(mockedUserDao);
+
                 doThrow(PiikDatabaseException.class).when(mockedUserDao).removeUser(altered);
                 deletionFacade.removeUser(altered, current);
             } catch (PiikDatabaseException db) {
@@ -153,6 +158,8 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
             Assert.assertTrue(thrown);
         }
     }
+
+    /* MULTIMEDIA */
 
     @Test
     public void removeMultimediaTest() throws PiikException {
@@ -191,6 +198,8 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
         }
     }
 
+    /* UNFOLLOW */
+
     @Test
     public void unfollowUserTest() throws PiikException {
         boolean thrown = false;
@@ -222,6 +231,7 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
         }
     }
 
+    /* POST */
 
     @Test
     public void removePostTest() throws PiikException {
@@ -249,7 +259,7 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
                 return;
             }
             try {
-                ApiFacade.getEntrypoint().setPostDao(Mockito.mock(PostDao.class));
+                ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
                 p.setPostAuthor(altered.getEmail());
                 doThrow(PiikDatabaseException.class).when(mockedPostDao).removePost(p);
                 deletionFacade.removePost(p, current);
@@ -260,4 +270,128 @@ public class DeletionFacadeTestParametrized extends FacadeTest {
             Assert.assertTrue(thrown);
         }
     }
+
+    /* Repost */
+
+    @Ignore
+    public void removeRePost() {
+        //TODO: Make tests once method is propperly defined
+    }
+
+
+    @Test
+    public void removeEvent() throws PiikException {
+        Event event = new Event();
+
+        boolean thrown = false;
+
+        if (expectedException == null) {
+            ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
+            event.setCreator(altered.getEmail());
+            deletionFacade.removeEvent(event, current);
+            verify(mockedInteractionDao, atLeastOnce()).removeEvent(event);
+        } else if (expectedException == PiikInvalidParameters.class) {
+            if (altered != null && current != null) {
+                return;
+            }
+            try {
+                deletionFacade.removeEvent(altered == null ? null : event, current);
+            } catch (PiikInvalidParameters invalid) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+
+        } else if (expectedException == PiikDatabaseException.class) {
+            if (altered.getEmail() != null) {
+                return;
+            }
+            try {
+                ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
+                event.setCreator(altered.getEmail());
+                doThrow(PiikDatabaseException.class).when(mockedInteractionDao).removeEvent(event);
+                deletionFacade.removeEvent(event, current);
+            } catch (PiikDatabaseException db) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+        }
+    }
+
+    @Test
+    public void removeReaction() throws PiikException {
+        Reaction reaction = new Reaction();
+
+        boolean thrown = false;
+
+        if (expectedException == null) {
+            ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
+            reaction.setUser(altered);
+            deletionFacade.removeReaction(reaction, current);
+            verify(mockedInteractionDao, atLeastOnce()).removeReaction(reaction);
+        } else if (expectedException == PiikInvalidParameters.class) {
+            if (altered != null && current != null) {
+                return;
+            }
+            try {
+                deletionFacade.removeReaction(altered == null ? null : reaction, current);
+            } catch (PiikInvalidParameters invalid) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+
+        } else if (expectedException == PiikDatabaseException.class) {
+            if (altered.getEmail() != null) {
+                return;
+            }
+            try {
+                ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
+                reaction.setUser(altered);
+                doThrow(PiikDatabaseException.class).when(mockedInteractionDao).removeReaction(reaction);
+                deletionFacade.removeReaction(reaction, current);
+            } catch (PiikDatabaseException db) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+        }
+    }
+
+    @Test
+    public void deleteMessage() throws PiikException {
+        Message message = new Message();
+
+        boolean thrown = false;
+
+        if (expectedException == null) {
+            ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
+            message.setSender(altered.getEmail());
+            deletionFacade.deleteMessage(message, current);
+            verify(mockedMessagesDao, atLeastOnce()).deleteMessage(message);
+        } else if (expectedException == PiikInvalidParameters.class) {
+            if (altered != null && current != null) {
+                return;
+            }
+            try {
+                deletionFacade.deleteMessage(altered == null ? null : message, current);
+            } catch (PiikInvalidParameters invalid) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+
+        } else if (expectedException == PiikDatabaseException.class) {
+            if (altered.getEmail() != null) {
+                return;
+            }
+            try {
+                ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
+                message.setSender(altered.getEmail());
+                doThrow(PiikDatabaseException.class).when(mockedMessagesDao).deleteMessage(message);
+                deletionFacade.deleteMessage(message, current);
+            } catch (PiikDatabaseException db) {
+                thrown = true;
+            }
+            Assert.assertTrue(thrown);
+        }
+    }
+
+
 }

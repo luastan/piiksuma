@@ -156,6 +156,13 @@ public class UserDao extends AbstractDao {
         return null;
     }
 
+    /**
+     * Function to follow a user
+     *
+     * @param followed User to be followed
+     * @param follower User who follows
+     * @throws PiikDatabaseException
+     */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
@@ -175,7 +182,7 @@ public class UserDao extends AbstractDao {
      * Function to unfollow a user
      *
      * @param followed User to be unfollowed
-     * @param follower User that wants to unfollow the followed user
+     * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
@@ -196,7 +203,7 @@ public class UserDao extends AbstractDao {
      * Function to block a user
      *
      * @param blockedUser User to be blocked
-     * @param user        User that wants to block the other user
+     * @param user        User who wants to block the other user
      * @throws PiikDatabaseException
      */
     public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
@@ -216,7 +223,7 @@ public class UserDao extends AbstractDao {
      * Function to silence a user
      *
      * @param silencedUser User to be silenced
-     * @param user         User that wants to silence the other user
+     * @param user         User who wants to silence the other user
      * @throws PiikDatabaseException
      */
     public void silenceUser(User silencedUser, User user) throws PiikDatabaseException {
@@ -305,5 +312,36 @@ public class UserDao extends AbstractDao {
         statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
 
         return statistics;
+    }
+
+    /**
+     * Retrieves userType from a desired user
+     *
+     * @param user User whose type wants to be known
+     * @return UserType
+     */
+    public UserType getUserType(User user) throws PiikDatabaseException {
+        return getUserType(user.getEmail());
+    }
+
+    /**
+     * Retrieves userType from a desired user
+     *
+     * @param email Email from the desired user
+     * @return UserType
+     * @throws PiikDatabaseException When null values are passed as parameters
+     */
+    public UserType getUserType(String email) throws PiikDatabaseException {
+        if (email == null) {
+            throw new PiikDatabaseException("(user) email can't be null");
+        }
+        if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT email FROM piiuser where email=?")
+                .defineParameters(email).defineClass(User.class).list(false).size() > 0)) {
+            throw new PiikDatabaseException("(user) User does not exist");
+        }
+
+        return new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM administrator where id=?")
+                .defineParameters(email).defineClass(User.class).list(false).size() > 0 ?
+                UserType.administrator : UserType.user;
     }
 }

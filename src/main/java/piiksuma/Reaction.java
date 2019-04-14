@@ -7,14 +7,17 @@ import java.util.Objects;
 
 @MapperTable
 public class Reaction {
-    @MapperColumn(columna = "usr", pkey = true)
+    @MapperColumn(columna = "usr", pkey = true, targetClass = User.class)
     private User user;
     @MapperColumn(columna = "author", pkey = true)
     private User owner;
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, targetClass = Post.class)
     private Post post;
-    @MapperColumn
+
     private ReactionType reactionType;
+
+    @MapperColumn(columna = "reactionType")
+    private String strReactionType;
 
     public Reaction() {
     }
