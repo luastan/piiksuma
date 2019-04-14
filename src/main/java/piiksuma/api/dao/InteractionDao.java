@@ -4,6 +4,7 @@ import piiksuma.*;
 import piiksuma.Notification;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
@@ -37,6 +38,8 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
 
+        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
+
         return null;
     }
 
@@ -52,6 +55,8 @@ public class InteractionDao extends AbstractDao {
         if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
+
+        new InsertionMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).insert();
 
         return null;
     }

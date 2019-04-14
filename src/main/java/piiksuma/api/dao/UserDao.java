@@ -98,6 +98,7 @@ public class UserDao extends AbstractDao {
                 user.getId(), user.getName(), limit).list();
     }
 
+
     public List<Achievement> getAchievement(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
@@ -147,6 +148,8 @@ public class UserDao extends AbstractDao {
         if (achievement == null || !achievement.checkPrimaryKey()) {
             throw new PiikDatabaseException("(achievement) Primary key constraints failed");
         }
+
+        new InsertionMapper<Achievement>(super.getConnection()).add(achievement).defineClass(Achievement.class).insert();
     }
 
     public Achievement unlockAchievement(Achievement achievement) throws PiikDatabaseException {
