@@ -71,11 +71,11 @@ public class InsertionFacade {
 
     /* MLTIMEDIA related methods */
 
-    public Multimedia addMultimedia(Multimedia multimedia) throws PiikInvalidParameters{
+    public void addMultimedia(Multimedia multimedia) throws PiikInvalidParameters{
         if (multimedia == null || multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) The parameter is null");
         }
-        return parentFacade.getMultimediaDao().addMultimedia(multimedia);
+        parentFacade.getMultimediaDao().addMultimedia(multimedia);
     }
 
 
@@ -104,11 +104,11 @@ public class InsertionFacade {
      * @param currentUser current user logged
      * @return the hashtag created
      */
-    public Hashtag createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        return parentFacade.getPostDao().createHashtag(hashtag);
+        parentFacade.getPostDao().createHashtag(hashtag);
     }
 
     /**
@@ -257,11 +257,11 @@ public class InsertionFacade {
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
-    public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        return parentFacade.getInteractionDao().createEvent(event);
+        parentFacade.getInteractionDao().createEvent(event);
     }
 
 
