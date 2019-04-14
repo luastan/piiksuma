@@ -71,7 +71,7 @@ public class InsertionFacade {
 
     /* MLTIMEDIA related methods */
 
-    public void addMultimedia(Multimedia multimedia) throws PiikInvalidParameters{
+    public void addMultimedia(Multimedia multimedia) throws PiikInvalidParameters,PiikDatabaseException{
         if (multimedia == null || multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) The parameter is null");
         }

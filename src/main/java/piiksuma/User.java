@@ -44,8 +44,6 @@ public class User {
     private String loveStatus;
     @MapperColumn
     private String job;
-    @MapperColumn(columna = "")
-    private String stringType;
     private UserType type;
 
     public User(String name, String id, String email) {
@@ -269,9 +267,17 @@ public class User {
             return false;
         }
 
-        return getRegistrationDate() != null;
+        return true;
     }
 
+    /**
+     * Function to know if an user is an administrator or a normal user
+     *
+     * @return Returns "true" if the user is an admin, otherwise return "false"
+     */
+    public boolean checkAdministrator(){
+        return type.equals(UserType.administrator);
+    }
     /**
      * Function to check that the primary keys are not null
      *

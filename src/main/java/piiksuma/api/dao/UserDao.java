@@ -29,10 +29,6 @@ public class UserDao extends AbstractDao {
      */
     public void removeUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
     }
 
@@ -170,14 +166,6 @@ public class UserDao extends AbstractDao {
      */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
-        }
-
-        if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
-        }
-
         new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO followuser(followed,follower) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
 
@@ -190,15 +178,7 @@ public class UserDao extends AbstractDao {
      * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
-    public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
-
-        if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
-        }
-
-        if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
-        }
+    public void unfollowUser(User followed, User follower) {
 
         new QueryMapper<Object>(super.getConnection()).createQuery("DELETE FROM followUser " +
                 "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();

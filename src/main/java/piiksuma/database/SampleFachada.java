@@ -125,7 +125,7 @@ public class SampleFachada {
         // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
         // todos los atributos. Si queréis actualizar algo en concreto podéis ejecutar la consulta con .executeUpdate()
         newUsuario2.setId("Goldar223");
-        newUsuario2.setGender("helicoptero apache");
+        newUsuario2.setGender("M");
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
         imprimirUsuarios();
