@@ -84,7 +84,7 @@ public class PostDao extends AbstractDao {
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) throws PiikDatabaseException {
+    public void removePost(Post post) {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -173,11 +173,8 @@ public class PostDao extends AbstractDao {
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
     }
 
-    public void removeRepost(Post repost) throws PiikDatabaseException {
+    public void removeRepost(Post repost){
 
-        if (repost == null || !repost.checkNotNull()) {
-            throw new PiikDatabaseException("(repost) Primary key constraints failed");
-        }
     }
 
     public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
