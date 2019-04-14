@@ -68,7 +68,8 @@ public class SearchFacade {
         return parentFacade.getUserDao().getUserStatistics(user);
     }
 
-    public List<Achievement> getAchievement(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
+    public List<Achievement> getAchievement(User user, User current) throws PiikInvalidParameters,
+            PiikDatabaseException {
         return parentFacade.getUserDao().getAchievement(user);
     }
 
@@ -119,7 +120,8 @@ public class SearchFacade {
      * @param current current user
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters,
+            PiikDatabaseException {
         return parentFacade.getPostDao().searchHashtag(hashtag, limit);
     }
 
@@ -146,9 +148,22 @@ public class SearchFacade {
      * @param current current user
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException, PiikInvalidParameters {
+    public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
 
-        if (user.equals(current)) {
+        if(current == null){
+            throw new  PiikInvalidParameters("(current) can't be null");
+        }
+
+        if(!current.checkPrimaryKey()){
+            throw new PiikDatabaseException("(current) primary keys can't be null");
+        }
+
+        if(user == null){
+            throw new PiikInvalidParameters("(user) can't be null");
+        }
+
+        if (user.equals(current) || current.getType().equals(UserType.administrator)) {
             return parentFacade.getPostDao().getFeed(user, limit);
         } else {
             throw new PiikForbiddenException("The current user doesn't match the given user");

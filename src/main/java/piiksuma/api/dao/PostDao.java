@@ -298,7 +298,7 @@ public class PostDao extends AbstractDao {
      * @param limit limit of the posts
      * @return posts that make up the user's feed
      */
-    public List<Post> getFeed(User user, Integer limit) throws PiikDatabaseException {
+    public List<Post> getFeed(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
         java.util.ArrayList<Post> result = new ArrayList<>();
         ResultSet rs;
@@ -306,6 +306,10 @@ public class PostDao extends AbstractDao {
         // We need to check that the given parameters are OK
         if (user == null || !user.checkNotNull()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
 
         // Connect to the database
