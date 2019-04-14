@@ -401,17 +401,17 @@ public class PostDao extends AbstractDao {
                             rs.getString("multimedia")));
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                throw new PiikDatabaseException(e.getMessage());
             } finally {
                 try {
                     // We must close the prepared statement as it won't be used anymore
                     stm.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    throw new PiikDatabaseException(e.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new PiikDatabaseException(e.getMessage());
         }
 
         return (result);
