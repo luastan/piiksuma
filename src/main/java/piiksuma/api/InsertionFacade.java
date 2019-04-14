@@ -34,9 +34,15 @@ public class InsertionFacade {
      *                               values on primary keys
      */
     public void createUser(User newUser, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (newUser == null || !newUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(newUser) null parameter");
+        }
+
         parentFacade.getUserDao().createUser(newUser);
     }
 
@@ -45,9 +51,15 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.getType().equals(UserType.administrator)){
+
+        if (achievement == null || !achievement.checkNotNull()) {
+            throw new PiikInvalidParameters("(achievement) null parameter");
+        }
+
+        if (!currentUser.getType().equals(UserType.administrator)) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getUserDao().createAchievement(achievement);
     }
 
@@ -62,28 +74,34 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!follower.equals(currentUser)){
+
+        if (followed == null || !followed.checkNotNull()) {
+            throw new PiikInvalidParameters("(followed) null parameter");
+        }
+
+        if (follower == null || !follower.checkNotNull()) {
+            throw new PiikInvalidParameters("(follower) null parameter");
+        }
+
+        if (!follower.equals(currentUser)) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
+
         parentFacade.getUserDao().followUser(followed, follower);
     }
 
 
-    /* MLTIMEDIA related methods */
+    /* MULTIMEDIA related methods */
 
-    public void addMultimedia(Multimedia multimedia,User currentUser) throws PiikInvalidParameters,PiikDatabaseException{
+    public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) The parameter is null");
         }
-        if (!multimedia.checkPrimaryKey()){
-            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
-        }
+
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()){
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
+
         parentFacade.getMultimediaDao().addMultimedia(multimedia);
     }
 
@@ -103,6 +121,11 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikInvalidParameters("(post) null parameter");
+        }
+
         parentFacade.getPostDao().createPost(post);
     }
 
@@ -117,6 +140,11 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikInvalidParameters("(hashtag) null parameter");
+        }
+
         parentFacade.getPostDao().createHashtag(hashtag);
     }
 
@@ -150,19 +178,15 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if (!currentUser.checkPrimaryKey()){
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
-
         if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) The parameter is null");
         }
 
-        if (!user.checkPrimaryKey()){
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikInvalidParameters("(post) The parameter is null");
         }
 
-        if (!user.equals(currentUser)){
+        if (!user.equals(currentUser)) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getPostDao().archivePost(post, user);
@@ -174,20 +198,17 @@ public class InsertionFacade {
      * @param post post to be updated
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void updatePost(Post post,User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void updatePost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if (!currentUser.checkPrimaryKey()){
-            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
-        }
         if (post == null || !post.checkNotNull()) {
             throw new PiikInvalidParameters("(post) The parameter is null");
         }
 
-        if (!post.checkPrimaryKey()){
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        if (!currentUser.checkAdministrator() && !post.getPostAuthor().equals(currentUser.getEmail())) {
+            throw new PiikForbiddenException("Permission denied");
         }
 
         parentFacade.getPostDao().updatePost(post);
@@ -207,6 +228,11 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (ticket == null || !ticket.checkNotNull()) {
+            throw new PiikInvalidParameters("(ticket) null parameter");
+        }
+
         parentFacade.getMessagesDao().newTicket(ticket);
     }
 
@@ -223,6 +249,14 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (ticket == null || !ticket.checkNotNull()) {
+            throw new PiikInvalidParameters("(ticket) null parameter");
+        }
+
+        if (message == null || !message.checkNotNull()) {
+            throw new PiikInvalidParameters("(message) null parameter");
+        }
         parentFacade.getMessagesDao().replyTicket(ticket, message);
     }
 
@@ -237,6 +271,11 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (privateMessage == null || !privateMessage.checkNotNull()) {
+            throw new PiikInvalidParameters("(privateMessage) null parameter");
+        }
+
         parentFacade.getMessagesDao().sendMessage(privateMessage);
     }
 
@@ -271,15 +310,12 @@ public class InsertionFacade {
         if (user == null || !user.checkNotNull()) {
             throw new PiikDatabaseException("(user) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()){
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
+
+
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikDatabaseException("(user) The parameter is null");
         }
-        if (!currentUser.checkPrimaryKey()){
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
+
         parentFacade.getUserDao().administratePersonalData(user);
     }
 
@@ -297,6 +333,10 @@ public class InsertionFacade {
     public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+
+        if(notification == null || !notification.checkNotNull()) {
+            throw new PiikInvalidParameters("(notification) null parameter");
         }
 
         if (!currentUser.getType().equals(UserType.administrator)) {
@@ -318,6 +358,15 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if(notification == null || !notification.checkNotNull()) {
+            throw new PiikInvalidParameters("(notification) null parameter");
+        }
+
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) null parameter");
+        }
+
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
@@ -325,6 +374,11 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if(event == null || !event.checkNotNull()) {
+            throw new PiikInvalidParameters("(event) null parameter");
+        }
+
         parentFacade.getInteractionDao().createEvent(event);
     }
 
