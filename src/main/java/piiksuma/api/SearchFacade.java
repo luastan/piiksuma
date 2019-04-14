@@ -41,6 +41,15 @@ public class SearchFacade {
      */
     public List<User> searchUser(User user, User current, Integer limit) throws PiikInvalidParameters,
             PiikDatabaseException {
+
+        if(user == null){
+            throw new PiikInvalidParameters("(user) can't be null");
+        }
+
+        if(current == null){
+            throw new PiikInvalidParameters("(current) can't be null");
+        }
+
         return parentFacade.getUserDao().searchUser(user, limit);
     }
 
