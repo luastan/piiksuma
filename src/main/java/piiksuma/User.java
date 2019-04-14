@@ -275,9 +275,10 @@ public class User {
      *
      * @return Returns "true" if the user is an admin, otherwise return "false"
      */
-    public boolean checkAdministrator(){
+    public boolean checkAdministrator() {
         return type.equals(UserType.administrator);
     }
+
     /**
      * Function to check that the primary keys are not null
      *

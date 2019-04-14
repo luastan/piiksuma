@@ -123,15 +123,15 @@ public class Ticket {
             return false;
         }
 
-        if(getTextProblem() == null || getTextProblem().isEmpty()){
+        if (getTextProblem() == null || getTextProblem().isEmpty()) {
             return false;
         }
 
-        if(getSection() == null || getSection().isEmpty()){
+        if (getSection() == null || getSection().isEmpty()) {
             return false;
         }
 
-        if(getUser() == null || getUser().isEmpty()){
+        if (getUser() == null || getUser().isEmpty()) {
             return false;
         }
 

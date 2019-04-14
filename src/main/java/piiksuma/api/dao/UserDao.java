@@ -1,6 +1,9 @@
 package piiksuma.api.dao;
 
-import piiksuma.*;
+import piiksuma.Achievement;
+import piiksuma.Statistics;
+import piiksuma.User;
+import piiksuma.UserType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -9,10 +12,6 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +27,10 @@ public class UserDao extends AbstractDao {
      * @param user user to remove
      */
     public void removeUser(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
 
         new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
     }
@@ -64,6 +67,10 @@ public class UserDao extends AbstractDao {
      */
     public User getUser(User user) throws PiikDatabaseException {
 
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getId()).findFirst();
     }
@@ -75,7 +82,15 @@ public class UserDao extends AbstractDao {
      * @param limit maximum of users to return
      * @return users that meet the given information
      */
-    public List<User> searchUser(User user, Integer limit) throws PiikDatabaseException{
+    public List<User> searchUser(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
@@ -84,6 +99,10 @@ public class UserDao extends AbstractDao {
 
 
     public List<Achievement> getAchievement(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
 
         return null;
     }
@@ -96,6 +115,10 @@ public class UserDao extends AbstractDao {
      * @return user from database that meets the required attributes
      */
     public User login(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "Where id = ? and pass = ?").defineClass(User.class).defineParameters(user.getId(), user.getPass()).findFirst();
@@ -111,10 +134,6 @@ public class UserDao extends AbstractDao {
         if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-
-        /*if(!user.equals(currentUser)) {
-            return;
-        }*/
 
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }
@@ -146,6 +165,14 @@ public class UserDao extends AbstractDao {
      */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
+        if (followed == null || !followed.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(followed) Primary key constraints failed");
+        }
+
+        if (follower == null || !follower.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(follower) Primary key constraints failed");
+        }
+
         new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO followuser(followed,follower) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
 
@@ -158,7 +185,15 @@ public class UserDao extends AbstractDao {
      * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
-    public void unfollowUser(User followed, User follower) throws PiikDatabaseException{
+    public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
+
+        if (followed == null || !followed.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(followed) Primary key constraints failed");
+        }
+
+        if (follower == null || !follower.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(follower) Primary key constraints failed");
+        }
 
         new QueryMapper<Object>(super.getConnection()).createQuery("DELETE FROM followUser " +
                 "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
@@ -282,6 +317,11 @@ public class UserDao extends AbstractDao {
      * @return UserType
      */
     public UserType getUserType(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         return getUserType(user.getEmail());
     }
 
@@ -296,6 +336,7 @@ public class UserDao extends AbstractDao {
         if (email == null) {
             throw new PiikDatabaseException("(user) email can't be null");
         }
+
         if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT email FROM piiuser where email=?")
                 .defineParameters(email).defineClass(User.class).list(false).size() > 0)) {
             throw new PiikDatabaseException("(user) User does not exist");

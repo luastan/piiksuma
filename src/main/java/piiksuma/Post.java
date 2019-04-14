@@ -3,13 +3,12 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable(nombre = "post")
 public class Post {
-    @MapperColumn(pkey = true, columna="author")
+    @MapperColumn(pkey = true, columna = "author")
     private String postAuthor;
     @MapperColumn(pkey = true)
     private String id;
@@ -114,28 +113,30 @@ public class Post {
 
     /**
      * Function to check that the attributes with restriction 'not null' are not null
+     *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
+    public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if(!checkPrimaryKey()){
+        if (!checkPrimaryKey()) {
             return false;
         }
 
-        return(text != null && !text.isEmpty());
+        return (text != null && !text.isEmpty());
     }
 
     /**
      * Function to check that the primary keys are not null
+     *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
+    public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if(getId() == null || getId().isEmpty()){
+        if (getId() == null || getId().isEmpty()) {
             return false;
         }
 
-        if(getPostAuthor() == null || getPostAuthor().isEmpty()){
+        if (getPostAuthor() == null || getPostAuthor().isEmpty()) {
             return false;
         }
 

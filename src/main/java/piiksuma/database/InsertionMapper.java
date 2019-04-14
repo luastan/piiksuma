@@ -10,16 +10,15 @@ import java.util.*;
 /**
  * Database conection and data insertion wrapper. Performs insertions from
  * given objects without actually specifying SQL sentences.
- * @param <E> Mapped class type. Used to check asigments when returning query
- *           results.
  *
+ * @param <E> Mapped class type. Used to check asigments when returning query
+ *            results.
  * @author luastan
  * @author CardamaS99
  * @author danimf99
  * @author alvrogd
  * @author OswaldOswin1
  * @author Marcos-marpin
- *
  */
 public class InsertionMapper<E> extends Mapper<E> {
     private List<E> inserciones;
@@ -74,7 +73,6 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     *
      * Extracts the atributes and fields to be inserted into the database and
      * generates the corresponding SQL sentence base for the insertions
      */
@@ -97,7 +95,7 @@ public class InsertionMapper<E> extends Mapper<E> {
         queryBuilder.deleteCharAt(queryBuilder.length() - 1);   // Deletes last comma ","
         queryBuilder.append(") VALUES (?");
         for (int i = 0; i < this.atributos.size() - 1; i++) {   // as there's a ? before, it's necessary to decrement the
-                                                                // size by one
+            // size by one
             queryBuilder.append(",?");
         }
         queryBuilder.append(");");
@@ -155,27 +153,26 @@ public class InsertionMapper<E> extends Mapper<E> {
     /**
      * Automatically inserts values indicated by a list containing maps with
      * the following structure:
-     *
+     * <p>
      * {
-     *     "table" : "Table name",
-     *     "set" : [
-     *          {
-     *              "Column name" : "value"
-     *          },
-     *          {
-     *              "Column name that has an Integer" : 445
-     *          }
-     *     ],
-     *     "where" : [
-     *          {
-     *              "Column name" : "value"
-     *          },
-     *          {
-     *              "Column name" : "value"
-     *          }
-     *     ]
+     * "table" : "Table name",
+     * "set" : [
+     * {
+     * "Column name" : "value"
+     * },
+     * {
+     * "Column name that has an Integer" : 445
      * }
-     *
+     * ],
+     * "where" : [
+     * {
+     * "Column name" : "value"
+     * },
+     * {
+     * "Column name" : "value"
+     * }
+     * ]
+     * }
      *
      * @param insertions Map list to be used as a guide to perform the
      *                   insertions

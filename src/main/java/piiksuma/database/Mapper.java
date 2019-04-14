@@ -1,28 +1,22 @@
 package piiksuma.database;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Common functionality between all the Mapper Classes.
- * @param <T> Mapped class type. Used to check asigments when returning query
- *           results.
  *
+ * @param <T> Mapped class type. Used to check asigments when returning query
+ *            results.
  * @author luastan
  * @author CardamaS99
  * @author danimf99
  * @author alvrogd
  * @author OswaldOswin1
  * @author Marcos-marpin
- *
  */
 public abstract class Mapper<T> {
     protected Connection connection;
@@ -48,7 +42,7 @@ public abstract class Mapper<T> {
      *                     corresponding to a foreign key object
      * @return Object's Primary Key value
      * @throws IllegalAccessException In case of being unable to grab the field
-     * value
+     *                                value
      */
     protected Object fkValue(Object forKeyObject) throws IllegalAccessException {
         Field fkField = Arrays.stream(forKeyObject.getClass().getDeclaredFields())
@@ -57,7 +51,9 @@ public abstract class Mapper<T> {
                 .findAny().orElseThrow(RuntimeException::new);
         fkField.setAccessible(true);
         return fkField.get(forKeyObject);
-    };
+    }
+
+    ;
 
     /**
      * Allows an update to be specified whith SQL.
@@ -65,7 +61,7 @@ public abstract class Mapper<T> {
      * @param update String with the SQL code to be used in the update
      * @return The current Mapper instance
      */
-    public Mapper<T> createUpdate(String update){
+    public Mapper<T> createUpdate(String update) {
         try {
             statement = connection.prepareStatement(update);
         } catch (SQLException ex) {
@@ -93,7 +89,7 @@ public abstract class Mapper<T> {
     /**
      * Queries a foreign key and maps it automatically
      *
-     * @param clase Class to be looped over
+     * @param clase    Class to be looped over
      * @param pkObject Object used as a parameter within the query to find
      *                 the tuple in the database
      * @return Mapped instance from the query result set. When the class isn't
@@ -137,7 +133,7 @@ public abstract class Mapper<T> {
      * @param mappedClass Class for the results to be mapped to
      * @return The mapper instance
      */
-    public Mapper<T> defineClass(Class<? extends T> mappedClass){
+    public Mapper<T> defineClass(Class<? extends T> mappedClass) {
         this.mappedClass = mappedClass;
         return this;
     }

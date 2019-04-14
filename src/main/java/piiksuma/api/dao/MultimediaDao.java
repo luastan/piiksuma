@@ -2,7 +2,6 @@ package piiksuma.api.dao;
 
 import piiksuma.Multimedia;
 import piiksuma.Post;
-import piiksuma.User;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -10,7 +9,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import java.sql.Connection;
 import java.util.List;
 
-public class MultimediaDao extends AbstractDao{
+public class MultimediaDao extends AbstractDao {
 
     public MultimediaDao(Connection connection) {
         super(connection);
@@ -24,15 +23,15 @@ public class MultimediaDao extends AbstractDao{
         new InsertionMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).insert();
     }
 
-    public Multimedia existsMultimedia(Multimedia multimedia) throws PiikDatabaseException{
+    public Multimedia existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
         return null;
     }
 
-    public Integer numPostMultimedia(Multimedia multimedia){
+    public Integer numPostMultimedia(Multimedia multimedia) {
         return null;
     }
 
-    public List<Post> postWithMultimedia(Multimedia multimedia){
+    public List<Post> postWithMultimedia(Multimedia multimedia) {
         return null;
     }
 

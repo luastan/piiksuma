@@ -2,7 +2,6 @@ package piiksuma.database;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,17 +11,16 @@ import java.util.List;
 
 /**
  * Database deletions wrapper
- * @param <T> Mapped class type. Used to check asigments on the mapped class
  *
+ * @param <T> Mapped class type. Used to check asigments on the mapped class
  * @author luastan
  * @author CardamaS99
  * @author danimf99
  * @author alvrogd
  * @author OswaldOswin1
  * @author Marcos-marpin
- *
  */
-public class DeleteMapper<T> extends Mapper<T>{
+public class DeleteMapper<T> extends Mapper<T> {
     private List<T> elementsDelete;
     private String deleteUpdate;
     private ArrayList<String> columnsName;
@@ -46,7 +44,7 @@ public class DeleteMapper<T> extends Mapper<T>{
      * @return Delete Mapper instance
      */
     @Override
-    public DeleteMapper<T> defineClass(Class<? extends T> clase){
+    public DeleteMapper<T> defineClass(Class<? extends T> clase) {
         super.defineClass(clase);
         return this;
     }
@@ -58,7 +56,7 @@ public class DeleteMapper<T> extends Mapper<T>{
      * @param object Object to be deleted
      * @return DeleteMapper instance
      */
-    public DeleteMapper<T> add(T object){
+    public DeleteMapper<T> add(T object) {
         this.elementsDelete.add(object);
         return this;
     }
@@ -69,7 +67,7 @@ public class DeleteMapper<T> extends Mapper<T>{
      * @param objects Objects to be deleted
      * @return DeleteMapper instance
      */
-    public DeleteMapper<T> addAll(T... objects){
+    public DeleteMapper<T> addAll(T... objects) {
         this.elementsDelete.addAll(Arrays.asList(objects));
         return this;
     }
@@ -77,7 +75,7 @@ public class DeleteMapper<T> extends Mapper<T>{
     /**
      * Extracts the primary keys and genterates the corresponding SQL code
      */
-    private void prepareDelete(){
+    private void prepareDelete() {
         String columnName;
 
         // SQL code base. Needed info gets extracted from the mapped class
@@ -89,7 +87,7 @@ public class DeleteMapper<T> extends Mapper<T>{
             // Allows access from reflection
             field.setAccessible(true);
             // Performs the mapping only on the annotated classes
-            if(field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()){
+            if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
                 // Column name extraction
                 // On empty / default column name specification uses the field name
                 columnName = field.getAnnotation(MapperColumn.class).columna();
@@ -105,15 +103,15 @@ public class DeleteMapper<T> extends Mapper<T>{
         }
 
         // Crops the deleteBuilder in order to get rid of the residual "and" added after each WHERE condition
-        deleteBuilder.delete(deleteBuilder.length()-4, deleteBuilder.length());
+        deleteBuilder.delete(deleteBuilder.length() - 4, deleteBuilder.length());
 
         // Stores the SQL code to be executed
         deleteUpdate = deleteBuilder.toString();
 
-        try{
+        try {
             // TODO: This code seems redundant to me. It gets lost on the delete() method
             this.statement = super.connection.prepareStatement(deleteUpdate);
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -121,27 +119,26 @@ public class DeleteMapper<T> extends Mapper<T>{
     /**
      * Deletes all the objects on the deletion pool
      */
-    public void delete(){
+    public void delete() {
         prepareDelete();  // Builds the statement
 
         try {
             // Loops over the deletion pool deleting each object
-            for(T object : this.elementsDelete){
+            for (T object : this.elementsDelete) {
                 // Statement gets created
                 this.statement = connection.prepareStatement(this.deleteUpdate);
                 // Inserts all the primary key atributes previously extracted into the statement
-                for(int i = 0; i < this.columnsName.size(); i++){
+                for (int i = 0; i < this.columnsName.size(); i++) {
                     statement.setObject(i + 1, this.attributes.get(this.columnsName.get(i)).get(object));
                 }
 
                 // Deletion gets performed
                 this.statement.executeUpdate();
             }
-        } catch(SQLException | IllegalAccessException e){
+        } catch (SQLException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
-
 
 
 }

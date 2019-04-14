@@ -10,18 +10,17 @@ import java.util.*;
 /**
  * Database conection and data retrieving wrapper. Automatically maps retreved
  * data
- * @param <T> Mapped class type. Used to check asigments when returning query
- *           results.
  *
+ * @param <T> Mapped class type. Used to check asigments when returning query
+ *            results.
  * @author luastan
  * @author CardamaS99
  * @author danimf99
  * @author alvrogd
  * @author OswaldOswin1
  * @author Marcos-marpin
- *
  */
-public class QueryMapper<T> extends Mapper<T>{
+public class QueryMapper<T> extends Mapper<T> {
 
     /**
      * @param conexion Database conection object
@@ -36,7 +35,7 @@ public class QueryMapper<T> extends Mapper<T>{
      * @param query String representing the query
      * @return Returns the Mapper instance
      */
-    public QueryMapper<T> createQuery(String query){
+    public QueryMapper<T> createQuery(String query) {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException ex) {
@@ -65,7 +64,7 @@ public class QueryMapper<T> extends Mapper<T>{
             ResultSet set = statement.getResultSet();
 
             // Metadata parsing
-            if(set != null) {
+            if (set != null) {
                 for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
                     columnas.add(set.getMetaData().getColumnName(i));
                 }
@@ -190,7 +189,7 @@ public class QueryMapper<T> extends Mapper<T>{
     public T findFirst(boolean useForeignkeys) {
         List<T> result = list(useForeignkeys);
 
-        if(result == null || result.isEmpty()){
+        if (result == null || result.isEmpty()) {
             return null;
         }
 
