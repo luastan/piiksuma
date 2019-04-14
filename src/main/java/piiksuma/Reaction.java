@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Reaction {
     @MapperColumn(columna = "usr", pkey = true, targetClass = User.class)
     private User user;
-    @MapperColumn(columna = "author", pkey = true)
+    @MapperColumn(columna = "author", pkey = true, targetClass = User.class)
     private User owner;
     @MapperColumn(pkey = true, targetClass = Post.class)
     private Post post;
@@ -54,11 +54,13 @@ public class Reaction {
     }
 
     public ReactionType getReactionType() {
+        this.reactionType = ReactionType.valueOf(strReactionType);
         return reactionType;
     }
 
     public void setReactionType(ReactionType reactionType) {
         this.reactionType = reactionType;
+        this.strReactionType = reactionType.toString();
     }
 
     /**
