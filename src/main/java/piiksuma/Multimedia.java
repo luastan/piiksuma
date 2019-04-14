@@ -82,11 +82,11 @@ public class Multimedia {
         return true;
     }
 
-    public boolean checkNotNull(){
-        if(!checkPrimaryKey()){
+    public boolean checkNotNull() {
+        if (!checkPrimaryKey()) {
             return false;
         }
-        if(uri==null || uri.isEmpty()){
+        if (uri == null || uri.isEmpty()) {
             return false;
         }
 

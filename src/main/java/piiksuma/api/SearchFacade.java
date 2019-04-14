@@ -90,6 +90,7 @@ public class SearchFacade {
 
         return parentFacade.getUserDao().login(user);
     }
+
     /**
      * Function that returns the statistics of the given user
      *
@@ -108,7 +109,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
         }
 
-        if(!current.checkAdministrator() && !user.equals(current)) {
+        if (!current.checkAdministrator() && !user.equals(current)) {
             throw new PiikForbiddenException("Forbidden");
         }
 
@@ -125,7 +126,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("(current) Parameter is null");
         }
 
-        if(!current.checkAdministrator() && !user.equals(current)) {
+        if (!current.checkAdministrator() && !user.equals(current)) {
             throw new PiikForbiddenException("Forbidden");
         }
 
@@ -181,7 +182,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
         }
 
-        if(!current.checkAdministrator() && !post.getPostAuthor().equals(current.getEmail())) {
+        if (!current.checkAdministrator() && !post.getPostAuthor().equals(current.getEmail())) {
             throw new PiikForbiddenException("Forbidden");
         }
 
@@ -209,7 +210,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("(user) Parameter can not  be null");
         }
 
-        if(!current.checkAdministrator() && !user.equals(current)) {
+        if (!current.checkAdministrator() && !user.equals(current)) {
             throw new PiikForbiddenException("Forbidden");
         }
 
@@ -379,7 +380,7 @@ public class SearchFacade {
     /**
      * Allows the user to read his messages
      *
-     * @param user user whose messages will be retrieved
+     * @param user        user whose messages will be retrieved
      * @param currentUser current user in the application
      * @return Messages for the user
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser
@@ -390,7 +391,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
         }
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) null parameter");
         }
 

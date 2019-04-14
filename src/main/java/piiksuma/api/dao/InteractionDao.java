@@ -1,7 +1,6 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
-import piiksuma.Notification;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -9,8 +8,6 @@ import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 

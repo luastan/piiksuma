@@ -6,7 +6,6 @@ import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class DeletionFacade {
     private ApiFacade parentFacade;

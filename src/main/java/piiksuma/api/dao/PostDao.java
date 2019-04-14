@@ -1,6 +1,8 @@
 package piiksuma.api.dao;
 
-import piiksuma.*;
+import piiksuma.Hashtag;
+import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -81,7 +83,7 @@ public class PostDao extends AbstractDao {
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) throws PiikDatabaseException{
+    public void removePost(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
@@ -97,7 +99,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE id = ? " +
-                "and author = ?").defineParameters(post.getId(),post.getPostAuthor()).findFirst();
+                "and author = ?").defineParameters(post.getId(), post.getPostAuthor()).findFirst();
     }
 
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
@@ -182,7 +184,7 @@ public class PostDao extends AbstractDao {
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
     }
 
-    public void removeRepost(Post repost) throws PiikDatabaseException{
+    public void removeRepost(Post repost) throws PiikDatabaseException {
 
         if (repost == null || !repost.checkNotNull()) {
             throw new PiikDatabaseException("(repost) Primary key constraints failed");
@@ -261,8 +263,8 @@ public class PostDao extends AbstractDao {
     /**
      * Lets a user follow a hashtag
      *
-     * @param hashtag     hashtag to follow
-     * @param user user who will follow the given hashtag
+     * @param hashtag hashtag to follow
+     * @param user    user who will follow the given hashtag
      */
     public void followHastag(Hashtag hashtag, User user) throws PiikDatabaseException {
 

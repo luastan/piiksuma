@@ -1,6 +1,9 @@
 package piiksuma.api.dao;
 
-import piiksuma.*;
+import piiksuma.Achievement;
+import piiksuma.Statistics;
+import piiksuma.User;
+import piiksuma.UserType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -9,10 +12,6 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -186,7 +185,7 @@ public class UserDao extends AbstractDao {
      * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
-    public void unfollowUser(User followed, User follower) throws PiikDatabaseException{
+    public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
             throw new PiikDatabaseException("(followed) Primary key constraints failed");

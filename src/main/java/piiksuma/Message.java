@@ -77,8 +77,8 @@ public class Message {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
-        if(id==null || sender ==null){
+    public boolean checkPrimaryKey() {
+        if (id == null || sender == null) {
             return false;
         }
         return true;
@@ -95,7 +95,7 @@ public class Message {
             return false;
         }
 
-        if(getText() == null || getText().isEmpty()){
+        if (getText() == null || getText().isEmpty()) {
             return false;
         }
 

@@ -335,7 +335,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if(notification == null || !notification.checkNotNull()) {
+        if (notification == null || !notification.checkNotNull()) {
             throw new PiikInvalidParameters("(notification) null parameter");
         }
 
@@ -359,11 +359,11 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if(notification == null || !notification.checkNotNull()) {
+        if (notification == null || !notification.checkNotNull()) {
             throw new PiikInvalidParameters("(notification) null parameter");
         }
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) null parameter");
         }
 
@@ -375,7 +375,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if(event == null || !event.checkNotNull()) {
+        if (event == null || !event.checkNotNull()) {
             throw new PiikInvalidParameters("(event) null parameter");
         }
 
