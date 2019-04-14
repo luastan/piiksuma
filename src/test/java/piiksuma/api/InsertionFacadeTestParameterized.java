@@ -1,6 +1,6 @@
 package piiksuma.api;
 
-//import javafx.geometry.Pos;
+import javafx.geometry.Pos;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
