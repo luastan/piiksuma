@@ -231,6 +231,7 @@ public class PostDao extends AbstractDao {
      * @param currentUser user in the application
      */
     public void followHastag(Hashtag hashtag, User currentUser) {
+
         new QueryMapper<Hashtag>(super.getConnection()).
                 createQuery("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
                         "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
