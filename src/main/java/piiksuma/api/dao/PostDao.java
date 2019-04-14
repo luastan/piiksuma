@@ -400,11 +400,12 @@ public class PostDao extends AbstractDao {
                     "    -- one\n" +
                     "    GROUP BY candidates.author, candidates.id\n" +
                     "    ORDER BY COUNT (r.reactiontype) DESC\n" +
-                    "    LIMIT ?)\n" +
+                    "    LIMIT 20)\n" +
                     "\n" +
                     ") as results\n" +
                     "\n" +
-                    "ORDER BY results.publicationdate DESC");
+                    "ORDER BY results.publicationdate DESC\n" +
+                    "LIMIT ?");
 
             // We set the identifier of the user whose feed will be retrieved
             stm.setString(1, user.getEmail());
