@@ -42,14 +42,21 @@ public class SearchFacade {
     public List<User> searchUser(User user, User current, Integer limit) throws PiikInvalidParameters,
             PiikDatabaseException {
 
-        if(user == null){
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) can't be null");
         }
-
-        if(current == null){
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
             throw new PiikInvalidParameters("(current) can't be null");
         }
-
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(current) Primary key constraints failed");
+        }
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) can't be null");
+        }
         return parentFacade.getUserDao().searchUser(user, limit);
     }
 
@@ -61,6 +68,18 @@ public class SearchFacade {
      * @return user that meets the given information
      */
     public User getUser(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) Parameter can not be null");
+        }
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(current) Primary key constraints failed");
+        }
         return parentFacade.getUserDao().getUser(user);
     }
 
@@ -74,39 +93,135 @@ public class SearchFacade {
      */
 
     public Statistics getUserStatistics(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) Parameter can not be null");
+        }
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getUserDao().getUserStatistics(user);
     }
 
     public List<Achievement> getAchievement(User user, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) Parameter can not be null");
+        }
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) Parameter is null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(current) Primary key constraints failed");
+        }
         return parentFacade.getUserDao().getAchievement(user);
     }
 
     /* MULTIMEDIA related methods */
 
-    public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
+    public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if (multimedia == null || !multimedia.checkNotNull()) {
+            throw new PiikInvalidParameters("(multimedia) Parameter can not be null");
+        }
+        if (multimedia.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(current) Primary key constraints failed");
+        }
         return parentFacade.getMultimediaDao().existsMultimedia(multimedia);
     }
 
-    public Integer numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
+    public Integer numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if (multimedia == null || !multimedia.checkNotNull()) {
+            throw new PiikInvalidParameters("(multimedia) Parameter is null");
+        }
+        if (multimedia.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) Parameter can't  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(current) Primary key constraints failed");
+        }
         return parentFacade.getMultimediaDao().numPostMultimedia(multimedia);
     }
 
-    public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters {
+    public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if (multimedia == null || !multimedia.checkNotNull()) {
+            throw new PiikInvalidParameters("(multimedia) Parameter can not be null");
+        }
+        if (multimedia.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getMultimediaDao().postWithMultimedia(multimedia);
     }
 
     /* POST related methods */
 
     public Post getPost(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikInvalidParameters("(post) Parameter can not be null");
+        }
+        if (!post.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().getPost(post);
     }
 
     public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+        }
+        if (!hashtag.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().getPost(hashtag);
     }
 
     public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) Parameter can not  be null");
+        }
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().getPost(user);
     }
 
@@ -118,6 +233,19 @@ public class SearchFacade {
      * @return hashtag that matches the given information
      */
     public Hashtag getHashtag(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+        }
+        if (!hashtag.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().getHashtag(hashtag);
     }
 
@@ -131,6 +259,21 @@ public class SearchFacade {
      */
     public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) Parameter can not  be null or less than zero");
+        }
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+        }
+        if (!hashtag.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().searchHashtag(hashtag, limit);
     }
 
@@ -142,7 +285,19 @@ public class SearchFacade {
      * @param current current user
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, Integer limit, User current) throws PiikInvalidParameters {
+    public List<Post> searchByText(String text, Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if (text == null || text.isEmpty()) {
+            throw new PiikInvalidParameters("(text) Parameter can not  be null");
+        }
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) Parameter can not  be null or less than zero");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().searchByText(text, limit);
     }
 
@@ -160,14 +315,18 @@ public class SearchFacade {
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) can not be null");
         }
-
-        if(current == null || !current.checkNotNull()) {
-            throw new  PiikInvalidParameters("(current) can not be null");
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) Parameter can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters("(limit) must be greater than 0");
         }
@@ -188,14 +347,18 @@ public class SearchFacade {
      */
     public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) can not be null");
         }
-
-        if(current == null || !current.checkNotNull()) {
-            throw new  PiikInvalidParameters("(current) can not be null");
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         // A user's archived posts can be retrieved by an user or by an admin
         if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried archived posts");
@@ -204,7 +367,16 @@ public class SearchFacade {
         return parentFacade.getPostDao().getArchivedPosts(user);
     }
 
-    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikInvalidParameters, PiikInvalidParameters {
+    public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getPostDao().getTrendingTopics(limit);
     }
 
@@ -217,11 +389,19 @@ public class SearchFacade {
      * @param current current user
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikForbiddenException {
-        if (!current.getType().equals(UserType.administrator)) {
+    public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException, PiikForbiddenException {
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+        if (!current.checkAdministrator()) {
             throw new PiikForbiddenException("The current user isn't an administrator");
         }
-
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
@@ -232,10 +412,13 @@ public class SearchFacade {
      * @return Messages for the user
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser
      */
-    public List<Message> readMessages(User currentUser) throws PiikDatabaseException {
+    public List<Message> readMessages(User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("Parameter 'currentUser' can not be null");
+            throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
+        }
+        if (!currentUser.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
         }
         return parentFacade.getMessagesDao().readMessages(currentUser);
     }
@@ -244,6 +427,18 @@ public class SearchFacade {
     /* INTERACTION related methods */
 
     public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (post == null || post.checkNotNull()) {
+            throw new PiikInvalidParameters("Parameter 'post' can not be null");
+        }
+        if(post.checkPrimaryKey()){
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         return parentFacade.getInteractionDao().getPostReaction(post);
     }
 
@@ -256,16 +451,20 @@ public class SearchFacade {
      */
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) can not be null");
         }
-
-        if(current == null || !current.checkNotNull()) {
-            throw new  PiikInvalidParameters("(current) can not be null");
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-
+        if (current == null || !current.checkNotNull()) {
+            throw new PiikInvalidParameters("(current) can not be null");
+        }
+        if (!current.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
         // A user's notifications can be retrieved by the user or by an admin
-        if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+        if (!current.checkAdministrator() && !current.equals(user)) {
             throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
         }
 

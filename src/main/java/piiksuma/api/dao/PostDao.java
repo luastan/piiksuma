@@ -84,15 +84,11 @@ public class PostDao extends AbstractDao {
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) {
+    public void removePost(Post post) throws PiikDatabaseException{
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
     public Post getPost(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE id = ? " +
                 "and author = ?").defineParameters(post.getId(),post.getPostAuthor()).findFirst();
@@ -100,19 +96,11 @@ public class PostDao extends AbstractDao {
 
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
-        }
-
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM ownHashtag as o, post as p" +
                 "WHERE p.id=o.post AND p.author=o.author").list();
     }
 
     public List<Post> getPost(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM ownHashtag as o, post as p" +
                 "WHERE p.id=o.post AND p.author=o.author").list();
@@ -176,7 +164,7 @@ public class PostDao extends AbstractDao {
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
     }
 
-    public void removeRepost(Post repost){
+    public void removeRepost(Post repost) throws PiikDatabaseException{
 
     }
 
@@ -218,10 +206,6 @@ public class PostDao extends AbstractDao {
      */
     public Hashtag getHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
-        }
-
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
                 "WHERE name LIKE '?'").defineClass(Hashtag.class).defineParameters(hashtag.getName()).findFirst();
     }
@@ -233,15 +217,7 @@ public class PostDao extends AbstractDao {
      * @param limit   maximum number of tickets to retrieve
      * @return hashtags that match the given information
      */
-    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
-
-        if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
-        }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
+    public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) throws PiikDatabaseException{
 
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
                 "WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
@@ -269,15 +245,7 @@ public class PostDao extends AbstractDao {
      * @param limit maximum number of tickets to retrieve
      * @return list of the posts which contain the given text
      */
-    public List<Post> searchByText(String text, Integer limit) throws PiikInvalidParameters {
-
-        if (text == null || text.isEmpty()) {
-            throw new PiikInvalidParameters("(text) is empty");
-        }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
+    public List<Post> searchByText(String text, Integer limit) throws PiikDatabaseException {
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE UPPER(text) " +
                 "LIKE UPPER(?) ORDER BY publicationDate DESC LIMIT ?").defineClass(Post.class).defineParameters(

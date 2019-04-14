@@ -137,15 +137,7 @@ public class MessagesDao extends AbstractDao {
      * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(Integer limit) throws PiikInvalidParameters {
-
-        // if (!currentUser.getType().equals(UserType.administrator)) {
-
-        // }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
+    public List<Ticket> getAdminTickets(Integer limit) throws PiikDatabaseException {
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
                 "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();

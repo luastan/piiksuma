@@ -49,7 +49,7 @@ public class DeletionFacade {
         if (!user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
-        if (!currentUser.checkAdministrator() || !currentUser.getEmail().equals(user.getEmail())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(user.getEmail())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().removeUser(user);
@@ -142,7 +142,7 @@ public class DeletionFacade {
         if (!post.checkPrimaryKey()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
-        if (!currentUser.checkAdministrator() || !currentUser.getEmail().equals(post.getPostAuthor())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(post.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getPostDao().removePost(post);
@@ -170,7 +170,7 @@ public class DeletionFacade {
         if (!repost.checkPrimaryKey()) {
             throw new PiikDatabaseException("(repost) Primary key constraints failed");
         }
-        if (!currentUser.checkAdministrator() || !currentUser.getEmail().equals(repost.getPostAuthor())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(repost.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getPostDao().removeRepost(repost);
@@ -202,7 +202,7 @@ public class DeletionFacade {
             throw new PiikDatabaseException("(message) Primary key constraints failed");
         }
         // Permision check
-        if (!currentUser.checkAdministrator() || !currentUser.getEmail().equals(message.getSender())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(message.getSender())) {
             throw new PiikForbiddenException("You do not have the required permissions");
         }
         parentFacade.getMessagesDao().deleteMessage(message);
@@ -232,7 +232,7 @@ public class DeletionFacade {
         if (!e.checkPrimaryKey()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
-        if (!currentUser.checkAdministrator() || !currentUser.getEmail().equals(e.getCreator())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(e.getCreator())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getInteractionDao().removeEvent(e);
