@@ -123,10 +123,6 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivePost as a" +
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
     }
