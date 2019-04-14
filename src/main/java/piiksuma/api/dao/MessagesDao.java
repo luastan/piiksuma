@@ -69,6 +69,8 @@ public class MessagesDao extends AbstractDao {
         if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
         }
+
+
     }
 // =====================================================================================================================
 
