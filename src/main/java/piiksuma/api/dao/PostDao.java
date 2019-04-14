@@ -276,8 +276,8 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Hashtag>(super.getConnection()).
-                createQuery("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
+        new InsertionMapper<Hashtag>(super.getConnection()).
+                createUpdate("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
                         "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
                 defineClass(Hashtag.class).
                 defineParameters(hashtag.getName(), user.getEmail(), hashtag.getName()).executeUpdate();
