@@ -84,7 +84,7 @@ public class PostDao extends AbstractDao {
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) throws PiikDatabaseException {
+    public void removePost(Post post) {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -94,7 +94,8 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        return null;
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE id = ? " +
+                "and author = ?").defineParameters(post.getId(),post.getPostAuthor()).findFirst();
     }
 
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
@@ -103,7 +104,8 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
         }
 
-        return null;
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM ownHashtag as o, post as p" +
+                "WHERE p.id=o.post AND p.author=o.author").list();
     }
 
     public List<Post> getPost(User user) throws PiikDatabaseException {
@@ -112,7 +114,8 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        return null;
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM ownHashtag as o, post as p" +
+                "WHERE p.id=o.post AND p.author=o.author").list();
     }
 
     /**
@@ -173,11 +176,8 @@ public class PostDao extends AbstractDao {
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
     }
 
-    public void removeRepost(Post repost) throws PiikDatabaseException {
+    public void removeRepost(Post repost){
 
-        if (repost == null || !repost.checkNotNull()) {
-            throw new PiikDatabaseException("(repost) Primary key constraints failed");
-        }
     }
 
     public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
@@ -201,13 +201,13 @@ public class PostDao extends AbstractDao {
         return null;
     }
 
-    public Hashtag createHashtag(Hashtag hashtag) throws PiikDatabaseException {
+    public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkNotNull()) {
             throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
         }
 
-        return null;
+        new InsertionMapper<Hashtag>(super.getConnection()).add(hashtag).defineClass(Hashtag.class).insert();
     }
 
     /**

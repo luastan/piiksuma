@@ -27,11 +27,7 @@ public class MessagesDao extends AbstractDao {
      *
      * @param message message to delete
      */
-    public void deleteMessage(Message message) throws PiikDatabaseException {
-        // Check new message
-        if (message == null || !message.checkNotNull()) {
-            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
-        }
+    public void deleteMessage(Message message){
 
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
@@ -73,6 +69,8 @@ public class MessagesDao extends AbstractDao {
         if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
         }
+
+
     }
 // =====================================================================================================================
 

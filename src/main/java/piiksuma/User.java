@@ -267,7 +267,7 @@ public class User {
             return false;
         }
 
-        return getRegistrationDate() != null;
+        return true;
     }
 
     /**

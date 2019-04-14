@@ -29,10 +29,6 @@ public class UserDao extends AbstractDao {
      */
     public void removeUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
     }
 
@@ -56,6 +52,8 @@ public class UserDao extends AbstractDao {
         if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
+
+        new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
     }
 
     /**
@@ -95,6 +93,7 @@ public class UserDao extends AbstractDao {
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
                 user.getId(), user.getName(), limit).list();
     }
+
 
     public List<Achievement> getAchievement(User user) throws PiikDatabaseException {
 
@@ -145,6 +144,8 @@ public class UserDao extends AbstractDao {
         if (achievement == null || !achievement.checkPrimaryKey()) {
             throw new PiikDatabaseException("(achievement) Primary key constraints failed");
         }
+
+        new InsertionMapper<Achievement>(super.getConnection()).add(achievement).defineClass(Achievement.class).insert();
     }
 
     public Achievement unlockAchievement(Achievement achievement) throws PiikDatabaseException {
@@ -165,14 +166,6 @@ public class UserDao extends AbstractDao {
      */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
-        }
-
-        if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
-        }
-
         new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO followuser(followed,follower) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
 
@@ -185,15 +178,7 @@ public class UserDao extends AbstractDao {
      * @param follower User who wants to unfollow the followed user
      * @throws PiikDatabaseException
      */
-    public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
-
-        if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
-        }
-
-        if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
-        }
+    public void unfollowUser(User followed, User follower) {
 
         new QueryMapper<Object>(super.getConnection()).createQuery("DELETE FROM followUser " +
                 "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();

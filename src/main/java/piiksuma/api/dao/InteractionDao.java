@@ -2,8 +2,10 @@ package piiksuma.api.dao;
 
 import piiksuma.*;
 import piiksuma.Notification;
+import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
+import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
@@ -22,6 +24,8 @@ public class InteractionDao extends AbstractDao {
         if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
+
+        new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
     }
 
     public void removeReaction(Reaction reaction) throws PiikDatabaseException {
@@ -29,15 +33,18 @@ public class InteractionDao extends AbstractDao {
         if (reaction == null || !reaction.checkNotNull()) {
             throw new PiikDatabaseException("(reaction) Primary key constraints failed");
         }
+
+        new DeleteMapper<Reaction>(super.getConnection()).add(reaction).defineClass(Reaction.class).delete();
     }
 
-    public Event updateEvent(Event event) throws PiikDatabaseException {
+    public void updateEvent(Event event) throws PiikDatabaseException {
 
         if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
 
-        return null;
+        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
+
     }
 
     public void react(Reaction reaction) throws PiikDatabaseException {
@@ -47,13 +54,14 @@ public class InteractionDao extends AbstractDao {
         }
     }
 
-    public Event createEvent(Event event) throws PiikDatabaseException {
+    public void createEvent(Event event) throws PiikDatabaseException {
 
         if (event == null || !event.checkNotNull()) {
             throw new PiikDatabaseException("(event) Primary key constraints failed");
         }
 
-        return null;
+        new InsertionMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).insert();
+
     }
 
     public HashMap<ReactionType, Integer> getPostReaction(Post post) throws PiikDatabaseException {
