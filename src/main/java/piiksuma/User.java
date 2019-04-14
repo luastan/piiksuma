@@ -271,6 +271,14 @@ public class User {
     }
 
     /**
+     * Function to know if an user is an administrator or a normal user
+     *
+     * @return Returns "true" if the user is an admin, otherwise return "false"
+     */
+    public boolean checkAdministrator(){
+        return type.equals(UserType.administrator);
+    }
+    /**
      * Function to check that the primary keys are not null
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
