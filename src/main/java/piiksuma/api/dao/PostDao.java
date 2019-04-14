@@ -175,7 +175,7 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(userPost) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO repost(post,usr,author) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
     }
 
