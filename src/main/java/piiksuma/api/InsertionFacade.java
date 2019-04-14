@@ -71,9 +71,18 @@ public class InsertionFacade {
 
     /* MLTIMEDIA related methods */
 
-    public void addMultimedia(Multimedia multimedia) throws PiikInvalidParameters,PiikDatabaseException{
-        if (multimedia == null || multimedia.checkNotNull()) {
+    public void addMultimedia(Multimedia multimedia,User currentUser) throws PiikInvalidParameters,PiikDatabaseException{
+        if (multimedia == null || !multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) The parameter is null");
+        }
+        if (!multimedia.checkPrimaryKey()){
+            throw new PiikDatabaseException("(multimedia) Primary key constraints failed");
+        }
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+        if (!currentUser.checkPrimaryKey()){
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
         }
         parentFacade.getMultimediaDao().addMultimedia(multimedia);
     }
@@ -140,10 +149,48 @@ public class InsertionFacade {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
+
+        if (!currentUser.checkPrimaryKey()){
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) The parameter is null");
+        }
+
+        if (!user.checkPrimaryKey()){
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         if (!user.equals(currentUser)){
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getPostDao().archivePost(post, user);
+    }
+
+    /**
+     * Function to update the text content of the post
+     *
+     * @param post post to be updated
+     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     */
+    public void updatePost(Post post,User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+
+        if (!currentUser.checkPrimaryKey()){
+            throw new PiikDatabaseException("(currentUser) Primary key constraints failed");
+        }
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikInvalidParameters("(post) The parameter is null");
+        }
+
+        if (!post.checkPrimaryKey()){
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
+        parentFacade.getPostDao().updatePost(post);
     }
 
 
@@ -217,6 +264,23 @@ public class InsertionFacade {
             throw new PiikForbiddenException("You do not have the required permissions");
         }
         parentFacade.getMessagesDao().modifyMessage(oldMessage, newMessage);
+    }
+
+    public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
+
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) The parameter is null");
+        }
+        if (!currentUser.checkPrimaryKey()){
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("(user) The parameter is null");
+        }
+        if (!currentUser.checkPrimaryKey()){
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        parentFacade.getUserDao().administratePersonalData(user);
     }
 
 

@@ -57,11 +57,7 @@ public class PostDao extends AbstractDao {
 
     public void updatePost(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        new UpdateMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).update();
+      new UpdateMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).update();
     }
 
     /**
@@ -71,10 +67,6 @@ public class PostDao extends AbstractDao {
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
     public void archivePost(Post post, User user) throws PiikDatabaseException {
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
 
         new QueryMapper<Post>(super.getConnection()).createQuery("INSERT into archivePost values (?,?,?)").defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
     }

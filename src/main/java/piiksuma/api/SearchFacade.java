@@ -84,6 +84,22 @@ public class SearchFacade {
     }
 
     /**
+     * Function to login into the app; it will try to find a user that meets the given keys
+     *
+     * @param user user whose primary fields will be used in the search
+     * @return user from database that meets the required attributes
+     */
+
+    public User login(User user) throws PiikInvalidParameters, PiikDatabaseException {
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikInvalidParameters("(user) Parameter can not be null");
+        }
+        if (!user.checkPrimaryKey()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+        return parentFacade.getUserDao().login(user);
+    }
+    /**
      * Function that returns the statistics of the given user
      *
      * @param user    user about whose statistics we want to know

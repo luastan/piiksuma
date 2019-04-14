@@ -97,10 +97,6 @@ public class UserDao extends AbstractDao {
      */
     public User login(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
-        }
-
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "Where id = ? and pass = ?").defineClass(User.class).defineParameters(user.getId(), user.getPass()).findFirst();
     }
