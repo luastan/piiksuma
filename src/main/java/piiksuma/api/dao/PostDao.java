@@ -188,6 +188,10 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(repost) Primary key constraints failed");
         }
 
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getSugarDaddy(),
+                repost.getPostAuthor(), repost.getFatherPost()).executeUpdate();
+
     }
 
     public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
