@@ -165,8 +165,6 @@ public class PostDao extends AbstractDao {
      * @param userRepost user who does the repost
      * @param post post to be reposted
      * @param userPost user who owns the post
-     * @return
-     * @throws PiikDatabaseException
      */
     public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
 
@@ -185,7 +183,6 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
                 "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getEmail(),
                 userPost.getEmail()).executeUpdate();
-
     }
 
     /**
@@ -200,7 +197,7 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(repost) Primary key constraints failed");
         }
 
-        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
+        new DeleteMapper<>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
                 "AND author=?").defineClass(Object.class).defineParameters(repost.getSugarDaddy(),
                 repost.getPostAuthor(), repost.getFatherPost()).executeUpdate();
 
