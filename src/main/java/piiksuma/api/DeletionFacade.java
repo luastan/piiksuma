@@ -234,7 +234,7 @@ public class DeletionFacade {
         }
 
         // We only allow the user who created the reaction to delete or an admin
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(reaction.getUser())) {
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(reaction.getUser().getEmail())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getInteractionDao().removeReaction(reaction);

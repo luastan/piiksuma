@@ -78,12 +78,18 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivePost values (?,?,?)")
                 .defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
     }
+
     /**
      * Function that removes a post from the database
      *
      * @param post post to remove from the database
      */
-    public void removePost(Post post) {
+    public void removePost(Post post) throws PiikDatabaseException {
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikDatabaseException("(post) Primary key constraints failed");
+        }
+
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
@@ -210,7 +216,7 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to get the hashtag that matchs with the given specifications
+     * Function to get the hashtag that matches the given specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
      * @return hashtag that matches the given information
@@ -253,7 +259,16 @@ public class PostDao extends AbstractDao {
      * @param hashtag hashtag to follow
      * @param user    user who will follow the given hashtag
      */
-    public void followHastag(Hashtag hashtag, User user) {
+    public void followHastag(Hashtag hashtag, User user) throws PiikDatabaseException {
+
+        if (hashtag == null || !hashtag.checkNotNull()) {
+            throw new PiikDatabaseException("(hashtag) Primary key constraints failed");
+        }
+
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         new InsertionMapper<Hashtag>(super.getConnection()).
                 createUpdate("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
                         "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").

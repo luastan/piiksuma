@@ -108,7 +108,7 @@ CREATE TABLE ticket
     section      varchar(20)  not null,
     text         varchar(200) not null,
     creationDate timestamp    not null default now(),
-    deadline     timestamp, -- todo añadir
+    closeDate    timestamp,
     adminClosing varchar(32),
     primary key (id),
     foreign key (usr) references piiUser (email) on delete set null on update cascade,
@@ -242,9 +242,9 @@ CREATE TABLE followHashtag
 
 CREATE TABLE archivePost
 (
-    post         varchar(32),
-    usr          varchar(32),
-    author       varchar(32),
+    post   varchar(32),
+    usr    varchar(32),
+    author varchar(32),
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
@@ -315,12 +315,14 @@ CREATE TABLE achievement
 
 CREATE TABLE ownAchievement
 (
-    logro           varchar(32),
-    usr             varchar(32),
+    achiev          varchar(32) primary key,
+    usr             varchar(32) primary key,
     acquisitionDate timestamp not null default now(),
 
-    foreign key (logro) references achievement (id) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+    foreign key (achiev) references achievement (id)
+        on delete cascade on update cascade,
+    foreign key (usr) references piiUser (email)
+        on delete cascade on update cascade
 );
 
 

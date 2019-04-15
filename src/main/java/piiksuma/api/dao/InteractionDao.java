@@ -10,6 +10,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InteractionDao extends AbstractDao {
     public InteractionDao(Connection connection) {
@@ -44,11 +45,18 @@ public class InteractionDao extends AbstractDao {
 
     }
 
+    /**
+     * Inserts into the database a given reaction
+     *
+     * @param reaction reaction to be inserted
+     */
     public void react(Reaction reaction) throws PiikDatabaseException {
 
         if (reaction == null || !reaction.checkNotNull()) {
             throw new PiikDatabaseException("(reaction) Primary key constraints failed");
         }
+
+        new InsertionMapper<Reaction>(super.getConnection()).add(reaction).defineClass(Reaction.class).insert();
     }
 
     public void createEvent(Event event) throws PiikDatabaseException {
@@ -61,13 +69,30 @@ public class InteractionDao extends AbstractDao {
 
     }
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post) throws PiikDatabaseException {
+    /**
+     * Gets the number of reactions that a post has, classified by type
+     *
+     * @param post post whose reactions will be counted
+     * @return number of reactions classified by type
+     */
+    public HashMap<ReactionType, Integer> getPostReactionsCount(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
             throw new PiikDatabaseException("(post) Primary key constraints failed");
         }
 
-        return null;
+        HashMap<ReactionType, Integer> result = new HashMap<>();
+
+        // We get the reactions associated with the post and we group them by type
+        List<Map<String, Object>> query = new QueryMapper<Object>(super.getConnection()).createQuery(
+                "SELECT reactionType as type, count(usr) as number FROM react WHERE post = ? AND author = ? GROUP BY " +
+                        "reactionType").defineParameters(post.getId(), post.getPostAuthor()).mapList();
+
+        for (Map<String, Object> row : query) {
+            result.put(ReactionType.stringToReactionType((String) row.get("type")), (Integer) row.get("number"));
+        }
+
+        return result;
     }
 
     /**
@@ -101,7 +126,7 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO haveNotification (notification,usr) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO haveNotification (notification,usr) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getEmail()).executeUpdate();
 
     }

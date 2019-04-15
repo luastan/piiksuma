@@ -98,13 +98,15 @@ public class UserDao extends AbstractDao {
     }
 
 
-    public List<Achievement> getAchievement(User user) throws PiikDatabaseException {
+    public List<Achievement> getAchievements(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        return null;
+        return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownAchievement as o, " +
+                "achievement as a WHERE o.usr = ? AND o.achiev = a.id").defineClass(Achievement.class).defineParameters(
+                user.getEmail()).list();
     }
 
 
@@ -147,13 +149,18 @@ public class UserDao extends AbstractDao {
         new InsertionMapper<Achievement>(super.getConnection()).add(achievement).defineClass(Achievement.class).insert();
     }
 
-    public Achievement unlockAchievement(Achievement achievement) throws PiikDatabaseException {
+    public void unlockAchievement(Achievement achievement, User user) throws PiikDatabaseException {
 
         if (achievement == null || !achievement.checkPrimaryKey()) {
             throw new PiikDatabaseException("(achievement) Primary key constraints failed");
         }
 
-        return null;
+        if(user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO ownAchievement VALUES " +
+                "(?, ?)").defineParameters(achievement.getId(), user.getEmail()).executeUpdate();
     }
 
     /**

@@ -27,7 +27,12 @@ public class MessagesDao extends AbstractDao {
      *
      * @param message message to delete
      */
-    public void deleteMessage(Message message) {
+    public void deleteMessage(Message message) throws PiikDatabaseException {
+
+        if (message == null || !message.checkNotNull()) {
+            throw new PiikDatabaseException("(message) Primary key constraints failed");
+        }
+
         //We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
@@ -39,7 +44,16 @@ public class MessagesDao extends AbstractDao {
      * @param oldMessage message to be replaced
      * @param newMessage message to be inserted
      */
-    public void modifyMessage(Message oldMessage, Message newMessage) {
+    public void modifyMessage(Message oldMessage, Message newMessage) throws PiikDatabaseException {
+
+        if (oldMessage == null || !oldMessage.checkNotNull()) {
+            throw new PiikDatabaseException("(oldMessage) Primary key constraints failed");
+        }
+
+        if (newMessage == null || !newMessage.checkNotNull()) {
+            throw new PiikDatabaseException("(newMessage) Primary key constraints failed");
+        }
+
         new UpdateMapper<Message>(super.getConnection()).add(newMessage).defineClass(Message.class).update();
 
     }
@@ -50,24 +64,29 @@ public class MessagesDao extends AbstractDao {
      * @param user user whose messages will be retrieved
      * @return list of messages for the user
      */
-    public List<Message> readMessages(User user) {
+    public List<Message> readMessages(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkNotNull()) {
+            throw new PiikDatabaseException("(user) Primary key constraints failed");
+        }
+
         return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE reciever = ? ").
                 defineClass(Message.class).defineParameters(user.getEmail()).list();
     }
 
     /**
-     * º
-     * This function sends a private message to another user in the app
+     *
+     * This function creates a private message to another user in the app
      *
      * @param message message to be sent
      */
-
-    public void sendMessage(Message message) throws PiikDatabaseException {
+    public void createMessage(Message message) throws PiikDatabaseException {
 
         if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
         }
 
+        new InsertionMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).insert();
     }
 // =====================================================================================================================
 
@@ -84,7 +103,7 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
-        new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
+        new InsertionMapper<Ticket>(super.getConnection()).add(ticket).defineClass(Ticket.class).insert();
     }
 
     /**
@@ -119,8 +138,12 @@ public class MessagesDao extends AbstractDao {
 
     public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
-        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET deadline = now() WHERE id = ?").defineClass(Ticket.class).defineParameters(ticket.getId()).executeUpdate();
+        if (ticket == null || !ticket.checkNotNull()) {
+            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
+        }
 
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closeDate = NOW() WHERE id = " +
+                "?").defineParameters(ticket.getId()).executeUpdate();
     }
 
     /**
@@ -130,6 +153,10 @@ public class MessagesDao extends AbstractDao {
      * @return the list of all the tickets which haven't been closed
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters("(limit) must be greater than 0");
+        }
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
                 "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();

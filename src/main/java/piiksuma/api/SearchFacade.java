@@ -116,7 +116,7 @@ public class SearchFacade {
         return parentFacade.getUserDao().getUserStatistics(user);
     }
 
-    public List<Achievement> getAchievement(User user, User current) throws PiikInvalidParameters,
+    public List<Achievement> getAchievements(User user, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (user == null || !user.checkNotNull()) {
             throw new PiikInvalidParameters("(user) Parameter can not be null");
@@ -130,7 +130,7 @@ public class SearchFacade {
             throw new PiikForbiddenException("Forbidden");
         }
 
-        return parentFacade.getUserDao().getAchievement(user);
+        return parentFacade.getUserDao().getAchievements(user);
     }
 
     /* MULTIMEDIA related methods */
@@ -401,7 +401,14 @@ public class SearchFacade {
 
     /* INTERACTION related methods */
 
-    public HashMap<ReactionType, Integer> getPostReaction(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
+    /**
+     * Gets the number of reactions that a post has, classified by type
+     *
+     * @param post post whose reactions will be counted
+     * @param current current user logged into the app
+     * @return number of reactions classified by type
+     */
+    public HashMap<ReactionType, Integer> getPostReactionCount(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null || post.checkNotNull()) {
             throw new PiikInvalidParameters("Parameter 'post' can not be null");
         }
@@ -410,7 +417,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
         }
 
-        return parentFacade.getInteractionDao().getPostReaction(post);
+        return parentFacade.getInteractionDao().getPostReactionsCount(post);
     }
 
     /**
