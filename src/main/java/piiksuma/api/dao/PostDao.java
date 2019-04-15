@@ -200,27 +200,6 @@ public class PostDao extends AbstractDao {
 
     }
 
-    public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
-
-        if (reply == null || !reply.checkNotNull()) {
-            throw new PiikDatabaseException("(reply) Primary key constraints failed");
-        }
-
-        if (userReply == null || !userReply.checkNotNull()) {
-            throw new PiikDatabaseException("(userReply) Primary key constraints failed");
-        }
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        if (userPost == null || !userPost.checkNotNull()) {
-            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
-        }
-
-        return null;
-    }
-
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkNotNull()) {
