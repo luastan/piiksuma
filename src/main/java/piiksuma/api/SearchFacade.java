@@ -147,7 +147,7 @@ public class SearchFacade {
         return parentFacade.getMultimediaDao().existsMultimedia(multimedia);
     }
 
-    public Integer numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
+    public Long numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) Parameter is null");
         }

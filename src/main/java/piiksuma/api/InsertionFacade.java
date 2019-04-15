@@ -356,10 +356,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
         if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters("(oldMessage) The parameter is null");
         }
         if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters("(newMessage) The parameter is null");
         }
         // Permision check
         if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(oldMessage.getSender())) {
@@ -380,6 +380,37 @@ public class InsertionFacade {
         }
 
         parentFacade.getUserDao().administratePersonalData(user);
+    }
+
+    /**
+     * Function to reply a post with other post
+     *
+     * @param reply response to the post father
+     * @param currentUser current user logged into the app
+     * @throws PiikDatabaseException
+     */
+    public void reply(Post reply, User currentUser) throws PiikDatabaseException {
+        if(reply == null || !reply.checkNotNull()){
+            throw new PiikDatabaseException("(reply) can't be null");
+        }
+
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikDatabaseException("(currentUser) can't be null");
+        }
+
+        if(!reply.getPostAuthor().equals(currentUser.getId()) && !currentUser.getType().equals(UserType.administrator)){
+            throw new PiikForbiddenException("You do not have the required permissions");
+        }
+
+        if(reply.getFatherPost() == null || reply.getFatherPost().isEmpty()){
+            throw new PiikDatabaseException("The author of the post father can not be null");
+        }
+
+        if(reply.getSugarDaddy() == null || reply.getSugarDaddy().isEmpty()){
+            throw new PiikDatabaseException("The post father can not be null");
+        }
+
+        parentFacade.getPostDao().createPost(reply);
     }
 
 
