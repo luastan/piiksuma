@@ -75,9 +75,9 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Post>(super.getConnection()).createQuery("INSERT into archivePost values (?,?,?)").defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
+        new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivePost values (?,?,?)")
+                .defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
     }
-
     /**
      * Function that removes a post from the database
      *
@@ -87,6 +87,12 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
+    /**
+     * Function to get the indicated post from the database
+     * @param post post to search from the database
+     * @return the post
+     * @throws PiikDatabaseException
+     */
     public Post getPost(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkNotNull()) {
@@ -97,6 +103,13 @@ public class PostDao extends AbstractDao {
                 "and author = ?").defineParameters(post.getId(), post.getPostAuthor()).findFirst();
     }
 
+    /**
+     * Funcion that return a list with all the posts that have the indicated hashtag
+     *
+     * @param hashtag hashtag to search in the posts
+     * @return a list with all the posts that have the hashtag
+     * @throws PiikDatabaseException
+     */
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkNotNull()) {
@@ -107,6 +120,13 @@ public class PostDao extends AbstractDao {
                 "WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author").defineParameters(hashtag.getName()).list();
     }
 
+    /**
+     * Function that return a list with all the user's post
+     *
+     * @param user user who created the post
+     * @return a list with all the user's posts
+     * @throws PiikDatabaseException
+     */
     public List<Post> getPost(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkNotNull()) {
@@ -133,11 +153,16 @@ public class PostDao extends AbstractDao {
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
     }
 
-    public Post repost(Post repost, User userRepost, Post post, User userPost) throws PiikDatabaseException {
-
-        if (repost == null || !repost.checkNotNull()) {
-            throw new PiikDatabaseException("(repost) Primary key constraints failed");
-        }
+    /**
+     * Function to do a repost on a post
+     *
+     * @param userRepost user who does the repost
+     * @param post post to be reposted
+     * @param userPost user who owns the post
+     * @return
+     * @throws PiikDatabaseException
+     */
+    public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
 
         if (userRepost == null || !userRepost.checkNotNull()) {
             throw new PiikDatabaseException("(userRepost) Primary key constraints failed");
@@ -151,61 +176,28 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(userPost) Primary key constraints failed");
         }
 
-        return null;
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
+                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getEmail(),
+                userPost.getEmail()).executeUpdate();
+
     }
 
     /**
-     * Function to do a retweet on a post
+     * Function to remove a repost
      *
-     * @param userRetweet User who does the retweet
-     * @param post        Post to be retweeted
-     * @param userPost    User who owns the post
+     * @param repost repost to remove from the database
      * @throws PiikDatabaseException
      */
-    public void retweet(User userRetweet, Post post, User userPost) throws PiikDatabaseException {
-        if (userRetweet == null || !userRetweet.checkNotNull()) {
-            throw new PiikDatabaseException("(userRetweet) Primary key constraints failed");
-        }
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        if (userPost == null || !userPost.checkNotNull()) {
-            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
-        }
-
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
-                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRetweet.getEmail(), userPost.getEmail()).executeUpdate();
-    }
-
     public void removeRepost(Post repost) throws PiikDatabaseException {
 
         if (repost == null || !repost.checkNotNull()) {
             throw new PiikDatabaseException("(repost) Primary key constraints failed");
         }
 
-    }
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getSugarDaddy(),
+                repost.getPostAuthor(), repost.getFatherPost()).executeUpdate();
 
-    public Post reply(Post reply, User userReply, Post post, User userPost) throws PiikDatabaseException {
-
-        if (reply == null || !reply.checkNotNull()) {
-            throw new PiikDatabaseException("(reply) Primary key constraints failed");
-        }
-
-        if (userReply == null || !userReply.checkNotNull()) {
-            throw new PiikDatabaseException("(userReply) Primary key constraints failed");
-        }
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        if (userPost == null || !userPost.checkNotNull()) {
-            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
-        }
-
-        return null;
     }
 
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {

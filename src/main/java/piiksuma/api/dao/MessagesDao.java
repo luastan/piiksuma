@@ -119,9 +119,8 @@ public class MessagesDao extends AbstractDao {
 
     public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkNotNull()) {
-            throw new PiikDatabaseException("(ticket) Primary key constraints failed");
-        }
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET deadline = now() WHERE id = ?").defineClass(Ticket.class).defineParameters(ticket.getId()).executeUpdate();
+
     }
 
     /**
@@ -131,10 +130,6 @@ public class MessagesDao extends AbstractDao {
      * @return the list of all the tickets which haven't been closed
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
-
-        if (limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
                 "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
