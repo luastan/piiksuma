@@ -6,7 +6,7 @@ import piiksuma.database.MapperTable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@MapperTable(nombre = "privateMessage")
+@MapperTable(nombre = "message")
 public class Message {
     @MapperColumn(pkey = true)
     private String id;
