@@ -1,0 +1,102 @@
+/*
+
+    Piiksuma Global stylesheet.
+
+
+    Defines common styling for the app
+
+*/
+
+
+/* GLOBAL CSS "VARIABLES" */
+* {
+    /* Colors */
+
+    -primary-color-1: #7F22FD;
+    -primary-color-2: #F2E7FE;
+    -primary-color-3: #D7B7FD;
+    -primary-color-4: #190078;
+    -primary-color-5: #391072;
+
+    -secondary-color-1: #00A6A6;
+    -secondary-color-2: #86FFEA;
+    -secondary-color-3: #4FFEE4;
+    -secondary-color-4: #002F33;
+
+    -piik-black: #211A1D;
+    -piik-dark-pink: #EA526F;
+    -piik-isabelline: #F6E8EA;
+
+
+    -white-high-emphasis: rgba(255, 255, 255, 1.00);
+    -white-medium-emphasis: rgba(255, 255, 255, 0.70);
+    -white-disabled: rgba(255, 255, 255, 0.50);
+    -white-inactive: rgba(255, 255, 255, 0.54);
+
+    -black-high-emphasis: rgba(0, 0, 0, 0.80);
+    -black-medium-emphasis: rgba(0, 0, 0, 0.60);
+    -black-disabled: rgba(0, 0, 0, 0.38);
+    -black-inactive: rgba(0, 0, 0, 0.54);
+
+    -color-surface-post: #FAFAFA;
+    -color-surface-app-ui: #ebebeb;
+
+    -color-surface-snackbar: #202020;
+    -color-error: #FF0C3E;
+
+}
+
+/*
+640
+360
+*/
+
+
+/* Decorator */
+.jfx-decorator {
+    -fx-decorator-color: -primary-color-5;
+}
+
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+}
+
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
+
+
+/* Tabs */
+
+
+.tab {
+    -fx-background-color: -primary-color-5;
+    -fx-text-fill: -white-high-emphasis;
+    -fx-color-label-visible: -white-high-emphasis;
+    -fx-cursor: hand;
+
+    -fx-pref-width: 108;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+}
+
+.tab-header-background {
+    -fx-background-color: -primary-color-5;
+}
+
+.jfx-tab-pane .headers-region .tab-selected-line {
+    -fx-background-color: -white-high-emphasis;
+}
+
+.jfx-tab-pane .headers-region .tab:selected .tab-container .tab-label {
+    -fx-text-fill: -white-high-emphasis;
+}
+
+
+.jfx-tab-pane .headers-region > .tab > .jfx-rippler {
+    -jfx-rippler-fill: -white-medium-emphasis;
+}
+
+.jfx-tab-pane .headers-region .tab .tab-container .tab-label {
+}

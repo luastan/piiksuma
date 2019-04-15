@@ -1,21 +1,44 @@
 package piiksuma;
 
+import com.jfoenix.controls.JFXDecorator;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import piiksuma.database.SampleFachada;
+import piiksuma.gui.ContextHandler;
 
-public class Arranque {
+public class Arranque extends Application {
     public static void main(String[] args) {
-        //System.out.println("lol");
-        //System.out.println(SampleFachada.getDb().test().get(0).get("nombre"));
-
-        System.out.println("\n\n");
-
-//      System.out.println(SampleFachada.getDb().usuarios());
-
-        System.out.println("\n\n");
-
-        SampleFachada.getDb().meterUsuario();
-
-        System.out.println("\n\n");
+        launch(args);
     }
 
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // Registers current stage into the Application Context
+        ContextHandler.getContext().register("primary", primaryStage);
+
+        // Stage configuration
+        primaryStage.setTitle("Piiksuma");
+        primaryStage.setResizable(false);
+
+        // Defines the loader to be used later
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
+
+        // Decorator which is the visual whindow frame, holding close button title and minimize
+        JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
+        // TODO: Add a logo and a cool title to the JFXDecorator
+
+        // Scene definition & binding to the Primary Stage
+        Scene scene = new Scene(decorator, 450, 800);
+        primaryStage.setScene(scene);
+
+        // Stylesheet loading
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm()
+        );
+
+        // Show
+        primaryStage.show();
+    }
 }
