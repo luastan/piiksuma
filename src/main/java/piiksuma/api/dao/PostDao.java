@@ -75,7 +75,8 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Post>(super.getConnection()).createQuery("INSERT into archivePost values (?,?,?)").defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
+        new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivePost values (?,?,?)")
+                .defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
     }
     /**
      * Function that removes a post from the database
