@@ -12,7 +12,7 @@ public class Ticket {
     /* Attributes */
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn(columna = "deadline")
+    @MapperColumn(columna = "closeDate")
     private String closeDate;
     @MapperColumn(columna = "usr")
     private String user;

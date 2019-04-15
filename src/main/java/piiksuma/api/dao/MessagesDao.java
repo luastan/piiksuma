@@ -75,18 +75,18 @@ public class MessagesDao extends AbstractDao {
     }
 
     /**
-     * º
-     * This function sends a private message to another user in the app
+     *
+     * This function creates a private message to another user in the app
      *
      * @param message message to be sent
      */
-
-    public void sendMessage(Message message) throws PiikDatabaseException {
+    public void createMessage(Message message) throws PiikDatabaseException {
 
         if (message == null || !message.checkNotNull()) {
             throw new PiikDatabaseException("(privateMessage) Primary key constraints failed");
         }
 
+        new InsertionMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).insert();
     }
 // =====================================================================================================================
 
@@ -103,7 +103,7 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
 
-        new InsertionMapper<Ticket>(super.getConnection()).add(ticket);
+        new InsertionMapper<Ticket>(super.getConnection()).add(ticket).defineClass(Ticket.class).insert();
     }
 
     /**
@@ -141,6 +141,9 @@ public class MessagesDao extends AbstractDao {
         if (ticket == null || !ticket.checkNotNull()) {
             throw new PiikDatabaseException("(ticket) Primary key constraints failed");
         }
+
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closeDate = NOW() WHERE id = " +
+                "?").defineParameters(ticket.getId()).executeUpdate();
     }
 
     /**

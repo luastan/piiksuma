@@ -138,26 +138,6 @@ public class PostDao extends AbstractDao {
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
     }
 
-    public Post repost(Post repost, User userRepost, Post post, User userPost) throws PiikDatabaseException {
-
-        if (repost == null || !repost.checkNotNull()) {
-            throw new PiikDatabaseException("(repost) Primary key constraints failed");
-        }
-
-        if (userRepost == null || !userRepost.checkNotNull()) {
-            throw new PiikDatabaseException("(userRepost) Primary key constraints failed");
-        }
-
-        if (post == null || !post.checkNotNull()) {
-            throw new PiikDatabaseException("(post) Primary key constraints failed");
-        }
-
-        if (userPost == null || !userPost.checkNotNull()) {
-            throw new PiikDatabaseException("(userPost) Primary key constraints failed");
-        }
-
-        return null;
-    }
 
     /**
      * Function to do a retweet on a post
@@ -223,7 +203,7 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Function to get the hashtag that matchs with the given specifications
+     * Function to get the hashtag that matches the given specifications
      *
      * @param hashtag hashtag whose properties will be used in the search
      * @return hashtag that matches the given information
