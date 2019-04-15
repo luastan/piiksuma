@@ -182,6 +182,12 @@ public class PostDao extends AbstractDao {
 
     }
 
+    /**
+     * Function to remove a repost
+     *
+     * @param repost repost to remove from the database
+     * @throws PiikDatabaseException
+     */
     public void removeRepost(Post repost) throws PiikDatabaseException {
 
         if (repost == null || !repost.checkNotNull()) {
