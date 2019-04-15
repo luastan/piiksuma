@@ -315,10 +315,11 @@ CREATE TABLE achievement
 
 CREATE TABLE ownAchievement
 (
-    achiev          varchar(32) primary key,
-    usr             varchar(32) primary key,
+    achiev          varchar(32),
+    usr             varchar(32),
     acquisitionDate timestamp not null default now(),
 
+    primary key (achiev, usr),
     foreign key (achiev) references achievement (id)
         on delete cascade on update cascade,
     foreign key (usr) references piiUser (email)
