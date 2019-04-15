@@ -60,7 +60,7 @@ public class DeletionFacade {
      * @throws PiikDatabaseException The followed user or the follower user have null values or non unique values on primary keys
      * @throws PiikInvalidParameters The currentUser is null
      */
-    public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
+    public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }

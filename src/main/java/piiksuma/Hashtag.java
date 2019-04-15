@@ -44,11 +44,8 @@ public class Hashtag {
      */
     public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if (!checkPrimaryKey()) {
-            return false;
-        }
+        return checkPrimaryKey();
 
-        return true;
     }
 
     /**
@@ -58,11 +55,8 @@ public class Hashtag {
      */
     public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if (getName() == null || getName().isEmpty()) {
-            return false;
-        }
+        return getName() != null && !getName().isEmpty();
 
-        return true;
     }
 
     @Override

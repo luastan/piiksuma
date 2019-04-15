@@ -53,21 +53,15 @@ public class Achievement {
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
     public boolean checkPrimaryKey() {
-        if (id == null || id.isEmpty()) {
-            return false;
-        }
+        return id != null && !id.isEmpty();
 
-        return true;
     }
 
     public boolean checkNotNull() {
         if (!checkPrimaryKey()) {
             return false;
         }
-        if (name == null || name.isEmpty()) {
-            return false;
-        }
-        return true;
+        return name != null && !name.isEmpty();
     }
 
     @Override

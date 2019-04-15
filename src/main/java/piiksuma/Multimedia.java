@@ -76,21 +76,15 @@ public class Multimedia {
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
     public boolean checkPrimaryKey() {
-        if (hash == null || hash.isEmpty()) {
-            return false;
-        }
-        return true;
+        return hash != null && !hash.isEmpty();
     }
 
     public boolean checkNotNull() {
         if (!checkPrimaryKey()) {
             return false;
         }
-        if (uri == null || uri.isEmpty()) {
-            return false;
-        }
+        return uri != null && !uri.isEmpty();
 
-        return true;
     }
 
     @Override

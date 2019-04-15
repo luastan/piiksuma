@@ -35,11 +35,7 @@ public class Post {
             this.postAuthor = postAuthor;
         }
 
-        if (publicationDate == null) {
-            this.publicationDate = null;
-        } else {
-            this.publicationDate = publicationDate;
-        }
+        this.publicationDate = publicationDate;
 
         this.fatherPost = "";
         this.multimedia = "";
@@ -136,11 +132,8 @@ public class Post {
             return false;
         }
 
-        if (getPostAuthor() == null || getPostAuthor().isEmpty()) {
-            return false;
-        }
+        return getPostAuthor() != null && !getPostAuthor().isEmpty();
 
-        return true;
     }
 
 

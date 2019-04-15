@@ -457,7 +457,7 @@ public class InsertionFacade {
      * @param notification notification given to the user
      * @param currentUser  current user logged into the app
      */
-    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
+    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }

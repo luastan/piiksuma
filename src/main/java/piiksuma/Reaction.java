@@ -70,11 +70,8 @@ public class Reaction {
      */
     public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if (!checkPrimaryKey()) {
-            return false;
-        }
+        return checkPrimaryKey();
 
-        return true;
     }
 
     /**

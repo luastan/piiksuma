@@ -53,8 +53,6 @@ public abstract class Mapper<T> {
         return fkField.get(forKeyObject);
     }
 
-    ;
-
     /**
      * Allows an update to be specified whith SQL.
      *
