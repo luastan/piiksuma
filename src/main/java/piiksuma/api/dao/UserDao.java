@@ -173,7 +173,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO followuser(followed,follower) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO followuser(followed,follower) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
 
     }
@@ -195,7 +195,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("DELETE FROM followUser " +
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followUser " +
                 "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
     }
 
@@ -215,7 +215,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO blockUser(usr,blocked) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockUser(usr,blocked) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), blockedUser.getEmail()).executeUpdate();
     }
 
@@ -234,7 +234,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new QueryMapper<Object>(super.getConnection()).createQuery("INSERT INTO silenceUser(usr,silenced) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceUser(usr,silenced) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), silencedUser.getEmail()).executeUpdate();
     }
 
