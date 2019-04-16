@@ -8,32 +8,26 @@ import java.util.Objects;
 
 @MapperTable(nombre = "post")
 public class Post {
-    @MapperColumn(pkey = true, columna = "author")
-    private String postAuthor;
+    @MapperColumn(pkey = true, fKeys = "author", targetClass = User.class)
+    private User author;
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String text;
     @MapperColumn(hasDefault = true)
     private Timestamp publicationDate;/*Date when the father post was creaetd*/
-    @MapperColumn
-    private String sugarDaddy;
-    @MapperColumn(columna = "authorDaddy")
-    private String fatherPost;
-    @MapperColumn
-    private String multimedia;
+    @MapperColumn(fKeys = "sugarDaddy,authorDaddy", targetClass = Post.class)
+    private Post fatherPost;
+    @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
+    private Multimedia multimedia;
 
     public Post() {
 
     }
 
-    public Post(String postAuthor, Timestamp publicationDate) {
+    public Post(User author, Timestamp publicationDate) {
 
-        if (postAuthor == null) {
-            this.postAuthor = "";
-        } else {
-            this.postAuthor = postAuthor;
-        }
+        this.author = author;
 
         if (publicationDate == null) {
             this.publicationDate = null;
@@ -41,18 +35,25 @@ public class Post {
             this.publicationDate = publicationDate;
         }
 
-        this.fatherPost = "";
-        this.multimedia = "";
+        this.fatherPost = null;
+        this.multimedia = null;
     }
 
-    public Post(String postAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy, String fatherPost, String multimedia) {
-        this.postAuthor = postAuthor;
+    public Post(User author, String id, String text, Timestamp publicationDate, Post father, Multimedia multimedia) {
+        this.author = author;
         this.id = id;
         this.text = text;
         this.publicationDate = publicationDate;
-        this.sugarDaddy = sugarDaddy;
-        this.fatherPost = fatherPost;
+        this.fatherPost = father;
         this.multimedia = multimedia;
+    }
+
+    public Post(String idAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy,
+                String authorDaddy, String idMultimedia){
+
+        this(new User("", idAuthor, ""), id, text, publicationDate,
+                new Post(new User("", authorDaddy, ""), null),
+                new Multimedia(idMultimedia, "", ""));
     }
 
     public String getId() {
@@ -79,35 +80,27 @@ public class Post {
         this.publicationDate = publicationDate;
     }
 
-    public String getFatherPost() {
+    public Post getFatherPost() {
         return fatherPost;
     }
 
-    public void setFatherPost(String fatherPost) {
+    public void setFatherPost(Post fatherPost) {
         this.fatherPost = fatherPost;
     }
 
-    public String getSugarDaddy() {
-        return sugarDaddy;
+    public User getPostAuthor() {
+        return author;
     }
 
-    public void setSugarDaddy(String sugarDaddy) {
-        this.sugarDaddy = sugarDaddy;
+    public void setPostAuthor(User postAuthor) {
+        this.author = postAuthor;
     }
 
-    public String getPostAuthor() {
-        return postAuthor;
-    }
-
-    public void setPostAuthor(String postAuthor) {
-        this.postAuthor = postAuthor;
-    }
-
-    public String getMultimedia() {
+    public Multimedia getMultimedia() {
         return multimedia;
     }
 
-    public void setMultimedia(String multimedia) {
+    public void setMultimedia(Multimedia multimedia) {
         this.multimedia = multimedia;
     }
 
@@ -136,7 +129,7 @@ public class Post {
             return false;
         }
 
-        if (getPostAuthor() == null || getPostAuthor().isEmpty()) {
+        if (getPostAuthor() == null || !getPostAuthor().checkPrimaryKey()) {
             return false;
         }
 
@@ -148,7 +141,7 @@ public class Post {
         return "Post{" +
                 " Id:" + '\'' + this.id + '\'' +
                 " Texto:" + '\'' + this.text + '\'' +
-                " Author:" + '\'' + this.postAuthor + '\'' + "}";
+                " Author:" + '\'' + this.author.getId() + '\'' + "}";
 
     }
 
@@ -157,12 +150,12 @@ public class Post {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return postAuthor.equals(post.postAuthor) &&
+        return author.equals(post.author) &&
                 id.equals(post.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postAuthor, id);
+        return Objects.hash(author, id);
     }
 }

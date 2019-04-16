@@ -18,5 +18,7 @@ public @interface MapperColumn {
 
     boolean hasDefault() default false;             // Has a default value on the definition
 
+    String fKeys() default "";                      // The name of the foreign keys of the reference
+
     Class<?> targetClass() default Object.class;    // It's actually a Mappeable class (foreign keys)
 }

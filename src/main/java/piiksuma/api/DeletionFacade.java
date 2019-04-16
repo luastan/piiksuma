@@ -35,7 +35,8 @@ public class DeletionFacade {
      * @throws PiikDatabaseException  The user has null values or non unique values on primary keys
      * @throws PiikInvalidParameters  The currentUser is null
      */
-    public void removeUser(User user, User currentUser) throws PiikForbiddenException, PiikDatabaseException, PiikInvalidParameters {
+    public void removeUser(User user, User currentUser) throws PiikForbiddenException, PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -44,7 +45,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters("(user) The parameter is null");
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(user.getEmail())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(user)) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
 
@@ -57,10 +58,12 @@ public class DeletionFacade {
      * @param followed    User to be unfollowed
      * @param follower    User that unfollows
      * @param currentUser Current user logged into the app
-     * @throws PiikDatabaseException The followed user or the follower user have null values or non unique values on primary keys
+     * @throws PiikDatabaseException The followed user or the follower user have null values or non unique values on
+     * primary keys
      * @throws PiikInvalidParameters The currentUser is null
      */
-    public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
+    public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -74,7 +77,7 @@ public class DeletionFacade {
         }
 
         // The current user has to be the follower user
-        if (!currentUser.getEmail().equals(follower.getEmail())) {
+        if (!currentUser.equals(follower)) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getUserDao().unfollowUser(followed, follower);
@@ -91,7 +94,8 @@ public class DeletionFacade {
      * @throws PiikForbiddenException The currentUser is not the author of the repost or he is not an admin
      * @throws PiikInvalidParameters  The currentUser is null
      */
-    public void removeMultimedia(Multimedia multimedia, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
+    public void removeMultimedia(Multimedia multimedia, User currentUser) throws PiikDatabaseException,
+            PiikForbiddenException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -127,7 +131,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters("(post) The parameter is null");
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(post.getPostAuthor())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(post.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
 
@@ -143,7 +147,8 @@ public class DeletionFacade {
      * @throws PiikForbiddenException The currentUser is not the author of the repost or he is not an admin
      * @throws PiikInvalidParameters  The currentUser is null
      */
-    public void removeRePost(Post repost, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
+    public void removeRePost(Post repost, User currentUser) throws PiikDatabaseException, PiikForbiddenException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -152,7 +157,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters("(repost) The parameter is null");
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(repost.getPostAuthor())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(repost.getPostAuthor())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
 
@@ -181,7 +186,7 @@ public class DeletionFacade {
         }
 
         // Permission check
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(message.getSender())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(message.getSender())) {
             throw new PiikForbiddenException("You do not have the required permissions");
         }
 
@@ -208,7 +213,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters("(event) The parameter is null");
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(e.getCreator())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(e.getCreator())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
 
@@ -234,7 +239,7 @@ public class DeletionFacade {
         }
 
         // We only allow the user who created the reaction to delete or an admin
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(reaction.getUser().getEmail())) {
+        if (!currentUser.checkAdministrator() && !currentUser.equals(reaction.getUser())) {
             throw new PiikForbiddenException("(user) You do not have permissions to do that");
         }
         parentFacade.getInteractionDao().removeReaction(reaction);

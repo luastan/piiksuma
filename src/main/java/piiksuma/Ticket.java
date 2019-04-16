@@ -14,16 +14,16 @@ public class Ticket {
     private String id;
     @MapperColumn(columna = "closeDate")
     private String closeDate;
-    @MapperColumn(columna = "usr")
-    private String user;
+    @MapperColumn(fKeys = "usr", targetClass = User.class)
+    private User user;
     @MapperColumn
     private String section;
     @MapperColumn(columna = "text")
     private String textProblem;
     @MapperColumn
     private String creationDate;
-    @MapperColumn
-    private String adminClosing;
+    @MapperColumn(fKeys = "adminClosing", targetClass = User.class)
+    private User adminClosing;
 
     /* Constructors */
 
@@ -51,11 +51,11 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -67,11 +67,11 @@ public class Ticket {
         this.creationDate = creationDate;
     }
 
-    public String getAdminClosing() {
+    public User getAdminClosing() {
         return adminClosing;
     }
 
-    public void setAdminClosing(String adminClosing) {
+    public void setAdminClosing(User adminClosing) {
         this.adminClosing = adminClosing;
     }
 
@@ -131,7 +131,7 @@ public class Ticket {
             return false;
         }
 
-        if (getUser() == null || getUser().isEmpty()) {
+        if (getUser() == null || !getUser().checkPrimaryKey()) {
             return false;
         }
 

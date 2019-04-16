@@ -8,11 +8,11 @@ import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
 public class User {
-    @MapperColumn(pkey = true)
+    @MapperColumn
     private String email;
     @MapperColumn
     private String name;
-    @MapperColumn
+    @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String pass;
@@ -243,6 +243,10 @@ public class User {
         return job;
     }
 
+    public String getPK(){
+        return getId();
+    }
+
     public void setJob(String job) {
         this.job = job;
     }
@@ -286,8 +290,7 @@ public class User {
      */
     public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        return getEmail() != null && !getEmail().isEmpty();
-
+        return getId() != null && !getId().isEmpty();
     }
 
     @Override
@@ -304,7 +307,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return email.equals(user.email);
+        return id.equals(user.getId());
     }
 
     @Override

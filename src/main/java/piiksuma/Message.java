@@ -12,14 +12,14 @@ public class Message {
     private String id;
     @MapperColumn
     private String text;
-    @MapperColumn(pkey = true)
-    private String sender;
-    @MapperColumn
-    private String multimedia;
+    @MapperColumn(pkey = true, fKeys = "sender", targetClass = User.class)
+    private User sender;
+    @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
+    private Multimedia multimedia;
     @MapperColumn(pkey = true, hasDefault = true)
     private Timestamp date;
-    @MapperColumn
-    private String ticket;
+    @MapperColumn(fKeys = "ticket", targetClass = Ticket.class)
+    private Ticket ticket;
 
     public Message() {
     }
@@ -40,19 +40,19 @@ public class Message {
         this.text = text;
     }
 
-    public String getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public String getMultimedia() {
+    public Multimedia getMultimedia() {
         return multimedia;
     }
 
-    public void setMultimedia(String multimedia) {
+    public void setMultimedia(Multimedia multimedia) {
         this.multimedia = multimedia;
     }
 
@@ -64,11 +64,11 @@ public class Message {
         this.date = date;
     }
 
-    public String getTicket() {
+    public Ticket getTicket() {
         return ticket;
     }
 
-    public void setTicket(String ticket) {
+    public void setTicket(Ticket ticket) {
         this.ticket = ticket;
     }
 

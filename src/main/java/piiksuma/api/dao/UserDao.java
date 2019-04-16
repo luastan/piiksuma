@@ -72,7 +72,7 @@ public class UserDao extends AbstractDao {
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
-                "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getId()).findFirst();
+                "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getPK()).findFirst();
     }
 
     /**
@@ -94,7 +94,7 @@ public class UserDao extends AbstractDao {
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
-                user.getId(), user.getName(), limit).list();
+                user.getPK(), user.getName(), limit).list();
     }
 
 
@@ -106,7 +106,7 @@ public class UserDao extends AbstractDao {
 
         return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownAchievement as o, " +
                 "achievement as a WHERE o.usr = ? AND o.achiev = a.id").defineClass(Achievement.class).defineParameters(
-                user.getEmail()).list();
+                user.getPK()).list();
     }
 
 
@@ -122,8 +122,8 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
-                "Where id = ? and pass = ?").defineClass(User.class).defineParameters(user.getId(), user.getPass()).findFirst();
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser WHERE id = ? and " +
+                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).findFirst();
     }
 
     /**
@@ -160,7 +160,7 @@ public class UserDao extends AbstractDao {
         }
 
         new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO ownAchievement VALUES " +
-                "(?, ?)").defineParameters(achievement.getId(), user.getEmail()).executeUpdate();
+                "(?, ?)").defineParameters(achievement.getId(), user.getPK()).executeUpdate();
     }
 
     /**
@@ -181,7 +181,8 @@ public class UserDao extends AbstractDao {
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO followuser(followed,follower) " +
-                "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getPK(), follower.getPK())
+                .executeUpdate();
 
     }
 
@@ -202,8 +203,9 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(follower) Primary key constraints failed");
         }
 
-        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followUser " +
-                "WHERE followed=? AND follower=?").defineClass(Object.class).defineParameters(followed.getEmail(), follower.getEmail()).executeUpdate();
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followUser WHERE followed=? AND " +
+                "follower=?").defineClass(Object.class).defineParameters(followed.getPK(), follower.getPK())
+                .executeUpdate();
     }
 
     /**
@@ -222,8 +224,8 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockUser(usr,blocked) " +
-                "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), blockedUser.getEmail()).executeUpdate();
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockUser(usr,blocked) VALUES " +
+                "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
     /**
@@ -241,8 +243,8 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceUser(usr,silenced) " +
-                "VALUES (?,?)").defineClass(Object.class).defineParameters(user.getEmail(), silencedUser.getEmail()).executeUpdate();
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceUser(usr,silenced) VALUES "+
+                "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), silencedUser.getPK()).executeUpdate();
     }
 
     /**
@@ -258,7 +260,7 @@ public class UserDao extends AbstractDao {
                 //Query to take the number of followers the given user has
                 "SELECT count(follower) AS followers \n" +
                         "FROM followuser \n" +
-                        "WHERE followed LIKE ? \n").defineParameters(user.getEmail()).mapList();
+                        "WHERE followed LIKE ? \n").defineParameters(user.getPK()).mapList();
 
         statistics.setFollowers((Long) estatistics.get(0).get("followers"));
 
@@ -266,7 +268,7 @@ public class UserDao extends AbstractDao {
                 "\n" +//Query to take the number of users that the user follows
                         "SELECT count(followed) AS followed \n" +
                         "FROM followuser \n" +
-                        "WHERE follower LIKE ? \n").defineParameters(user.getEmail()).mapList();
+                        "WHERE follower LIKE ? \n").defineParameters(user.getPK()).mapList();
 
         statistics.setFollowing((Long) estatistics.get(0).get("followed"));
 
@@ -282,35 +284,36 @@ public class UserDao extends AbstractDao {
                         "\n" +
                         "SELECT COUNT(*) AS followback " +
                         "FROM followedtable, followerstable " +
-                        "WHERE followedtable.followed=followerstable.follower").defineParameters(user.getEmail()).mapList();
+                        "WHERE followedtable.followed=followerstable.follower"
+        ).defineParameters(user.getPK()).mapList();
 
         statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(user.getEmail()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(user.getPK()).mapList();
 
         statistics.setMaxLikeIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(user.getEmail()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(user.getPK()).mapList();
 
         statistics.setMaxLoveIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(user.getEmail()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(user.getPK()).mapList();
 
         statistics.setMaxHateIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(user.getEmail()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(user.getPK()).mapList();
 
         statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
 
@@ -329,28 +332,28 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException("(user) Primary key constraints failed");
         }
 
-        return getUserType(user.getEmail());
+        return getUserType(user.getPK());
     }
 
     /**
      * Retrieves userType from a desired user
      *
-     * @param email Email from the desired user
+     * @param pk Primary key from the desired user
      * @return UserType
      * @throws PiikDatabaseException When null values are passed as parameters
      */
-    public UserType getUserType(String email) throws PiikDatabaseException {
-        if (email == null) {
-            throw new PiikDatabaseException("(user) email can't be null");
+    public UserType getUserType(String pk) throws PiikDatabaseException {
+        if (pk == null) {
+            throw new PiikDatabaseException("(user) Primary key can't be null");
         }
 
-        if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT email FROM piiuser where email=?")
-                .defineParameters(email).defineClass(User.class).list(false).size() > 0)) {
+        if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM piiuser where id=?")
+                .defineParameters(pk).defineClass(User.class).list(false).size() > 0)) {
             throw new PiikDatabaseException("(user) User does not exist");
         }
 
         return new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM administrator where id=?")
-                .defineParameters(email).defineClass(User.class).list(false).size() > 0 ?
+                .defineParameters(pk).defineClass(User.class).list(false).size() > 0 ?
                 UserType.administrator : UserType.user;
     }
 }

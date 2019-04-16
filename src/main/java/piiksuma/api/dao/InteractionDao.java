@@ -86,7 +86,7 @@ public class InteractionDao extends AbstractDao {
         // We get the reactions associated with the post and we group them by type
         List<Map<String, Object>> query = new QueryMapper<Object>(super.getConnection()).createQuery(
                 "SELECT reactionType as type, count(usr) as number FROM react WHERE post = ? AND author = ? GROUP BY " +
-                        "reactionType").defineParameters(post.getId(), post.getPostAuthor()).mapList();
+                        "reactionType").defineParameters(post.getId(), post.getPostAuthor().getId()).mapList();
 
         for (Map<String, Object> row : query) {
             result.put(ReactionType.stringToReactionType((String) row.get("type")), (Integer) row.get("number"));
@@ -127,7 +127,7 @@ public class InteractionDao extends AbstractDao {
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO haveNotification (notification,usr) " +
-                "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getEmail()).executeUpdate();
+                "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getPK()).executeUpdate();
 
     }
 
@@ -145,6 +145,6 @@ public class InteractionDao extends AbstractDao {
 
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
                 "haveNotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
-                user.getEmail()).list();
+                user.getPK()).list();
     }
 }

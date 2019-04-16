@@ -45,8 +45,8 @@ CREATE TABLE multimediaVideo
 
 CREATE TABLE piiUser
 (
-    id                 varchar(32)             not null unique,
-    email              varchar(35) primary key,
+    id                 varchar(32) primary key,
+    email              varchar(35)             not null unique,
     name               varchar(35)             not null,
     pass               varchar(256)            not null,
     gender             char(1) CHECK (gender IN ('H', 'M', 'O')),
@@ -69,6 +69,8 @@ CREATE TABLE piiUser
         on delete set null on update cascade
 );
 
+
+
 CREATE TABLE phone
 (
     prefix varchar(3), -- todo actualizar los demás
@@ -76,13 +78,13 @@ CREATE TABLE phone
     usr    varchar(32),
 
     primary key (phone, usr, prefix),
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );
 
 CREATE TABLE administrator
 (
-    id varchar(32) primary key references piiUser (email)
+    id varchar(32) primary key references piiUser (id)
         on delete set null on update cascade
 );
 
@@ -92,7 +94,7 @@ CREATE TABLE associatedAccount
     token varchar(128), -- todo vamos a meter el token al final?
     usr   varchar(32),
 
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -111,7 +113,7 @@ CREATE TABLE ticket
     closeDate    timestamp,
     adminClosing varchar(32),
     primary key (id),
-    foreign key (usr) references piiUser (email) on delete set null on update cascade,
+    foreign key (usr) references piiUser (id) on delete set null on update cascade,
     foreign key (adminClosing) references administrator (id) on delete set null on update cascade
 );
 
@@ -126,9 +128,9 @@ CREATE TABLE followUser
     follower varchar(32),
 
     primary key (followed, follower),
-    foreign key (followed) references piiUser (email)
+    foreign key (followed) references piiUser (id)
         on delete cascade on update cascade,
-    foreign key (follower) references piiUser (email)
+    foreign key (follower) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -138,9 +140,9 @@ CREATE TABLE silenceUser
     silenced varchar(32),
 
     primary key (usr, silenced),
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade,
-    foreign key (silenced) references piiUser (email)
+    foreign key (silenced) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -150,9 +152,9 @@ CREATE TABLE blockUser
     blocked varchar(32),
 
     primary key (usr, blocked),
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade,
-    foreign key (blocked) references piiUser (email)
+    foreign key (blocked) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -166,7 +168,7 @@ CREATE TABLE message
     ticket     varchar(32),
 
     primary key (sender, id),
-    foreign key (sender) references piiUser (email)
+    foreign key (sender) references piiUser (id)
         on delete cascade on update cascade,
     foreign key (multimedia) references multimedia (hash)
         on delete set null on update cascade,
@@ -182,7 +184,7 @@ CREATE TABLE receiveMessage
     primary key (message, sender, receiver),
     foreign key (message, sender) references message (id, sender)
         on delete cascade on update cascade,
-    foreign key (receiver) references piiUser (email)
+    foreign key (receiver) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -197,7 +199,7 @@ CREATE TABLE post
     multimedia      varchar(32),
 
     primary key (id, author),
-    foreign key (author) references piiUser (email),
+    foreign key (author) references piiUser (id),
     foreign key (sugarDaddy, authorDaddy) references post (id, author),
     foreign key (multimedia) references multimedia (hash)
 );
@@ -229,7 +231,7 @@ CREATE TABLE followHashtag
     hashtag varchar(256),
 
     primary key (piiUser, hashtag),
-    foreign key (piiUser) references piiUser (email)
+    foreign key (piiUser) references piiUser (id)
         on delete cascade on update cascade,
     foreign key (hashtag) references hashtag (name)
         on delete cascade on update cascade
@@ -248,7 +250,7 @@ CREATE TABLE archivePost
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 CREATE TABLE react
@@ -260,7 +262,7 @@ CREATE TABLE react
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 CREATE TABLE repost
@@ -270,7 +272,7 @@ CREATE TABLE repost
     author varchar(32),
     primary key (post, usr, author),
     foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 
@@ -288,7 +290,7 @@ CREATE TABLE event
     creatorUser varchar(32) not null,
 
     primary key (id),
-    foreign key (creatorUser) references piiUser (email) on delete cascade on update cascade
+    foreign key (creatorUser) references piiUser (id) on delete cascade on update cascade
 );
 
 CREATE TABLE participateEvent
@@ -298,7 +300,7 @@ CREATE TABLE participateEvent
 
     primary key (event, usr),
     foreign key (event) references event (id) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email) on delete cascade on update cascade
+    foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
 
 
@@ -322,7 +324,7 @@ CREATE TABLE ownAchievement
     primary key (achiev, usr),
     foreign key (achiev) references achievement (id)
         on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );
 
@@ -346,6 +348,6 @@ CREATE TABLE haveNotification
     primary key (notification, usr),
     foreign key (notification) references notification (id)
         on delete cascade on update cascade,
-    foreign key (usr) references piiUser (email)
+    foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );

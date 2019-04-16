@@ -17,8 +17,8 @@ public class Event {
     private String date;
     @MapperColumn(hasDefault = true)
     private String name;
-    @MapperColumn
-    private String creator;
+    @MapperColumn(fKeys = "creatorUser", targetClass = User.class)
+    private User creator;
 
 
     public Event(String id, String nombre) {
@@ -88,7 +88,7 @@ public class Event {
         return name;
     }
 
-    public String getCreator() {
+    public User getCreator() {
         return creator;
     }
 
@@ -114,7 +114,7 @@ public class Event {
         this.name = name;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(User creator) {
         this.creator = creator;
     }
 
@@ -135,7 +135,7 @@ public class Event {
             return false;
         }
 
-        if (creator == null || creator.isEmpty()) {
+        if (creator == null || !creator.checkPrimaryKey()) {
             return false;
         }
 

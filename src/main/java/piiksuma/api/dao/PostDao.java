@@ -76,7 +76,8 @@ public class PostDao extends AbstractDao {
         }
 
         new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivePost values (?,?,?)")
-                .defineClass(Post.class).defineParameters(post.getId(), user.getId(), post.getPostAuthor()).executeUpdate();
+                .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
+                .executeUpdate();
     }
 
     /**
@@ -106,7 +107,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT * FROM post WHERE id = ? " +
-                "and author = ?").defineParameters(post.getId(), post.getPostAuthor()).findFirst();
+                "and author = ?").defineParameters(post.getId(), post.getPostAuthor().getPK()).findFirst();
     }
 
     /**
@@ -140,7 +141,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p WHERE p.author = " +
-                "?").defineParameters(user.getEmail()).list();
+                "?").defineParameters(user.getPK()).list();
     }
 
     /**
@@ -156,7 +157,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivePost as a" +
-                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getEmail()).list();
+                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
     }
 
     /**
@@ -183,8 +184,8 @@ public class PostDao extends AbstractDao {
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
-                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getEmail(),
-                userPost.getEmail()).executeUpdate();
+                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getPK(),
+                userPost.getPK()).executeUpdate();
 
     }
 
@@ -201,8 +202,8 @@ public class PostDao extends AbstractDao {
         }
 
         new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
-                "AND author=?").defineClass(Object.class).defineParameters(repost.getSugarDaddy(),
-                repost.getPostAuthor(), repost.getFatherPost()).executeUpdate();
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
+                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
 
     }
 
@@ -273,7 +274,7 @@ public class PostDao extends AbstractDao {
                 createUpdate("INSERT INTO followhastag (piiuser, hastag) VALUES (?, ?) " +
                         "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
                 defineClass(Hashtag.class).
-                defineParameters(hashtag.getName(), user.getEmail(), hashtag.getName()).executeUpdate();
+                defineParameters(hashtag.getName(), user.getPK(), hashtag.getName()).executeUpdate();
     }
 
     /**
@@ -401,11 +402,11 @@ public class PostDao extends AbstractDao {
                     "LIMIT ?");
 
             // We set the identifier of the user whose feed will be retrieved
-            stm.setString(1, user.getEmail());
-            stm.setString(2, user.getEmail());
-            stm.setString(3, user.getEmail());
-            stm.setString(4, user.getEmail());
-            stm.setString(5, user.getEmail());
+            stm.setString(1, user.getPK());
+            stm.setString(2, user.getPK());
+            stm.setString(3, user.getPK());
+            stm.setString(4, user.getPK());
+            stm.setString(5, user.getPK());
             stm.setInt(6, limit);
 
             try {
