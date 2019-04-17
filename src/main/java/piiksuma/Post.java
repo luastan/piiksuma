@@ -129,11 +129,8 @@ public class Post {
             return false;
         }
 
-        if (getPostAuthor() == null || !getPostAuthor().checkPrimaryKey()) {
-            return false;
-        }
+        return getPostAuthor() != null && getPostAuthor().checkPrimaryKey();
 
-        return true;
     }
 
 

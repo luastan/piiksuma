@@ -363,7 +363,7 @@ public class SearchFacade {
      * @param current current user
      * @return the list of all the tickets which haven't been closed
      */
-    public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException, PiikForbiddenException {
+    public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (current == null || !current.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
         }

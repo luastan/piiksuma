@@ -267,11 +267,8 @@ public class User {
             return false;
         }
 
-        if (getBirthday() == null) {
-            return false;
-        }
+        return getBirthday() != null;
 
-        return true;
     }
 
     /**

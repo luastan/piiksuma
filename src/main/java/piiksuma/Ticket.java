@@ -106,10 +106,7 @@ public class Ticket {
      */
     public boolean checkPrimaryKey() {
 
-        if (id == null) {
-            return false;
-        }
-        return true;
+        return id != null;
     }
 
     /**
@@ -131,11 +128,7 @@ public class Ticket {
             return false;
         }
 
-        if (getUser() == null || !getUser().checkPrimaryKey()) {
-            return false;
-        }
-
-        return true;
+        return getUser() != null && getUser().checkPrimaryKey();
     }
 
 

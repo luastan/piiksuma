@@ -4,6 +4,7 @@ import piiksuma.Achievement;
 import piiksuma.Statistics;
 import piiksuma.User;
 import piiksuma.UserType;
+import piiksuma.api.ErrorMessage;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -11,6 +12,7 @@ import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import javax.xml.ws.EndpointReference;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class UserDao extends AbstractDao {
     public void removeUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
@@ -43,7 +45,7 @@ public class UserDao extends AbstractDao {
     public void createUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         // Insertion is done with the given user data, which is passed by parameters
@@ -53,7 +55,7 @@ public class UserDao extends AbstractDao {
     public void updateUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
@@ -68,7 +70,7 @@ public class UserDao extends AbstractDao {
     public User getUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
@@ -85,11 +87,11 @@ public class UserDao extends AbstractDao {
     public List<User> searchUser(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         if (limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
@@ -101,7 +103,7 @@ public class UserDao extends AbstractDao {
     public List<Achievement> getAchievements(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownAchievement as o, " +
@@ -119,7 +121,7 @@ public class UserDao extends AbstractDao {
     public User login(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser WHERE id = ? and " +
@@ -134,7 +136,7 @@ public class UserDao extends AbstractDao {
     public void administratePersonalData(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new UpdateMapper<User>(super.getConnection()).add(user).defineClass(User.class).update();
@@ -143,7 +145,7 @@ public class UserDao extends AbstractDao {
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
 
         if (achievement == null || !achievement.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(achievement) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("achievement"));
         }
 
         new InsertionMapper<Achievement>(super.getConnection()).add(achievement).defineClass(Achievement.class).insert();
@@ -152,11 +154,11 @@ public class UserDao extends AbstractDao {
     public void unlockAchievement(Achievement achievement, User user) throws PiikDatabaseException {
 
         if (achievement == null || !achievement.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(achievement) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("achievement"));
         }
 
         if(user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO ownAchievement VALUES " +
@@ -173,11 +175,11 @@ public class UserDao extends AbstractDao {
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
         }
 
         if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO followuser(followed,follower) " +
@@ -196,11 +198,11 @@ public class UserDao extends AbstractDao {
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
 
         if (followed == null || !followed.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(followed) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
         }
 
         if (follower == null || !follower.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(follower) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
         new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followUser WHERE followed=? AND " +
@@ -218,10 +220,10 @@ public class UserDao extends AbstractDao {
     public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
 
         if (blockedUser == null || !blockedUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(blockedUser) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
         }
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockUser(usr,blocked) VALUES " +
@@ -237,10 +239,11 @@ public class UserDao extends AbstractDao {
      */
     public void silenceUser(User silencedUser, User user) throws PiikDatabaseException {
         if (silencedUser == null || !silencedUser.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(silencedUser) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("silencedUser"));
         }
+
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceUser(usr,silenced) VALUES "+
@@ -254,6 +257,11 @@ public class UserDao extends AbstractDao {
      * @return computed statistics
      */
     public Statistics getUserStatistics(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey()) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
         Statistics statistics = new Statistics();
 
         List<Map<String, Object>> estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
@@ -329,7 +337,7 @@ public class UserDao extends AbstractDao {
     public UserType getUserType(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         return getUserType(user.getPK());
@@ -344,12 +352,12 @@ public class UserDao extends AbstractDao {
      */
     public UserType getUserType(String pk) throws PiikDatabaseException {
         if (pk == null) {
-            throw new PiikDatabaseException("(user) Primary key can't be null");
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         if (!(new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM piiuser where id=?")
                 .defineParameters(pk).defineClass(User.class).list(false).size() > 0)) {
-            throw new PiikDatabaseException("(user) User does not exist");
+            throw new PiikDatabaseException(ErrorMessage.getNotExistsMessage("user"));
         }
 
         return new QueryMapper<User>(this.getConnection()).createQuery("SELECT id FROM administrator where id=?")

@@ -124,10 +124,7 @@ public class Event {
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
     public boolean checkPrimaryKey() {
-        if (id == null || id.isEmpty()) {
-            return false;
-        }
-        return true;
+        return id != null && !id.isEmpty();
     }
 
     public boolean checkNotNull() {
@@ -139,11 +136,8 @@ public class Event {
             return false;
         }
 
-        if (this.name == null || name.isEmpty()) {
-            return false;
-        }
+        return this.name != null && !name.isEmpty();
 
-        return true;
     }
 
     @Override

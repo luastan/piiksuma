@@ -212,7 +212,8 @@ public class InsertionFacade {
      * @param post post to be archived
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters{
+    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -251,6 +252,39 @@ public class InsertionFacade {
         }
 
         parentFacade.getPostDao().updatePost(post);
+    }
+
+    /**
+     * Function to do a repost on a post
+     *
+     * @param userRepost user who does the repost
+     * @param post post to be reposted
+     * @param userPost user who owns the post
+     * @param currentUser user performing the action
+     */
+    public void repost(User userRepost, Post post, User userPost, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (currentUser == null || !currentUser.checkNotNull()) {
+            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+        }
+
+        if (userRepost == null || !userRepost.checkNotNull()) {
+            throw new PiikInvalidParameters("(userRepost) The parameter is null");
+        }
+
+        if (post == null || !post.checkNotNull()) {
+            throw new PiikInvalidParameters("(post) The parameter is null");
+        }
+
+        if (userPost == null || !userPost.checkNotNull()) {
+            throw new PiikInvalidParameters("(userPost) The parameter is null");
+        }
+
+        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(post.getPostAuthor())) {
+            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+        }
+
+        parentFacade.getPostDao().repost(userRepost, post, userPost);
     }
 
 
