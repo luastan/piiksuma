@@ -44,8 +44,9 @@ public class MultimediaDao extends AbstractDao {
      * @return Number of post which contains the multimedia
      */
     public Long numPostMultimedia(Multimedia multimedia) {
-        List<Map<String, Object>> count = new QueryMapper<Object>(super.getConnection()).createQuery("SELECT COUNT(*) as numPostMultimedia FROM post" +
-                "WHERE multimedia = ?").defineClass(Object.class).defineParameters(multimedia.getHash()).mapList();
+        List<Map<String, Object>> count = new QueryMapper<Object>(super.getConnection()).createQuery("SELECT COUNT(*) "+
+                "as numPostMultimedia FROM post WHERE multimedia = ?").defineClass(Object.class)
+                .defineParameters(multimedia.getHash()).mapList();
         return (Long) count.get(0).get("numPostMultimedia");
     }
 

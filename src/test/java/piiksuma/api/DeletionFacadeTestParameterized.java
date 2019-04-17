@@ -243,7 +243,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         if (expectedException == null) {
             ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
             p.setId("notNull");
-            p.setPostAuthor(altered.getEmail());
+            p.setPostAuthor(altered);
             deletionFacade.removePost(p, current);
             verify(mockedPostDao, atLeastOnce()).removePost(p);
         } else if (expectedException == PiikInvalidParameters.class) {
@@ -258,12 +258,12 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
             Assert.assertTrue(thrown);
 
         } else if (expectedException == PiikDatabaseException.class) {
-            if (altered.getEmail() != null) {
+            if (altered != null) {
                 return;
             }
             try {
                 ApiFacade.getEntrypoint().setPostDao(mockedPostDao);
-                p.setPostAuthor(altered.getEmail());
+                p.setPostAuthor(altered);
                 doThrow(PiikDatabaseException.class).when(mockedPostDao).removePost(p);
                 deletionFacade.removePost(p, current);
             } catch (PiikDatabaseException db) {
@@ -291,7 +291,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         if (expectedException == null) {
             event.setId("notNull");
             ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
-            event.setCreator(altered.getEmail());
+            event.setCreator(altered);
             deletionFacade.removeEvent(event, current);
             verify(mockedInteractionDao, atLeastOnce()).removeEvent(event);
         } else if (expectedException == PiikInvalidParameters.class) {
@@ -306,12 +306,12 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
             Assert.assertTrue(thrown);
 
         } else if (expectedException == PiikDatabaseException.class) {
-            if (altered.getEmail() != null) {
+            if (altered != null) {
                 return;
             }
             try {
                 ApiFacade.getEntrypoint().setInteractionDao(mockedInteractionDao);
-                event.setCreator(altered.getEmail());
+                event.setCreator(altered);
                 doThrow(PiikDatabaseException.class).when(mockedInteractionDao).removeEvent(event);
                 deletionFacade.removeEvent(event, current);
             } catch (PiikDatabaseException db) {
@@ -345,7 +345,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
             Assert.assertTrue(thrown);
 
         } else if (expectedException == PiikDatabaseException.class) {
-            if (altered.getEmail() != null) {
+            if (altered != null) {
                 return;
             }
             try {
@@ -369,7 +369,7 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
         if (expectedException == null) {
             message.setId("notNull");
             ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
-            message.setSender(altered.getEmail());
+            message.setSender(altered);
             deletionFacade.deleteMessage(message, current);
             verify(mockedMessagesDao, atLeastOnce()).deleteMessage(message);
         } else if (expectedException == PiikInvalidParameters.class) {
@@ -384,12 +384,12 @@ public class DeletionFacadeTestParameterized extends FacadeTest {
             Assert.assertTrue(thrown);
 
         } else if (expectedException == PiikDatabaseException.class) {
-            if (altered.getEmail() != null) {
+            if (altered != null) {
                 return;
             }
             try {
                 ApiFacade.getEntrypoint().setMessagesDao(mockedMessagesDao);
-                message.setSender(altered.getEmail());
+                message.setSender(altered);
                 doThrow(PiikDatabaseException.class).when(mockedMessagesDao).deleteMessage(message);
                 deletionFacade.deleteMessage(message, current);
             } catch (PiikDatabaseException db) {

@@ -76,6 +76,10 @@
     -fx-color-label-visible: -white-high-emphasis;
     -fx-cursor: hand;
 
+    -fx-pref-height: 50;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+
     -fx-pref-width: 108;
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;

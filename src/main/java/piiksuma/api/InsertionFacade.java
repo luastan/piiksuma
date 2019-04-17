@@ -61,7 +61,8 @@ public class InsertionFacade {
         parentFacade.getUserDao().updateUser(user);
     }
 
-    public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -77,7 +78,8 @@ public class InsertionFacade {
         parentFacade.getUserDao().createAchievement(achievement);
     }
 
-    public void unlockAchievement(Achievement achievement, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void unlockAchievement(Achievement achievement, User user, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
 
         if (achievement == null || !achievement.checkNotNull()) {
             throw new PiikInvalidParameters("(achievement) null");
@@ -105,7 +107,8 @@ public class InsertionFacade {
      * @param follower User who follows
      * @throws PiikDatabaseException
      */
-    public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -128,7 +131,8 @@ public class InsertionFacade {
 
     /* MULTIMEDIA related methods */
 
-    public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
+    public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters,
+            PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
             throw new PiikInvalidParameters("(multimedia) The parameter is null");
         }
@@ -208,7 +212,8 @@ public class InsertionFacade {
      * @param post post to be archived
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
-    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -242,7 +247,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(post) The parameter is null");
         }
 
-        if (!currentUser.checkAdministrator() && !post.getPostAuthor().equals(currentUser.getEmail())) {
+        if (!currentUser.checkAdministrator() && !post.getPostAuthor().equals(currentUser)) {
             throw new PiikForbiddenException("Permission denied");
         }
 
@@ -313,7 +318,8 @@ public class InsertionFacade {
      * @param message     reply to be added to the ticket
      * @param currentUser current user logged into the app
      */
-    public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -359,7 +365,8 @@ public class InsertionFacade {
      * @param currentUser    current user logged into the app
      */
 
-    public void createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -368,7 +375,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(privateMessage) null parameter");
         }
 
-        if(!privateMessage.getSender().equals(currentUser.getEmail())) {
+        if(!privateMessage.getSender().equals(currentUser)) {
             throw new PiikForbiddenException("forbidden");
         }
 
@@ -383,7 +390,8 @@ public class InsertionFacade {
      * @param currentUser logged User
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, oldMessage, newMessage
      */
-    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
@@ -395,7 +403,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(newMessage) The parameter is null");
         }
         // Permision check
-        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.getEmail().equals(oldMessage.getSender())) {
+        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.equals(oldMessage.getSender())) {
             throw new PiikForbiddenException("You do not have the required permissions");
         }
         parentFacade.getMessagesDao().modifyMessage(oldMessage, newMessage);
@@ -431,15 +439,11 @@ public class InsertionFacade {
             throw new PiikDatabaseException("(currentUser) can't be null");
         }
 
-        if(!reply.getPostAuthor().equals(currentUser.getId()) && !currentUser.getType().equals(UserType.administrator)){
+        if(!reply.getPostAuthor().equals(currentUser) && !currentUser.getType().equals(UserType.administrator)){
             throw new PiikForbiddenException("You do not have the required permissions");
         }
 
-        if(reply.getFatherPost() == null || reply.getFatherPost().isEmpty()){
-            throw new PiikDatabaseException("The author of the post father can not be null");
-        }
-
-        if(reply.getSugarDaddy() == null || reply.getSugarDaddy().isEmpty()){
+        if(reply.getFatherPost() == null || !reply.checkNotNull()){
             throw new PiikDatabaseException("The post father can not be null");
         }
 
@@ -457,7 +461,8 @@ public class InsertionFacade {
      * @param notification notification given to the user
      * @param currentUser  current user logged into the app
      */
-    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -481,7 +486,8 @@ public class InsertionFacade {
      * @param currentUser  current user logged into the app
      */
 
-    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException,
+            PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
@@ -542,7 +548,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters("(currentUser) The parameter is null");
         }
 
-        if(!currentUser.getEmail().equals(event.getCreator())) {
+        if(!currentUser.equals(event.getCreator())) {
             throw new PiikForbiddenException("forbidden");
         }
 

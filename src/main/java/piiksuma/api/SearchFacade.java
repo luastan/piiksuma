@@ -182,7 +182,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
         }
 
-        if (!current.checkAdministrator() && !post.getPostAuthor().equals(current.getEmail())) {
+        if (!current.checkAdministrator() && !post.getPostAuthor().equals(current)) {
             throw new PiikForbiddenException("Forbidden");
         }
 

@@ -71,7 +71,7 @@ public class MessagesDao extends AbstractDao {
         }
 
         return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE reciever = ? ").
-                defineClass(Message.class).defineParameters(user.getEmail()).list();
+                defineClass(Message.class).defineParameters(user.getPK()).list();
     }
 
     /**
