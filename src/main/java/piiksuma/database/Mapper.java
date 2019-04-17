@@ -4,7 +4,11 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Common functionality between all the Mapper Classes.
@@ -22,6 +26,7 @@ public abstract class Mapper<T> {
     protected Connection connection;
     protected PreparedStatement statement;
     protected Class<? extends T> mappedClass;
+    protected static Pattern regexFKeys = Pattern.compile("(\\w+):(\\w+)");
 
     public Mapper(Connection connection) {
         this.connection = connection;
@@ -29,6 +34,9 @@ public abstract class Mapper<T> {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public class DEFAULT {
     }
 
     public void setConnection(Connection connection) {
@@ -108,7 +116,8 @@ public abstract class Mapper<T> {
         // Query will end up looking somewhat like this
         // SELECT * FROM [TABLE] WHERE [PRIMARY_KEY]=pkObject;
         queryBuilder.append(clase.getAnnotation(MapperTable.class).nombre().equals("") ?
-                clase.getName() : clase.getAnnotation(MapperTable.class).nombre()).append(" ? WHERE ");
+                clase.getName() : clase.getAnnotation(MapperTable.class).nombre()).append(" WHERE ");
+        // .append(" ? WHERE "); ?¿¿?¿
 
         // Finds the field which is anotaded as Primary Key
         Field fkField = Arrays.stream(clase.getDeclaredFields())
@@ -125,6 +134,46 @@ public abstract class Mapper<T> {
         return new QueryMapper<>(connection)
                 .createQuery(queryBuilder.toString()).defineClass(clase).defineParameters(pkObject)
                 .findFirst(false);
+    }
+
+    /**
+     * Queries a foreign key and maps it automatically.
+     *
+     * @param clase Class to be looped over
+     * @param pkeys Object used as a parameter within the query to find
+     *              the tuple in the database
+     * @return Mapped instance from the query result set. When the class isn't
+     * annotated with {@link MapperTable MapperTable} returns null.
+     */
+    protected Object getFK(Class<?> clase, Map<String, Object> pkeys) {
+        if (!clase.isAnnotationPresent(MapperTable.class)) {
+            return null;
+        }
+        // If any of the pkeys is null then the object should be null too
+        if (pkeys.values().stream().anyMatch(Objects::isNull)) {
+            return null;
+        }
+        String tmpColumn;
+        QueryMapper<?> queryMapper = new QueryMapper<>(connection).defineClass(clase);
+        ArrayList<Object> params = new ArrayList<>();
+
+        // Base query
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM ");
+        queryBuilder.append(clase.getAnnotation(MapperTable.class).nombre().equals("") ?
+                clase.getName() : clase.getAnnotation(MapperTable.class).nombre()).append(" WHERE ");
+
+        for (Field field : clase.getDeclaredFields()) {
+            if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
+                tmpColumn = field.getAnnotation(MapperColumn.class).columna().equals("") ?
+                        field.getName() : field.getAnnotation(MapperColumn.class).columna();
+                queryBuilder.append(tmpColumn).append("=? and ");  // ? used to insert it on the where clause
+                params.add(pkeys.get(tmpColumn));
+            }
+        }
+        // Crops the queryBuilder in order to get rid of the residual "and" added after each WHERE condition
+        queryBuilder.delete(queryBuilder.length() - 4, queryBuilder.length());
+
+        return queryMapper.createQuery(queryBuilder.toString()).defineParameters(params.toArray()).findFirst(false);
     }
 
     /**

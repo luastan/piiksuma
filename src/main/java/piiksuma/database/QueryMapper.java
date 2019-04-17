@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Database conection and data retrieving wrapper. Automatically maps retreved
@@ -56,6 +57,8 @@ public class QueryMapper<T> extends Mapper<T> {
     public List<T> list(boolean useForeignKeys) {
         ArrayList<T> resultado = new ArrayList<>();
         String nombreColumna;
+        Matcher matcher;
+        HashMap<String, Object> fkValues;
         HashSet<String> columnas = new HashSet<>();
         T elemento;
         Class<?> foreignClass;
@@ -77,13 +80,27 @@ public class QueryMapper<T> extends Mapper<T> {
                         if (field.isAnnotationPresent(MapperColumn.class)) {
                             nombreColumna = field.getAnnotation(MapperColumn.class).columna();
                             nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
-                            if (columnas.contains(nombreColumna)) {
+                            if (columnas.contains(nombreColumna) || field.getAnnotation(MapperColumn.class).targetClass() != Object.class) {
                                 foreignClass = field.getAnnotation(MapperColumn.class).targetClass();
                                 // Checks if the Field class has the MapperTable anotation. This means that it's a
                                 // foreign key and special actions are required
-                                if (useForeignKeys && foreignClass != Object.class &&
-                                        foreignClass.isAnnotationPresent(MapperColumn.class)) {
-                                    field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                if (foreignClass != Object.class &&
+                                        foreignClass.isAnnotationPresent(MapperTable.class)) {
+                                    if (useForeignKeys) {
+                                        // FKEYS
+                                        if (field.getAnnotation(MapperColumn.class).fKeys().equals("")) {
+                                            field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                        } else {
+                                            fkValues = new HashMap<>();
+                                            matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
+                                            while (matcher.find()) {
+                                                fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                            }
+                                            field.set(elemento, getFK(foreignClass, fkValues));
+                                        }
+
+                                    }
+
                                 } else {
                                     field.set(elemento, set.getObject(nombreColumna));
                                 }

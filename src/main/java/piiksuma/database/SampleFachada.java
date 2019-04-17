@@ -2,6 +2,7 @@ package piiksuma.database;
 
 
 import piiksuma.User;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -92,7 +93,7 @@ public class SampleFachada {
      * //TODO borrar esto cuando ya no sea necesario
      * Ejemplo para el uso de los mappers :)
      */
-    public void meterUsuario() {
+    public void meterUsuario() throws PiikDatabaseException {
 
         User usuario = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email LIKE ?")
                 .defineClass(User.class).defineParameters("email").findFirst();

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @MapperTable(nombre = "post")
 public class Post {
-    @MapperColumn(pkey = true, fKeys = "author", targetClass = User.class)
+    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
     private User author;
     @MapperColumn(pkey = true)
     private String id;
@@ -16,9 +16,9 @@ public class Post {
     private String text;
     @MapperColumn(hasDefault = true)
     private Timestamp publicationDate;/*Date when the father post was creaetd*/
-    @MapperColumn(fKeys = "sugarDaddy,authorDaddy", targetClass = Post.class)
+    @MapperColumn(fKeys = "sugarDaddy:id authorDaddy:author", targetClass = Post.class)
     private Post fatherPost;
-    @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
+    @MapperColumn(fKeys = "multimedia:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
 
     public Post() {
@@ -140,8 +140,9 @@ public class Post {
     public String toString() {
         return "Post{" +
                 " Id:" + '\'' + this.id + '\'' +
+                " Parent:" + '\'' + this.fatherPost + '\'' +
                 " Texto:" + '\'' + this.text + '\'' +
-                " Author:" + '\'' + this.author.getId() + '\'' + "}";
+                " Author:" + '\'' + this.author + '\'' + "}";
 
     }
 

@@ -67,7 +67,7 @@ public class User {
         this.email = email;
         this.pass = pass;
         this.type = type;
-        this.birthday = new Timestamp(System.currentTimeMillis());
+        //this.birthday = new Timestamp(System.currentTimeMillis());
 
     }
 
@@ -298,7 +298,7 @@ public class User {
         return "User{" +
                 "id='" + id + '\'' +
                 ", pass='" + pass + '\'' +
-                ", type='" + this.type + '\'' +
+                ", type='" + this.getType() + '\'' +
                 '}';
     }
 

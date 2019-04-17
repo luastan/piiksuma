@@ -12,4 +12,7 @@ values ('id3', 'mrajoy@suiza.sz', 'Mariano Rajoy', 'putas12345678', 'H', 'No rob
         'Mi Españita', 'Pontevedra', 'Pontevedra', 'Protestante', 'casado o eso creo', 'moción de censura',
         '11/11/1999');
 INSERT INTO post (author, id, text, publicationDate, sugarDaddy, authorDaddy, multimedia)
-values ('id3', 'post1', 'Hola que tal estkmos', default, null, null, null)
+values ('id3', 'post1', 'Hola que tal estkmos', default, null, null, null);
+
+INSERT INTO post (author, id, text, publicationDate, sugarDaddy, authorDaddy, multimedia)
+values ('id2', 'post2', 'Respuesta', default, 'post2', 'id2', null)
