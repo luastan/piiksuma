@@ -43,15 +43,15 @@ public class SearchFacade {
             PiikDatabaseException {
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) can't be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) can't be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) can't be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         return parentFacade.getUserDao().searchUser(user, limit);
@@ -66,11 +66,11 @@ public class SearchFacade {
      */
     public User getUser(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getUserDao().getUser(user);
@@ -85,7 +85,7 @@ public class SearchFacade {
 
     public User login(User user) throws PiikInvalidParameters, PiikDatabaseException {
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         return parentFacade.getUserDao().login(user);
@@ -102,15 +102,15 @@ public class SearchFacade {
 
     public Statistics getUserStatistics(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException("Forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getUserDao().getUserStatistics(user);
@@ -119,15 +119,15 @@ public class SearchFacade {
     public List<Achievement> getAchievements(User user, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) Parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException("Forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getUserDao().getAchievements(user);
@@ -137,11 +137,11 @@ public class SearchFacade {
 
     public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
-            throw new PiikInvalidParameters("(multimedia) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getMultimediaDao().existsMultimedia(multimedia);
@@ -149,11 +149,11 @@ public class SearchFacade {
 
     public Long numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
-            throw new PiikInvalidParameters("(multimedia) Parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) Parameter can't  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getMultimediaDao().numPostMultimedia(multimedia);
@@ -161,11 +161,11 @@ public class SearchFacade {
 
     public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
-            throw new PiikInvalidParameters("(multimedia) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getMultimediaDao().postWithMultimedia(multimedia);
@@ -175,15 +175,15 @@ public class SearchFacade {
 
     public Post getPost(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null || !post.checkNotNull()) {
-            throw new PiikInvalidParameters("(post) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (!current.checkAdministrator() && !post.getPostAuthor().equals(current)) {
-            throw new PiikForbiddenException("Forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getPostDao().getPost(post);
@@ -191,11 +191,11 @@ public class SearchFacade {
 
     public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getPostDao().getPost(hashtag);
@@ -203,15 +203,15 @@ public class SearchFacade {
 
     public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException("Forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getPostDao().getPost(user);
@@ -227,11 +227,11 @@ public class SearchFacade {
     public Hashtag getHashtag(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
         return parentFacade.getPostDao().getHashtag(hashtag);
@@ -248,15 +248,15 @@ public class SearchFacade {
     public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikInvalidParameters("(hashtag) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
         if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) Parameter can not  be null or less than zero");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
         return parentFacade.getPostDao().searchHashtag(hashtag, limit);
     }
@@ -271,15 +271,15 @@ public class SearchFacade {
      */
     public List<Post> searchByText(String text, Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (text == null || text.isEmpty()) {
-            throw new PiikInvalidParameters("(text) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("text"));
         }
 
         if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) Parameter can not  be null or less than zero");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not  be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getPostDao().searchByText(text, limit);
@@ -300,21 +300,21 @@ public class SearchFacade {
             PiikInvalidParameters {
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         if (user.equals(current) || current.getType().equals(UserType.administrator)) {
             return parentFacade.getPostDao().getFeed(user, limit);
         } else {
-            throw new PiikForbiddenException("The current user doesn't match the given user");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
     }
 
@@ -328,16 +328,16 @@ public class SearchFacade {
     public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         // A user's archived posts can be retrieved by an user or by an admin
         if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
-            throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried archived posts");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getPostDao().getArchivedPosts(user);
@@ -345,10 +345,10 @@ public class SearchFacade {
 
     public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         return parentFacade.getPostDao().getTrendingTopics(limit);
@@ -365,15 +365,17 @@ public class SearchFacade {
      */
     public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) Parameter can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+        
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         if (!current.checkAdministrator()) {
-            throw new PiikForbiddenException("The current user isn't an administrator");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters("(limit) must be greater than 0");
-        }
+        
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
@@ -388,11 +390,11 @@ public class SearchFacade {
     public List<Message> readMessages(User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         return parentFacade.getMessagesDao().readMessages(user);
@@ -410,11 +412,11 @@ public class SearchFacade {
      */
     public HashMap<ReactionType, Integer> getPostReactionCount(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null || post.checkNotNull()) {
-            throw new PiikInvalidParameters("Parameter 'post' can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("Parameter 'currentUser' can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
         return parentFacade.getInteractionDao().getPostReactionsCount(post);
@@ -430,16 +432,16 @@ public class SearchFacade {
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) can not be null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         // A user's notifications can be retrieved by the user or by an admin
         if (!current.checkAdministrator() && !current.equals(user)) {
-            throw new PiikForbiddenException("The current user isn't allowed to retrieved the queried notifications");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getInteractionDao().getNotifications(user);

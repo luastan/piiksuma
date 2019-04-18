@@ -38,7 +38,7 @@ public class InsertionFacade {
     public void createUser(User newUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (newUser == null || !newUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(newUser) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newUser"));
         }
 
         parentFacade.getUserDao().createUser(newUser);
@@ -47,15 +47,15 @@ public class InsertionFacade {
     public void updateUser(User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException("(user) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if(!user.equals(currentUser) && !currentUser.checkAdministrator()) {
-            throw new PiikForbiddenException("forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().updateUser(user);
@@ -64,15 +64,15 @@ public class InsertionFacade {
     public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (achievement == null || !achievement.checkNotNull()) {
-            throw new PiikInvalidParameters("(achievement) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("achievement"));
         }
 
         if (!currentUser.getType().equals(UserType.administrator)) {
-            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().createAchievement(achievement);
@@ -82,19 +82,19 @@ public class InsertionFacade {
             PiikInvalidParameters {
 
         if (achievement == null || !achievement.checkNotNull()) {
-            throw new PiikInvalidParameters("(achievement) null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("achievement"));
         }
 
         if(user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if(!currentUser.checkAdministrator()) {
-            throw new PiikForbiddenException("forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().unlockAchievement(achievement, user);
@@ -110,19 +110,19 @@ public class InsertionFacade {
     public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (followed == null || !followed.checkNotNull()) {
-            throw new PiikInvalidParameters("(followed) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
         }
 
         if (follower == null || !follower.checkNotNull()) {
-            throw new PiikInvalidParameters("(follower) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
         }
 
         if (!follower.equals(currentUser)) {
-            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().followUser(followed, follower);
@@ -134,11 +134,11 @@ public class InsertionFacade {
     public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull()) {
-            throw new PiikInvalidParameters("(multimedia) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         parentFacade.getMultimediaDao().addMultimedia(multimedia);
@@ -158,11 +158,11 @@ public class InsertionFacade {
      */
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (post == null || !post.checkNotNull()) {
-            throw new PiikInvalidParameters("(post) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         parentFacade.getPostDao().createPost(post);
@@ -177,11 +177,11 @@ public class InsertionFacade {
      */
     public void createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikInvalidParameters("(hashtag) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
         parentFacade.getPostDao().createHashtag(hashtag);
@@ -197,12 +197,13 @@ public class InsertionFacade {
     public void followHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
         // Null check
         if (hashtag == null || !hashtag.checkNotNull()) {
-            throw new PiikInvalidParameters("(hashtag) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
+
         parentFacade.getPostDao().followHastag(hashtag, currentUser);
     }
 
@@ -215,19 +216,19 @@ public class InsertionFacade {
     public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         if (post == null || !post.checkNotNull()) {
-            throw new PiikInvalidParameters("(post) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         if (!user.equals(currentUser)) {
-            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
         parentFacade.getPostDao().archivePost(post, user);
     }
@@ -240,15 +241,15 @@ public class InsertionFacade {
      */
     public void updatePost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (post == null || !post.checkNotNull()) {
-            throw new PiikInvalidParameters("(post) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         if (!currentUser.checkAdministrator() && !post.getPostAuthor().equals(currentUser)) {
-            throw new PiikForbiddenException("Permission denied");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getPostDao().updatePost(post);
@@ -265,23 +266,23 @@ public class InsertionFacade {
     public void repost(User userRepost, Post post, User userPost, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (userRepost == null || !userRepost.checkNotNull()) {
-            throw new PiikInvalidParameters("(userRepost) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userRepost"));
         }
 
         if (post == null || !post.checkNotNull()) {
-            throw new PiikInvalidParameters("(post) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
         if (userPost == null || !userPost.checkNotNull()) {
-            throw new PiikInvalidParameters("(userPost) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.getEmail().equals(post.getPostAuthor())) {
-            throw new PiikForbiddenException("(user) You do not have permissions to do that");
+        if (!currentUser.checkAdministrator() && !currentUser.equals(post.getPostAuthor())) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getPostDao().repost(userRepost, post, userPost);
@@ -299,11 +300,11 @@ public class InsertionFacade {
      */
     public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (ticket == null || !ticket.checkNotNull()) {
-            throw new PiikInvalidParameters("(ticket) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
         parentFacade.getMessagesDao().newTicket(ticket);
@@ -321,16 +322,17 @@ public class InsertionFacade {
     public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (ticket == null || !ticket.checkNotNull()) {
-            throw new PiikInvalidParameters("(ticket) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
         if (message == null || !message.checkNotNull()) {
-            throw new PiikInvalidParameters("(message) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
         }
+
         parentFacade.getMessagesDao().replyTicket(ticket, message);
     }
 
@@ -344,15 +346,15 @@ public class InsertionFacade {
     public void closeTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (ticket == null || !ticket.checkNotNull()) {
-            throw new PiikInvalidParameters("(ticket) null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if(!currentUser.checkAdministrator()) {
-            throw new PiikForbiddenException("you're not an admin");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getMessagesDao().closeTicket(ticket);
@@ -368,15 +370,15 @@ public class InsertionFacade {
     public void createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (privateMessage == null || !privateMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(privateMessage) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("privateMessage"));
         }
 
         if(!privateMessage.getSender().equals(currentUser)) {
-            throw new PiikForbiddenException("forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getMessagesDao().createMessage(privateMessage);
@@ -394,30 +396,30 @@ public class InsertionFacade {
             PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
         if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(oldMessage) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("oldMessage"));
         }
         if (newMessage == null || !newMessage.checkNotNull()) {
-            throw new PiikInvalidParameters("(newMessage) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newMessage"));
         }
         // Permision check
         if (!currentUser.getType().equals(UserType.administrator) || !currentUser.equals(oldMessage.getSender())) {
-            throw new PiikForbiddenException("You do not have the required permissions");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
+
         parentFacade.getMessagesDao().modifyMessage(oldMessage, newMessage);
     }
 
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikDatabaseException("(user) The parameter is null");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(user) The parameter is null");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         parentFacade.getUserDao().administratePersonalData(user);
@@ -432,19 +434,19 @@ public class InsertionFacade {
      */
     public void reply(Post reply, User currentUser) throws PiikDatabaseException {
         if(reply == null || !reply.checkNotNull()){
-            throw new PiikDatabaseException("(reply) can't be null");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("reply"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikDatabaseException("(currentUser) can't be null");
-        }
-
-        if(!reply.getPostAuthor().equals(currentUser) && !currentUser.getType().equals(UserType.administrator)){
-            throw new PiikForbiddenException("You do not have the required permissions");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if(reply.getFatherPost() == null || !reply.checkNotNull()){
-            throw new PiikDatabaseException("The post father can not be null");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("fatherPost"));
+        }
+
+        if(!reply.getPostAuthor().equals(currentUser) && !currentUser.getType().equals(UserType.administrator)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getPostDao().createPost(reply);
@@ -464,16 +466,17 @@ public class InsertionFacade {
     public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (notification == null || !notification.checkNotNull()) {
-            throw new PiikInvalidParameters("(notification) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("notification"));
         }
 
         if (!currentUser.getType().equals(UserType.administrator)) {
-            throw new PiikForbiddenException("The user is not an administrator");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
+
         parentFacade.getInteractionDao().createNotification(notification);
     }
 
@@ -489,15 +492,15 @@ public class InsertionFacade {
     public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (notification == null || !notification.checkNotNull()) {
-            throw new PiikInvalidParameters("(notification) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("notification"));
         }
 
         if (user == null || !user.checkNotNull()) {
-            throw new PiikInvalidParameters("(user) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
         parentFacade.getInteractionDao().notifyUser(notification, user);
@@ -505,11 +508,11 @@ public class InsertionFacade {
 
     public void createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if (event == null || !event.checkNotNull()) {
-            throw new PiikInvalidParameters("(event) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
         parentFacade.getInteractionDao().createEvent(event);
@@ -524,15 +527,15 @@ public class InsertionFacade {
     public void react(Reaction reaction, User current) throws PiikInvalidParameters, PiikDatabaseException {
 
         if (reaction == null || !reaction.checkNotNull()) {
-            throw new PiikInvalidParameters("(reaction) null parameter");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("reaction"));
         }
 
         if (current == null || !current.checkNotNull()) {
-            throw new PiikInvalidParameters("(current) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
         if(!current.equals(reaction.getUser())) {
-            throw new PiikForbiddenException("forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getInteractionDao().react(reaction);
@@ -541,15 +544,15 @@ public class InsertionFacade {
     public void updateEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (event == null || !event.checkNotNull()) {
-            throw new PiikDatabaseException("(event) Primary key constraints failed");
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("event"));
         }
 
         if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters("(currentUser) The parameter is null");
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
         if(!currentUser.equals(event.getCreator())) {
-            throw new PiikForbiddenException("forbidden");
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getInteractionDao().updateEvent(event);
