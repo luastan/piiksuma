@@ -107,42 +107,23 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Inserts all the given elements into the database
+     * Inserts all the given elements into the database. When following
+     * foreign keys while inserting; It won't go into infinite recursion.
+     * At most It will propperly insert a foreign key from a foreign key. For
+     * example: A post wich has a parent wich is partially identified by its
+     * user which is actually a custom declared Class, not a String or an
+     * integer.
      */
     public void insert() throws PiikDatabaseException {
-        /*
-        PreparedStatement statement = null;
-        // Pepares the query
-        prepareQuery();
-        try {
-            for (E insercion : this.insertions) {
-                statement = connection.prepareStatement(this.query);    // Instances the preparedStatement
-                for (int i = 0; i < this.columnas.size(); i++) {        // Inserts the data
-                    Object object = this.atributos.get(this.columnas.get(i)).get(insercion);
-                    if (object != null && this.atributos.get(this.columnas.get(i)).get(insercion).getClass().
-                            isAnnotationPresent(MapperTable.class)) {
-                        statement.setObject(i + 1, fkValue(this.atributos.get(this.columnas.get(i)).get(insercion)));
-                    } else {
-                        statement.setObject(i + 1, this.atributos.get(this.columnas.get(i)).get(insercion));
-                    }
-                }
-                // Ejecutar
-                statement.execute();
-            }
-        } catch (SQLException e) {
-            System.out.println("SQL movida");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-         */
         Map<String, Object> insertion;
         Class fieldClass;
         String columnName;
         Matcher matcher;
         Object atrib;
         String extColumn;
+        Object fAtrib;
+        Field ffield;
+        Object ffAtrib;
         try {
             for (E element : this.insertions) {
                 insertion = new HashMap<>();
@@ -150,29 +131,59 @@ public class InsertionMapper<E> extends Mapper<E> {
                     if (field.isAnnotationPresent(MapperColumn.class)) {
                         field.setAccessible(true);
                         fieldClass = field.getAnnotation(MapperColumn.class).targetClass();
-                        if (fieldClass == Object.class) {
-                            // Normal field
+                        if (fieldClass == Object.class) { // Normal field
                             columnName = field.getAnnotation(MapperColumn.class).columna();
                             columnName = columnName.equals("") ? field.getName() : columnName;
                             atrib = field.get(element);
+                            // Checks for default values
                             if (field.getAnnotation(MapperColumn.class).hasDefault() && atrib == null) {
                                 insertion.put(columnName, new Mapper.DEFAULT());
                             } else {
                                 insertion.put(columnName, atrib);
                             }
-                        } else {
-                            // Foreign keys
-                            if (field.get(element) != null) {
+                        } else { // Foreign keys
+                            if (field.get(element) != null) {   // Asumes that a foreign key can't be null
+                                // It doesn't make a lot of sense to insert something
+                                // referencing a tuple that doesn't already exist
                                 matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
                                 while (matcher.find()) {
+                                    // Loops over the atributes indicated by the fkeys value on the MapperColumn
+                                    // annotation
                                     for (Field extField : fieldClass.getDeclaredFields()) {
                                         if (extField.isAnnotationPresent(MapperColumn.class)) {
                                             extField.setAccessible(true);
                                             extColumn = extField.getAnnotation(MapperColumn.class).columna();
                                             extColumn = extColumn.equals("") ? extField.getName() : extColumn;
+                                            // Looks for the field which column matches with the indicated at the fkeys
+                                            // declaration on the annotation
                                             if (extColumn.equals(matcher.group(2))) {
-                                                System.out.println(matcher.group(0));
-                                                insertion.put(matcher.group(1), extField.get(field.get(element)));
+                                                fAtrib = extField.get(field.get(element));
+                                                // In case the field is again a foreign key, the actual value needs
+                                                // to be fetched from the fAtrib.
+                                                if (fAtrib.getClass().isAnnotationPresent(MapperTable.class)) {
+                                                    // It's asumed that when dealing with this depth of foreign keys
+                                                    // There's not going to be more foreign keys and the first primary
+                                                    // key found will be the correct value
+                                                    ffield = Arrays.stream(fAtrib.getClass().getDeclaredFields())
+                                                            .filter(f -> f.isAnnotationPresent(MapperColumn.class) &&
+                                                                    f.getAnnotation(MapperColumn.class).pkey())
+                                                            .findAny().orElse(null);
+                                                    if (ffield != null) {   // In case the field wasn't found nothing
+                                                        // gets inserted at all
+                                                        ffield.setAccessible(true);
+                                                        ffAtrib = ffield.get(fAtrib);
+                                                        // Checks default values
+                                                        if (ffield.getAnnotation(MapperColumn.class).hasDefault() &&
+                                                                ffAtrib == null) {
+                                                            insertion.put(matcher.group(1), new Mapper.DEFAULT());
+                                                        } else {
+                                                            insertion.put(matcher.group(1), ffAtrib);
+                                                        }
+                                                    }
+                                                } else {
+                                                    // When the Atrib is not a FK again; It can be inserted normally
+                                                    insertion.put(matcher.group(1), fAtrib);
+                                                }
                                             }
                                         }
                                     }
@@ -186,7 +197,6 @@ public class InsertionMapper<E> extends Mapper<E> {
         } catch (IllegalAccessException ex) {
             throw new PiikDatabaseException("Unable to map the insertion");
         }
-
     }
 
 
