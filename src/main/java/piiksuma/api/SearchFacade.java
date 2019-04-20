@@ -189,6 +189,7 @@ public class SearchFacade {
         return parentFacade.getPostDao().getPost(post);
     }
 
+    // TODO we need to set a limit
     public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (hashtag == null || !hashtag.checkNotNull()) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
@@ -201,6 +202,7 @@ public class SearchFacade {
         return parentFacade.getPostDao().getPost(hashtag);
     }
 
+    // TODO we need to set a limit
     public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (current == null || !current.checkNotNull()) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
