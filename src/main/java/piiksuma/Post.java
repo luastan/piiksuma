@@ -100,6 +100,7 @@ public class Post extends PiikObject{
         this.multimedia = multimedia;
     }
 
+    // TODO hashtags are missing
     /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
