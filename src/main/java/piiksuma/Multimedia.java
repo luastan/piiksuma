@@ -6,14 +6,14 @@ import piiksuma.database.MapperTable;
 import java.util.Objects;
 
 @MapperTable
-public class Multimedia {
+public class Multimedia extends PiikObject{
 
     /* Attributes */
     @MapperColumn(pkey = true)
     private String hash;
     @MapperColumn
     private String resolution;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String uri;
 
 
@@ -75,17 +75,19 @@ public class Multimedia {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
+            // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return hash != null && !hash.isEmpty();
-    }
+    }*/
 
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
+            // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         if (!checkPrimaryKey()) {
             return false;
         }
         return uri != null && !uri.isEmpty();
 
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

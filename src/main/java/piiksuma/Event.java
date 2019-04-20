@@ -6,7 +6,7 @@ import piiksuma.database.MapperTable;
 import java.util.Objects;
 
 @MapperTable
-public class Event {
+public class Event extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn(hasDefault = true)
@@ -17,7 +17,7 @@ public class Event {
     private String date;
     @MapperColumn(hasDefault = true)
     private String name;
-    @MapperColumn(fKeys = "creatorUser", targetClass = User.class)
+    @MapperColumn(fKeys = "creatorUser", targetClass = User.class, notNull = true)
     private User creator;
 
 
@@ -123,11 +123,12 @@ public class Event {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
         return id != null && !id.isEmpty();
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         if (!checkPrimaryKey()) {
             return false;
         }
@@ -137,8 +138,8 @@ public class Event {
         }
 
         return this.name != null && !name.isEmpty();
-
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
     @Override
     public boolean equals(Object o) {

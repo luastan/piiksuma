@@ -5,11 +5,20 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import piiksuma.database.QueryMapper;
 import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
 
+import javax.management.Query;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class Arranque extends Application {
     public static void main(String[] args) {
+
+        SampleFachada.getDb().ejemploGETFK();
+        SampleFachada.getDb().pruebasCheck();
+
         launch(args);
     }
 

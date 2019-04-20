@@ -6,7 +6,7 @@ import piiksuma.database.MapperTable;
 import java.util.Objects;
 
 @MapperTable
-public class Reaction {
+public class Reaction extends PiikObject{
     @MapperColumn(columna = "usr", pkey = true, fKeys = "usr", targetClass = User.class)
     private User user;
     @MapperColumn(pkey = true, fKeys = "post,author", targetClass = Post.class)
@@ -57,22 +57,22 @@ public class Reaction {
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         // Check that the primary keys are not null
         return checkPrimaryKey();
-
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
     /**
      * Function to check that the primary keys are not null
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+   /* public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
         return getUser() != null && getPost() != null && getPost().getPostAuthor() != null;
-
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
     @Override
     public boolean equals(Object o) {

@@ -6,10 +6,10 @@ import piiksuma.database.MapperTable;
 import java.util.Objects;
 
 @MapperTable
-public class Achievement {
+public class Achievement extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String name;
     @MapperColumn
     private String description;
@@ -52,17 +52,17 @@ public class Achievement {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+   /* public boolean checkPrimaryKey() {
         return id != null && !id.isEmpty();
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
-    }
-
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         if (!checkPrimaryKey()) {
             return false;
         }
         return name != null && !name.isEmpty();
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

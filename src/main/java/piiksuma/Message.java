@@ -7,10 +7,10 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable(nombre = "message")
-public class Message {
+public class Message extends PiikObject {
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String text;
     @MapperColumn(pkey = true, fKeys = "sender", targetClass = User.class)
     private User sender;
@@ -77,15 +77,17 @@ public class Message {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
+    // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return id != null && sender != null;
-    }
+    }*/
 
     /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
+    /*
     public boolean checkNotNull() {
         // Check that the primary keys are not null
         if (!checkPrimaryKey()) {
@@ -93,8 +95,8 @@ public class Message {
         }
 
         return getText() != null && !getText().isEmpty();
-
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
 
     @Override
     public boolean equals(Object o) {

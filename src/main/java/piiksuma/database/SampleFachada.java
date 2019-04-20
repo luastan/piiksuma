@@ -1,6 +1,7 @@
 package piiksuma.database;
 
 
+import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.exceptions.PiikDatabaseException;
 
@@ -131,6 +132,63 @@ public class SampleFachada {
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
         imprimirUsuarios();
 
+    }
+
+    /**
+     * //TODO BORRAR CUANDO NO HAGA FALTA
+     */
+    public void ejemploGETFK(){
+
+        User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
+        User user2 = new User("Álvaro Goldar", "alvrogd", "alvarogoldard@gmail.com");
+
+        // El usuario Cardama va a crear un post cuyo id es "id2"
+        Post postPadre = new Post(user, Timestamp.from(Instant.now()));
+        postPadre.setId("id2");
+
+        // El usuario alvrogd va a responder al post anterior, el id de respuesta va a ser "id43"
+        Post postHijo = new Post(user2, Timestamp.from(Instant.now()));
+        postHijo.setId("id43");
+
+        // Se establece el post padre
+        postHijo.setFatherPost(postPadre);
+
+        // Se obtienen las claves primarias
+        Map<String, Object> fks = new QueryMapper<>(getConexion()).getFKs(postHijo);
+
+        // Se imprimen
+        for(String column : fks.keySet()){
+            System.out.println(column + " " + fks.get(column).toString());
+        }
+    }
+
+    public void pruebasCheck(){
+        User user = new User("Fran", "Cardama", "francardama@gmail.com");
+        User user2 = new User("Álvaro Goldar", null, "alvarogoldard@gmail.com");
+
+
+        Post postPadre = new Post(user, Timestamp.from(Instant.now()));
+        postPadre.setId("id2");
+
+        // El usuario alvrogd va a responder al post anterior, el id de respuesta va a ser "id43"
+        Post postHijo = new Post(user2, Timestamp.from(Instant.now()));
+        postHijo.setId("id43");
+
+        // Se establece el post padre
+        postHijo.setFatherPost(postPadre);
+        postHijo.setText("hola");
+
+        System.out.println(postPadre.checkNotNull() + "-> valor esperado: false | falta el text");
+        System.out.println(postPadre.checkPrimaryKey()+ "-> valor esperado: true");
+
+        System.out.println(user.checkPrimaryKey()+ "-> valor esperado: true");
+        System.out.println(user.checkNotNull()+ "-> valor esperado: false | falta el cumpleaños");
+
+        System.out.println(user2.checkPrimaryKey()+ "-> valor esperado: false | falta el id");
+        System.out.println(user2.checkNotNull()+ "-> valor esperado: false | falta el id y el cumpleaños");
+
+        System.out.println(postHijo.checkPrimaryKey()+ "-> valor esperado: true");
+        System.out.println(postHijo.checkNotNull()+ "-> valor esperado: false | el autor no cumple el checkPrimaryKey");
     }
 
     public void imprimirUsuarios() {

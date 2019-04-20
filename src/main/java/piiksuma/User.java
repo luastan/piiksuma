@@ -7,14 +7,14 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
-public class User {
+public class User extends PiikObject{
     @MapperColumn
     private String email;
     @MapperColumn
     private String name;
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String pass;
     @MapperColumn
     private String gender;
@@ -32,7 +32,7 @@ public class User {
     private String city;
     @MapperColumn(columna = "birthPlace")
     private String birthPlace;
-    @MapperColumn(columna = "birthdate")
+    @MapperColumn(columna = "birthdate", notNull = true)
     private Timestamp birthday;
     @MapperColumn(columna = "registrationDate", hasDefault = true)
     private Timestamp registrationDate;
@@ -251,11 +251,12 @@ public class User {
         this.job = job;
     }
 
-    /**
+   /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
+   /*
     public boolean checkNotNull() {
         // Check that the primary keys are not null
         if (!checkPrimaryKey()) {
@@ -266,10 +267,10 @@ public class User {
         if (getPass() == null || getPass().isEmpty()) {
             return false;
         }
-
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return getBirthday() != null;
 
-    }
+    }*/
 
     /**
      * Function to know if an user is an administrator or a normal user
@@ -285,10 +286,11 @@ public class User {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         // Check that the primary keys are not null
         return getId() != null && !getId().isEmpty();
-    }
+    }*/
 
     @Override
     public String toString() {

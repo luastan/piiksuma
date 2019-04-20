@@ -7,18 +7,18 @@ import java.util.Objects;
 
 @MapperTable(nombre = "ticket")
 
-public class Ticket {
+public class Ticket extends PiikObject{
 
     /* Attributes */
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn(columna = "closeDate")
     private String closeDate;
-    @MapperColumn(fKeys = "usr", targetClass = User.class)
+    @MapperColumn(fKeys = "usr", targetClass = User.class, notNull = true)
     private User user;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String section;
-    @MapperColumn(columna = "text")
+    @MapperColumn(columna = "text", notNull = true)
     private String textProblem;
     @MapperColumn
     private String creationDate;
@@ -104,17 +104,17 @@ public class Ticket {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
-
+    /*public boolean checkPrimaryKey() {
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return id != null;
-    }
+    }*/
 
     /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         // Check that the primary keys are not null
         if (!checkPrimaryKey()) {
             return false;
@@ -128,8 +128,10 @@ public class Ticket {
             return false;
         }
 
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+
         return getUser() != null && getUser().checkPrimaryKey();
-    }
+    }*/
 
 
     @Override

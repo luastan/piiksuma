@@ -7,12 +7,12 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable(nombre = "post")
-public class Post {
+public class Post extends PiikObject{
     @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
     private User author;
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String text;
     @MapperColumn(hasDefault = true)
     private Timestamp publicationDate;/*Date when the father post was creaetd*/
@@ -29,11 +29,7 @@ public class Post {
 
         this.author = author;
 
-        if (publicationDate == null) {
-            this.publicationDate = null;
-        } else {
-            this.publicationDate = publicationDate;
-        }
+        this.publicationDate = publicationDate;
 
         this.fatherPost = null;
         this.multimedia = null;
@@ -109,29 +105,29 @@ public class Post {
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         // Check that the primary keys are not null
         if (!checkPrimaryKey()) {
             return false;
         }
-
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return (text != null && !text.isEmpty());
-    }
+    }*/
 
     /**
      * Function to check that the primary keys are not null
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
         if (getId() == null || getId().isEmpty()) {
             return false;
         }
-
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         return getPostAuthor() != null && getPostAuthor().checkPrimaryKey();
 
-    }
+    }*/
 
 
     public String toString() {

@@ -6,12 +6,12 @@ import piiksuma.database.MapperTable;
 import java.util.Objects;
 
 @MapperTable
-public class Notification {
+public class Notification extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
     @MapperColumn
     private String creationDate;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String content;
 
     public Notification() {
@@ -53,24 +53,24 @@ public class Notification {
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull() {
+    /*public boolean checkNotNull() {
         // Check that the primary keys are not null
         if (!checkPrimaryKey()) {
             return false;
         }
 
         return getContent() != null && !getContent().isEmpty();
-    }
+    }*/
 
     /**
      * Function to check that the primary keys are not null
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
+    /*public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
         return (getId() != null && !getId().isEmpty());
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

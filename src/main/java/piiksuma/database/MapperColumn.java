@@ -22,4 +22,6 @@ public @interface MapperColumn {
     // Syntax: "columnNameAsFK:columnNameAsPK"
 
     Class<?> targetClass() default Object.class;    // It's actually a Mappeable class (foreign keys)
+
+    boolean notNull() default false;                // True if the object can not be null
 }
