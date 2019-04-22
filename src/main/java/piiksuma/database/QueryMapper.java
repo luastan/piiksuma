@@ -164,6 +164,18 @@ public class QueryMapper<T> extends Mapper<T> {
         return this;
     }
 
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return query mapper which is being built
+     */
+    @Override
+    public QueryMapper<T> setIsolationLevel(int isolationLevel) {
+
+        return((QueryMapper<T>)super.setIsolationLevel(isolationLevel));
+    }
+
     /* Closing methods */
 
     /**

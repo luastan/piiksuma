@@ -1,11 +1,9 @@
 package piiksuma.database;
 
-import piiksuma.PiikObject;
-
 import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.*;
 import java.util.Date;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -56,14 +54,20 @@ public abstract class Mapper<T> {
         return isolationLevel;
     }
 
-    public void setIsolationLevel(int isolationLevel) {
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return mapper which is being built
+     */
+    public Mapper<T> setIsolationLevel(int isolationLevel) {
 
         // We need to check that the given database supports the desired isolation level; if it doesn't support it,
         // the default value remains
         try {
             DatabaseMetaData metaData = this.connection.getMetaData();
 
-            if(metaData.supportsTransactionIsolationLevel(isolationLevel)) {
+            if (metaData.supportsTransactionIsolationLevel(isolationLevel)) {
                 this.isolationLevel = isolationLevel;
             }
 
@@ -71,6 +75,8 @@ public abstract class Mapper<T> {
             System.err.println("Unable to set the given transaction isolation level");
             e.printStackTrace();
         }
+
+        return this;
     }
 
     public class DEFAULT {
@@ -218,14 +224,14 @@ public abstract class Mapper<T> {
      * @param object object to get the foreign keys
      * @return the foreign keys indexed by the name of column
      */
-    public Map<String, Object> getFKs(T object){
+    public Map<String, Object> getFKs(T object) {
 
         // HashMap with the foreign keys indexed by the name of the column of the relation that contains the FKs
         HashMap<String, Object> containFK = new HashMap<>();
         try {
 
             // Se recorren las field de la mappedClass
-            for(Field field : object.getClass().getDeclaredFields()){
+            for (Field field : object.getClass().getDeclaredFields()) {
 
                 // Se hace accesible
                 field.setAccessible(true);
@@ -236,8 +242,8 @@ public abstract class Mapper<T> {
                 // Se comprueba que el objeto sea null (no se referencia a nada)
                 // Que la field tenga una anotación de tipo MapperColumn
                 // Que la targetClass no sea un Object
-                if(objFK != null && field.isAnnotationPresent(MapperColumn.class) &&
-                        field.getAnnotation(MapperColumn.class).targetClass() != Object.class){
+                if (objFK != null && field.isAnnotationPresent(MapperColumn.class) &&
+                        field.getAnnotation(MapperColumn.class).targetClass() != Object.class) {
 
                     // Se obtiene la targetClass de las claves foráneas
                     Class<?> targetClass = field.getAnnotation(MapperColumn.class).targetClass();
@@ -247,7 +253,7 @@ public abstract class Mapper<T> {
                     String[] foreignKeys = field.getAnnotation(MapperColumn.class).fKeys().split(" ");
 
                     // Se comprueba si la targetClass es de tipo atómico
-                    if(isAtomicClass(targetClass)){
+                    if (isAtomicClass(targetClass)) {
                         // En caso de que sea de tipo atómico, solo se referencia a un atributo de la otra relación y
                         // se añade directamente al HashMap
                         containFK.put(foreignKeys[0].split(":")[0], field.get(object));
@@ -263,7 +269,7 @@ public abstract class Mapper<T> {
                         HashMap<String, String> translateColumn = new HashMap<>();
 
                         // Se recorren todas las foreignKeys obtenidas anteriormente
-                        for(String fk : foreignKeys){
+                        for (String fk : foreignKeys) {
                             // Se genera una tupla mediante el split(":") para separar el nombre del atributo en la
                             // relación y el nombre en la relación referenciada
                             String[] tuple = fk.split(":");
@@ -277,7 +283,7 @@ public abstract class Mapper<T> {
                         Map<String, Object> atomicPks = getAtomicPK(field.get(object));
 
                         // Se recorren las claves primarias obtenidas
-                        for(String column : atomicPks.keySet()){
+                        for (String column : atomicPks.keySet()) {
                             // Se obtiene el nombre de la columna en la relación inicial a partir del nombre de
                             // columna de la tabla referenciada y se añade la clave foránea
                             containFK.put(translateColumn.get(column), atomicPks.get(column));
@@ -285,8 +291,7 @@ public abstract class Mapper<T> {
                     }
                 }
             }
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
@@ -299,7 +304,7 @@ public abstract class Mapper<T> {
      * @param object object from which the primary keys are obtained
      * @return a map with the primary keys indexed by the name of column
      */
-    protected Map<String, Object> getAtomicPK(Object object){
+    protected Map<String, Object> getAtomicPK(Object object) {
 
         // HashMap en el que se devolverá al usuario las claves primarias en clases atómicas
         HashMap<String, Object> pKeys = new HashMap<>();
@@ -311,7 +316,7 @@ public abstract class Mapper<T> {
             // Se recorren todas las fields que son clave primaria, donde su columna equivale al nombre
             // de la columna en la base de datos. En caso de que haya más de una clave primaria se separan
             // por ":"
-            for(String columnName : fields.keySet()){
+            for (String columnName : fields.keySet()) {
 
                 // Se obtiene la field correspondiente a esta clave
                 Field field = fields.get(columnName);
@@ -332,13 +337,13 @@ public abstract class Mapper<T> {
 
                     // El número de claves que se han devuelto en getAtomicPK debería ser el mismo número de columnas
                     // que se generó en el anterior split
-                    for(String columnExtern : pAux.keySet()){
+                    for (String columnExtern : pAux.keySet()) {
                         // La función getAtomicPK devuelve las claves primarias indexadas por su columna en dicha
                         // relación, por lo tanto hay que indexarlo en función de columnNames y no de columnExtern
                         pKeys.put(columnNames[count], pAux.get(columnExtern));
 
                         // Se incrementa cuenta
-                        count+=2;
+                        count += 2;
                     }
                 } else {
                     // En caso de que la clase sea atómica se añade la clave primaria
@@ -358,7 +363,7 @@ public abstract class Mapper<T> {
      * @param classField type of class to analyze
      * @return true if the class is contained in the set of the atomic classes. In another case, false
      */
-    public boolean isAtomicClass(Class<?> classField){
+    public boolean isAtomicClass(Class<?> classField) {
         return this.atomicClasses.contains(classField);
     }
 
@@ -367,7 +372,7 @@ public abstract class Mapper<T> {
      *
      * @return the fields indexed by the name of the column
      */
-    public Map<String, Field> getPK(){
+    public Map<String, Field> getPK() {
         return getPK(mappedClass);
     }
 
@@ -377,7 +382,7 @@ public abstract class Mapper<T> {
      * @param mappedClass class from which to obtain the primary keys
      * @return the fields indexed by the name of the column
      */
-    protected Map<String, Field> getPK(Class<?> mappedClass){
+    protected Map<String, Field> getPK(Class<?> mappedClass) {
 
         // HashMap with the primary keys indexed by the name of the column
         HashMap<String, Field> pKeys = new HashMap<>();
@@ -386,10 +391,10 @@ public abstract class Mapper<T> {
         String columnName;
 
         // Loops over all the fields from the object
-        for(Field field : mappedClass.getDeclaredFields()){
+        for (Field field : mappedClass.getDeclaredFields()) {
 
             // Performs the mapping only of the annotated class and if the field is a primary key
-            if(field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()){
+            if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
 
                 // Column name extraction
                 // On empty / default column name specification uses the field name
@@ -446,7 +451,7 @@ public abstract class Mapper<T> {
         try {
             this.connection.setTransactionIsolation(this.isolationLevel);
         } catch (SQLException e) {
-            System.err.println("Unable to set the desired isolation level");
+            System.err.println("Unable to set the desired transaction isolation level");
             e.printStackTrace();
         }
     }

@@ -125,7 +125,8 @@ public class UserDao extends AbstractDao {
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser WHERE id = ? and " +
-                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).findFirst();
+                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).setIsolationLevel(
+                Connection.TRANSACTION_SERIALIZABLE).findFirst();
     }
 
     /**

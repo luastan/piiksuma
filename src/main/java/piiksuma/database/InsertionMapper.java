@@ -74,6 +74,17 @@ public class InsertionMapper<E> extends Mapper<E> {
         return this;
     }
 
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return insertion mapper which is being built
+     */
+    @Override
+    public InsertionMapper<E> setIsolationLevel(int isolationLevel) {
+
+        return((InsertionMapper<E>)super.setIsolationLevel(isolationLevel));
+    }
 
     /**
      * Extracts the atributes and fields to be inserted into the database and
