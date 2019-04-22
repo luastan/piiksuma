@@ -142,6 +142,11 @@ public class SampleFachada {
         User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
         User user2 = new User("Álvaro Goldar", "alvrogd", "alvarogoldard@gmail.com");
 
+        user.setBirthday(Timestamp.from(Instant.now()));
+        user2.setBirthday(Timestamp.from(Instant.now()));
+        user.setPass("pass1");
+        user2.setPass("pass2");
+
         // El usuario Cardama va a crear un post cuyo id es "id2"
         Post postPadre = new Post(user, Timestamp.from(Instant.now()));
         postPadre.setId("id2");
@@ -150,8 +155,29 @@ public class SampleFachada {
         Post postHijo = new Post(user2, Timestamp.from(Instant.now()));
         postHijo.setId("id43");
 
+        postHijo.setText("textohijo");
+        postPadre.setText("textopadre");
+
         // Se establece el post padre
         postHijo.setFatherPost(postPadre);
+
+        try {
+            new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user, user2).insert();
+            new InsertionMapper<Post>(conexion).defineClass(Post.class).add(postPadre).insert();
+            new InsertionMapper<Post>(conexion).defineClass(Post.class).add(postHijo).insert();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+
+        List<Post> posts = new QueryMapper<Post>(conexion).defineClass(Post.class)
+                .createQuery("SELECT * FROM post").list();
+
+        System.out.println("Búsqueda de todos los posts");
+
+        for(Post post : posts){
+            System.out.println(post);
+        }
 
         // Se obtienen las claves primarias
         Map<String, Object> fks = new QueryMapper<>(getConexion()).getFKs(postHijo);

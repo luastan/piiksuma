@@ -143,51 +143,7 @@ public class InsertionMapper<E> extends Mapper<E> {
                             }
                         } else { // Foreign keys
                             if (field.get(element) != null) {   // Asumes that a foreign key can't be null
-                                // It doesn't make a lot of sense to insert something
-                                // referencing a tuple that doesn't already exist
-                                matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
-                                while (matcher.find()) {
-                                    // Loops over the atributes indicated by the fkeys value on the MapperColumn
-                                    // annotation
-                                    for (Field extField : fieldClass.getDeclaredFields()) {
-                                        if (extField.isAnnotationPresent(MapperColumn.class)) {
-                                            extField.setAccessible(true);
-                                            extColumn = extField.getAnnotation(MapperColumn.class).columna();
-                                            extColumn = extColumn.equals("") ? extField.getName() : extColumn;
-                                            // Looks for the field which column matches with the indicated at the fkeys
-                                            // declaration on the annotation
-                                            if (extColumn.equals(matcher.group(2))) {
-                                                fAtrib = extField.get(field.get(element));
-                                                // In case the field is again a foreign key, the actual value needs
-                                                // to be fetched from the fAtrib.
-                                                if (fAtrib.getClass().isAnnotationPresent(MapperTable.class)) {
-                                                    // It's asumed that when dealing with this depth of foreign keys
-                                                    // There's not going to be more foreign keys and the first primary
-                                                    // key found will be the correct value
-                                                    ffield = Arrays.stream(fAtrib.getClass().getDeclaredFields())
-                                                            .filter(f -> f.isAnnotationPresent(MapperColumn.class) &&
-                                                                    f.getAnnotation(MapperColumn.class).pkey())
-                                                            .findAny().orElse(null);
-                                                    if (ffield != null) {   // In case the field wasn't found nothing
-                                                        // gets inserted at all
-                                                        ffield.setAccessible(true);
-                                                        ffAtrib = ffield.get(fAtrib);
-                                                        // Checks default values
-                                                        if (ffield.getAnnotation(MapperColumn.class).hasDefault() &&
-                                                                ffAtrib == null) {
-                                                            insertion.put(matcher.group(1), new Mapper.DEFAULT());
-                                                        } else {
-                                                            insertion.put(matcher.group(1), ffAtrib);
-                                                        }
-                                                    }
-                                                } else {
-                                                    // When the Atrib is not a FK again; It can be inserted normally
-                                                    insertion.put(matcher.group(1), fAtrib);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                insertion.putAll(getFKs(element));
                             }
                         }
                     }
