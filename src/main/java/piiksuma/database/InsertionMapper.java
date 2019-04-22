@@ -120,6 +120,9 @@ public class InsertionMapper<E> extends Mapper<E> {
         String columnName;
         Object atrib;
 
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             for (E element : this.insertions) {
                 insertion = new HashMap<>();

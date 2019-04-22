@@ -3,17 +3,15 @@ package piiksuma.database;
 import piiksuma.PiikObject;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
  * Common functionality between all the Mapper Classes.
  *
- * @param <T> Mapped class type. Used to check asigments when returning query
+ * @param <T> Mapped class type. Used to check assigments when returning query
  *            results.
  * @author luastan
  * @author CardamaS99
@@ -23,7 +21,12 @@ import java.util.regex.Pattern;
  * @author Marcos-marpin
  */
 public abstract class Mapper<T> {
+
     protected Connection connection;
+
+    // Desired isolation level for the transaction that will be executed (initializes to default isolation level in
+    // PostgreSQL)
+    private int isolationLevel = Connection.TRANSACTION_READ_COMMITTED;
 
     // Set with the atomic classes (String, Integer, etc...)
     protected Set<Class<?>> atomicClasses;
@@ -47,6 +50,27 @@ public abstract class Mapper<T> {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public int getIsolationLevel() {
+        return isolationLevel;
+    }
+
+    public void setIsolationLevel(int isolationLevel) {
+
+        // We need to check that the given database supports the desired isolation level; if it doesn't support it,
+        // the default value remains
+        try {
+            DatabaseMetaData metaData = this.connection.getMetaData();
+
+            if(metaData.supportsTransactionIsolationLevel(isolationLevel)) {
+                this.isolationLevel = isolationLevel;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Unable to set the given transaction isolation level");
+            e.printStackTrace();
+        }
     }
 
     public class DEFAULT {
@@ -410,5 +434,20 @@ public abstract class Mapper<T> {
         }
 
         return this;
+    }
+
+    /**
+     * This method is intended to be executed before performing a transaction. It will set the connection's required
+     * attributes to the ones stored in the Mapper.
+     */
+    protected void configureConnection() {
+
+        // Isolation level
+        try {
+            this.connection.setTransactionIsolation(this.isolationLevel);
+        } catch (SQLException e) {
+            System.err.println("Unable to set the desired isolation level");
+            e.printStackTrace();
+        }
     }
 }

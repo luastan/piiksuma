@@ -62,6 +62,10 @@ public class QueryMapper<T> extends Mapper<T> {
         HashSet<String> columnas = new HashSet<>();
         T elemento;
         Class<?> foreignClass;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             statement.execute();
             ResultSet set = statement.getResultSet();
@@ -175,6 +179,10 @@ public class QueryMapper<T> extends Mapper<T> {
         Map<String, Object> element;
         ArrayList<String> columnas = new ArrayList<>();
         ResultSet set;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             statement.execute();
             set = statement.getResultSet();

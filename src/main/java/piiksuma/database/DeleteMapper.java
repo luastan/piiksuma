@@ -122,6 +122,9 @@ public class DeleteMapper<T> extends Mapper<T> {
     public void delete() {
         prepareDelete();  // Builds the statement
 
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             // Loops over the deletion pool deleting each object
             for (T object : this.elementsDelete) {

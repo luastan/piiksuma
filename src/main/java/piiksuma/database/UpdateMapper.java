@@ -88,6 +88,9 @@ public class UpdateMapper<T> extends Mapper<T> {
         StringBuilder updateBuilder = new StringBuilder("UPDATE ").append(mappedClass.getAnnotation(MapperTable.class)
                 .nombre()).append(" SET ");
 
+        // Configures the connection to the database
+        configureConnection();
+
         /* SET clause building */
 
         // Loops over the elements to be updated
