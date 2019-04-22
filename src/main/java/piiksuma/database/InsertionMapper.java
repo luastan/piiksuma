@@ -118,12 +118,8 @@ public class InsertionMapper<E> extends Mapper<E> {
         Map<String, Object> insertion;
         Class fieldClass;
         String columnName;
-        Matcher matcher;
         Object atrib;
-        String extColumn;
-        Object fAtrib;
-        Field ffield;
-        Object ffAtrib;
+
         try {
             for (E element : this.insertions) {
                 insertion = new HashMap<>();
