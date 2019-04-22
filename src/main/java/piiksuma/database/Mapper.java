@@ -314,7 +314,7 @@ public abstract class Mapper<T> {
                         pKeys.put(columnNames[count], pAux.get(columnExtern));
 
                         // Se incrementa cuenta
-                        count++;
+                        count+=2;
                     }
                 } else {
                     // En caso de que la clase sea atómica se añade la clave primaria
