@@ -26,6 +26,7 @@ public class Arranque extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Registers current stage into the Application Context
+
         ContextHandler.getContext().register("primary", primaryStage);
 
         // Stage configuration
@@ -47,8 +48,8 @@ public class Arranque extends Application {
         scene.getStylesheets().addAll(
                 getClass().getResource("/gui/css/global.css").toExternalForm()
         );
-
         // Show
         primaryStage.show();
+
     }
 }
