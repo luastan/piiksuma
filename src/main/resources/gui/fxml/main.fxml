@@ -7,19 +7,15 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXTabPane?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="piiksuma.gui.MainController">
-    <center>
-        <StackPane>
-            <JFXTabPane fx:id="mainPane"/>
-        </StackPane>
-    </center>
-    <bottom>
-        <StackPane>
-            <Label text="BottomBar"/>
-        </StackPane>
-    </bottom>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.MainController">
+    <StackPane fx:id="mainContainer" StackPane.alignment="TOP_CENTER">
+        <JFXTabPane fx:id="mainPane"/>
+    </StackPane>
+    <StackPane fx:id="deckContainer" StackPane.alignment="BOTTOM_CENTER" styleClass="deck-hitbox">
+        <Label text="BottomBar"/>
+    </StackPane>
 
 
-</BorderPane>
+</StackPane>

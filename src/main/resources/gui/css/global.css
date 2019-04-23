@@ -43,7 +43,6 @@
 
     -color-surface-snackbar: #202020;
     -color-error: #FF0C3E;
-
 }
 
 /*
@@ -103,4 +102,64 @@
 }
 
 .jfx-tab-pane .headers-region .tab .tab-container .tab-label {
+}
+
+
+/* Toolbar */
+
+.top-toolbar {
+    -fx-pref-height: 50;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-background-color: -primary-color-5;
+
+}
+
+
+/* Buttons */
+
+.classic-button {
+    -fx-text-fill: -white-high-emphasis;
+}
+
+.deck-button {
+    -fx-background-color: -primary-color-5;
+    -jfx-button-type: RAISED;
+    -fx-text-fill: -white-high-emphasis;
+    -fx-background-radius: 60;
+    -fx-pref-width: 60;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-pref-height: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-cursor: hand;
+}
+
+.deck-button-graphic {
+    -fx-pref-width: 55;
+    /*
+    TODO: check resizing properties
+    */
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-pref-height: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-fill: -white-high-emphasis;
+}
+
+
+/* Deck */
+.deck-container {
+    -fx-background-color: -white-high-emphasis;
+    -fx-pref-height: 75;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+}
+
+.deck-hitbox {
+    -fx-pref-height: 105;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
 }

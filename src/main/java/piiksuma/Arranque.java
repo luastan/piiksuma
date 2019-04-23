@@ -17,8 +17,8 @@ import java.time.Instant;
 public class Arranque extends Application {
     public static void main(String[] args) {
 
-        SampleFachada.getDb().ejemploGETFK();
-        SampleFachada.getDb().pruebasCheck();
+        //SampleFachada.getDb().ejemploGETFK();
+        //SampleFachada.getDb().pruebasCheck();
 
         launch(args);
     }
@@ -45,7 +45,8 @@ public class Arranque extends Application {
 
         // Stylesheet loading
         scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm()
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
         );
 
         // Show
