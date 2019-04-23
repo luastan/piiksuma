@@ -9,6 +9,6 @@
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.FeedController">
-    <Label text="Feed"/>
+    <Label text="Feed" fx:id="superCoolLabel"/>
 
 </StackPane>

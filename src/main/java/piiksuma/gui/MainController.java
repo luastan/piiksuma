@@ -6,6 +6,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -18,8 +19,8 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-
-    public JFXTabPane mainPane;
+    @FXML
+    private JFXTabPane mainPane;
 
     /**
      * Loads all the required tabs into the mainPane
@@ -58,7 +59,6 @@ public class MainController implements Initializable {
         searchTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) searchTabIcon.setStyle("-fx-fill: -white-high-emphasis;");
             else searchTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
-
         });
         FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search.fxml"));
         searchTab.setContent(searchViewLoader.load());
@@ -84,7 +84,6 @@ public class MainController implements Initializable {
         eventTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) eventTabIcon.setStyle("-fx-fill: -white-high-emphasis;");
             else eventTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
-
         });
         FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
         eventTab.setContent(eventViewLoader.load());

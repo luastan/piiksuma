@@ -5,6 +5,7 @@ import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.exceptions.PiikDatabaseException;
 
+import javax.management.Query;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.Timestamp;
@@ -99,7 +100,7 @@ public class SampleFachada {
         User usuario = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email LIKE ?")
                 .defineClass(User.class).defineParameters("email").findFirst();
 
-        User newUsuario = new User("Fran", "Cardama", "francardama@gmail.com");
+        User newUsuario = new User("Fran", "Cardama2", "francardama@gmail.com");
         newUsuario.setPass("hola1");
         newUsuario.setBirthday(Timestamp.from(Instant.now()));
 
@@ -108,12 +109,12 @@ public class SampleFachada {
         newUsuario2.setBirthday(Timestamp.from(Instant.now()));
 
         // Se insertan ambos usuarios en la base de datos
-        new InsertionMapper<User>(this.conexion).addAll(newUsuario, newUsuario2).defineClass(User.class).insert();
+        new InsertionMapper<User>(this.conexion).addAll(newUsuario).defineClass(User.class).insert();
         System.out.println("Se han insertado los siguientes usuarios: " + newUsuario.getId() + ", " +
                 newUsuario2.getId());
         imprimirUsuarios();
 
-        new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
+        //new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
         System.out.println("Se ha borrado el id: " + newUsuario.getId());
         imprimirUsuarios();
 
@@ -151,6 +152,11 @@ public class SampleFachada {
         Post postPadre = new Post(user, Timestamp.from(Instant.now()));
         postPadre.setId("id2");
 
+        user.setPass("pass");
+        user2.setPass("pass2");
+        user.setBirthday(Timestamp.from(Instant.now()));
+        user2.setBirthday(Timestamp.from(Instant.now()));
+
         // El usuario alvrogd va a responder al post anterior, el id de respuesta va a ser "id43"
         Post postHijo = new Post(user2, Timestamp.from(Instant.now()));
         postHijo.setId("id43");
@@ -160,6 +166,9 @@ public class SampleFachada {
 
         // Se establece el post padre
         postHijo.setFatherPost(postPadre);
+        postHijo.setText("hola");
+
+        postPadre.setText("hasdas");
 
         try {
             new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user, user2).insert();
@@ -169,22 +178,26 @@ public class SampleFachada {
             e.printStackTrace();
         }
 
-
-        List<Post> posts = new QueryMapper<Post>(conexion).defineClass(Post.class)
-                .createQuery("SELECT * FROM post").list();
-
-        System.out.println("Búsqueda de todos los posts");
-
-        for(Post post : posts){
-            System.out.println(post);
-        }
-
         // Se obtienen las claves primarias
         Map<String, Object> fks = new QueryMapper<>(getConexion()).getFKs(postHijo);
+
+        /*try {
+            new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user, user2).insert();
+            new InsertionMapper<Post>(conexion).defineClass(Post.class).add(postPadre).insert();
+            new InsertionMapper<Post>(conexion).defineClass(Post.class).add(postHijo).insert();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }*/
 
         // Se imprimen
         for(String column : fks.keySet()){
             System.out.println(column + " " + fks.get(column).toString());
+        }
+
+        List<Post> posts = new QueryMapper<Post>(conexion).defineClass(Post.class).createQuery("SELECT * FROM post").list();
+
+        for(Post post : posts) {
+            System.out.println(post);
         }
     }
 

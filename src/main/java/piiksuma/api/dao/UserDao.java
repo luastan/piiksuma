@@ -34,7 +34,8 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).delete();
+        new DeleteMapper<User>(super.getConnection()).defineClass(User.class).add(user).setIsolationLevel(
+                Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
     /**
@@ -125,7 +126,8 @@ public class UserDao extends AbstractDao {
         }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser WHERE id = ? and " +
-                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).findFirst();
+                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).setIsolationLevel(
+                Connection.TRANSACTION_SERIALIZABLE).findFirst();
     }
 
     /**
@@ -268,7 +270,8 @@ public class UserDao extends AbstractDao {
                 //Query to take the number of followers the given user has
                 "SELECT count(follower) AS followers \n" +
                         "FROM followuser \n" +
-                        "WHERE followed LIKE ? \n").defineParameters(user.getPK()).mapList();
+                        "WHERE followed LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
+                        Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowers((Long) estatistics.get(0).get("followers"));
 
@@ -276,7 +279,8 @@ public class UserDao extends AbstractDao {
                 "\n" +//Query to take the number of users that the user follows
                         "SELECT count(followed) AS followed \n" +
                         "FROM followuser \n" +
-                        "WHERE follower LIKE ? \n").defineParameters(user.getPK()).mapList();
+                        "WHERE follower LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
+                Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowing((Long) estatistics.get(0).get("followed"));
 
@@ -293,35 +297,39 @@ public class UserDao extends AbstractDao {
                         "SELECT COUNT(*) AS followback " +
                         "FROM followedtable, followerstable " +
                         "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK()).mapList();
+        ).defineParameters(user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(user.getPK()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(
+                        user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setMaxLikeIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(user.getPK()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(
+                        user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setMaxLoveIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(user.getPK()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(
+                        user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setMaxHateIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
                         "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(user.getPK()).mapList();
+                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(
+                        user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
 

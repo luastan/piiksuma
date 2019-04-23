@@ -21,7 +21,9 @@ public @interface MapperColumn {
     String fKeys() default "";                      // The name of the foreign keys of the reference
     // Syntax: "columnNameAsFK:columnNameAsPK"
 
-    Class<?> targetClass() default Object.class;    // It's actually a Mappeable class (foreign keys)
+    Class<?> targetClass() default Object.class;    // It's actually a Mappeable class (foreign keys); Object class
+                                                    // cannot act as FK because all checks are made against Object
+                                                    // as targetClass cannot be null
 
     boolean notNull() default false;                // True if the object can not be null
 }
