@@ -17,8 +17,8 @@ import java.time.Instant;
 public class Arranque extends Application {
     public static void main(String[] args) {
 
-        SampleFachada.getDb().ejemploGETFK();
-        SampleFachada.getDb().pruebasCheck();
+        //SampleFachada.getDb().ejemploGETFK();
+        //SampleFachada.getDb().pruebasCheck();
 
         launch(args);
     }
@@ -41,12 +41,13 @@ public class Arranque extends Application {
         // TODO: Add a logo and a cool title to the JFXDecorator
 
         // Scene definition & binding to the Primary Stage
-        Scene scene = new Scene(decorator, 800, 800);
+        Scene scene = new Scene(decorator, 450, 800);
         primaryStage.setScene(scene);
 
         // Stylesheet loading
         scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm()
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
         );
         // Show
         primaryStage.show();

@@ -6,8 +6,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.SearchController">
-    <Label text="search"/>
+    <BorderPane>
+        <top>
+            <JFXToolbar styleClass="top-toolbar">
+                <leftItems>
+                    <StackPane>
+                        <JFXButton text="back" fx:id="back" styleClass="classic-button"/>
+                    </StackPane>
+                </leftItems>
+                <rightItems>
+                    <Label text="Something"/>
+                </rightItems>
+            </JFXToolbar>
+        </top>
+        <center>
+            <StackPane>
+                <Label text="Search"/>
+            </StackPane>
+        </center>
+        <bottom>
+            <StackPane>
+                <Label text="Stuff at the bottom"/>
+            </StackPane>
+        </bottom>
+    </BorderPane>
 </StackPane>

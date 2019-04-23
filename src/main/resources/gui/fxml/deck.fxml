@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           styleClass="deck-hitbox">
+    <BorderPane styleClass="deck-container" StackPane.alignment="BOTTOM_CENTER">
+        <center>
+            <Label text="Whatever" fx:id="sampleLabel"/>
+        </center>
+    </BorderPane>
+    <JFXButton StackPane.alignment="TOP_CENTER" styleClass="deck-button" fx:id="mainButton"/>
+</StackPane>
