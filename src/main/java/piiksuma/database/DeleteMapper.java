@@ -73,6 +73,18 @@ public class DeleteMapper<T> extends Mapper<T> {
     }
 
     /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return deletion mapper which is being built
+     */
+    @Override
+    public DeleteMapper<T> setIsolationLevel(int isolationLevel) {
+
+        return((DeleteMapper<T>)super.setIsolationLevel(isolationLevel));
+    }
+
+    /**
      * Extracts the primary keys and genterates the corresponding SQL code
      */
     private void prepareDelete() {
@@ -121,6 +133,9 @@ public class DeleteMapper<T> extends Mapper<T> {
      */
     public void delete() {
         prepareDelete();  // Builds the statement
+
+        // Configures the connection to the database
+        configureConnection();
 
         try {
             // Loops over the deletion pool deleting each object

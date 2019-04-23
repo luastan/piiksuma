@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.SampleFachada;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.gui.ContextHandler;
 
 import javax.management.Query;

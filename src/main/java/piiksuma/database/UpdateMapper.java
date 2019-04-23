@@ -78,6 +78,18 @@ public class UpdateMapper<T> extends Mapper<T> {
     }
 
     /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return update mapper which is being built
+     */
+    @Override
+    public UpdateMapper<T> setIsolationLevel(int isolationLevel) {
+
+        return((UpdateMapper<T>)super.setIsolationLevel(isolationLevel));
+    }
+
+    /**
      * Updates the objects from the update pool on the database
      *
      * @param allowNullValues On true allows null values to be inserted into the database
@@ -87,6 +99,9 @@ public class UpdateMapper<T> extends Mapper<T> {
         String columnName;
         StringBuilder updateBuilder = new StringBuilder("UPDATE ").append(mappedClass.getAnnotation(MapperTable.class)
                 .nombre()).append(" SET ");
+
+        // Configures the connection to the database
+        configureConnection();
 
         /* SET clause building */
 

@@ -62,6 +62,10 @@ public class QueryMapper<T> extends Mapper<T> {
         HashSet<String> columnas = new HashSet<>();
         T elemento;
         Class<?> foreignClass;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             statement.execute();
             ResultSet set = statement.getResultSet();
@@ -160,6 +164,18 @@ public class QueryMapper<T> extends Mapper<T> {
         return this;
     }
 
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return query mapper which is being built
+     */
+    @Override
+    public QueryMapper<T> setIsolationLevel(int isolationLevel) {
+
+        return((QueryMapper<T>)super.setIsolationLevel(isolationLevel));
+    }
+
     /* Closing methods */
 
     /**
@@ -175,6 +191,10 @@ public class QueryMapper<T> extends Mapper<T> {
         Map<String, Object> element;
         ArrayList<String> columnas = new ArrayList<>();
         ResultSet set;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             statement.execute();
             set = statement.getResultSet();

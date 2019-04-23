@@ -22,8 +22,8 @@ Source Code:
 CREATE TABLE multimedia
 (
     hash       varchar(256) primary key,
-    resolution varchar(10) not null,
-    uri        varchar(50)
+    resolution varchar(10),
+    uri        varchar(128) not null
 );
 
 CREATE TABLE multimediaImage

@@ -5,8 +5,8 @@ import piiksuma.database.MapperTable;
 
 import java.util.Objects;
 
-@MapperTable
-public class Multimedia extends PiikObject{
+@MapperTable(nombre = "multimedia")
+public class Multimedia extends PiikObject {
 
     /* Attributes */
     @MapperColumn(pkey = true)
@@ -17,10 +17,9 @@ public class Multimedia extends PiikObject{
     private String uri;
 
 
-    /* Constructos */
+    /* Constructor */
 
     public Multimedia() {
-
     }
 
     public Multimedia(String hash, String resolution, String uri) {
