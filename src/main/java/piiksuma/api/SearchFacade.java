@@ -54,7 +54,14 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return parentFacade.getUserDao().searchUser(user, limit);
+        List<User> result = parentFacade.getUserDao().searchUser(user, limit);
+
+        // Search for each user's type
+        for(User u : result) {
+            u.setType(parentFacade.getUserDao().getUserType(u.getPK()));
+        }
+
+        return result;
     }
 
     /**
@@ -73,7 +80,14 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        return parentFacade.getUserDao().getUser(user);
+        User result = parentFacade.getUserDao().getUser(user);
+
+        // Also get user's type
+        if(result != null ) {
+            result.setType(parentFacade.getUserDao().getUserType(user.getPK()));
+        }
+
+        return result;
     }
 
     /**
@@ -88,7 +102,14 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        return parentFacade.getUserDao().login(user);
+        User result = parentFacade.getUserDao().login(user);
+
+        // Also get user's type
+        if(result != null ) {
+            result.setType(parentFacade.getUserDao().getUserType(user.getPK()));
+        }
+
+        return(result);
     }
 
     /**
