@@ -202,12 +202,6 @@ public class SampleFachada {
         }
 
         Hashtag hashtag = new Hashtag("patata");
-
-        new InsertionMapper<>(conexion).createUpdate("INSERT INTO hashtag VALUES(?) WHERE NOT EXISTS (" +
-                "SELECT * FROM hashtag WHERE name = ?)").defineParameters(hashtag.getName(), hashtag.getName()).executeUpdate();
-
-        new InsertionMapper<>(conexion).createUpdate("INSERT INTO hashtag VALUES(?) WHERE NOT EXISTS (" +
-                "SELECT * FROM hashtag WHERE name = ?)").defineParameters(hashtag.getName(), hashtag.getName()).executeUpdate();
     }
 
     public void pruebasCheck(){
