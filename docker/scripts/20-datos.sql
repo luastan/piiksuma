@@ -1,3 +1,4 @@
+/*
 -- Piiuser
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
   postalcode, province, country, city, birthdate, registrationdate)
@@ -205,3 +206,4 @@ INSERT INTO repost (post, usr, author)
 -- Silence User
 INSERT INTO silenceuser (usr, silenced)
   VALUES ('usr1', 'usr4');
+*/
