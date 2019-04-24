@@ -40,7 +40,7 @@ public class Arranque extends Application {
 
         // Show
         primaryStage.show();
-        
+
        /* // Registers current stage into the Application Context
         ContextHandler.getContext().register("primary", primaryStage);
 

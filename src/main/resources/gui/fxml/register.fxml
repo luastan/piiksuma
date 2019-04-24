@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.layout.StackPane?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.RegisterController"
            prefHeight="600.0" prefWidth="600.0">
+
+    <HBox spacing="30">
+        <StackPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </StackPane.margin>
+        <VBox alignment="TOP_LEFT" spacing="15">
+            <JFXTextField fx:id="user" maxWidth="90" promptText="Username"/>
+            <JFXTextField fx:id="email"  maxWidth="90" promptText="Email"/>
+            <JFXPasswordField fx:id="password"  maxWidth="90" promptText="Password"/>
+            <JFXComboBox fx:id="genderBox"  maxWidth="90" promptText="Gender"/>
+
+
+        </VBox>
+
+        <VBox alignment="TOP_RIGHT" spacing="15">
+            <JFXTextField fx:id="home"  maxWidth="200" promptText="Home"/>
+            <JFXTextField fx:id="province"  maxWidth="200" promptText="Province"/>
+            <JFXTextField fx:id="country"  maxWidth="200" promptText="Country"/>
+        </VBox>
+    </HBox>
+    <JFXButton fx:id="register" styleClass="jfx-button-border" text="Register" />
 </StackPane>
