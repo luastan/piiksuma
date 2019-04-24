@@ -255,7 +255,7 @@ CREATE TABLE archivePost
 
 CREATE TABLE react
 (
-    reactionType varchar(8) not null,
+    reactionType varchar(8) not null, -- TODO there's a reaction type which does not fit
     post         varchar(32),
     usr          varchar(32),
     author       varchar(32),
