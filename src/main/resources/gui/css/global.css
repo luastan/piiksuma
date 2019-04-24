@@ -130,8 +130,8 @@
     -fx-background-color: -primary-color-5;
     -jfx-button-type: RAISED;
     -fx-text-fill: -white-high-emphasis;
-    -fx-background-radius: 60;
-    -fx-pref-width: 60;
+    -fx-background-radius: 70;
+    -fx-pref-width: 70;
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
     -fx-pref-height: -fx-pref-width;
@@ -141,16 +141,17 @@
 }
 
 .deck-button-graphic {
-    -fx-pref-width: 55;
-    /*
-    TODO: check resizing properties
-    */
-    -fx-min-width: -fx-pref-width;
-    -fx-max-width: -fx-pref-width;
-    -fx-pref-height: -fx-pref-width;
-    -fx-min-height: -fx-pref-height;
-    -fx-max-height: -fx-pref-height;
+    -fx-scale-x: 1.85;
+    -fx-scale-y: -fx-scale-x;
     -fx-fill: -white-high-emphasis;
+}
+
+.hamburguer-button {
+    -fx-cursor: hand;
+}
+
+.rippler-hamburguer {
+    -jfx-rippler-fill: -black-medium-emphasis;
 }
 
 
@@ -166,4 +167,27 @@
     -fx-pref-height: 105;
     -fx-min-height: -fx-pref-height;
     -fx-max-height: -fx-pref-height;
+}
+
+.deck-small-button {
+    -fx-cursor: hand;
+    -fx-background-radius: 50;
+    -fx-pref-width: 50;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-pref-height: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+}
+
+.deck-small-button-container {
+    -fx-padding: 20 10 20 10;
+}
+
+.hamburguer-space {
+    -fx-padding: 0 10 0 10;
+}
+
+.deck-small-button-graphic {
+    -fx-fill: -black-medium-emphasis;
 }

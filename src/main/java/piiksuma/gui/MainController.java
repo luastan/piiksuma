@@ -11,6 +11,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.deckControllers.EventsDeckController;
+import piiksuma.gui.deckControllers.FeedDeckController;
+import piiksuma.gui.deckControllers.MessagesDeckController;
 
 import java.io.IOException;
 import java.net.URL;

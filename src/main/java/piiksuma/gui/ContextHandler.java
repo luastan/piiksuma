@@ -30,7 +30,7 @@ public class ContextHandler {
     // Piiksuma static instances
 
     private User currentUser;   // User logged into the application
-
+    private FeedController feedController;
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -165,5 +165,19 @@ public class ContextHandler {
      */
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+
+    /**
+     * Rreturns Feed Controller
+     *
+     * @return Current feedController if existent
+     */
+    public FeedController getFeedController() {
+        return feedController;
+    }
+
+    public void setFeedController(FeedController feedController) {
+        this.feedController = feedController;
     }
 }

@@ -6,9 +6,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.FeedController">
-    <Label text="Feed" fx:id="superCoolLabel"/>
-
+    <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">
+        <JFXMasonryPane fx:id="postMasonryPane" HSpacing="10" VSpacing="10">
+            <padding>
+                <Insets top="16" right="20" bottom="16" left="16"/>
+            </padding>
+        </JFXMasonryPane>
+    </ScrollPane>
 </StackPane>
