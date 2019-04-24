@@ -4,6 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @MapperTable(nombre = "post")
@@ -20,6 +21,7 @@ public class Post extends PiikObject{
     private Post fatherPost;
     @MapperColumn(fKeys = "multimedia:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
+    private List<Hashtag> hashtags;
 
     public Post() {
 
@@ -58,6 +60,26 @@ public class Post extends PiikObject{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<Hashtag> getHashtags() {
+        return hashtags;
+    }
+
+    public void setHashtags(List<Hashtag> hashtags) {
+        this.hashtags = hashtags;
+    }
+
+    public void addHashtag(Hashtag hashtag){
+        if(hashtag != null) {
+            this.hashtags.add(hashtag);
+        }
+    }
+
+    public void addAllHashtag(List<Hashtag> hashtags){
+        if(hashtags != null){
+            this.hashtags.addAll(hashtags);
+        }
     }
 
     public String getText() {

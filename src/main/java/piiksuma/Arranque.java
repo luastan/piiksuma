@@ -17,7 +17,7 @@ import java.time.Instant;
 public class Arranque extends Application {
     public static void main(String[] args) {
 
-        //SampleFachada.getDb().ejemploGETFK();
+        SampleFachada.getDb().ejemploGETFK();
         //SampleFachada.getDb().pruebasCheck();
 
         launch(args);

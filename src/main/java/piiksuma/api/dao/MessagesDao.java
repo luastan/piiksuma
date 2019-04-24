@@ -34,7 +34,7 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
 
-        //We delete the message from the system
+        // We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
 
