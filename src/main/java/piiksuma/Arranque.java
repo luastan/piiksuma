@@ -5,14 +5,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import piiksuma.database.QueryMapper;
 import piiksuma.database.SampleFachada;
-import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.gui.ContextHandler;
-
-import javax.management.Query;
-import java.sql.Timestamp;
-import java.time.Instant;
 
 public class Arranque extends Application {
     public static void main(String[] args) {
@@ -25,7 +19,24 @@ public class Arranque extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Registers current stage into the Application Context
+        ContextHandler.getContext().register("primary", primaryStage);
+        // Stage configuration
+        primaryStage.setTitle("Piiksuma");
+        primaryStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+
+        // Decorator which is the visual whindow frame, holding close button title and minimize
+        JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
+        // TODO: Add a logo and a cool title to the JFXDecorator
+
+        // Scene definition & binding to the Primary Stage
+        Scene scene = new Scene(decorator, 450, 550);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+       /* // Registers current stage into the Application Context
         ContextHandler.getContext().register("primary", primaryStage);
 
         // Stage configuration
@@ -48,7 +59,7 @@ public class Arranque extends Application {
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
-
+    */
         // Show
         primaryStage.show();
     }
