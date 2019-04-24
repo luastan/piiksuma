@@ -59,7 +59,8 @@ public class MainController implements Initializable {
                     deckContainer.getChildren().add(deckLoader.load());
                 } catch (IOException ignore) {
                     // TODO: Handle exception
-                }
+                }---------------------------------------++++++++++++++**************
+
 
             } else {
                 feedTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
@@ -68,6 +69,7 @@ public class MainController implements Initializable {
         // Lads and sets the content to be represented when the tab gets selected
         FXMLLoader feedViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/feed.fxml"));
         feedTab.setContent(feedViewLoader.load());
+
 
         // Missing tabs follow the same pattern as the feed tab
 
@@ -149,16 +151,15 @@ public class MainController implements Initializable {
         FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
         eventTab.setContent(eventViewLoader.load());
 
-        // Finally loads tabs into the pane
+       // Finally loads tabs into the pane
         mainPane.getTabs().addAll(
                 feedTab,
                 //profileTab,
                 messagesTab,
                 eventTab,
                 searchTab
+
         );
-
-
     }
 
     @Override
