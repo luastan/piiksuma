@@ -66,7 +66,7 @@ INSERT INTO multimedia (hash, resolution, uri) VALUES ('aaad', '1080p', 'here');
 
 -- Ticket
 INSERT INTO ticket (id, usr ,section ,text, creationdate)
-  VALUES ('aaaaa', 'usr1', 'easyGameEasyLife', 'dont know what to say',CURRENT_DATE);
+  VALUES ('aaaa', 'usr1', 'easyGameEasyLife', 'dont know what to say',CURRENT_DATE);
 
 -- Message
 INSERT INTO message (id, sender, text, date, multimedia)

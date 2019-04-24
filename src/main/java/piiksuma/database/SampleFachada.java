@@ -1,6 +1,7 @@
 package piiksuma.database;
 
 
+import piiksuma.Hashtag;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -199,6 +200,14 @@ public class SampleFachada {
         for(Post post : posts) {
             System.out.println(post);
         }
+
+        Hashtag hashtag = new Hashtag("patata");
+
+        new InsertionMapper<>(conexion).createUpdate("INSERT INTO hashtag VALUES(?) WHERE NOT EXISTS (" +
+                "SELECT * FROM hashtag WHERE name = ?)").defineParameters(hashtag.getName(), hashtag.getName()).executeUpdate();
+
+        new InsertionMapper<>(conexion).createUpdate("INSERT INTO hashtag VALUES(?) WHERE NOT EXISTS (" +
+                "SELECT * FROM hashtag WHERE name = ?)").defineParameters(hashtag.getName(), hashtag.getName()).executeUpdate();
     }
 
     public void pruebasCheck(){

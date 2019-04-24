@@ -14,6 +14,8 @@ import piiksuma.exceptions.PiikInvalidParameters;
 
 import javax.xml.ws.EndpointReference;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +52,7 @@ public class UserDao extends AbstractDao {
         }
 
         // Insertion is done with the given user data, which is passed by parameters
+        // TODO administrator table doesn't get updated
         new InsertionMapper<User>(super.getConnection()).add(user).defineClass(User.class).insert();
     }
 

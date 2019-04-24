@@ -212,7 +212,9 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
-        new InsertionMapper<Hashtag>(super.getConnection()).add(hashtag).defineClass(Hashtag.class).insert();
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO hashtag(name) SELECT '?' WHERE NOT " +
+                "EXISTS (SELECT * FROM hashtag WHERE name = '?' FOR UPDATE)").defineParameters(hashtag.getName(),
+                hashtag.getName()).executeUpdate();
     }
 
     /**
