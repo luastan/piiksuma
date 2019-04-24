@@ -1,4 +1,4 @@
-/*
+
 -- Piiuser
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
   postalcode, province, country, city, birthdate, registrationdate)
@@ -66,7 +66,7 @@ INSERT INTO multimedia (hash, resolution, uri) VALUES ('aaad', '1080p', 'here');
 
 -- Ticket
 INSERT INTO ticket (id, usr ,section ,text, creationdate)
-  VALUES ('aaaaa', 'usr1', 'easyGameEasyLife', 'dont know what to say',CURRENT_DATE);
+  VALUES ('aaaa', 'usr1', 'easyGameEasyLife', 'dont know what to say',CURRENT_DATE);
 
 -- Message
 INSERT INTO message (id, sender, text, date, multimedia)
@@ -178,8 +178,8 @@ INSERT INTO react (reactiontype, post, usr, author)
   VALUES ('likeit', 'aaaa', 'usr2', 'usr1');
 INSERT INTO react (reactiontype, post, usr, author)
   VALUES ('hateit', 'aaaa', 'usr3', 'usr1');
---INSERT INTO react (reactiontype, post, usr, author) --Error varchar(8)
-  --VALUES ('makesmeangry', 'aaaa', 'usr4', 'usr1');
+INSERT INTO react (reactiontype, post, usr, author) --Error varchar(8)
+VALUES ('makesmeangry', 'aaaa', 'usr4', 'usr1');
 INSERT INTO react (reactiontype, post, usr, author)
   VALUES ('loveit', 'aaaa', 'usr1', 'usr1');
 
@@ -206,4 +206,3 @@ INSERT INTO repost (post, usr, author)
 -- Silence User
 INSERT INTO silenceuser (usr, silenced)
   VALUES ('usr1', 'usr4');
-*/

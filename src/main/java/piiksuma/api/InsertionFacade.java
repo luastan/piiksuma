@@ -44,23 +44,6 @@ public class InsertionFacade {
         parentFacade.getUserDao().createUser(newUser);
     }
 
-    public void updateUser(User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-
-        if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
-        }
-
-        if (currentUser == null || !currentUser.checkNotNull()) {
-            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
-        }
-
-        if(!user.equals(currentUser) && !currentUser.checkAdministrator()) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
-        parentFacade.getUserDao().updateUser(user);
-    }
-
     public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull()) {
@@ -385,31 +368,28 @@ public class InsertionFacade {
     }
 
     /**
-     * This function modifies a message already sent to another user
+     * This function replaces the content of a message stored in the database because the user wants to modify it or
+     * because an admin wants to censor its content
      *
-     * @param oldMessage  old message
-     * @param newMessage  new message
+     * @param newMessage message to be updated
      * @param currentUser logged User
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, oldMessage, newMessage
      */
-    public void modifyMessage(Message oldMessage, Message newMessage, User currentUser) throws PiikDatabaseException,
+    public void modifyMessage(Message newMessage, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         // Null check
         if (currentUser == null || !currentUser.checkNotNull()) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
-        if (oldMessage == null || !oldMessage.checkNotNull()) {
-            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("oldMessage"));
-        }
         if (newMessage == null || !newMessage.checkNotNull()) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newMessage"));
         }
         // Permision check
-        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.equals(oldMessage.getSender())) {
+        if (!currentUser.getType().equals(UserType.administrator) || !currentUser.equals(newMessage.getSender())) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
-        parentFacade.getMessagesDao().modifyMessage(oldMessage, newMessage);
+        parentFacade.getMessagesDao().modifyMessage(newMessage);
     }
 
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
@@ -422,7 +402,11 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        parentFacade.getUserDao().administratePersonalData(user);
+        if(!user.equals(currentUser) && !currentUser.checkAdministrator()) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        parentFacade.getUserDao().updateUser(user);
     }
 
     /**

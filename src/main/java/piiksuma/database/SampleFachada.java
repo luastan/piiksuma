@@ -1,6 +1,7 @@
 package piiksuma.database;
 
 
+import piiksuma.Hashtag;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -199,6 +200,8 @@ public class SampleFachada {
         for(Post post : posts) {
             System.out.println(post);
         }
+
+        Hashtag hashtag = new Hashtag("patata");
     }
 
     public void pruebasCheck(){
