@@ -62,8 +62,7 @@ public class MainController implements Initializable {
                     deckContainer.getChildren().add(deckLoader.load());
                 } catch (IOException ignore) {
                     // TODO: Handle exception
-                }---------------------------------------++++++++++++++**************
-
+                }
 
             } else {
                 feedTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");

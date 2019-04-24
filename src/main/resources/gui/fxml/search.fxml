@@ -8,31 +8,25 @@
 
 <?import com.jfoenix.controls.JFXToolbar?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.SearchController">
     <BorderPane>
         <top>
             <JFXToolbar styleClass="top-toolbar">
-                <leftItems>
-                    <StackPane>
-                        <JFXButton text="back" fx:id="back" styleClass="classic-button"/>
-                    </StackPane>
-                </leftItems>
-                <rightItems>
-                    <Label text="Something"/>
-                </rightItems>
+
             </JFXToolbar>
         </top>
-        <center>
-            <StackPane>
-                <Label text="Search"/>
-            </StackPane>
-        </center>
-        <bottom>
-            <StackPane>
-                <Label text="Stuff at the bottom"/>
-            </StackPane>
-        </bottom>
     </BorderPane>
+
+    <HBox spacing="40">
+        <VBox spacing="40" alignment="TOP_LEFT">
+            <JFXButton text="back" fx:id="back" styleClass="classic-button"/>
+            <JFXTextField fx:id="search" maxWidth="200" promptText="Search"/>
+        </VBox>
+        <VBox alignment="TOP_RIGHT">
+            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search" />
+        </VBox>
+    </HBox>
 </StackPane>
