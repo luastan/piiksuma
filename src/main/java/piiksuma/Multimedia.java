@@ -1,5 +1,6 @@
 package piiksuma;
 
+import piiksuma.api.MultimediaType;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
@@ -15,6 +16,7 @@ public class Multimedia extends PiikObject {
     private String resolution;
     @MapperColumn(notNull = true)
     private String uri;
+    private MultimediaType type;
 
 
     /* Constructor */
@@ -67,6 +69,14 @@ public class Multimedia extends PiikObject {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public MultimediaType getType() {
+        return type;
+    }
+
+    public void setType(MultimediaType type) {
+        this.type = type;
     }
 
     /**

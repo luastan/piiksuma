@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -62,6 +63,8 @@ public class LoginController implements Initializable {
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
+        registerStage.initModality(Modality.WINDOW_MODAL);
+        registerStage.initOwner(ContextHandler.getContext().getStage("primary"));
         registerStage.setScene(scene);
         // Show and wait till it closes
         registerStage.showAndWait();
