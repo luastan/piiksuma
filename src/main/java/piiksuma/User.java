@@ -8,9 +8,9 @@ import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
 public class User extends PiikObject{
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String email;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String name;
     @MapperColumn(pkey = true)
     private String id;
@@ -18,33 +18,36 @@ public class User extends PiikObject{
     private String pass;
     @MapperColumn
     private String gender;
-    @MapperColumn(columna = "description")
-    private String bio;
-    @MapperColumn(columna = "home")
-    private String direction;
-    @MapperColumn(columna = "postalCode")
-    private String postCode;
-    @MapperColumn(columna = "province")
-    private String state;
+    @MapperColumn
+    private String description;
+    @MapperColumn
+    private String home;
+    @MapperColumn
+    private String postalCode;
+    @MapperColumn
+    private String province;
     @MapperColumn
     private String country;
     @MapperColumn
     private String city;
-    @MapperColumn(columna = "birthPlace")
-    private String birthPlace;
-    @MapperColumn(columna = "birthdate", notNull = true)
+    @MapperColumn
+    private String birthplace;
+    @MapperColumn(notNull = true)
     private Timestamp birthday;
-    @MapperColumn(columna = "registrationDate", hasDefault = true)
+    @MapperColumn(hasDefault = true, notNull = true)
     private Timestamp registrationDate;
-    @MapperColumn(columna = "deathdate")
-    private Timestamp deadDate;
+    @MapperColumn
+    private Timestamp deathdate;
     @MapperColumn
     private String religion;
-    @MapperColumn(columna = "emotionalSituation")
-    private String loveStatus;
+    @MapperColumn
+    private String emotionalSituation;
     @MapperColumn
     private String job;
+    @MapperColumn(fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
+    private Multimedia multimedia;
     private UserType type;
+
 
     public User(String name, String id, String email) {
         this.name = name;
@@ -76,31 +79,6 @@ public class User extends PiikObject{
      */
 
     public User() {
-    }
-
-
-    public String getNombre() {
-        return name;
-    }
-
-    public void setNombre(String name) {
-        this.name = name;
-    }
-
-    public UserType getType() {
-        return type;
-    }
-
-    public void setType(UserType type) {
-        this.type = type;
-    }
-
-    public String getIdUsuario() {
-        return id;
-    }
-
-    public void setIdUsuario(String id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -143,36 +121,36 @@ public class User extends PiikObject{
         this.gender = gender;
     }
 
-    public String getBio() {
-        return bio;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getHome() {
+        return home;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setHome(String home) {
+        this.home = home;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
-    public String getState() {
-        return state;
+    public String getProvince() {
+        return province;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getCountry() {
@@ -191,12 +169,12 @@ public class User extends PiikObject{
         this.city = city;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
+    public String getBirthplace() {
+        return birthplace;
     }
 
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
+    public void setBirthplace(String birthplace) {
+        this.birthplace = birthplace;
     }
 
     public Timestamp getBirthday() {
@@ -215,12 +193,12 @@ public class User extends PiikObject{
         this.registrationDate = registrationDate;
     }
 
-    public Timestamp getDeadDate() {
-        return deadDate;
+    public Timestamp getDeathdate() {
+        return deathdate;
     }
 
-    public void setDeadDate(Timestamp deadDate) {
-        this.deadDate = deadDate;
+    public void setDeathdate(Timestamp deathdate) {
+        this.deathdate = deathdate;
     }
 
     public String getReligion() {
@@ -231,27 +209,44 @@ public class User extends PiikObject{
         this.religion = religion;
     }
 
-    public String getLoveStatus() {
-        return loveStatus;
+    public String getEmotionalSituation() {
+        return emotionalSituation;
     }
 
-    public void setLoveStatus(String loveStatus) {
-        this.loveStatus = loveStatus;
+    public void setEmotionalSituation(String emotionalSituation) {
+        this.emotionalSituation = emotionalSituation;
     }
 
     public String getJob() {
         return job;
     }
 
-    public String getPK(){
-        return getId();
-    }
-
     public void setJob(String job) {
         this.job = job;
     }
 
-   /**
+    public Multimedia getMultimedia() {
+        return multimedia;
+    }
+
+    public void setMultimedia(Multimedia multimedia) {
+        this.multimedia = multimedia;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
+    }
+
+    public String getPK()
+    {
+        return id;
+    }
+
+    /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
