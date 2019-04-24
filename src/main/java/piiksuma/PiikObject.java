@@ -37,7 +37,8 @@ public abstract class PiikObject {
 
             // Performs the mapping only of the annotated class and if the field is a notNull or is a primary key
             if(field.isAnnotationPresent(MapperColumn.class) &&
-                (field.getAnnotation(MapperColumn.class).notNull() || field.getAnnotation(MapperColumn.class).pkey())){
+                (field.getAnnotation(MapperColumn.class).notNull() || field.getAnnotation(MapperColumn.class).pkey()) &&
+                    !(field.getAnnotation(MapperColumn.class).hasDefault())){
 
                 // Insert the field
                 insertion(notNulls, field);
