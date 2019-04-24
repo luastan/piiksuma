@@ -19,6 +19,7 @@ public class Arranque extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //THIS CODE IS TO SHOW THE LOGIN WINDOW, UNCOMMENT THE NEXT CODE TO SHOW THE MAIN WINDOW
         ContextHandler.getContext().register("primary", primaryStage);
         // Stage configuration
         primaryStage.setTitle("Piiksuma");
@@ -36,6 +37,10 @@ public class Arranque extends Application {
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
+
+        // Show
+        primaryStage.show();
+        
        /* // Registers current stage into the Application Context
         ContextHandler.getContext().register("primary", primaryStage);
 
@@ -59,8 +64,9 @@ public class Arranque extends Application {
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
-    */
+
         // Show
         primaryStage.show();
+    */
     }
 }
