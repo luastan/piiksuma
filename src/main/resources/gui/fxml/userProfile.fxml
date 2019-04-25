@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Line?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.UserProfileController"
+           prefHeight="400.0" prefWidth="600.0">
+    <BorderPane>
+        <top>
+            <JFXToolbar styleClass="top-toolbar">
+            </JFXToolbar>
+        </top>
+        <bottom>
+            <JFXToolbar styleClass="bottom-toolbar"/>
+        </bottom>
+    </BorderPane>
+
+    <VBox spacing="24">
+        <HBox spacing="125">
+            <JFXButton fx:id="feedButton" styleClass="jfx-button-border" text="Feed" scaleX="1.25" scaleY="1.25" translateX="15"/>
+            <JFXButton fx:id="profileButton" styleClass="jfx-button-border" text="Profile" scaleX="1.25" scaleY="1.25" translateX="7.5"/>
+            <JFXButton fx:id="eventsButton" styleClass="jfx-button-border" text="Events" scaleX="1.25" scaleY="1.25"/>
+
+
+        </HBox>
+        <HBox spacing="125">
+            <ImageView>
+                <Image preserveRatio="true"  requestedHeight="120" url="/imagenes/huevo.png"/>
+            </ImageView>
+            <Label text="userName" translateY="32.5" scaleX="1.25" scaleY="1.25"/>
+        </HBox>
+        <Line startX="0" endX="450" translateY="-24" />
+        <HBox>
+            <JFXButton fx:id="ticketsButton" styleClass="jfx-button-border" text="Show Tickets" translateY="-40" translateX="325"/>
+            <JFXButton fx:id="newticketButton" styleClass="jfx-button-border" text="New Ticket" translateY="-10" translateX="227.5"/>
+        </HBox>
+        <Label text="userDescription" translateX="10" translateY="-70"/>
+        <Line startX="0" endX="450" translateY="-24"/>
+        <Label alignment="CENTER" text="USER POSTS" translateX="175" translateY="200" scaleX="1.5" scaleY="1.5"/>
+    </VBox>
+
+</StackPane>

@@ -31,7 +31,7 @@
 
         </HBox>
         <HBox alignment="TOP_LEFT" spacing="100">
-            <JFXTextField fx:id="searchText" maxWidth="200" promptText="Search"/>
+            <JFXTextField fx:id="searchText" maxWidth="300" promptText="Introduce your search"/>
             <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
         </HBox>
         <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">

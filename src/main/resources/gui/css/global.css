@@ -112,7 +112,13 @@
     -fx-min-height: -fx-pref-height;
     -fx-max-height: -fx-pref-height;
     -fx-background-color: -primary-color-5;
+}
 
+.bottom-toolbar {
+    -fx-pref-height: 20;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-background-color: -primary-color-5;
 }
 
 

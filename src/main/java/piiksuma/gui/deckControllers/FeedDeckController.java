@@ -27,6 +27,9 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     @FXML
     private JFXHamburger hamburguerButton;
 
+    @FXML
+    private JFXButton userButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
@@ -37,6 +40,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         buttonIcon.getStyleClass().add("deck-button-graphic");
         mainButton.setGraphic(buttonIcon);
         mainButton.setOnAction(this::handleNewPostEvent);
+        userButton.setOnAction(this::handleUserButton);
     }
 
 
@@ -71,6 +75,45 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         }
 
         Scene scene = new Scene(decorator, 450, 550);
+
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        searchStage.initModality(Modality.WINDOW_MODAL);
+        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        searchStage.setScene(scene);
+        // Show and wait till it closes
+        searchStage.showAndWait();
+    }
+
+    private void handleUserButton(ActionEvent event){
+        // TODO: Create a new Post. Which should be another method that might be better placed in another class.
+
+        // Requests the feed controller to update the feed for the new Post to show up
+        Stage searchStage = new Stage();
+
+        try {
+            ContextHandler.getContext().register("User Profile", searchStage);
+        }catch(PiikInvalidParameters e){
+            e.printStackTrace();
+            return;
+        }
+        // Stage configuration
+        searchStage.setTitle("UserProfile");
+        searchStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
+        JFXDecorator decorator;
+
+        try {
+            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
+        }catch (IOException e){
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 450, 800);
 
 
         scene.getStylesheets().addAll(
