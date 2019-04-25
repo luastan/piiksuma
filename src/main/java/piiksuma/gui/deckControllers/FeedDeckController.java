@@ -57,7 +57,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
 
         try {
             ContextHandler.getContext().register("Create Post", searchStage);
-        }catch(PiikInvalidParameters e){
+        } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;
         }
@@ -69,7 +69,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
 
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
@@ -88,7 +88,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         searchStage.showAndWait();
     }
 
-    private void handleUserButton(ActionEvent event){
+    private void handleUserButton(ActionEvent event) {
         // TODO: Create a new Post. Which should be another method that might be better placed in another class.
 
         // Requests the feed controller to update the feed for the new Post to show up
@@ -96,19 +96,26 @@ public class FeedDeckController extends AbstractDeckController implements Initia
 
         try {
             ContextHandler.getContext().register("User Profile", searchStage);
-        }catch(PiikInvalidParameters e){
+        } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;
         }
         // Stage configuration
         searchStage.setTitle("UserProfile");
         searchStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
-        JFXDecorator decorator;
+        FXMLLoader loader;
+        //This condition is to determinate if the user wants to see his own profile or another user's profile
+        //It must be completed later, this version is only for testing.
+        if (false) {
+            loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
 
+        } else {
+            loader = new FXMLLoader(getClass().getResource("/gui/fxml/otherUserProfile.fxml"));
+        }
+        JFXDecorator decorator;
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
