@@ -4993,7 +4993,7 @@
 											"top": 998,
 											"width": 74.79443359375,
 											"height": 13,
-											"text": "+id{PK}",
+											"text": "+id{PK_P}",
 											"horizontalAlignment": 0
 										},
 										{
@@ -13309,8 +13309,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFpw7kdAs7dJZA="
 							},
-							"name": "id{PK}",
-							"type": ""
+							"name": "id{PK_P}"
 						},
 						{
 							"_type": "UMLAttribute",

@@ -47,6 +47,7 @@ public class User extends PiikObject{
     @MapperColumn(fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
     private UserType type;
+    private String oldID;
 
 
     public User(String name, String id, String email) {
@@ -244,6 +245,14 @@ public class User extends PiikObject{
     public String getPK()
     {
         return id;
+    }
+
+    public String getOldID() {
+        return oldID;
+    }
+
+    public void setOldID(String oldID) {
+        this.oldID = oldID;
     }
 
     /**

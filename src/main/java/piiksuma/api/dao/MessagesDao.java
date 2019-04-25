@@ -86,7 +86,7 @@ public class MessagesDao extends AbstractDao {
             }
 
             // TODO date may need to be between ''
-            clause.append("UPDATE message SET id = '?', sender = '?', text = '?', date = '?', multimedia = ");
+            clause.append("UPDATE message SET text = '?', date = '?', multimedia = ");
 
             // Multimedia or ticket may be null
             if (multimediaExists) {
@@ -103,8 +103,7 @@ public class MessagesDao extends AbstractDao {
                 clause.append("NULL");
             }
 
-            // TODO we need the old ID
-            clause.append(" WHERE id = '?'");
+            clause.append(" WHERE id = '?' AND author = '?'");
 
 
             statement = con.prepareStatement(clause.toString());
@@ -126,8 +125,6 @@ public class MessagesDao extends AbstractDao {
                 offset += 6;
             }
 
-            statement.setString(offset++, newMessage.getId());
-            statement.setString(offset++, newMessage.getSender().getPK());
             statement.setString(offset++, newMessage.getText());
             statement.setTimestamp(offset++, newMessage.getDate());
 
@@ -139,7 +136,8 @@ public class MessagesDao extends AbstractDao {
                 statement.setInt(offset++, newMessage.getTicket().getId());
             }
 
-            statement.setString(offset, newMessage.getId());
+            statement.setString(offset++, newMessage.getId());
+            statement.setString(offset, newMessage.getSender().getPK());
 
 
             /* Execution */

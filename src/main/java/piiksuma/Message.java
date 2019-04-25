@@ -12,7 +12,7 @@ public class Message extends PiikObject {
     private String id;
     @MapperColumn(notNull = true)
     private String text;
-    @MapperColumn(pkey = true, fKeys = "sender", targetClass = User.class)
+    @MapperColumn(pkey = true, columna = "author", fKeys = "sender", targetClass = User.class)
     private User sender;
     @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
     private Multimedia multimedia;
