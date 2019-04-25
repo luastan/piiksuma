@@ -22,13 +22,13 @@ INSERT INTO piiuser (id, email, name, pass, gender, description, home,
 
 -- Post
 INSERT INTO post (author, id, text, publicationdate)
-  VALUES ('usr1','aaaa', 'Hi! My name is... what?', '2019-05-12');
+VALUES ('usr1', 'aaa', 'Hi! My name is... what?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
-  VALUES ('usr2','aaab', 'My name is... who?', '2019-05-12');
+VALUES ('usr2', 'aab', 'My name is... who?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
-  VALUES ('usr3','aaac', 'My name is... Slim Shady ?', '2019-05-12');
+VALUES ('usr3', 'aac', 'My name is... Slim Shady ?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
-  VALUES ('usr4','aaad', 'Hi kids! Do you like violence?', '2019-05-12');
+VALUES ('usr4', 'aad', 'Hi kids! Do you like violence?', '2019-05-12');
 
 -- Achievement
 INSERT INTO achievement (id, name, description)
@@ -45,17 +45,17 @@ INSERT INTO hashtag (name) VALUES ('test');
 INSERT INTO hashtag (name) VALUES ('ThisProyectIsA10');
 
 -- Event
-INSERT INTO event (id, name, description, location, date, creatoruser)
-  VALUES ('aaaa', 'USC party', 'Party for all usc students', 'USC campus',
+INSERT INTO event (id, name, description, location, date, author)
+VALUES ('aaaa', 'USC party', 'Party for all usc students', 'USC campus',
           '2019-04-23', 'usr1');
-INSERT INTO event (id, name, description, location, date, creatoruser)
-  VALUES ('aaab', 'Suprise exam USC', 'Dont tell the teachers', 'USC campus',
+INSERT INTO event (id, name, description, location, date, author)
+VALUES ('aaab', 'Suprise exam USC', 'Dont tell the teachers', 'USC campus',
           '2019-04-29', 'usr2');
-INSERT INTO event (id, name, description, location, date, creatoruser)
-  VALUES ('aaac', 'Test1', 'Is late i dont have any more ideas', 'Home if where your heart is',
+INSERT INTO event (id, name, description, location, date, author)
+VALUES ('aaac', 'Test1', 'Is late i dont have any more ideas', 'Home if where your heart is',
         '2019-06-29', 'usr2');
-INSERT INTO event (id, name, description, location, date, creatoruser)
-  VALUES ('aaad', 'Test2', 'things', 'Santiago de Compostela',
+INSERT INTO event (id, name, description, location, date, author)
+VALUES ('aaad', 'Test2', 'things', 'Santiago de Compostela',
         '2019-07-10', 'usr1');
 
 -- Multimedia
@@ -66,16 +66,16 @@ INSERT INTO multimedia (hash, resolution, uri) VALUES ('aaad', '1080p', 'here');
 
 -- Ticket
 INSERT INTO ticket (id, usr ,section ,text, creationdate)
-  VALUES ('aaaa', 'usr1', 'easyGameEasyLife', 'dont know what to say',CURRENT_DATE);
+VALUES (1, 'usr1', 'easyGameEasyLife', 'dont know what to say', CURRENT_DATE);
 
 -- Message
-INSERT INTO message (id, sender, text, date, multimedia)
-  VALUES ('aaaa', 'usr3', 'Is this the real life?', '2019-04-10', 'aaaa');
-INSERT INTO message (id, sender, text, date, multimedia)
-  VALUES ('aaab', 'usr3', 'Is this the real life?', '2019-04-11', 'aaaa');
-INSERT INTO message (id, sender, text, date, multimedia, ticket)
-  VALUES ('aaac', 'usr2', 'Is this the real life?', '2019-04-12', 'aaaa', 'aaaa');
-INSERT INTO message (id, sender, text, date, multimedia)
+INSERT INTO message (id, author, text, date, multimedia)
+VALUES ('aaaa', 'usr3', 'Is this the real life?', '2019-04-10', 'aaaa');
+INSERT INTO message (id, author, text, date, multimedia)
+VALUES ('aaab', 'usr3', 'Is this the real life?', '2019-04-11', 'aaaa');
+INSERT INTO message (id, author, text, date, multimedia, ticket)
+VALUES ('aaac', 'usr2', 'Is this the real life?', '2019-04-12', 'aaaa', 1);
+INSERT INTO message (id, author, text, date, multimedia)
   VALUES ('aaad', 'usr1', 'Is this the real life?', '2019-04-13', 'aaad');
 
 -- Notification
@@ -89,6 +89,7 @@ INSERT INTO notification (id, creationdate, content)
   VALUES ('aaad', '2019-04-10', 'No sleep');
 
 -- Archive post
+/*
 INSERT INTO archivepost (post, usr, author)
   VALUES ('aaaa', 'usr1' , 'usr1');
 INSERT INTO archivepost (post, usr, author)
@@ -97,7 +98,7 @@ INSERT INTO archivepost (post, usr, author)
   VALUES ('aaac', 'usr4' , 'usr3');
 INSERT INTO archivepost (post, usr, author)
   VALUES ('aaad', 'usr2' , 'usr4');
-
+*/
 -- Associated account
 INSERT INTO associatedaccount (id, token, usr)
   VALUES ('aaaa', 'tokenaaaa' , 'usr1');
@@ -124,6 +125,7 @@ INSERT INTO followuser (followed, follower) VALUES ('usr1','usr3');
 INSERT INTO followuser (followed, follower) VALUES ('usr1','usr4');
 
 -- Have Notification
+/*
 INSERT INTO havenotification (notification, usr)
   VALUES ('aaaa', 'usr1');
 INSERT INTO havenotification (notification, usr)
@@ -132,7 +134,7 @@ INSERT INTO havenotification (notification, usr)
   VALUES ('aaac', 'usr3');
 INSERT INTO havenotification (notification, usr)
   VALUES ('aaad', 'usr4');
-
+*/
 -- Multimedia Image
 INSERT INTO multimediaimage (hash) VALUES ('aaaa');
 INSERT INTO multimediaimage (hash) VALUES ('aaab');
@@ -142,6 +144,7 @@ INSERT INTO multimediavideo (hash) VALUES ('aaac');
 INSERT INTO multimediavideo (hash) VALUES ('aaad');
 
 -- Own Achivement
+/*
 INSERT INTO ownachievement (achiev, usr, acquisitiondate)
   VALUES ('aaaa', 'usr1', '2019-04-12');
 INSERT INTO ownachievement (achiev, usr, acquisitiondate)
@@ -150,8 +153,9 @@ INSERT INTO ownachievement (achiev, usr, acquisitiondate)
   VALUES ('aaaa', 'usr3', '2019-04-12');
 INSERT INTO ownachievement (achiev, usr, acquisitiondate)
   VALUES ('aaaa', 'usr4', '2019-04-12');
-
+*/
 -- Own Hastag
+/*
 INSERT INTO ownhashtag (hashtag, post, author)
   VALUES ('ThisProyectIsA10', 'aaaa', 'usr1');
 INSERT INTO ownhashtag (hashtag, post, author)
@@ -160,13 +164,14 @@ INSERT INTO ownhashtag (hashtag, post, author)
   VALUES ('ThisProyectIsA10', 'aaac', 'usr3');
 INSERT INTO ownhashtag (hashtag, post, author)
   VALUES ('ThisProyectIsA10', 'aaad', 'usr4');
-
+*/
 -- Participate Event
+/*
 INSERT INTO participateevent (event, usr) VALUES ('aaaa','usr1');
 INSERT INTO participateevent (event, usr) VALUES ('aaaa','usr2');
 INSERT INTO participateevent (event, usr) VALUES ('aaaa','usr3');
 INSERT INTO participateevent (event, usr) VALUES ('aaaa','usr4');
-
+*/
 -- Phone
 INSERT INTO phone (prefix, phone, usr) VALUES ('+34', '608564255', 'usr1');
 INSERT INTO phone (prefix, phone, usr) VALUES ('+34', '698281823', 'usr2');
@@ -174,6 +179,7 @@ INSERT INTO phone (prefix, phone, usr) VALUES ('+34', '613224123', 'usr3');
 INSERT INTO phone (prefix, phone, usr) VALUES ('+34', '655110033', 'usr1');
 
 -- React
+/*
 INSERT INTO react (reactiontype, post, usr, author)
   VALUES ('likeit', 'aaaa', 'usr2', 'usr1');
 INSERT INTO react (reactiontype, post, usr, author)
@@ -182,8 +188,9 @@ INSERT INTO react (reactiontype, post, usr, author) --Error varchar(8)
 VALUES ('makesmeangry', 'aaaa', 'usr4', 'usr1');
 INSERT INTO react (reactiontype, post, usr, author)
   VALUES ('loveit', 'aaaa', 'usr1', 'usr1');
-
+*/
 -- Recieve Message
+/*
 INSERT INTO receivemessage (message, sender, receiver)
   VALUES ('aaaa', 'usr3', 'usr1');
 INSERT INTO receivemessage (message, sender, receiver)
@@ -192,8 +199,9 @@ INSERT INTO receivemessage (message, sender, receiver)
   VALUES ('aaaa', 'usr3', 'usr3');
 INSERT INTO receivemessage (message, sender, receiver)
   VALUES ('aaaa', 'usr3', 'usr4');
-
+*/
 -- Repost
+/*
 INSERT INTO repost (post, usr, author)
   VALUES ('aaaa', 'usr2','usr1');
 INSERT INTO repost (post, usr, author)
@@ -202,7 +210,7 @@ INSERT INTO repost (post, usr, author)
   VALUES ('aaaa', 'usr4','usr1');
 INSERT INTO repost (post, usr, author)
   VALUES ('aaaa', 'usr1','usr1');
-
+*/
 -- Silence User
 INSERT INTO silenceuser (usr, silenced)
   VALUES ('usr1', 'usr4');
