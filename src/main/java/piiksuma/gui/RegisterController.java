@@ -59,6 +59,7 @@ public class RegisterController implements Initializable {
         try {
             date = dateFormat.parse(birthday.getText());
         }catch(ParseException e){
+            System.out.println("ERROR DATE");
             return;
         }
 
@@ -76,14 +77,18 @@ public class RegisterController implements Initializable {
         user.setGender(genderBox.getSelectionModel().getSelectedItem());
         user.setDescription(description.getText());
         user.setHome(home.getText());
+        user.setCountry(country.getText());
+        user.setProvince(province.getText());
+        user.setReligion(religion.getText());
+        user.setJob(job.getText());
 
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
         }catch (PiikException e){
             //TODO handle exceptions properly
+            System.out.println("PiikException");
             return;
         }
-
     }
 
     private boolean checkFields(){
