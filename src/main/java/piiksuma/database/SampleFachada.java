@@ -219,7 +219,7 @@ public class SampleFachada {
         // Se establece el post padre
         postHijo.setFatherPost(postPadre);
         postHijo.setText("hola");
-
+/*
         System.out.println(postPadre.checkNotNull() + "-> valor esperado: false | falta el text");
         System.out.println(postPadre.checkPrimaryKey()+ "-> valor esperado: true");
 
@@ -231,6 +231,8 @@ public class SampleFachada {
 
         System.out.println(postHijo.checkPrimaryKey()+ "-> valor esperado: true");
         System.out.println(postHijo.checkNotNull()+ "-> valor esperado: false | el autor no cumple el checkPrimaryKey");
+        /*
+ */
     }
 
     public void imprimirUsuarios() {

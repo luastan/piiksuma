@@ -11,6 +11,7 @@
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.scene.image.ImageView?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.CreatePostController"
@@ -20,14 +21,17 @@
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
         </StackPane.margin>
         <HBox spacing="100">
-
             <VBox alignment="TOP_LEFT" spacing="25">
                 <JFXTextArea fx:id="postText" maxWidth="200" maxHeight="50" promptText="¿What's happening?"/>
-                <JFXButton fx:id="multimediaButton" styleClass="jfx-button-border" text="Add multimedia"/>
+                <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 255, 0.54)">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="PLUS" size="32"
+                                             styleClass="deck-small-button-graphic"/>
+                    </graphic>
+                </JFXButton>
             </VBox>
-            <VBox alignment="TOP_RIGHT" spacing="100">
+            <VBox alignment="TOP_RIGHT">
                 <JFXButton fx:id="postButton" styleClass="jfx-button-border" text="Post"/>
-
             </VBox>
         </HBox>
 
