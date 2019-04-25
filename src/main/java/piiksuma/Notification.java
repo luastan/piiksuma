@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @MapperTable
 public class Notification extends PiikObject{
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, hasDefault = true)
     private String id;
     @MapperColumn
     private String creationDate;
