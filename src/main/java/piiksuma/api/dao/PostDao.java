@@ -623,7 +623,7 @@ public class PostDao extends AbstractDao {
 
         try {
             // We'll use a prepared statement to avoid malicious intentions :(
-            PreparedStatement stm = con.prepareStatement("\n" +
+            PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
                     "WITH followedUsers AS (\n" +
                     "    SELECT followed\n" +
@@ -668,6 +668,17 @@ public class PostDao extends AbstractDao {
                     "\n" +
                     "    UNION\n" +
                     "\n" +
+                    "    -- We obtain the reposts that the user made\n" +
+                    "    (SELECT p.*, 'repost' as type\n" +
+                    "    FROM post as p\n" +
+                    "    WHERE EXISTS (\n" +
+                    "        SELECT *\n" +
+                    "        FROM repost as r\n" +
+                    "        WHERE r.author = '?' AND r.author = p.author AND r.post = p.id\n" +
+                    "    ))\n" +
+                    "\n" +
+                    "    UNION\n" +
+                    "\n" +
                     "    -- We obtain the 20 most reacted to posts which are in the user's followed\n" +
                     "    -- hashtags; the parentheses are needed to apply the 'ORDER BY' only to\n" +
                     "    -- this query, instead on applying it to the whole 'UNION'\n" +
@@ -707,7 +718,8 @@ public class PostDao extends AbstractDao {
             stm.setString(3, user.getPK());
             stm.setString(4, user.getPK());
             stm.setString(5, user.getPK());
-            stm.setInt(6, limit);
+            stm.setString(6, user.getPK());
+            stm.setInt(7, limit);
 
             try {
                 // We execute the composed query
