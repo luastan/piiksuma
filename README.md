@@ -1,4 +1,4 @@
-# Piiksuma &middot; [![Build Status](https://travis-ci.com/luastan/piiksuma.svg?token=ZH9Kst8PtvBThQjCiYhF&branch=develop)](https://travis-ci.com/luastan/piiksuma)
+# Piiksuma &middot;
 Proyecto de bases de datos
 
 ## Enlaces chulis :)
