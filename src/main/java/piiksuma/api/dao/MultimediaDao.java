@@ -1,5 +1,6 @@
 package piiksuma.api.dao;
 
+import javafx.scene.image.Image;
 import piiksuma.Multimedia;
 import piiksuma.Post;
 import piiksuma.api.ErrorMessage;
@@ -8,6 +9,7 @@ import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -138,6 +140,25 @@ public class MultimediaDao extends AbstractDao {
         }
 
         new DeleteMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).delete();
+    }
+
+    /**
+     * Function to get the image of the multimedia
+     *
+     * @param multimedia Multimedia that contains the information of the image
+     * @return the image of the multimedia
+     * @throws PiikDatabaseException
+     */
+    public Image getImage(Multimedia multimedia) throws PiikDatabaseException, PiikInvalidParameters {
+        if(multimedia == null || !multimedia.checkPrimaryKey()){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
+
+        if(multimedia.getType() != MultimediaType.image){
+            throw new PiikInvalidParameters("The multimedia type is not 'photo'");
+        }
+
+        return new Image(getClass().getResource("/imagenes/" + multimedia.getUri()).toString());
     }
 
 }
