@@ -41,7 +41,5 @@
                 </padding>
             </JFXMasonryPane>
         </ScrollPane>
-
-
     </VBox>
 </StackPane>
