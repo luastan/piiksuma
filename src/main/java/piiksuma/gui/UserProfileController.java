@@ -21,7 +21,7 @@ public class UserProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        backButton.setOnAction(this::backButton);
+
 
     }
 

@@ -31,7 +31,6 @@
                     <Label alignment="BOTTOM_LEFT" text="*Password:"/>
                     <JFXPasswordField fx:id="password" styleClass="fx-text-field" maxWidth="85"/>
                 </HBox>
-
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*Birthday:"/>
                     <JFXTextField fx:id="birthday" styleClass="fx-text-field" maxWidth="90" promptText="DD-MM-YYYY"/>
@@ -40,8 +39,6 @@
                     <Label alignment="BOTTOM_LEFT" text="Religion:"/>
                     <JFXTextField fx:id="religion" styleClass="fx-text-field" maxWidth="100"/>
                 </HBox>
-
-
             </VBox>
 
             <VBox spacing="35">

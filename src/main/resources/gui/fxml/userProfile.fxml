@@ -21,13 +21,17 @@
             </JFXToolbar>
         </top>
         <bottom>
-            <JFXToolbar styleClass="top-toolbar"/>
+            <JFXToolbar styleClass="bottom-toolbar"/>
         </bottom>
     </BorderPane>
 
     <VBox spacing="24">
         <HBox spacing="125">
-            <JFXButton fx:id="backButton" styleClass="jfx-button-border" text="Back"/>
+            <JFXButton fx:id="feedButton" styleClass="jfx-button-border" text="Feed" scaleX="1.25" scaleY="1.25" translateX="15"/>
+            <JFXButton fx:id="profileButton" styleClass="jfx-button-border" text="Profile" scaleX="1.25" scaleY="1.25" translateX="7.5"/>
+            <JFXButton fx:id="eventsButton" styleClass="jfx-button-border" text="Events" scaleX="1.25" scaleY="1.25"/>
+
+
         </HBox>
         <HBox spacing="125">
             <ImageView>
@@ -42,7 +46,7 @@
         </HBox>
         <Label text="userDescription" translateX="10" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
-        <Label alignment="CENTER" text="USER FEED" translateX="175" translateY="200" scaleX="1.5" scaleY="1.5"/>
+        <Label alignment="CENTER" text="USER POSTS" translateX="175" translateY="200" scaleX="1.5" scaleY="1.5"/>
     </VBox>
 
 </StackPane>
