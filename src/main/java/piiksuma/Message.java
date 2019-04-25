@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @MapperTable(nombre = "message")
 public class Message extends PiikObject {
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, hasDefault = true)
     private String id;
     @MapperColumn(notNull = true)
     private String text;

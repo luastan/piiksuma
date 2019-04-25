@@ -42,11 +42,11 @@ public class SearchFacade {
     public List<User> searchUser(User user, User current, Integer limit) throws PiikInvalidParameters,
             PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -72,11 +72,11 @@ public class SearchFacade {
      * @return user that meets the given information
      */
     public User getUser(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -98,7 +98,7 @@ public class SearchFacade {
      */
 
     public User login(User user) throws PiikInvalidParameters, PiikDatabaseException {
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -122,11 +122,11 @@ public class SearchFacade {
      */
 
     public Statistics getUserStatistics(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -139,11 +139,11 @@ public class SearchFacade {
 
     public List<Achievement> getAchievements(User user, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -157,11 +157,11 @@ public class SearchFacade {
     /* MULTIMEDIA related methods */
 
     public Multimedia existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull()) {
+        if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -169,11 +169,11 @@ public class SearchFacade {
     }
 
     public Long numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull()) {
+        if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -181,11 +181,11 @@ public class SearchFacade {
     }
 
     public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull()) {
+        if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -195,11 +195,11 @@ public class SearchFacade {
     /* POST related methods */
 
     public Post getPost(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -212,11 +212,11 @@ public class SearchFacade {
 
     // TODO we need to set a limit
     public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (hashtag == null || !hashtag.checkNotNull()) {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -225,11 +225,11 @@ public class SearchFacade {
 
     // TODO we need to set a limit
     public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -249,11 +249,11 @@ public class SearchFacade {
      */
     public Hashtag getHashtag(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (hashtag == null || !hashtag.checkNotNull()) {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
@@ -270,11 +270,11 @@ public class SearchFacade {
      */
     public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (hashtag == null || !hashtag.checkNotNull()) {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
@@ -301,7 +301,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -322,11 +322,11 @@ public class SearchFacade {
     public List<Post> getFeed(User user, Integer limit, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -350,11 +350,11 @@ public class SearchFacade {
      */
     public List<Post> getArchivedPosts(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -370,7 +370,7 @@ public class SearchFacade {
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -387,7 +387,7 @@ public class SearchFacade {
      * @return the list of all the tickets which haven't been closed
      */
     public List<Ticket> getAdminTickets(Integer limit, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
         
@@ -412,11 +412,11 @@ public class SearchFacade {
      */
     public List<Message> readMessages(User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -434,11 +434,11 @@ public class SearchFacade {
      * @return number of reactions classified by type
      */
     public HashMap<ReactionType, Integer> getPostReactionCount(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (post == null || post.checkNotNull()) {
+        if (post == null || post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
@@ -454,11 +454,11 @@ public class SearchFacade {
      */
     public List<Notification> getNotifications(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
