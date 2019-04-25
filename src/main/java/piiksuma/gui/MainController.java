@@ -11,6 +11,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.deckControllers.EventsDeckController;
+import piiksuma.gui.deckControllers.FeedDeckController;
+import piiksuma.gui.deckControllers.MessagesDeckController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -68,6 +71,7 @@ public class MainController implements Initializable {
         // Lads and sets the content to be represented when the tab gets selected
         FXMLLoader feedViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/feed.fxml"));
         feedTab.setContent(feedViewLoader.load());
+
 
         // Missing tabs follow the same pattern as the feed tab
 
@@ -149,16 +153,15 @@ public class MainController implements Initializable {
         FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
         eventTab.setContent(eventViewLoader.load());
 
-        // Finally loads tabs into the pane
+       // Finally loads tabs into the pane
         mainPane.getTabs().addAll(
                 feedTab,
                 //profileTab,
                 messagesTab,
                 eventTab,
                 searchTab
+
         );
-
-
     }
 
     @Override

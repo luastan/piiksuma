@@ -18,13 +18,14 @@ public class Arranque extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {// Registers current stage into the Application Context
+
         //THIS CODE IS TO SHOW THE LOGIN WINDOW, UNCOMMENT THE NEXT CODE TO SHOW THE MAIN WINDOW
         ContextHandler.getContext().register("primary", primaryStage);
         // Stage configuration
         primaryStage.setTitle("Piiksuma");
         primaryStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
 
         // Decorator which is the visual whindow frame, holding close button title and minimize
         JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
@@ -41,32 +42,5 @@ public class Arranque extends Application {
         // Show
         primaryStage.show();
 
-       /* // Registers current stage into the Application Context
-        ContextHandler.getContext().register("primary", primaryStage);
-
-        // Stage configuration
-        primaryStage.setTitle("Piiksuma");
-        primaryStage.setResizable(false);
-
-        // Defines the loader to be used later
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
-
-        // Decorator which is the visual whindow frame, holding close button title and minimize
-        JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
-        // TODO: Add a logo and a cool title to the JFXDecorator
-
-        // Scene definition & binding to the Primary Stage
-        Scene scene = new Scene(decorator, 450, 800);
-        primaryStage.setScene(scene);
-
-        // Stylesheet loading
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-
-        // Show
-        primaryStage.show();
-    */
     }
 }
