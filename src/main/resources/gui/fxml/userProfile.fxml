@@ -30,10 +30,7 @@
     <VBox spacing="24">
         <HBox spacing="125">
             <JFXButton fx:id="feedButton" styleClass="jfx-button-border" text="Feed" scaleX="1.25" scaleY="1.25" translateX="65"/>
-
             <JFXButton fx:id="archivedPostssButton" styleClass="jfx-button-border" text="Show Archived Posts" scaleX="1.25" scaleY="1.25" translateX="50"/>
-
-
         </HBox>
         <HBox spacing="125">
             <ImageView>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.text.Text?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXButton?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.UserDataController"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <BorderPane>
+        <top>
+            <JFXToolbar styleClass="top-toolbar"/>
+        </top>
+    </BorderPane>
+    <VBox spacing="20">
+        <StackPane.margin>
+            <Insets bottom="25.0" left="10.0" right="25.0" top="20.0"/>
+        </StackPane.margin>
+        <HBox spacing="40">
+            <JFXButton fx:id="achievmentButton" styleClass="jfx-button-border" text="Achievments"/>
+            <JFXButton fx:id="statsButton" styleClass="jfx-button-border" text="Stats"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="Name:" translateX="30"/>
+            <JFXTextField fx:id="userName" promptText="" translateY="-12"/>
+            <Text text="Email:" translateX="30"/>
+            <JFXTextField fx:id="userMail" promptText="" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="Pass:" translateX="30"/>
+            <JFXTextField fx:id="userPass" promptText="" translateY="-12"/>
+            <Text text="ID:" translateX="28"/>
+            <JFXTextField fx:id="userID" promptText="" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="Gender:" translateX="30"/>
+            <JFXTextField fx:id="userGender" promptText="" translateY="-12"/>
+            <Text text="Decription:" translateX="30"/>
+            <JFXTextArea fx:id="userDescription" promptText="" translateY="-12" maxWidth="200" maxHeight="50"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="Home:" translateX="30"/>
+            <JFXTextField fx:id="userHome" promptText="" translateY="-12"/>
+            <Text text="PostalCode:" translateX="28"/>
+            <JFXTextField fx:id="userPostalCode" promptText="" translateY="-12"/>
+        </HBox>
+
+
+    </VBox>
+
+
+</StackPane>

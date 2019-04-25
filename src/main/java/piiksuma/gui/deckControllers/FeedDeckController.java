@@ -30,6 +30,9 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     @FXML
     private JFXButton userButton;
 
+    @FXML
+    private JFXButton userDataButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
@@ -41,6 +44,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         mainButton.setGraphic(buttonIcon);
         mainButton.setOnAction(this::handleNewPostEvent);
         userButton.setOnAction(this::handleUserButton);
+        userDataButton.setOnAction(this::handleUserDataButton);
     }
 
 
@@ -111,6 +115,43 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         } else {
             loader = new FXMLLoader(getClass().getResource("/gui/fxml/otherUserProfile.fxml"));
         }
+        JFXDecorator decorator;
+        try {
+            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 450, 800);
+
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        searchStage.initModality(Modality.WINDOW_MODAL);
+        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        searchStage.setScene(scene);
+        // Show and wait till it closes
+        searchStage.showAndWait();
+    }
+
+    private void handleUserDataButton(ActionEvent event) {
+        // Requests the feed controller to update the feed for the new Post to show up
+        Stage searchStage = new Stage();
+
+        try {
+            ContextHandler.getContext().register("User Profile", searchStage);
+        } catch (PiikInvalidParameters e) {
+            e.printStackTrace();
+            return;
+        }
+        // Stage configuration
+        searchStage.setTitle("UserProfile");
+        searchStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/userData.fxml"));
+
         JFXDecorator decorator;
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
