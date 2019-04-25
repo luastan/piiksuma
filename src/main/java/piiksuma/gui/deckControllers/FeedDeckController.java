@@ -89,7 +89,6 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     }
 
     private void handleUserButton(ActionEvent event) {
-        // TODO: Create a new Post. Which should be another method that might be better placed in another class.
 
         // Requests the feed controller to update the feed for the new Post to show up
         Stage searchStage = new Stage();
