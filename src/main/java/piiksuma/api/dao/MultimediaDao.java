@@ -3,12 +3,15 @@ package piiksuma.api.dao;
 import piiksuma.Multimedia;
 import piiksuma.Post;
 import piiksuma.api.ErrorMessage;
+import piiksuma.api.MultimediaType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +26,60 @@ public class MultimediaDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        new InsertionMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).insert();
+        // Connection to the database
+        Connection con = getConnection();
+        // SQL clause
+        PreparedStatement statement = null;
+
+        // Built clause
+        StringBuilder clause = new StringBuilder();
+
+        try {
+
+            /* Statement */
+
+            clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
+                    " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+
+            String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
+                    "multimediaVideo ";
+            clause.append("INSERT INTO ").append(type).append("SELECT '?' WHERE NOT EXISTS (SELECT * " +
+                    "FROM ").append(type).append("WHERE hash = '?' FOR UPDATE); ");
+
+
+            statement = con.prepareStatement(clause.toString());
+
+
+            /* Clause's data insertion */
+
+            statement.setString(1, multimedia.getHash());
+            statement.setString(2, multimedia.getResolution());
+            statement.setString(3, multimedia.getUri());
+            statement.setString(4, multimedia.getHash());
+
+            statement.setString(5, multimedia.getHash());
+            statement.setString(6, multimedia.getHash());
+
+
+            /* Execution */
+
+            statement.executeUpdate();
+
+
+        } catch (SQLException e) {
+            throw new PiikDatabaseException(e.getMessage());
+
+        } finally {
+
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+            }
+        }
     }
 
     /**

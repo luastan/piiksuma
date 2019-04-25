@@ -312,6 +312,7 @@ public class UserDao extends AbstractDao {
             }
 
             // Row to be modified
+            // TODO we need the old ID
             statement.setObject(offset++, user.getId());
 
             // Upgrades and downgrades from admin

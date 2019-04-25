@@ -316,7 +316,11 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
         }
 
-        parentFacade.getMessagesDao().replyTicket(ticket, message);
+        if(!ticket.equals(message.getTicket())) {
+            throw new PiikInvalidParameters("The given message is not associated to the given ticket");
+        }
+
+        parentFacade.getMessagesDao().createMessage(message);
     }
 
     /**

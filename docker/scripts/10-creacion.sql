@@ -105,7 +105,7 @@ CREATE TABLE associatedAccount
 
 CREATE TABLE ticket
 (
-    id           varchar(32),
+    id           integer,
     usr          varchar(32)  not null,
     section      varchar(20)  not null,
     text         varchar(200) not null,
@@ -165,7 +165,7 @@ CREATE TABLE message
     text       varchar(200) not null,
     date       timestamp    not null default now(),
     multimedia varchar(32),
-    ticket     varchar(32),
+    ticket     integer,
 
     primary key (sender, id),
     foreign key (sender) references piiUser (id)

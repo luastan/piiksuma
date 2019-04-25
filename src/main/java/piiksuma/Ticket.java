@@ -10,8 +10,8 @@ import java.util.Objects;
 public class Ticket extends PiikObject{
 
     /* Attributes */
-    @MapperColumn(pkey = true)
-    private String id;
+    @MapperColumn(pkey = true, hasDefault = true)
+    private Integer id;
     @MapperColumn(columna = "closeDate")
     private String closeDate;
     @MapperColumn(fKeys = "usr", targetClass = User.class, notNull = true)
@@ -43,11 +43,12 @@ public class Ticket extends PiikObject{
 
 
     /* Getters and setters */
-    public String getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

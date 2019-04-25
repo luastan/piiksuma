@@ -1,9 +1,11 @@
 package piiksuma.api.dao;
 
 import piiksuma.Hashtag;
+import piiksuma.Multimedia;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ErrorMessage;
+import piiksuma.api.MultimediaType;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
@@ -40,7 +42,147 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
-        new InsertionMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).insert();
+        Multimedia multimedia = post.getMultimedia();
+
+        // Which not-null-required parameters will be inserted
+        boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkNotNull();
+        boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
+                post.getFatherPost().getAuthor().checkNotNull();
+        boolean multimediaExists = multimedia != null && multimedia.checkNotNull();
+
+        // Connection to the database
+        Connection con = getConnection();
+        // SQL clauses
+        PreparedStatement statement = null;
+        PreparedStatement statementHashtags = null;
+
+        // Built clause
+        StringBuilder clause = new StringBuilder();
+
+        try {
+
+            /* Auto-commit */
+
+            // The post won't be created unless there's no error modifying all related tables
+            con.setAutoCommit(false);
+
+
+            /* Statement */
+
+            // If the post will display some kind of media, it gets inserted if it does not exist in the database
+            if (multimediaExists) {
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+
+                String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
+                        "multimediaVideo ";
+                clause.append("INSERT INTO ").append(type).append("SELECT '?' WHERE NOT EXISTS (SELECT * " +
+                        "FROM ").append(type).append("WHERE hash = '?' FOR UPDATE); ");
+            }
+
+            // TODO date may need to be between ''
+            // Publication date will automatically be set as "NOW()" because it is its default value
+            clause.append("INSERT INTO post(author, id, text, sugarDaddy, authorDaddy, multimedia) VALUES('?', ");
+            clause.append("1"); // TODO make random and unique between author's posts
+            clause.append(", '?'");
+
+            // Some attributes may be null
+            if(sugarDaddyExists) {
+                clause.append(", '?'");
+            } else {
+                clause.append(", NULL");
+            }
+
+            if(authorDaddyExists) {
+                clause.append(", '?'");
+            } else {
+                clause.append(", NULL");
+            }
+
+            if (multimediaExists) {
+                clause.append(", '?')");
+            } else {
+                clause.append(", NULL)");
+            }
+
+
+            statement = con.prepareStatement(clause.toString());
+
+
+            /* Clause's data insertion */
+
+            int offset = 1;
+
+            if(multimediaExists) {
+                statement.setString(1, multimedia.getHash());
+                statement.setString(2, multimedia.getResolution());
+                statement.setString(3, multimedia.getUri());
+                statement.setString(4, multimedia.getHash());
+
+                statement.setString(5, multimedia.getHash());
+                statement.setString(6, multimedia.getHash());
+
+                offset += 6;
+            }
+
+            statement.setString(offset++, post.getAuthor().getPK());
+            statement.setString(offset++, post.getText());
+
+            if(sugarDaddyExists) {
+                statement.setString(offset++, post.getFatherPost().getId());
+            }
+
+            if(authorDaddyExists) {
+                statement.setString(offset++, post.getFatherPost().getAuthor().getPK());
+            }
+
+            if(multimediaExists) {
+                statement.setString(offset, multimedia.getHash());
+            }
+
+
+            /* Execution */
+
+            statement.executeUpdate();
+
+
+            /* Statement for hashtags */
+
+            clause = new StringBuilder();
+            clause.append("INSERT INTO ownHashtag(hashtag, post, author) VALUES ('?', '?', '?')");
+
+            statementHashtags = con.prepareStatement(clause.toString());
+
+            statementHashtags.setString(2, post.getId());
+            statementHashtags.setString(3, post.getAuthor().getPK());
+
+            for(Hashtag hashtag : post.getHashtags()) {
+                statementHashtags.setString(1, hashtag.getName());
+                statementHashtags.executeUpdate();
+            }
+
+
+            /* Commit */
+
+            con.commit();
+
+            // Restoring auto-commit to its default value
+            con.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            throw new PiikDatabaseException(e.getMessage());
+
+        } finally {
+
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+            }
+        }
     }
 
 

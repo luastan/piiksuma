@@ -76,7 +76,7 @@ public class Post extends PiikObject{
         }
     }
 
-    public void addAllHashtag(List<Hashtag> hashtags){
+    public void addAllHashtags(List<Hashtag> hashtags){
         if(hashtags != null){
             this.hashtags.addAll(hashtags);
         }
@@ -106,6 +106,7 @@ public class Post extends PiikObject{
         this.fatherPost = fatherPost;
     }
 
+    // TODO duplicated
     public User getPostAuthor() {
         return author;
     }
@@ -120,6 +121,14 @@ public class Post extends PiikObject{
 
     public void setMultimedia(Multimedia multimedia) {
         this.multimedia = multimedia;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     // TODO hashtags are missing

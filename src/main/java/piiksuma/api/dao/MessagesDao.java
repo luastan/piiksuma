@@ -103,6 +103,7 @@ public class MessagesDao extends AbstractDao {
                 clause.append("NULL");
             }
 
+            // TODO we need the old ID
             clause.append(" WHERE id = '?'");
 
 
@@ -135,7 +136,7 @@ public class MessagesDao extends AbstractDao {
             }
 
             if(ticketExists) {
-                statement.setString(offset++, newMessage.getTicket().getId());
+                statement.setInt(offset++, newMessage.getTicket().getId());
             }
 
             statement.setString(offset, newMessage.getId());
@@ -264,7 +265,7 @@ public class MessagesDao extends AbstractDao {
             }
 
             if(ticketExists) {
-                statement.setString(offset, message.getTicket().getId());
+                statement.setInt(offset, message.getTicket().getId());
             }
 
 
@@ -302,31 +303,57 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
-        new InsertionMapper<Ticket>(super.getConnection()).add(ticket).defineClass(Ticket.class).insert();
-    }
+        // Connection to the database
+        Connection con = getConnection();
+        // SQL clause
+        PreparedStatement statement = null;
 
-    /**
-     * An user replies a ticket by creating a message that will be associated to it; therefore, message.getTicket()
-     * cannot be null
-     *
-     * @param ticket  the ticket is not necessary actually, we just have to check if the ticket is in the message
-     * @param message reply to be added to the ticket
-     */
-    public void replyTicket(Ticket ticket, Message message) throws PiikDatabaseException {
+        // Built clause
+        StringBuilder clause = new StringBuilder();
 
-        if (ticket == null || !ticket.checkNotNull()) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
+        try {
+
+            /* Statement */
+
+            // "closeDate" and "adminClosing" are inserted as NULL because they are intended to be stored when closing
+            // a ticket; "creationDate" has "NOW()" as the default value
+            clause.append("INSERT INTO ticket(id, usr, section, text, closeDate, adminClosing) VALUES (");
+
+            // Ticket's IDs autoincrement as each ticket is created in the database; we need to make sure that the
+            // generated ID cannot be taken by another concurrent transaction which also is creating a ticket
+            clause.append("(SELECT MAX(id) FROM ticket FOR UPDATE) + 1, ");
+
+            clause.append("'?', '?', '?', NULL, NULL)");
+
+
+            statement = con.prepareStatement(clause.toString());
+
+
+            /* Clause's data insertion */
+
+            statement.setString(1, ticket.getUser().getPK());
+            statement.setString(2, ticket.getSection());
+            statement.setString(3, ticket.getTextProblem());
+
+
+            /* Execution */
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new PiikDatabaseException(e.getMessage());
+
+        } finally {
+
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+            }
         }
-
-        if (message == null || !message.checkNotNull()) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
-        }
-
-        if (!ticket.getId().equals(message.getTicket())) {
-            return;
-        }
-
-        new InsertionMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).insert();
     }
 
     /**
@@ -341,8 +368,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
-        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closeDate = NOW() WHERE id = " +
-                "?").defineParameters(ticket.getId()).executeUpdate();
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closeDate = NOW(), " +
+                "adminClosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+                ticket.getId()).executeUpdate();
     }
 
     /**
