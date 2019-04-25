@@ -11,6 +11,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Line?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.OtherUserProfileController"
@@ -50,7 +52,14 @@
         </HBox>
         <Label text="userDescription" translateX="10" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
-        <Label alignment="CENTER" text="USER POSTS" translateX="175" translateY="200" scaleX="1.5" scaleY="1.5"/>
+        <Label alignment="CENTER" text="USER POSTS" translateX="175" scaleX="1.5" scaleY="1.5"/>
+        <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">
+            <JFXMasonryPane fx:id="searchMasonryPane" HSpacing="100" VSpacing="100">
+                <padding>
+                    <Insets top="16" right="20" bottom="16" left="16"/>
+                </padding>
+            </JFXMasonryPane>
+        </ScrollPane>
     </VBox>
 
 </StackPane>
