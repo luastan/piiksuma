@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.image.ImageView?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.CreatePostController"
+           prefHeight="400.0" prefWidth="600.0">
+    <VBox spacing="30">
+        <StackPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+        </StackPane.margin>
+        <HBox spacing="100">
+
+            <VBox alignment="TOP_LEFT" spacing="25">
+                <JFXTextArea fx:id="postText" maxWidth="200" maxHeight="50" promptText="¿What's happening?"/>
+                <JFXButton fx:id="multimediaButton" styleClass="jfx-button-border" text="Add multimedia"/>
+            </VBox>
+            <VBox alignment="TOP_RIGHT" spacing="100">
+                <JFXButton fx:id="postButton" styleClass="jfx-button-border" text="Post"/>
+
+            </VBox>
+        </HBox>
+
+        <VBox alignment="CENTER">
+            <ImageView fx:id="boxImage" disable="true" fitHeight="300" fitWidth="300"/>
+        </VBox>
+    </VBox>
+
+
+</StackPane>
