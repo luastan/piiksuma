@@ -11,6 +11,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.User;
+import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
@@ -20,7 +23,7 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private JFXTextField user;
+    private JFXTextField userId;
     @FXML
     private JFXPasswordField password;
     @FXML
@@ -34,17 +37,79 @@ public class LoginController implements Initializable {
         logIn.setOnAction(this::handleLogIn);
     }
 
-    private void handleLogIn(Event event){
+    private void handleLogIn(Event event) {
 
+        if (!checkFields()) {
+            //TODO alert
+            System.out.println("Fields not filled");
+            return;
+        }
+        User user = new User(userId.getText(), password.getText());
+        User userLoggin = null;
+        try {
+            userLoggin = ApiFacade.getEntrypoint().getSearchFacade().login(user);
+        } catch (PiikException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        if (userLoggin == null) {
+            //TODO alert with invalid credentials
+            System.out.println("User == null");
+            return;
+        }
+
+        ContextHandler.getContext().setCurrentUser(userLoggin);
     }
 
-    private void handleRegister(Event event){
+    private boolean checkFields() {
+        if (userId.getText().isEmpty() || password.getText().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void enterMainWindow() {
+        Stage mainStage = new Stage();
+
+        try {
+            ContextHandler.getContext().register("primary", mainStage);
+        }catch (PiikException e){
+            //TODO
+            return;
+        }
+        // Stage configuration
+        mainStage.setTitle("Piiksuma");
+        mainStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
+
+        JFXDecorator decorator;
+
+        try {
+            decorator = new JFXDecorator(mainStage, loader.load(), false, false, true);
+        }catch (IOException e){
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 450, 800);
+        mainStage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+
+        // Show
+        mainStage.show();
+    }
+
+    private void handleRegister(Event event) {
 
         Stage registerStage = new Stage();
 
         try {
             ContextHandler.getContext().register("register", registerStage);
-        }catch(PiikInvalidParameters e){
+        } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;
         }
@@ -56,7 +121,7 @@ public class LoginController implements Initializable {
 
         try {
             decorator = new JFXDecorator(registerStage, loader.load(), false, false, true);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }

@@ -75,6 +75,11 @@ public class User extends PiikObject{
 
     }
 
+    public User(String id, String pass) {
+        this.id = id;
+        this.pass = pass;
+    }
+
     /**
      * A empty constructor is needed to be created by reflexion
      */
