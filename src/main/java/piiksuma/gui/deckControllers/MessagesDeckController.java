@@ -66,7 +66,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
             return;
         }
 
-        Scene scene = new Scene(decorator, 350, 250);
+        Scene scene = new Scene(decorator, 400, 300);
 
 
         scene.getStylesheets().addAll(

@@ -9,6 +9,7 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.MessagesController"
@@ -18,6 +19,11 @@
     </StackPane.margin>
     <JFXTextField fx:id="userField" promptText="Introduce a user name to start a chat" translateY="-50"/>
     <JFXTextField fx:id="messageField" promptText="Introduce the first message"/>
-    <JFXButton fx:id="insertChat" styleClass="jfx-button-border" text="Send" translateY="50" scaleY="1.25" scaleX="1.25"/>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" styleClass="deck-button" fx:id="mainButton"
+               ripplerFill="rgba(255, 255, 255, 0.70)">
+        <graphic>
+            <FontAwesomeIconView glyphName="PLUS" size="24" fill="#fffffb"/>
+        </graphic>
+    </JFXButton>
 
 </StackPane>

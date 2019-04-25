@@ -39,7 +39,7 @@
             <ImageView>
                 <Image preserveRatio="true"  requestedHeight="120" url="/imagenes/huevo.png"/>
             </ImageView>
-            <Label text="userName" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
+            <Label text="userName" fx:id="Name" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
         </HBox>
         <Line startX="0" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="20">

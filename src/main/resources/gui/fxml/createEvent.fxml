@@ -31,10 +31,5 @@
             <JFXTextArea translateX="-5" fx:id="descriptionEvent" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
         </HBox>
     </VBox>
-    <JFXButton StackPane.alignment="BOTTOM_CENTER" styleClass="deck-button" fx:id="mainButton"
-               ripplerFill="rgba(255, 255, 255, 0.70)">
-    <graphic>
-        <FontAwesomeIconView glyphName="PLUS" size="24" fill="#fffffb"/>
-    </graphic>
-    </JFXButton>
+
 </StackPane>
