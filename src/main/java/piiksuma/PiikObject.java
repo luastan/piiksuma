@@ -74,12 +74,22 @@ public abstract class PiikObject {
     }
 
     /**
-     * Function to get the first primary key of the object
+     * Function to get the first primary key of the object if the insertion is false
      *
      * @return the first primary key
      */
     public Object getPK(){
-        Map<String, Object> pks = getPKs();
+        return getPK(false);
+    }
+
+    /**
+     * Function to get the first primary key of the object
+     *
+     * @param isInsertion boolean to indicate that it is an insert
+     * @return the first primary key
+     */
+    public Object getPK(boolean isInsertion){
+        Map<String, Object> pks = getPKs(isInsertion);
         return pks.values().toArray()[0];
     }
 
