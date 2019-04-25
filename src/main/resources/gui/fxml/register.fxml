@@ -7,26 +7,77 @@
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.RegisterController"
-           prefHeight="600.0" prefWidth="600.0">
+>
+    <StackPane.margin>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </StackPane.margin>
+    <VBox spacing="20">
+        <HBox spacing="20">
 
-    <HBox spacing="30">
-        <StackPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-        </StackPane.margin>
-        <VBox alignment="TOP_LEFT" spacing="15">
-            <JFXTextField fx:id="user" maxWidth="90" promptText="Username"/>
-            <JFXTextField fx:id="email"  maxWidth="90" promptText="Email"/>
-            <JFXPasswordField fx:id="password"  maxWidth="90" promptText="Password"/>
-            <JFXComboBox fx:id="genderBox"  maxWidth="90" promptText="Gender"/>
+            <VBox spacing="35">
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="*UserID:"/>
+                    <JFXTextField alignment="TOP_LEFT" styleClass="fx-text-field" fx:id="userId" maxWidth="80"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="*Name:"/>
+                    <JFXTextField alignment="TOP_LEFT" styleClass="fx-text-field" fx:id="userName" maxWidth="80"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label layoutY="50" text="*Email:"/>
+                    <JFXTextField fx:id="email" styleClass="fx-text-field" maxWidth="110"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="*Password:"/>
+                    <JFXPasswordField fx:id="password" styleClass="fx-text-field" maxWidth="85"/>
+                </HBox>
+
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="*Birthday:"/>
+                    <JFXTextField fx:id="birthday" styleClass="fx-text-field" maxWidth="90" promptText="DD-MM-YYYY"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="Religion:"/>
+                    <JFXTextField fx:id="religion" styleClass="fx-text-field" maxWidth="100"/>
+                </HBox>
 
 
-        </VBox>
+            </VBox>
 
-        <VBox alignment="TOP_RIGHT" spacing="15">
-            <JFXTextField fx:id="home"  maxWidth="200" promptText="Home"/>
-            <JFXTextField fx:id="province"  maxWidth="200" promptText="Province"/>
-            <JFXTextField fx:id="country"  maxWidth="200" promptText="Country"/>
-        </VBox>
-    </HBox>
-    <JFXButton fx:id="register" styleClass="jfx-button-border" text="Register" />
+            <VBox spacing="35">
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="PostalCode:"/>
+                    <JFXTextField fx:id="postalCode" styleClass="fx-text-field" maxWidth="120"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label layoutY="50" text="Home:"/>
+                    <JFXTextField fx:id="home" styleClass="fx-text-field" maxWidth="170"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="Province:"/>
+                    <JFXTextField fx:id="province" styleClass="fx-text-field" maxWidth="135"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="Country:"/>
+                    <JFXTextField fx:id="country" styleClass="fx-text-field" maxWidth="140"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label alignment="BOTTOM_LEFT" text="Actual job:"/>
+                    <JFXTextField fx:id="job" styleClass="fx-text-field" maxWidth="125"/>
+                </HBox>
+
+                <JFXComboBox fx:id="genderBox" maxWidth="200" promptText="Gender"/>
+            </VBox>
+        </HBox>
+        <HBox spacing="20">
+            <VBox spacing="5">
+                <Label alignment="BOTTOM_LEFT" text="Description:"/>
+                <JFXTextArea fx:id="description" styleClass="fx-text-field" maxWidth="200" maxHeight="60"/>
+            </VBox>
+            <Label alignment="BOTTOM_LEFT" text="*Fields cannot be empty"/>
+        </HBox>
+
+
+    </VBox>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" fx:id="register" styleClass="jfx-button-border" text="Register"/>
 </StackPane>

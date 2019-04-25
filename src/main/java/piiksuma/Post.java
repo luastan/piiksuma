@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Post extends PiikObject{
     @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
     private User author;
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, hasDefault = true)
     private String id;
     @MapperColumn(notNull = true)
     private String text;

@@ -29,6 +29,8 @@ INSERT INTO post (author, id, text, publicationdate)
 VALUES ('usr3', 'aac', 'My name is... Slim Shady ?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
 VALUES ('usr4', 'aad', 'Hi kids! Do you like violence?', '2019-05-12');
+INSERT INTO post (author, id, text, publicationdate)
+VALUES ('usr4', 'aad', 'whateveeeer?', '2019-05-12');
 
 -- Achievement
 INSERT INTO achievement (id, name, description)

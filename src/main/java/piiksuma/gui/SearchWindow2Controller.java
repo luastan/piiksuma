@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class SearchWindow2 implements Initializable {
+public class SearchWindow2Controller implements Initializable {
 
 
 

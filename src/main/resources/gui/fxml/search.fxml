@@ -5,10 +5,10 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import com.jfoenix.controls.JFXToolbar?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.SearchController">
@@ -18,15 +18,23 @@
 
             </JFXToolbar>
         </top>
+
     </BorderPane>
 
-    <HBox spacing="40">
-        <VBox spacing="40" alignment="TOP_LEFT">
-            <JFXButton text="back" fx:id="back" styleClass="classic-button"/>
+    <VBox spacing="40">
+        <StackPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="10.0"/>
+        </StackPane.margin>
+        <HBox spacing="40" alignment="TOP_LEFT">
+            <JFXButton text="Back" fx:id="back" styleClass="classic-button"/>
+
+        </HBox>
+        <HBox alignment="TOP_LEFT" spacing="100">
+
             <JFXTextField fx:id="search" maxWidth="200" promptText="Search"/>
-        </VBox>
-        <VBox alignment="TOP_RIGHT">
-            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search" />
-        </VBox>
-    </HBox>
+            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
+        </HBox>
+
+
+    </VBox>
 </StackPane>
