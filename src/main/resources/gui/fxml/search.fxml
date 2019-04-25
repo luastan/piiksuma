@@ -9,6 +9,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.SearchController">
@@ -30,10 +31,16 @@
 
         </HBox>
         <HBox alignment="TOP_LEFT" spacing="100">
-
-            <JFXTextField fx:id="search" maxWidth="200" promptText="Search"/>
+            <JFXTextField fx:id="searchText" maxWidth="200" promptText="Search"/>
             <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
         </HBox>
+        <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">
+            <JFXMasonryPane fx:id="searchMasonryPane" HSpacing="100" VSpacing="100">
+                <padding>
+                    <Insets top="16" right="20" bottom="16" left="16"/>
+                </padding>
+            </JFXMasonryPane>
+        </ScrollPane>
 
 
     </VBox>
