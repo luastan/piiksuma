@@ -8,11 +8,11 @@ import java.util.Objects;
 
 @MapperTable(nombre = "message")
 public class Message extends PiikObject {
-    @MapperColumn(pkey = true)
+    @MapperColumn(pkey = true, hasDefault = true)
     private String id;
     @MapperColumn(notNull = true)
     private String text;
-    @MapperColumn(pkey = true, fKeys = "sender", targetClass = User.class)
+    @MapperColumn(pkey = true, columna = "author", fKeys = "sender", targetClass = User.class)
     private User sender;
     @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
     private Multimedia multimedia;

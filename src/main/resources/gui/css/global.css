@@ -126,6 +126,8 @@
     -fx-text-fill: -white-high-emphasis;
     -fx-background-color: -primary-color-5;
 }
+
+
 .deck-button {
     -fx-background-color: -primary-color-5;
     -jfx-button-type: RAISED;

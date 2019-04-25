@@ -11,7 +11,7 @@ import piiksuma.gui.ContextHandler;
 public class Arranque extends Application {
     public static void main(String[] args) {
 
-        SampleFachada.getDb().ejemploGETFK();
+        //SampleFachada.getDb().ejemploGETFK();
         //SampleFachada.getDb().pruebasCheck();
 
         launch(args);
@@ -32,7 +32,7 @@ public class Arranque extends Application {
         // TODO: Add a logo and a cool title to the JFXDecorator
 
         // Scene definition & binding to the Primary Stage
-        Scene scene = new Scene(decorator, 450, 550);
+        Scene scene = new Scene(decorator, 450, 800);
         primaryStage.setScene(scene);
         scene.getStylesheets().addAll(
                 getClass().getResource("/gui/css/global.css").toExternalForm(),

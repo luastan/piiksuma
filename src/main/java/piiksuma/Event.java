@@ -1,5 +1,6 @@
 package piiksuma;
 
+import org.junit.runners.Parameterized;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
@@ -9,6 +10,8 @@ import java.util.Objects;
 public class Event extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
+    @MapperColumn(pkey = true, fKeys = "creatorUser", targetClass = User.class)
+    private User creator;
     @MapperColumn(hasDefault = true)
     private String description;
     @MapperColumn(hasDefault = true)
@@ -17,8 +20,6 @@ public class Event extends PiikObject{
     private String date;
     @MapperColumn(hasDefault = true)
     private String name;
-    @MapperColumn(fKeys = "creatorUser", targetClass = User.class, notNull = true)
-    private User creator;
 
 
     public Event(String id, String nombre) {
