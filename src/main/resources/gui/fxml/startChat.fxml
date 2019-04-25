@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXButton?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.MessagesController"
+           prefHeight="400.0" prefWidth="600.0">
+    <StackPane.margin>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </StackPane.margin>
+    <JFXTextField fx:id="userField" promptText="Introduce a user name to start a chat" translateY="-50"/>
+    <JFXTextField fx:id="messageField" promptText="Introduce the first message"/>
+    <JFXButton fx:id="insertChat" styleClass="jfx-button-border" text="Send" translateY="50" scaleY="1.25" scaleX="1.25"/>
+
+</StackPane>
