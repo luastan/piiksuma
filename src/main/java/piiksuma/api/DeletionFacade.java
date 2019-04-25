@@ -37,11 +37,11 @@ public class DeletionFacade {
      */
     public void removeUser(User user, User currentUser) throws PiikForbiddenException, PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -64,15 +64,15 @@ public class DeletionFacade {
      */
     public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (followed == null || !followed.checkNotNull()) {
+        if (followed == null || !followed.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
         }
 
-        if (follower == null || follower.checkNotNull()) {
+        if (follower == null || follower.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
         }
 
@@ -96,11 +96,11 @@ public class DeletionFacade {
      */
     public void removeMultimedia(Multimedia multimedia, User currentUser) throws PiikDatabaseException,
             PiikForbiddenException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (multimedia == null || multimedia.checkNotNull()) {
+        if (multimedia == null || multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
@@ -123,11 +123,11 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removePost(Post post, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
@@ -149,11 +149,11 @@ public class DeletionFacade {
      */
     public void removeRePost(Post repost, User currentUser) throws PiikDatabaseException, PiikForbiddenException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (repost == null || !repost.checkNotNull()) {
+        if (repost == null || !repost.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("repost"));
         }
 
@@ -177,11 +177,11 @@ public class DeletionFacade {
      */
     public void deleteMessage(Message message, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
         // Null check
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (message == null || !message.checkNotNull()) {
+        if (message == null || !message.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
         }
 
@@ -205,11 +205,11 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeEvent(Event e, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (e == null || e.checkNotNull()) {
+        if (e == null || e.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
@@ -230,11 +230,11 @@ public class DeletionFacade {
      * @throws PiikInvalidParameters  The currentUser is null
      */
     public void removeReaction(Reaction reaction, User currentUser) throws PiikDatabaseException, PiikForbiddenException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (reaction == null || !reaction.checkNotNull()) {
+        if (reaction == null || !reaction.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("reaction"));
         }
 

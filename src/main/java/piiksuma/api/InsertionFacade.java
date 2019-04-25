@@ -37,7 +37,7 @@ public class InsertionFacade {
      */
     public void createUser(User newUser) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (newUser == null || !newUser.checkNotNull()) {
+        if (newUser == null || !newUser.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newUser"));
         }
 
@@ -46,11 +46,11 @@ public class InsertionFacade {
 
     public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (achievement == null || !achievement.checkNotNull()) {
+        if (achievement == null || !achievement.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("achievement"));
         }
 
@@ -64,15 +64,15 @@ public class InsertionFacade {
     public void unlockAchievement(Achievement achievement, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if (achievement == null || !achievement.checkNotNull()) {
+        if (achievement == null || !achievement.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("achievement"));
         }
 
-        if(user == null || !user.checkNotNull()) {
+        if(user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -92,15 +92,15 @@ public class InsertionFacade {
      */
     public void followUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (followed == null || !followed.checkNotNull()) {
+        if (followed == null || !followed.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
         }
 
-        if (follower == null || !follower.checkNotNull()) {
+        if (follower == null || !follower.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
         }
 
@@ -116,11 +116,11 @@ public class InsertionFacade {
 
     public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters,
             PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull()) {
+        if (multimedia == null || !multimedia.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -140,11 +140,11 @@ public class InsertionFacade {
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
     public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
@@ -159,11 +159,11 @@ public class InsertionFacade {
      * @return the hashtag created
      */
     public void createHashtag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (hashtag == null || !hashtag.checkNotNull()) {
+        if (hashtag == null || !hashtag.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
@@ -177,13 +177,14 @@ public class InsertionFacade {
      * @param currentUser user in the apliccation
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, hashtag
      */
+    // TODO add desired user
     public void followHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         // Null check
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
         // Null check
-        if (hashtag == null || !hashtag.checkNotNull()) {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
@@ -198,15 +199,15 @@ public class InsertionFacade {
      */
     public void archivePost(Post post, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
@@ -223,11 +224,11 @@ public class InsertionFacade {
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      */
     public void updatePost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
@@ -248,19 +249,19 @@ public class InsertionFacade {
      */
     public void repost(User userRepost, Post post, User userPost, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (userRepost == null || !userRepost.checkNotNull()) {
+        if (userRepost == null || !userRepost.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userRepost"));
         }
 
-        if (post == null || !post.checkNotNull()) {
+        if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (userPost == null || !userPost.checkNotNull()) {
+        if (userPost == null || !userPost.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
@@ -282,11 +283,11 @@ public class InsertionFacade {
      * @param currentUser current user logged
      */
     public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (ticket == null || !ticket.checkNotNull()) {
+        if (ticket == null || !ticket.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
@@ -304,15 +305,15 @@ public class InsertionFacade {
      */
     public void replyTicket(Ticket ticket, Message message, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (ticket == null || !ticket.checkNotNull()) {
+        if (ticket == null || !ticket.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
-        if (message == null || !message.checkNotNull()) {
+        if (message == null || !message.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
         }
 
@@ -332,11 +333,11 @@ public class InsertionFacade {
 
     public void closeTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (ticket == null || !ticket.checkNotNull()) {
+        if (ticket == null || !ticket.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -356,11 +357,11 @@ public class InsertionFacade {
 
     public void createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (privateMessage == null || !privateMessage.checkNotNull()) {
+        if (privateMessage == null || !privateMessage.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("privateMessage"));
         }
 
@@ -382,10 +383,10 @@ public class InsertionFacade {
     public void modifyMessage(Message newMessage, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         // Null check
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
-        if (newMessage == null || !newMessage.checkNotNull()) {
+        if (newMessage == null || !newMessage.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newMessage"));
         }
         // Permision check
@@ -398,11 +399,11 @@ public class InsertionFacade {
 
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -421,15 +422,15 @@ public class InsertionFacade {
      * @throws PiikDatabaseException
      */
     public void reply(Post reply, User currentUser) throws PiikDatabaseException {
-        if(reply == null || !reply.checkNotNull()){
+        if(reply == null || !reply.checkNotNull(false)){
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("reply"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(reply.getFatherPost() == null || !reply.checkNotNull()){
+        if(reply.getFatherPost() == null || !reply.checkNotNull(true)){
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("fatherPost"));
         }
 
@@ -453,11 +454,11 @@ public class InsertionFacade {
      */
     public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (notification == null || !notification.checkNotNull()) {
+        if (notification == null || !notification.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("notification"));
         }
 
@@ -479,15 +480,15 @@ public class InsertionFacade {
 
     public void notifyUser(Notification notification, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (notification == null || !notification.checkNotNull()) {
+        if (notification == null || !notification.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("notification"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -495,11 +496,11 @@ public class InsertionFacade {
     }
 
     public void createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (event == null || !event.checkNotNull()) {
+        if (event == null || !event.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
@@ -514,11 +515,11 @@ public class InsertionFacade {
      */
     public void react(Reaction reaction, User current) throws PiikInvalidParameters, PiikDatabaseException {
 
-        if (reaction == null || !reaction.checkNotNull()) {
+        if (reaction == null || !reaction.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("reaction"));
         }
 
-        if (current == null || !current.checkNotNull()) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
@@ -531,11 +532,11 @@ public class InsertionFacade {
 
     public void updateEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (event == null || !event.checkNotNull()) {
+        if (event == null || !event.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("event"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull()) {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 

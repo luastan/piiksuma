@@ -114,9 +114,10 @@ public class UpdateMapper<T> extends Mapper<T> {
 
                 // Se comprueba que el atributo tiene @MapperColumn y que no es null
                 try {
-                    // Only annotated and non null fields get updated into the database
+                    // Only annotated and non null which are not primary keys fields get updated into the database
                     if (field.isAnnotationPresent(MapperColumn.class) &&
-                            (allowNullValues || field.get(objectUpdate) != null)) {
+                            (allowNullValues || field.get(objectUpdate) != null) &&
+                            !field.getAnnotation(MapperColumn.class).pkey()) {
                         // Colum name for the current Field. If it's not annotated, field name gets used
                         columnName = field.getAnnotation(MapperColumn.class).columna();
                         columnName = columnName.equals("") ? field.getName() : columnName;

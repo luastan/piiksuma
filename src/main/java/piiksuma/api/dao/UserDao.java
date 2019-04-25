@@ -51,7 +51,7 @@ public class UserDao extends AbstractDao {
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkNotNull();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
 
 
         // Connection to the database
@@ -201,7 +201,8 @@ public class UserDao extends AbstractDao {
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkNotNull();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean oldIDExists = user.getOldID() != null && !user.getOldID().isEmpty();
 
 
         // Connection to the database
@@ -312,8 +313,8 @@ public class UserDao extends AbstractDao {
             }
 
             // Row to be modified
-            // TODO we need the old ID
-            statement.setObject(offset++, user.getId());
+            String id = oldIDExists ? user.getOldID() : user.getId();
+            statement.setObject(offset++, id);
 
             // Upgrades and downgrades from admin
             if (user.checkAdministrator()) {
@@ -321,9 +322,8 @@ public class UserDao extends AbstractDao {
                 statement.setString(offset, user.getId());
             }
             else {
-                statement.setString(offset, user.getId());
+                statement.setString(offset, id);
             }
-
 
 
             /* Execution */
@@ -356,7 +356,7 @@ public class UserDao extends AbstractDao {
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkNotNull();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
 
 
         // Connection to the database
@@ -630,7 +630,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("achievement"));
         }
 
-        if (user == null || !user.checkNotNull()) {
+        if (user == null || !user.checkPrimaryKey()) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 

@@ -1,8 +1,6 @@
 package piiksuma;
 
-import piiksuma.database.Mapper;
 import piiksuma.database.MapperColumn;
-import piiksuma.database.QueryMapper;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -10,15 +8,15 @@ import java.util.Map;
 
 public abstract class PiikObject {
 
-    public Map<String, Object> getPKs(){
+    public Map<String, Object> getPKs() {
         // HashMap with the primary keys indexed by the name of the column
         HashMap<String, Object> pKeys = new HashMap<>();
 
         // Loops over all the fields from the object
-        for(Field field : this.getClass().getDeclaredFields()){
+        for (Field field : this.getClass().getDeclaredFields()) {
 
             // Performs the mapping only of the annotated class and if the field is a primary key
-            if(field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()){
+            if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
 
                 // Insert the field
                 insertion(pKeys, field);
@@ -28,21 +26,37 @@ public abstract class PiikObject {
         return pKeys;
     }
 
-    public Map<String, Object> getNotNulls(){
+    public Map<String, Object> getNotNulls(boolean isInsertion) {
         // HashMap with the not nulls indexed by the name of the column
         HashMap<String, Object> notNulls = new HashMap<>();
 
         // Loops over all the fields from the object
-        for(Field field : this.getClass().getDeclaredFields()){
+        for (Field field : this.getClass().getDeclaredFields()) {
 
-            // Performs the mapping only of the annotated class and if the field is a notNull or is a primary key
-            if(field.isAnnotationPresent(MapperColumn.class) &&
-                (field.getAnnotation(MapperColumn.class).notNull() || field.getAnnotation(MapperColumn.class).pkey()) &&
-                    !(field.getAnnotation(MapperColumn.class).hasDefault())){
+            // Insertion -> Performs the mapping only of the annotated class and if the field is a notNull or is a
+            // primary key and hasn't got a default value
+            if (isInsertion) {
+                if (field.isAnnotationPresent(MapperColumn.class) &&
+                        (field.getAnnotation(MapperColumn.class).notNull() ||
+                                field.getAnnotation(MapperColumn.class).pkey()) &&
+                        !(field.getAnnotation(MapperColumn.class).hasDefault())) {
 
-                // Insert the field
-                insertion(notNulls, field);
+                    // Inserts the field
+                    insertion(notNulls, field);
+                }
             }
+
+            // Iterated field must also have a value if it is default
+            else {
+                if (field.isAnnotationPresent(MapperColumn.class) &&
+                        (field.getAnnotation(MapperColumn.class).notNull() ||
+                                field.getAnnotation(MapperColumn.class).pkey())) {
+
+                    // Inserts the field
+                    insertion(notNulls, field);
+                }
+            }
+
         }
 
         return notNulls;
@@ -52,7 +66,7 @@ public abstract class PiikObject {
      * Function to insert in the HashMap the object of the field
      *
      * @param contain contain of the object
-     * @param field field to insert
+     * @param field   field to insert
      */
     private void insertion(HashMap<String, Object> contain, Field field) {
         String columnName;
@@ -66,8 +80,8 @@ public abstract class PiikObject {
         try {
             Object toInsert = field.get(this);
             // If the toInsert is a String and is empty, the object is null
-            if(toInsert instanceof String){
-                if(((String)toInsert).isEmpty())
+            if (toInsert instanceof String) {
+                if (((String) toInsert).isEmpty())
                     toInsert = null;
             }
             contain.put(columnName, toInsert);
@@ -81,9 +95,9 @@ public abstract class PiikObject {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
-        for(Object pKey : getPKs().values()){
-            if(pKey == null){
+    public boolean checkPrimaryKey() {
+        for (Object pKey : getPKs().values()) {
+            if (pKey == null) {
                 return false;
             }
         }
@@ -93,17 +107,19 @@ public abstract class PiikObject {
     /**
      * Function to check that the attributes with restriction 'not null' are not null
      *
+     * @param isInsertion if TRUE, fields that have a default value are not considered
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
-        for(Object notNull : getNotNulls().values()){
-            if(notNull == null){
+    public boolean checkNotNull(boolean isInsertion) {
+
+        for (Object notNull : getNotNulls(isInsertion).values()) {
+            if (notNull == null) {
                 return false;
             }
 
             // If the object is a PiikObject, this has to meet the checkPrimaryKey
-            if(notNull instanceof PiikObject){
-                if(!((PiikObject)notNull).checkPrimaryKey()){
+            if (notNull instanceof PiikObject) {
+                if (!((PiikObject) notNull).checkPrimaryKey()) {
                     return false;
                 }
             }
