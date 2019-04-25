@@ -24,7 +24,7 @@ public class MultimediaDao extends AbstractDao {
     }
 
     public void addMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+        if (multimedia == null || !multimedia.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
@@ -92,7 +92,7 @@ public class MultimediaDao extends AbstractDao {
      * @throws PiikDatabaseException
      */
     public Multimedia getMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
@@ -118,7 +118,7 @@ public class MultimediaDao extends AbstractDao {
      * @return Number of post which contains the multimedia
      */
     public Long numPostMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
@@ -131,7 +131,7 @@ public class MultimediaDao extends AbstractDao {
 
     public List<Post> postWithMultimedia(Multimedia multimedia) throws PiikDatabaseException {
 
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
@@ -147,7 +147,7 @@ public class MultimediaDao extends AbstractDao {
      */
     public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
 
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
@@ -162,7 +162,7 @@ public class MultimediaDao extends AbstractDao {
      * @throws PiikDatabaseException
      */
     public Image getImage(Multimedia multimedia) throws PiikDatabaseException, PiikInvalidParameters {
-        if(multimedia == null || !multimedia.checkPrimaryKey()){
+        if(multimedia == null || !multimedia.checkPrimaryKey(false)){
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 

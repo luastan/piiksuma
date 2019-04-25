@@ -8,18 +8,29 @@ import java.util.Map;
 
 public abstract class PiikObject {
 
-    public Map<String, Object> getPKs() {
+    public Map<String, Object> getPKs(boolean isInsertion) {
         // HashMap with the primary keys indexed by the name of the column
         HashMap<String, Object> pKeys = new HashMap<>();
 
         // Loops over all the fields from the object
         for (Field field : this.getClass().getDeclaredFields()) {
 
-            // Performs the mapping only of the annotated class and if the field is a primary key
-            if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
+            // Insertion -> Performs the mapping only of the annotated class and if the field is primary key and hasn't
+            // got a default value
+            if (isInsertion) {
+                if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()
+                    && !field.getAnnotation(MapperColumn.class).hasDefault()) {
+                    // Inserts the field
+                    insertion(pKeys, field);
+                }
+            }
 
-                // Insert the field
-                insertion(pKeys, field);
+            // Iterated field must also have a value even if it is default
+            else {
+                if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
+                    // Inserts the field
+                    insertion(pKeys, field);
+                }
             }
         }
 
@@ -46,7 +57,7 @@ public abstract class PiikObject {
                 }
             }
 
-            // Iterated field must also have a value if it is default
+            // Iterated field must also have a value even if it is default
             else {
                 if (field.isAnnotationPresent(MapperColumn.class) &&
                         (field.getAnnotation(MapperColumn.class).notNull() ||
@@ -106,8 +117,8 @@ public abstract class PiikObject {
      *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey() {
-        for (Object pKey : getPKs().values()) {
+    public boolean checkPrimaryKey(boolean isInsertion) {
+        for (Object pKey : getPKs(isInsertion).values()) {
             if (pKey == null) {
                 return false;
             }
@@ -130,7 +141,7 @@ public abstract class PiikObject {
 
             // If the object is a PiikObject, this has to meet the checkPrimaryKey
             if (notNull instanceof PiikObject) {
-                if (!((PiikObject) notNull).checkPrimaryKey()) {
+                if (!((PiikObject) notNull).checkPrimaryKey(isInsertion)) {
                     return false;
                 }
             }

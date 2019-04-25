@@ -34,7 +34,7 @@ public class MessagesDao extends AbstractDao {
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
 
@@ -50,16 +50,16 @@ public class MessagesDao extends AbstractDao {
      */
     public void modifyMessage(Message newMessage) throws PiikDatabaseException {
 
-        if (newMessage == null || !newMessage.checkPrimaryKey()) {
+        if (newMessage == null || !newMessage.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("newMessage"));
         }
 
         Multimedia multimedia = newMessage.getMultimedia();
 
         // If multimedia will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         // If ticket will be inserted
-        boolean ticketExists = newMessage.getTicket() != null && newMessage.getTicket().checkPrimaryKey();
+        boolean ticketExists = newMessage.getTicket() != null && newMessage.getTicket().checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -168,7 +168,7 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Message> readMessages(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -183,16 +183,16 @@ public class MessagesDao extends AbstractDao {
      */
     public void createMessage(Message message) throws PiikDatabaseException {
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
 
         Multimedia multimedia = message.getMultimedia();
 
         // If multimedia will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         // If ticket will be inserted
-        boolean ticketExists = message.getTicket() != null && message.getTicket().checkPrimaryKey();
+        boolean ticketExists = message.getTicket() != null && message.getTicket().checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -297,7 +297,7 @@ public class MessagesDao extends AbstractDao {
      */
     public void newTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkPrimaryKey()) {
+        if (ticket == null || !ticket.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
@@ -362,7 +362,7 @@ public class MessagesDao extends AbstractDao {
 
     public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkPrimaryKey()) {
+        if (ticket == null || !ticket.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
