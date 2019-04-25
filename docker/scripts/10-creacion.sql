@@ -57,7 +57,7 @@ CREATE TABLE piiUser
     country            varchar(30),
     city               varchar(30),
     birthplace         varchar(30),
-    birthdate          timestamp               not null,
+    birthday           timestamp               not null,
     registrationDate   timestamp default now() not null,
     deathdate          timestamp,
     religion           varchar(20),
@@ -68,6 +68,7 @@ CREATE TABLE piiUser
     profilePicture     varchar(32) references multimediaImage (hash)
         on delete set null on update cascade
 );
+
 
 
 

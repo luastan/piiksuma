@@ -12,7 +12,7 @@ public class Multimedia extends PiikObject {
     /* Attributes */
     @MapperColumn(pkey = true)
     private String hash;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String resolution;
     @MapperColumn(notNull = true)
     private String uri;

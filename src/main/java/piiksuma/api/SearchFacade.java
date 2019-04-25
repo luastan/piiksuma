@@ -1,5 +1,6 @@
 package piiksuma.api;
 
+import javafx.scene.image.Image;
 import piiksuma.*;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
@@ -468,5 +469,20 @@ public class SearchFacade {
         }
 
         return parentFacade.getInteractionDao().getNotifications(user);
+    }
+
+    /**
+     * Function to get the image of the multimedia
+     *
+     * @param multimedia Multimedia that contains the information of the image
+     * @return the image of the multimedia
+     * @throws PiikDatabaseException
+     */
+    public Image getImage(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
+        if(multimedia == null || !multimedia.checkNotNull()){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
+        }
+
+        return parentFacade.getMultimediaDao().getImage(multimedia);
     }
 }
