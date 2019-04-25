@@ -83,6 +83,22 @@ public class MultimediaDao extends AbstractDao {
             }
         }
     }
+    
+    /**
+     * Function to return the multimedia from the database
+     *
+     * @param multimedia Given multimedia to search into database
+     * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
+     * @throws PiikDatabaseException
+     */
+    public Multimedia getMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        if (multimedia == null || !multimedia.checkPrimaryKey()) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
+
+        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
+                "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getPK()).findFirst();
+    }
 
     /**
      * Function to return the multimedia from the database to check if it exists
@@ -91,13 +107,8 @@ public class MultimediaDao extends AbstractDao {
      * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
      * @throws PiikDatabaseException
      */
-    public Multimedia existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkPrimaryKey()) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
-        }
-
-        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
-                "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getHash()).findFirst();
+    public boolean existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        return(getMultimedia(multimedia) != null);
     }
 
     /**
@@ -111,9 +122,9 @@ public class MultimediaDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        List<Map<String, Object>> count = new QueryMapper<Object>(super.getConnection()).createQuery("SELECT COUNT(*) "+
+        List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) "+
                 "as numPostMultimedia FROM post WHERE multimedia = ?").defineClass(Object.class)
-                .defineParameters(multimedia.getHash()).mapList();
+                .defineParameters(multimedia.getPK()).mapList();
 
         return (Long) count.get(0).get("numPostMultimedia");
     }
@@ -124,7 +135,8 @@ public class MultimediaDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        return null;
+        return new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
+                "SELECT * FROM post WHERE multimedia = ?").defineParameters(multimedia.getPK()).list();
     }
 
     /**

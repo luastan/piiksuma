@@ -63,6 +63,17 @@ public abstract class PiikObject {
     }
 
     /**
+     * Function to get the first primary key of the object
+     *
+     * @return the first primary key
+     */
+    public Object getPK(){
+        Map<String, Object> pks = getPKs();
+        return pks.values().toArray()[0];
+    }
+
+
+    /**
      * Function to insert in the HashMap the object of the field
      *
      * @param contain contain of the object
