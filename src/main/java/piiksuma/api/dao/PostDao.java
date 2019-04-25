@@ -239,7 +239,7 @@ public class PostDao extends AbstractDao {
 
             // TODO date may need to be between ''
             // Publication date will automatically be set as "NOW()" because it is its default value
-            clause.append("UPDATE post SET author = '?', id = '?', text = '?', sugarDaddy = ");
+            clause.append("UPDATE post SET text = '?', sugarDaddy = ");
 
             // Some attributes may be null
             if(sugarDaddyExists) {
@@ -285,9 +285,6 @@ public class PostDao extends AbstractDao {
                 offset += 6;
             }
 
-            statement.setString(offset++, post.getAuthor().getPK());
-            // TODO it should be the old one
-            statement.setString(offset++, post.getId());
             statement.setString(offset++, post.getText());
 
             if(sugarDaddyExists) {
