@@ -38,17 +38,17 @@ public class PostDao extends AbstractDao {
      */
     public void createPost(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
         Multimedia multimedia = post.getMultimedia();
 
         // Which may-be-null parameters will be inserted
-        boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey();
+        boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey(false);
         boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
-                post.getFatherPost().getAuthor().checkPrimaryKey();
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+                post.getFatherPost().getAuthor().checkPrimaryKey(false);
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -195,17 +195,17 @@ public class PostDao extends AbstractDao {
 
     public void updatePost(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
         Multimedia multimedia = post.getMultimedia();
 
         // Which may-be-null parameters will be inserted
-        boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey();
+        boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey(false);
         boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
-                post.getFatherPost().getAuthor().checkPrimaryKey();
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+                post.getFatherPost().getAuthor().checkPrimaryKey(false);
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -367,11 +367,11 @@ public class PostDao extends AbstractDao {
      */
     public void archivePost(Post post, User user) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -387,7 +387,7 @@ public class PostDao extends AbstractDao {
      */
     public void removePost(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
@@ -402,7 +402,7 @@ public class PostDao extends AbstractDao {
      */
     public Post getPost(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
@@ -419,7 +419,7 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkPrimaryKey()) {
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
@@ -436,7 +436,7 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getPost(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -452,7 +452,7 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -469,15 +469,15 @@ public class PostDao extends AbstractDao {
      */
     public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
 
-        if (userRepost == null || !userRepost.checkPrimaryKey()) {
+        if (userRepost == null || !userRepost.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userRepost"));
         }
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
-        if (userPost == null || !userPost.checkPrimaryKey()) {
+        if (userPost == null || !userPost.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userPost"));
         }
 
@@ -495,7 +495,7 @@ public class PostDao extends AbstractDao {
      */
     public void removeRepost(Post repost) throws PiikDatabaseException {
 
-        if (repost == null || !repost.checkPrimaryKey()) {
+        if (repost == null || !repost.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
         }
 
@@ -507,7 +507,7 @@ public class PostDao extends AbstractDao {
 
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkPrimaryKey()) {
+        if (hashtag == null || !hashtag.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
@@ -524,7 +524,7 @@ public class PostDao extends AbstractDao {
      */
     public Hashtag getHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkPrimaryKey()) {
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
@@ -541,7 +541,7 @@ public class PostDao extends AbstractDao {
      */
     public List<Hashtag> searchHashtag(Hashtag hashtag, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (hashtag == null || !hashtag.checkPrimaryKey()) {
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
@@ -562,11 +562,11 @@ public class PostDao extends AbstractDao {
      */
     public void followHastag(Hashtag hashtag, User user) throws PiikDatabaseException {
 
-        if (hashtag == null || !hashtag.checkPrimaryKey()) {
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -607,7 +607,7 @@ public class PostDao extends AbstractDao {
      */
     public List<Post> getFeed(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 

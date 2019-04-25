@@ -20,7 +20,7 @@ public class InteractionDao extends AbstractDao {
 
     public void removeEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
 
@@ -29,7 +29,7 @@ public class InteractionDao extends AbstractDao {
 
     public void removeReaction(Reaction reaction) throws PiikDatabaseException {
 
-        if (reaction == null || !reaction.checkPrimaryKey()) {
+        if (reaction == null || !reaction.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
 
@@ -38,7 +38,7 @@ public class InteractionDao extends AbstractDao {
 
     public void updateEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
 
@@ -53,7 +53,7 @@ public class InteractionDao extends AbstractDao {
      */
     public void react(Reaction reaction) throws PiikDatabaseException {
 
-        if (reaction == null || !reaction.checkPrimaryKey()) {
+        if (reaction == null || !reaction.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
 
@@ -62,7 +62,7 @@ public class InteractionDao extends AbstractDao {
 
     public void createEvent(Event event) throws PiikDatabaseException {
 
-        if (event == null || !event.checkPrimaryKey()) {
+        if (event == null || !event.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
 
@@ -78,7 +78,7 @@ public class InteractionDao extends AbstractDao {
      */
     public HashMap<ReactionType, Integer> getPostReactionsCount(Post post) throws PiikDatabaseException {
 
-        if (post == null || !post.checkPrimaryKey()) {
+        if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
@@ -103,7 +103,7 @@ public class InteractionDao extends AbstractDao {
      */
     public void createNotification(Notification notification) throws PiikDatabaseException {
 
-        if (notification == null || !notification.checkPrimaryKey()) {
+        if (notification == null || !notification.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("notification"));
         }
 
@@ -119,11 +119,11 @@ public class InteractionDao extends AbstractDao {
     public void notifyUser(Notification notification, User user) throws PiikDatabaseException {
 
         // We check that the given objects are not null and that the primary keys are correct
-        if (notification == null || !notification.checkPrimaryKey()) {
+        if (notification == null || !notification.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("notification"));
         }
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -140,7 +140,7 @@ public class InteractionDao extends AbstractDao {
      */
     public List<Notification> getNotifications(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
