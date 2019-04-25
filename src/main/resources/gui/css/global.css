@@ -191,3 +191,9 @@
 .deck-small-button-graphic {
     -fx-fill: -black-medium-emphasis;
 }
+
+/* TextFields and TextAreas*/
+
+.fx-text-field{
+    -fx-background-color: #d7d7d7;
+}

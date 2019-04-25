@@ -31,6 +31,11 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         register.setOnAction(this::handleRegister);
+        logIn.setOnAction(this::handleLogIn);
+    }
+
+    private void handleLogIn(Event event){
+
     }
 
     private void handleRegister(Event event){
@@ -60,11 +65,10 @@ public class LoginController implements Initializable {
 
 
         scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
+                getClass().getResource("/gui/css/global.css").toExternalForm()
         );
         registerStage.initModality(Modality.WINDOW_MODAL);
-        registerStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        registerStage.initOwner(ContextHandler.getContext().getStage("login"));
         registerStage.setScene(scene);
         // Show and wait till it closes
         registerStage.showAndWait();
