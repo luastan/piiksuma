@@ -39,7 +39,7 @@
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </JFXButton>
-                            <JFXButton text="der1" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <JFXButton text="der1" fx:id="userButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="USER" size="24"
                                                          styleClass="deck-small-button-graphic"/>
