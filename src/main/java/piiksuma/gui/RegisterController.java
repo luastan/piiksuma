@@ -63,15 +63,13 @@ public class RegisterController implements Initializable {
             return;
         }
 
-        User user;
-
         if(!checkFields()) {
             //TODO display an alert
             System.out.println("ERROR FIELDS");
             return;
         }
 
-        user = new User(userName.getText(), userId.getText(), email.getText());
+        User user = new User(userName.getText(), userId.getText(), email.getText());
         user.setBirthday(new Timestamp(date.getTime()));
         user.setPass(password.getText());
         user.setGender(genderBox.getSelectionModel().getSelectedItem());

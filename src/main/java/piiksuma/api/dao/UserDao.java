@@ -2,7 +2,10 @@ package piiksuma.api.dao;
 
 import piiksuma.*;
 import piiksuma.api.ErrorMessage;
-import piiksuma.database.*;
+import piiksuma.database.DeleteMapper;
+import piiksuma.database.InsertionMapper;
+import piiksuma.database.MapperColumn;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -10,9 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -554,10 +555,6 @@ public class UserDao extends AbstractDao {
      * @return user that meets the given information
      */
     public User getUser(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkPrimaryKey()) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
-        }
 
         return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
                 "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getPK()).findFirst();
