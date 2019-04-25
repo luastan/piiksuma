@@ -14,6 +14,87 @@ Source Code:
       https://github.com/luastan/piiksuma
 */
 
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+/*
+      Trigger functions
+*/
+
+/**
+  POST & MESSAGE id generation
+ */
+CREATE OR REPLACE FUNCTION generate_unique_weak_entity_id()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    key        TEXT;
+    test_query TEXT;
+    found      TEXT;
+BEGIN
+    /*
+        Key generation loop:
+            1. Generates random key
+            2. Tries to find generated key in the actual table
+                2_5. If the key doesn't exists already the loop ends
+            3. If the key was found on the table it tries again
+    */
+    LOOP
+        -- Asks psql for random bytes and encodes them in base64
+        key := encode(gen_random_bytes(6), 'base64');
+
+        -- Checks if the generated id already exists
+        test_query := 'SELECT id FROM ' || quote_ident(TG_TABLE_NAME) || ' WHERE id=';
+        EXECUTE test_query || quote_literal(key) || ' AND author=' || quote_literal(NEW.author) INTO found;
+
+        -- Checks if the pkey pair already exists, if not it ends the loop
+        IF found IS NULL THEN
+            EXIT;
+        END IF;
+    END LOOP;
+
+    NEW.id = key; -- Assigns the key to the id column.
+    RETURN NEW; -- Actual row value to be inserted
+END;
+$$ language 'plpgsql';
+
+
+/**
+  Unique id generation
+ */
+CREATE OR REPLACE FUNCTION generate_unique_id()
+    RETURNS TRIGGER AS
+$$
+DECLARE
+    key        TEXT;
+    test_query TEXT;
+    found      TEXT;
+BEGIN
+    /*
+        Key generation loop:
+            1. Generates random key
+            2. Tries to find generated key in the actual table
+                2_5. If the key doesn't exists already the loop ends
+            3. If the key was found on the table it tries again
+    */
+    LOOP
+        -- Asks psql for random bytes and encodes them in base64
+        key := encode(gen_random_bytes(6), 'base64');
+
+        -- Checks if the generated id already exists
+        test_query := 'SELECT id FROM ' || quote_ident(TG_TABLE_NAME) || ' WHERE id=';
+        EXECUTE test_query || quote_literal(key) INTO found;
+
+        -- Checks if the pkey pair already exists, if not it ends the loop
+        IF found IS NULL THEN
+            EXIT;
+        END IF;
+    END LOOP;
+
+    NEW.id = key; -- Assigns the key to the id column.
+    RETURN NEW; -- Actual row value to be inserted
+END;
+$$ language 'plpgsql';
+
 
 /*
       Multimedia
@@ -57,7 +138,7 @@ CREATE TABLE piiUser
     country            varchar(30),
     city               varchar(30),
     birthplace         varchar(30),
-    birthday           timestamp               not null,
+    birthdate          timestamp               not null,
     registrationDate   timestamp default now() not null,
     deathdate          timestamp,
     religion           varchar(20),
@@ -68,7 +149,6 @@ CREATE TABLE piiUser
     profilePicture     varchar(32) references multimediaImage (hash)
         on delete set null on update cascade
 );
-
 
 
 
@@ -162,32 +242,42 @@ CREATE TABLE blockUser
 CREATE TABLE message
 (
     id         varchar(32),
-    sender     varchar(32),
+    author     varchar(32),
     text       varchar(200) not null,
     date       timestamp    not null default now(),
     multimedia varchar(32),
     ticket     integer,
 
-    primary key (sender, id),
-    foreign key (sender) references piiUser (id)
+    primary key (author, id),
+    foreign key (author) references piiUser (id)
         on delete cascade on update cascade,
     foreign key (multimedia) references multimedia (hash)
         on delete set null on update cascade,
     foreign key (ticket) references ticket (id)
 );
 
+-- Trigger to generate the ids propperly
+CREATE TRIGGER trigger_message_id_gen
+    BEFORE INSERT
+    ON message
+    FOR EACH ROW
+EXECUTE PROCEDURE generate_unique_weak_entity_id();
+
+
+
 CREATE TABLE receiveMessage
 (
     message  varchar(32),
-    sender   varchar(32),
+    author   varchar(32),
     receiver varchar(32),
 
-    primary key (message, sender, receiver),
-    foreign key (message, sender) references message (id, sender)
+    primary key (message, author, receiver),
+    foreign key (message, author) references message (id, author)
         on delete cascade on update cascade,
     foreign key (receiver) references piiUser (id)
         on delete cascade on update cascade
 );
+
 
 CREATE TABLE post
 (
@@ -204,6 +294,14 @@ CREATE TABLE post
     foreign key (sugarDaddy, authorDaddy) references post (id, author),
     foreign key (multimedia) references multimedia (hash)
 );
+
+-- Trigger to generate the ids propperly
+CREATE TRIGGER trigger_post_id_gen
+    BEFORE INSERT
+    ON post
+    FOR EACH ROW
+EXECUTE PROCEDURE generate_unique_weak_entity_id();
+
 
 
 /*
@@ -288,21 +386,30 @@ CREATE TABLE event
     description varchar(200)         default '',
     location    varchar(50)          default '',
     date        timestamp,
-    creatorUser varchar(32) not null,
+    author      varchar(32),
 
-    primary key (id),
-    foreign key (creatorUser) references piiUser (id) on delete cascade on update cascade
+    primary key (id, author),
+    foreign key (author) references piiUser (id) on delete cascade on update cascade
 );
+
+CREATE TRIGGER trigger_event_id_gen
+    BEFORE INSERT
+    ON event
+    FOR EACH ROW
+EXECUTE PROCEDURE generate_unique_weak_entity_id();
+
 
 CREATE TABLE participateEvent
 (
-    event varchar(32),
-    usr   varchar(32),
+    event       varchar(32),
+    eventauthor varchar(32),
+    usr         varchar(32),
 
-    primary key (event, usr),
-    foreign key (event) references event (id) on delete cascade on update cascade,
+    primary key (event, eventauthor, usr),
+    foreign key (event, eventauthor) references event (id, author) on delete cascade on update cascade,
     foreign key (usr) references piiUser (id) on delete cascade on update cascade
 );
+
 
 
 /*
@@ -315,6 +422,15 @@ CREATE TABLE achievement
     name        varchar(20) not null,
     description varchar(70) not null
 );
+
+-- Trigger to generate the ids propperly
+CREATE TRIGGER trigger_event_id_gen
+    BEFORE INSERT
+    ON achievement
+    FOR EACH ROW
+EXECUTE PROCEDURE generate_unique_id();
+
+
 
 CREATE TABLE ownAchievement
 (
@@ -340,6 +456,15 @@ CREATE TABLE notification
     creationDate timestamp    not null default now(),
     content      varchar(200) not null
 );
+
+-- Trigger to generate the ids propperly
+CREATE TRIGGER trigger_notification_id_gen
+    BEFORE INSERT
+    ON notification
+    FOR EACH ROW
+EXECUTE PROCEDURE generate_unique_id();
+
+
 
 CREATE TABLE haveNotification
 (
