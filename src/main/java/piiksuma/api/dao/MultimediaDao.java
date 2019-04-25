@@ -40,13 +40,13 @@ public class MultimediaDao extends AbstractDao {
 
             /* Statement */
 
-            clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                    " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+            clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                    " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
             String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
                     "multimediaVideo ";
-            clause.append("INSERT INTO ").append(type).append("SELECT '?' WHERE NOT EXISTS (SELECT * " +
-                    "FROM ").append(type).append("WHERE hash = '?' FOR UPDATE); ");
+            clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
+                    "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
 
 
             statement = con.prepareStatement(clause.toString());

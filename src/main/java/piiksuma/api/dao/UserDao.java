@@ -70,11 +70,11 @@ public class UserDao extends AbstractDao {
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                clause.append("INSERT INTO multimediaImage SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
             // TODO dates may need to be between ''
@@ -136,7 +136,7 @@ public class UserDao extends AbstractDao {
 
             // The user may be an administrator
             if (user.checkAdministrator()) {
-                clause.append("INSERT INTO administrator(id) VALUES('?'); ");
+                clause.append("INSERT INTO administrator(id) VALUES(?); ");
             }
 
 
@@ -220,11 +220,11 @@ public class UserDao extends AbstractDao {
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                clause.append("INSERT INTO multimediaImage SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
             // TODO dates may need to be between ''
@@ -275,16 +275,16 @@ public class UserDao extends AbstractDao {
             }
 
             clause.deleteCharAt(clause.length() - 2);
-            clause.append(" WHERE id = '?'; ");
+            clause.append(" WHERE id = ?; ");
 
             // The user may haven been promoted to administrator
             if (user.checkAdministrator())
-                clause.append("INSERT INTO administrator(id) SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "administrator WHERE id = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "administrator WHERE id = ? FOR UPDATE); ");
 
                 // Or he may have been downgraded
             else {
-                clause.append("DELETE FROM administrator WHERE id = '?'; ");
+                clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
             statement = con.prepareStatement(clause.toString());
