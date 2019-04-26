@@ -39,7 +39,7 @@ public class UserDataController implements Initializable {
     @FXML
     private JFXTextArea description;
     @FXML
-    private JFXButton register;
+    private JFXButton update;
     @FXML
     private JFXListView<String> telephoneList;
     @FXML
