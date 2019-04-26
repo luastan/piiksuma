@@ -81,6 +81,6 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
         searchStage.setScene(scene);
         // Show and wait till it closes
-        searchStage.showAndWait();
+        searchStage.show();
     }
 }
