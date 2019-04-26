@@ -4,6 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
@@ -48,6 +49,7 @@ public class User extends PiikObject{
     private Multimedia multimedia;
     private UserType type;
     private String oldID;
+    private List<String> phones;
 
 
     public User(String name, String id, String email) {
@@ -258,6 +260,14 @@ public class User extends PiikObject{
 
     public void setOldID(String oldID) {
         this.oldID = oldID;
+    }
+
+    public List<String> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<String> phones) {
+        this.phones = phones;
     }
 
     /**
