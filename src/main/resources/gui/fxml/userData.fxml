@@ -12,6 +12,9 @@
 <?import javafx.scene.text.Text?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.UserDataController"
@@ -32,9 +35,9 @@
         </HBox>
         <HBox spacing="40">
             <Text text="Name:" translateX="30"/>
-            <JFXTextField fx:id="userName" promptText="" translateY="-12"/>
-            <Text text="Email:" translateX="30"/>
-            <JFXTextField fx:id="userMail" promptText="" translateY="-12"/>
+            <JFXTextField fx:id="userName" promptText="" translateY="-12" prefWidth="200"/>
+            <Text text="Email:" translateX="35"/>
+            <JFXTextField fx:id="userMail" promptText="" translateY="-12" prefWidth="200"/>
         </HBox>
         <HBox spacing="40">
             <Text text="Pass:" translateX="30"/>
@@ -54,6 +57,55 @@
             <Text text="PostalCode:" translateX="28"/>
             <JFXTextField fx:id="userPostalCode" promptText="" translateY="-12"/>
         </HBox>
+        <HBox spacing="40">
+            <Text text="Province:" translateX="30"/>
+            <JFXTextField fx:id="userProvince" promptText="" translateY="-12"/>
+            <Text text="Country:" translateX="28"/>
+            <JFXTextField fx:id="userCountry" promptText="" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="City:" translateX="30"/>
+            <JFXTextField fx:id="userCity" promptText="" translateY="-12"/>
+            <Text text="Birthplace:" translateX="28"/>
+            <JFXTextField fx:id="userBirthplace" promptText="" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="Birthdate:" translateX="30"/>
+            <JFXTextField fx:id="userBirthdate" promptText="" translateY="-12"/>
+            <Text text="RegistrationDate:" translateX="28"/>
+            <Text text="Fill with Date" fx:id="userRegistrationDate" translateY="0"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="DeathDate:" translateX="30"/>
+            <JFXTextField fx:id="userDeathDate" promptText="" translateY="-12"/>
+            <Text text="Religion:" translateX="28"/>
+            <JFXTextField promptText="" fx:id="userReligion" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <Text text="EmotianalSitation:" translateX="30"/>
+            <JFXTextField fx:id="userEmotionalSitation" promptText="" translateY="-12"/>
+            <Text text="Job:" translateX="28"/>
+            <JFXTextField fx:id="userJob" promptText="" translateY="-12"/>
+        </HBox>
+        <HBox spacing="40">
+            <ImageView translateY="20">
+                <Image preserveRatio="true" requestedHeight="90" url="/imagenes/huevo.png"/>
+            </ImageView>
+            <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" translateY="50" ripplerFill="rgba(0, 50, 255, 0.24)" >
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="32"
+                                         styleClass="deck-small-button-graphic" />
+                </graphic>
+            </JFXButton>
+            <VBox alignment="CENTER">
+                <ImageView fx:id="boxImage" disable="true" fitHeight="90" fitWidth="90" translateY="20"/>
+            </VBox>
+            <JFXButton fx:id="confirmButton" styleClass="jfx-button-border" text="Confirm" translateY="70"/>
+        </HBox>
+
+        <Text text="Current profile photo" translateY="-110" />
+
+
 
 
     </VBox>

@@ -22,12 +22,9 @@
             <Label text="Messages" scaleY="1.5" scaleX="1.5" translateY="50"/>
         </HBox>
         <Line startX="0" endX="450"/>
-        <Label text="CHATS" alignment="CENTER" translateX="200" translateY="10" scaleX="1.25" scaleY="1.25"/>
-        <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER" translateY="10">
-            <JFXMasonryPane fx:id="searchMasonryPane" HSpacing="100" VSpacing="100" translateY="10">
-                <padding>
-                    <Insets top="16" right="20" bottom="16" left="16"/>
-                </padding>
+        <Label text="CHATS" fx:id="hola" alignment="CENTER" translateX="200" translateY="10" scaleX="1.25" scaleY="1.25"/>
+        <ScrollPane fx:id="messageScroll" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
+            <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
             </JFXMasonryPane>
         </ScrollPane>
     </VBox>
