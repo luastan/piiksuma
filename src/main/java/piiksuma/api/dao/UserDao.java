@@ -43,7 +43,7 @@ public class UserDao extends AbstractDao {
      *
      * @param user user to insert into the database
      */
-    public void createUser(User user) throws PiikDatabaseException {
+    public void createUser(User user) throws PiikDatabaseException 1{
 
         if (user == null || !user.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
@@ -76,6 +76,14 @@ public class UserDao extends AbstractDao {
 
                 clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "multimediaImage WHERE hash = ? FOR UPDATE); ");
+            }
+
+            if(user.getPhones() != null && !user.getPhones().isEmpty()){
+                for(String phone : user.getPhones()) {
+                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+                        clause.append("INSERT INTO phone(prefix, phone, usr) VALUES(?, ?, ?)");
+                    }
+                }
             }
 
             // TODO dates may need to be between ''
@@ -168,6 +176,19 @@ public class UserDao extends AbstractDao {
                 statement.setString(6, multimedia.getHash());
 
                 offset += 6;
+            }
+
+            // Phones insertion
+            if(user.getPhones() != null && !user.getPhones().isEmpty()){
+                for(String phone : user.getPhones()) {
+                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+                        String prefix = phone.substring(0, 2);
+                        String withoutPrefix = phone.substring(3);
+                        statement.setString(offset++, prefix);
+                        statement.setString(offset++, withoutPrefix);
+                        statement.setString(offset++, user.getPK());
+                    }
+                }
             }
 
             // User's data insertion
