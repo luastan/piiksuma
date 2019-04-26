@@ -3,7 +3,7 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
+
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXToolbar?>
@@ -13,6 +13,10 @@
 <?import javafx.scene.shape.Line?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.text.Text?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.OtherUserProfileController"
@@ -39,7 +43,7 @@
             <ImageView>
                 <Image preserveRatio="true" requestedHeight="120" url="/imagenes/huevo.png"/>
             </ImageView>
-            <Label text="userName" fx:id="Name" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
+            <Text text="userName" fx:id="userName" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
         </HBox>
         <Line startX="0" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="20">
