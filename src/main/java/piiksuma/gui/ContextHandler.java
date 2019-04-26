@@ -32,6 +32,7 @@ public class ContextHandler {
     private FeedController feedController;
     private EventsController eventsController;
     private MessagesController messagesController;
+    private SearchController searchController;
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -196,5 +197,13 @@ public class ContextHandler {
 
     public void setMessagesController(MessagesController messagesController) {
         this.messagesController = messagesController;
+    }
+
+    public SearchController getSearchController() {
+        return searchController;
+    }
+
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
     }
 }

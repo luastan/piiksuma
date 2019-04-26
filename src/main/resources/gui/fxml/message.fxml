@@ -37,8 +37,6 @@
     <center>
         <VBox alignment="CENTER">
             <Label text="Last Message" fx:id="messageText" wrapText="true" styleClass="post-text" translateY="-20" translateX="-100"/>
-            <JFXButton fx:id="chatButton" text="Enter Chat" styleClass="jfx-button-border" ripplerFill="rgba(0, 0, 0, 0.80)" translateX="100"/>
-
         </VBox>
     </center>
 </BorderPane>
