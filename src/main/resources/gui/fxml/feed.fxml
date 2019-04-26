@@ -11,11 +11,8 @@
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.FeedController">
-    <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">
-        <JFXMasonryPane fx:id="postMasonryPane" HSpacing="10" VSpacing="10">
-            <padding>
-                <Insets top="16" right="20" bottom="16" left="16"/>
-            </padding>
+    <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
+        <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
 </StackPane>

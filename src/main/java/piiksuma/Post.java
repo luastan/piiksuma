@@ -27,6 +27,16 @@ public class Post extends PiikObject{
 
     }
 
+    public Post(Post post) {
+        this.author = post.getAuthor();
+        this.id = post.getId();
+        this.text = post.getText();
+        this.publicationDate = post.getPublicationDate();
+        this.fatherPost = post.getFatherPost();
+        this.multimedia = post.getMultimedia();
+        this.hashtags = post.getHashtags();
+    }
+
     public Post(User author, Timestamp publicationDate) {
 
         this.author = author;

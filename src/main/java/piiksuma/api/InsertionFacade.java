@@ -136,10 +136,11 @@ public class InsertionFacade {
      *
      * @param post        New Post
      * @param currentUser Current user using the application
+     * @return post containing the given data and its generated ID
      * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
      * @throws PiikInvalidParameters Given post or currentUser are invalid
      */
-    public void createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public Post createPost(Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
@@ -148,7 +149,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        parentFacade.getPostDao().createPost(post);
+        return parentFacade.getPostDao().createPost(post);
     }
 
     /**
@@ -281,8 +282,9 @@ public class InsertionFacade {
      *
      * @param ticket      ticket to insert
      * @param currentUser current user logged
+     * @return ticket containing the given data and its generated ID
      */
-    public void newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public Ticket newTicket(Ticket ticket, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
@@ -291,7 +293,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
-        parentFacade.getMessagesDao().newTicket(ticket);
+        return parentFacade.getMessagesDao().newTicket(ticket);
     }
 
 
@@ -353,9 +355,10 @@ public class InsertionFacade {
      *
      * @param privateMessage message to be sent
      * @param currentUser    current user logged into the app
+     * @return message containing the given data and its generated ID
      */
 
-    public void createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException,
+    public Message createMessage(Message privateMessage, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -369,7 +372,7 @@ public class InsertionFacade {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
-        parentFacade.getMessagesDao().createMessage(privateMessage);
+        return parentFacade.getMessagesDao().createMessage(privateMessage);
     }
 
     /**
@@ -451,8 +454,9 @@ public class InsertionFacade {
      *
      * @param notification notification given to the user
      * @param currentUser  current user logged into the app
+     * @return notification containing the given data and its generated ID
      */
-    public void createNotification(Notification notification, User currentUser) throws PiikDatabaseException,
+    public Notification createNotification(Notification notification, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -466,7 +470,7 @@ public class InsertionFacade {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
-        parentFacade.getInteractionDao().createNotification(notification);
+        return parentFacade.getInteractionDao().createNotification(notification);
     }
 
 
@@ -495,7 +499,7 @@ public class InsertionFacade {
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
-    public void createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
@@ -504,7 +508,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
-        parentFacade.getInteractionDao().createEvent(event);
+        return parentFacade.getInteractionDao().createEvent(event);
     }
 
     /**

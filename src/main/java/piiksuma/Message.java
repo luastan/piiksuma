@@ -24,6 +24,15 @@ public class Message extends PiikObject {
     public Message() {
     }
 
+    public Message(Message message) {
+        this.id = message.getId();
+        this.text = message.getText();
+        this.sender = message.getSender();
+        this.multimedia = message.getMultimedia();
+        this.date = message.getDate();
+        this.ticket = message.getTicket();
+    }
+
     public String getId() {
         return id;
     }

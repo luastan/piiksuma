@@ -85,6 +85,7 @@ public class UserDao extends AbstractDao {
             ArrayList<Object> columnValues = new ArrayList<>();
 
             // For each user's field
+            // TODO get rid of reflection
             for (Field field : user.getClass().getDeclaredFields()) {
 
                 // Required to
@@ -97,7 +98,6 @@ public class UserDao extends AbstractDao {
                     //  True -> equals to the attribute's name
                     //  False -> they don't match; the proper name is put in the class
                     String column = mapperColumn.columna().equals("") ? field.getName() : mapperColumn.columna();
-                    clause.append(column).append(", ");
 
                     Object value = null;
 
@@ -107,22 +107,31 @@ public class UserDao extends AbstractDao {
                         e.printStackTrace();
                     }
 
-                    // The iterated field cannot be null
-                    if (mapperColumn.pkey() || mapperColumn.notNull()) {
-                        clauseAux.append("?");
-                    } else {
-                        // Unable to set a value in prepared statement
-                        if (value == null) {
-                            clauseAux.append("NULL");
-                        } else {
+                    // Default values are skipped (registration date)
+                    if(!mapperColumn.hasDefault()) {
+                        // The iterated field cannot be null and have a default value
+                        if (mapperColumn.pkey() || mapperColumn.notNull()) {
                             clauseAux.append("?");
+                            // To preserve the order when filling values in the prepared statement
+                            columnValues.add(value);
+                        } else {
+                            // Unable to set a value in prepared statement or it is an empty string
+                            if (value == null || (value instanceof String && ((String)value).isEmpty())) {
+                                clauseAux.append("NULL");
+                            } else {
+                                clauseAux.append("?");
+                                // To preserve the order when filling values in the prepared statement
+                                if(value instanceof Multimedia) {
+                                    columnValues.add(((Multimedia)value).getHash());
+                                }
+                                else {
+                                    columnValues.add(value);
+                                }
+                            }
                         }
+                        clause.append(column).append(", ");
+                        clauseAux.append(", ");
                     }
-
-                    clauseAux.append(", ");
-
-                    // To preserve the order when filling values in the prepared statement
-                    columnValues.add(value);
                 }
             }
 
@@ -258,20 +267,21 @@ public class UserDao extends AbstractDao {
 
                     // The iterated field cannot be null
                     if (mapperColumn.pkey() || mapperColumn.notNull()) {
-                            clause.append("?");
+                        clause.append("?");
+                        // To preserve the order when filling values in the prepared statement
+                        columnValues.add(value);
                     } else {
-                        // Unable to set a value in prepared statement
-                        if (value == null) {
+                        // Unable to set a value in prepared statement or it is an empty string
+                        if (value == null || (value instanceof String && ((String)value).isEmpty())) {
                             clause.append("NULL");
                         } else {
                             clause.append("?");
+                            // To preserve the order when filling values in the prepared statement
+                            columnValues.add(value);
                         }
                     }
 
                     clause.append(", ");
-
-                    // To preserve the order when filling values in the prepared statement
-                    columnValues.add(value);
                 }
             }
 

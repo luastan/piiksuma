@@ -4,20 +4,22 @@ import org.junit.runners.Parameterized;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable
 public class Event extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn(pkey = true, fKeys = "creatorUser", targetClass = User.class)
+    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
     private User creator;
     @MapperColumn(hasDefault = true)
     private String description;
     @MapperColumn(hasDefault = true)
     private String location;
     @MapperColumn
-    private String date;
+    private Timestamp date;
     @MapperColumn(hasDefault = true)
     private String name;
 
@@ -35,7 +37,16 @@ public class Event extends PiikObject{
         }
     }
 
-    public Event(String id, String description, String location, String date, String nombre) {
+    public Event(Event event) {
+        this.id = event.getId();
+        this.creator = event.getCreator();
+        this.description = event.getDescription();
+        this.location = event.getLocation();
+        this.date = event.getDate();
+        this.name = event.getName();
+    }
+
+    public Event(String id, String description, String location, Timestamp date, String nombre) {
         if (id == null) {
             this.id = "";
         } else {
@@ -51,11 +62,7 @@ public class Event extends PiikObject{
         } else {
             this.location = location;
         }
-        if (date == null) {
-            this.date = "";
-        } else {
-            this.date = date;
-        }
+        this.date = date;
         if (nombre == null) {
             this.name = "";
         } else {
@@ -81,7 +88,7 @@ public class Event extends PiikObject{
         return location;
     }
 
-    public String getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
@@ -107,7 +114,7 @@ public class Event extends PiikObject{
         this.location = location;
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

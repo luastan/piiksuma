@@ -33,7 +33,7 @@ public class User extends PiikObject{
     private String city;
     @MapperColumn
     private String birthplace;
-    @MapperColumn(notNull = true)
+    @MapperColumn(notNull = true, columna = "birthdate")
     private Timestamp birthday;
     @MapperColumn(hasDefault = true, notNull = true)
     private Timestamp registrationDate;
@@ -45,7 +45,7 @@ public class User extends PiikObject{
     private String emotionalSituation;
     @MapperColumn
     private String job;
-    @MapperColumn(fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
+    @MapperColumn(columna = "profilePicture", fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
     private UserType type;
     private String oldID;

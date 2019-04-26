@@ -184,9 +184,11 @@ CREATE TABLE associatedAccount
       Tickets
 */
 
+CREATE SEQUENCE sequenceTicketID;
+
 CREATE TABLE ticket
 (
-    id           integer,
+    id           integer default nextval('sequenceTicketID'),
     usr          varchar(32)  not null,
     section      varchar(20)  not null,
     text         varchar(200) not null,
@@ -301,7 +303,7 @@ CREATE TABLE post
         on delete set null on update cascade
 );
 
--- Trigger to generate the ids propperly
+-- Trigger to generate the ids properly
 CREATE TRIGGER trigger_post_id_gen
     BEFORE INSERT
     ON post

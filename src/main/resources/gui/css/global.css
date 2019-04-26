@@ -149,7 +149,7 @@
 }
 
 .deck-button-graphic {
-    -fx-scale-x: 1.85;
+    -fx-scale-x: 1.65;
     -fx-scale-y: -fx-scale-x;
     -fx-fill: -white-high-emphasis;
 }
@@ -166,9 +166,10 @@
 /* Deck */
 .deck-container {
     -fx-background-color: -white-high-emphasis;
-    -fx-pref-height: 75;
+    -fx-pref-height: 65;
     -fx-min-height: -fx-pref-height;
     -fx-max-height: -fx-pref-height;
+    -fx-border-color: -color-surface-app-ui;
 }
 
 .deck-hitbox {
@@ -179,8 +180,8 @@
 
 .deck-small-button {
     -fx-cursor: hand;
-    -fx-background-radius: 50;
-    -fx-pref-width: 50;
+    -fx-background-radius: 30;
+    -fx-pref-width: 30;
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
     -fx-pref-height: -fx-pref-width;
@@ -198,10 +199,31 @@
 
 .deck-small-button-graphic {
     -fx-fill: -black-medium-emphasis;
+    -fx-scale-x: 0.8;
+    -fx-scale-y: -fx-scale-x;
 }
 
 /* TextFields and TextAreas*/
 
 .fx-text-field{
     -fx-background-color: #d7d7d7;
+}
+
+
+/* Post cards */
+
+.post-container {
+    -fx-pref-width: 430;
+    /*-fx-pref-height: 100;*/
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-background-color: -white-high-emphasis;
+    -fx-effect: dropshadow(gaussian, #515151, 20, 0.01, 0, 3);
+    -fx-padding: 20 20 20 20;
+    -fx-alignment: CENTER;
+}
+
+.post-text {
+    -fx-padding: 10 10 10 10;
+    /*-fx-background-color: #cacacaca;*/
 }
