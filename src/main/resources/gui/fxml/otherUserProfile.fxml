@@ -57,11 +57,8 @@
         <Label text="userDescription" translateX="10" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
         <Label alignment="CENTER" text="USER POSTS" translateX="175" scaleX="1.5" scaleY="1.5"/>
-        <ScrollPane fx:id="postScrollPane" hbarPolicy="NEVER">
-            <JFXMasonryPane fx:id="searchMasonryPane" HSpacing="100" VSpacing="100">
-                <padding>
-                    <Insets top="16" right="20" bottom="16" left="16"/>
-                </padding>
+        <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
+            <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
             </JFXMasonryPane>
         </ScrollPane>
     </VBox>
