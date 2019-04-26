@@ -43,7 +43,7 @@ public class UserDao extends AbstractDao {
      *
      * @param user user to insert into the database
      */
-    public void createUser(User user) throws PiikDatabaseException 1{
+    public void createUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
