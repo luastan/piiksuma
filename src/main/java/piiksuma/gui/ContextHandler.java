@@ -40,6 +40,7 @@ public class ContextHandler {
 
     private TicketsController ticketsController;
     private UserProfileController userProfileController;
+    private OtherUserProfileController otherUserProfileController;
 
 
     /**
@@ -230,6 +231,14 @@ public class ContextHandler {
 
     public void setUserProfileController(UserProfileController userProfileController) {
         this.userProfileController = userProfileController;
+    }
+
+    public OtherUserProfileController getOtherUserProfileController() {
+        return otherUserProfileController;
+    }
+
+    public void setOtherUserProfileController(OtherUserProfileController otherUserProfileController) {
+        this.otherUserProfileController = otherUserProfileController;
     }
 
     /**
