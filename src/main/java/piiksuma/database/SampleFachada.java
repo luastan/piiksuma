@@ -207,7 +207,7 @@ public class SampleFachada {
     }
 
     public void idGenerationTest() {
-
+/*
         System.out.println(conexion);
 
         User user = new User("Fran", "Cardama", "francardama@gmail.com");
