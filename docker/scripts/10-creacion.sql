@@ -286,8 +286,8 @@ CREATE TABLE receiveMessage
 
 CREATE TABLE post
 (
-    author          varchar(32),
     id              varchar(32),
+    author          varchar(32),
     text            varchar(256)            not null,
     publicationDate timestamp default now() not null,
     sugarDaddy      varchar(32),
