@@ -29,6 +29,9 @@ public class UserProfileController implements Initializable {
     private JFXButton newticketButton;
 
     @FXML
+    private JFXButton ticketsButton;
+
+    @FXML
     private Label Name;
 
 
@@ -38,6 +41,7 @@ public class UserProfileController implements Initializable {
         ContextHandler.getContext().setCurrentUser(user);
         Name.setText(ContextHandler.getContext().getCurrentUser().getName());
         newticketButton.setOnAction(this::handleNewTicektButton);
+        ticketsButton.setOnAction(this::handleTicketsButton);
     }
 
     /**
@@ -75,6 +79,42 @@ public class UserProfileController implements Initializable {
         }
 
         Scene scene = new Scene(decorator, 400, 300);
+
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        searchStage.initModality(Modality.WINDOW_MODAL);
+        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        searchStage.setScene(scene);
+        // Show and wait till it closes
+        searchStage.showAndWait();
+    }
+
+    private void handleTicketsButton(Event event){
+        Stage searchStage = new Stage();
+
+        try {
+            ContextHandler.getContext().register("Tickets", searchStage);
+        } catch (PiikInvalidParameters e) {
+            e.printStackTrace();
+            return;
+        }
+        // Stage configuration
+        searchStage.setTitle("Tickets");
+        searchStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/tickets.fxml"));
+        JFXDecorator decorator;
+
+        try {
+            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 450, 600);
 
 
         scene.getStylesheets().addAll(
