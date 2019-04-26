@@ -6,8 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.EventsController">
-    <Label text="Events"/>
+    <ScrollPane fx:id="eventScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
+        <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" styleClass="main-masonry">
+        </JFXMasonryPane>
+    </ScrollPane>
 </StackPane>

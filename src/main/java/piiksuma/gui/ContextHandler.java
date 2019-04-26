@@ -6,7 +6,6 @@ import javafx.stage.Window;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class ContextHandler {
 
     private User currentUser;   // User logged into the application
     private FeedController feedController;
-
+    private EventsController eventsController;
     /**
      * Private Contrstructor since this is a Singleton Class
      */
@@ -179,5 +178,13 @@ public class ContextHandler {
 
     public void setFeedController(FeedController feedController) {
         this.feedController = feedController;
+    }
+
+    public EventsController getEventsController() {
+        return eventsController;
+    }
+
+    public void setEventsController(EventsController eventsController) {
+        this.eventsController = eventsController;
     }
 }

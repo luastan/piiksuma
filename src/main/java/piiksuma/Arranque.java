@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
 
 public class Arranque extends Application {
@@ -13,7 +12,7 @@ public class Arranque extends Application {
 
 //        SampleFachada.getDb().ejemploGETFK();
   //      SampleFachada.getDb().pruebasCheck();
-        SampleFachada.getDb().idGenerationTest();
+        //SampleFachada.getDb().idGenerationTest();
 
         launch(args);
     }
@@ -26,7 +25,7 @@ public class Arranque extends Application {
         // Stage configuration
         primaryStage.setTitle("Piiksuma");
         primaryStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/register.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
 
         // Decorator which is the visual whindow frame, holding close button title and minimize
         JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
