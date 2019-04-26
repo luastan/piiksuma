@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.UserDataController"
@@ -14,9 +16,26 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </StackPane.margin>
     <VBox spacing="25">
+        <HBox spacing="40">
+            <ImageView fx:id="imageView" translateY="20">
+                <Image  preserveRatio="true" requestedWidth="180" requestedHeight="90" url="/imagenes/huevo.png"/>
+            </ImageView>
+            <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" translateY="50" ripplerFill="rgba(0, 50, 255, 0.24)" >
+                <graphic>
+                    <FontAwesomeIconView glyphName="PLUS" size="32"
+                                         styleClass="deck-small-button-graphic" />
+                </graphic>
+            </JFXButton>
+            <VBox spacing="10">
+
+                <Label alignment="BOTTOM_LEFT" text="Description:"/>
+                <JFXTextArea fx:id="description" styleClass="fx-text-field" maxWidth="180" maxHeight="100"/>
+            </VBox>
+        </HBox>
         <HBox spacing="20">
 
             <VBox spacing="30">
+
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*UserID:"/>
                     <JFXTextField alignment="TOP_LEFT" styleClass="fx-text-field" fx:id="userId" maxWidth="110"/>
@@ -78,24 +97,19 @@
             </VBox>
         </HBox>
         <HBox spacing="20">
-            <VBox spacing="10">
-
-                <Label alignment="BOTTOM_LEFT" text="Description:"/>
-                <JFXTextArea fx:id="description" styleClass="fx-text-field" maxWidth="180" maxHeight="100"/>
-            </VBox>
-            <VBox spacing="10">
                 <Label alignment="BOTTOM_LEFT" text="Emotional Situation:"/>
                 <JFXTextField fx:id="emotionalSituation" styleClass="fx-text-field" maxWidth="200"/>
-            </VBox>
+
         </HBox>
-        <Label text="Telephones"/>
-        <JFXListView  editable="true" fx:id="telephoneList"/>
         <HBox spacing="15">
+            <Label text="Telephones"/>
             <JFXButton fx:id="addTelephone" styleClass="jfx-button-border" text="Add Telephone"/>
             <JFXButton fx:id="removeTelephone" styleClass="jfx-button-border" text="Remove Telephone"/>
         </HBox>
+        <JFXListView  editable="true" fx:id="telephoneList"/>
 
+
+        <JFXButton StackPane.alignment="BOTTOM_CENTER" translateX="150" fx:id="update" styleClass="jfx-button-border" text="UpdateData"/>
     </VBox>
-    <JFXButton StackPane.alignment="BOTTOM_CENTER" fx:id="update" styleClass="jfx-button-border" text="UpdateData"/>
 
 </StackPane>
