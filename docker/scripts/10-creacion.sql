@@ -330,7 +330,8 @@ CREATE TABLE ownHashtag
 
     primary key (hashtag, post, author),
     foreign key (post, author) references post (id, author)
-        on delete cascade on update cascade
+        on delete cascade on update cascade,
+    foreign key (hashtag) references hashtag (name)
 );
 
 CREATE TABLE followHashtag
