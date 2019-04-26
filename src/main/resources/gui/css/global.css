@@ -237,3 +237,21 @@
     -fx-padding: 20 20 20 20;
     -fx-alignment: CENTER;
 }
+
+/* Alerts */
+.accept-dialog-button {
+    -fx-text-fill: #1B1B1E;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.7em 0.8em;
+    -fx-cursor: hand;
+}
+
+
+.alert-title {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.alert-text {
+    -fx-font-size: 15;
+}
