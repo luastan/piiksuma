@@ -28,6 +28,10 @@ VALUES ('usr2', 'aab', 'My name is... who?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
 VALUES ('usr3', 'aac', 'My name is... Slim Shady ?', '2019-05-12');
 INSERT INTO post (author, id, text, publicationdate)
+VALUES ('usr4', 'aad',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        '2019-05-12');
+INSERT INTO post (author, id, text, publicationdate)
 VALUES ('usr4', 'aad', 'Hi kids! Do you like violence?', '2019-05-12');
 
 -- Achievement
