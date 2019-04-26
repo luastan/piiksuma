@@ -1,17 +1,24 @@
 package piiksuma.gui;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import piiksuma.Post;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.awt.*;
 import java.io.IOException;
@@ -29,6 +36,9 @@ public class OtherUserProfileController implements Initializable {
     private JFXMasonryPane postMasonryPane;
     private ObservableList<Post> feed;
 
+    @FXML
+    private JFXButton messageButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        ContextHandler.getContext().getCurrentUser().setName("OswaldOswin");
@@ -39,6 +49,7 @@ public class OtherUserProfileController implements Initializable {
         setUpFeedListener();
 
         updateFeed();
+        messageButton.setOnAction(this::handleMessageButton);
     }
 
     public void updateFeed() {
@@ -71,5 +82,41 @@ public class OtherUserProfileController implements Initializable {
         }
         postScrollPane.requestLayout();
         postScrollPane.requestFocus();
+    }
+    private void handleMessageButton(Event event) {
+        Stage searchStage = new Stage();
+
+        try {
+            ContextHandler.getContext().register("Start chat", searchStage);
+        } catch (
+                PiikInvalidParameters e) {
+            e.printStackTrace();
+            return;
+        }
+        // Stage configuration
+        searchStage.setTitle("Start chat");
+        searchStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/startChatFromProfile.fxml"));
+        JFXDecorator decorator;
+
+        try {
+            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 400, 300);
+
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        searchStage.initModality(Modality.WINDOW_MODAL);
+        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        searchStage.setScene(scene);
+        // Show and wait till it closes
+        searchStage.showAndWait();
     }
 }
