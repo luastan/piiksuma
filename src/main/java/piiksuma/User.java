@@ -95,6 +95,7 @@ public class User extends PiikObject{
      */
 
     public User() {
+        phones = new ArrayList<>();
     }
 
     public String getEmail() {

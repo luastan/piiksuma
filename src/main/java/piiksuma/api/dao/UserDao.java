@@ -611,8 +611,52 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
-                "WHERE id LIKE '?'").defineClass(User.class).defineParameters(user.getPK()).findFirst();
+        // Get the list with the user and the phones
+        List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(
+                "SELECT * " +
+                "FROM piiUser LEFT JOIN phone ON(id = usr) " +
+                "WHERE id LIKE ?").defineParameters(user.getPK()).mapList();
+
+        User returnUser = new User();
+
+        if(listObject == null || listObject.isEmpty()){
+            return null;
+        } else {
+
+            // The user information is found in the first item, except the phones
+            Map<String, Object> columnsUsr = listObject.get(0);
+
+            // User information is saved
+            try {
+
+                for (Field field : returnUser.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+
+                    if (field.isAnnotationPresent(MapperColumn.class)) {
+
+                        String columnName = field.getAnnotation(MapperColumn.class).columna();
+                        columnName = columnName.equals("") ? field.getName() : columnName;
+
+                        if (columnsUsr.containsKey(columnName)) {
+                            field.set(returnUser, columnsUsr.get(columnName));
+                        }
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            // Get the phones
+            for (Map<String, Object> usrInfo : listObject) {
+                if (usrInfo.containsKey("phone")) {
+                    String phone = (String) usrInfo.get("prefix");
+                    phone += usrInfo.get("phone");
+                    returnUser.addPhone(phone);
+                }
+            }
+        }
+
+        return returnUser;
     }
 
     /**
