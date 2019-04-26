@@ -126,7 +126,7 @@ public class LoginController implements Initializable {
             return;
         }
 
-        Scene scene = new Scene(decorator, 450, 550);
+        Scene scene = new Scene(decorator, 450, 850);
 
 
         scene.getStylesheets().addAll(
@@ -136,6 +136,6 @@ public class LoginController implements Initializable {
         registerStage.initOwner(ContextHandler.getContext().getStage("login"));
         registerStage.setScene(scene);
         // Show and wait till it closes
-        registerStage.showAndWait();
+        registerStage.show();
     }
 }

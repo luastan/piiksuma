@@ -24,18 +24,36 @@ public class DeckPopUpController implements Initializable {
     }
 
     public void selectItem() {
+        Stage stage = new Stage();
+        FXMLLoader loader;
+        JFXDecorator decorator;
 
         if (popup.getSelectionModel().getSelectedIndex() == 0) {
             /* Log-out */
             ContextHandler.getContext().setCurrentUser(null);
             ContextHandler.getContext().getCurrentStage().close();
-            // TODO: SHOW LOGIN
+            // Now we show the login window
+            stage.setTitle("Login");
+            loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+            try {
+                decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+            }catch (IOException e){
+                return;
+            }
+
+            // Scene definition & binding to the Primary Stage
+            Scene scene = new Scene(decorator, 450, 550);
+            stage.setScene(scene);
+            scene.getStylesheets().addAll(
+                    getClass().getResource("/gui/css/global.css").toExternalForm(),
+                    getClass().getResource("/gui/css/main.css").toExternalForm()
+            );
+
+            // Show
+            stage.show();
             return;
         }
 
-        Stage stage = new Stage();
-        FXMLLoader loader;
-        JFXDecorator decorator;
         switch (popup.getSelectionModel().getSelectedIndex()) {
             case 1:
                 /* Show achievements */
