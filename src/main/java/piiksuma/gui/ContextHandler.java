@@ -33,7 +33,7 @@ public class ContextHandler {
     private EventsController eventsController;
     private MessagesController messagesController;
     private SearchController searchController;
-    private TicketController ticketController;
+    private TicketsController ticketsController;
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -208,11 +208,11 @@ public class ContextHandler {
         this.searchController = searchController;
     }
 
-    public TicketController getTicketController() {
-        return ticketController;
+    public TicketsController getTicketsController() {
+        return ticketsController;
     }
 
-    public void setTicketController(TicketController ticketController) {
-        this.ticketController = ticketController;
+    public void setTicketsController(TicketsController ticketsController) {
+        this.ticketsController = ticketsController;
     }
 }
