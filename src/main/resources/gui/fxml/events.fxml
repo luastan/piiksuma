@@ -15,5 +15,4 @@
         <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
-
 </StackPane>

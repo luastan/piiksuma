@@ -7,10 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.ScrollPane;
 import piiksuma.Event;
-
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 
@@ -19,7 +17,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EventsController implements Initializable {
-
     @FXML
     private ScrollPane eventScrollPane;
     @FXML
@@ -37,7 +34,7 @@ public class EventsController implements Initializable {
         updateEventFeed();
     }
 
-    private void updateEventFeed(){
+    private void updateEventFeed() {
 
         eventFeed.clear();
         eventFeed.addAll(new QueryMapper<Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(Event.class).createQuery("SELECT * FROM event;").list());
@@ -51,7 +48,7 @@ public class EventsController implements Initializable {
         });
     }
 
-    private void insertEvent(Event event){
+    private void insertEvent(Event event) {
         FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
         eventLoader.setController(new EventController(event));
         try {
@@ -62,6 +59,5 @@ public class EventsController implements Initializable {
         }
         eventScrollPane.requestLayout();
         eventScrollPane.requestFocus();
-
     }
 }

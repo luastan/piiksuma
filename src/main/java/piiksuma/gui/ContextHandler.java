@@ -30,8 +30,8 @@ public class ContextHandler {
 
     private User currentUser;   // User logged into the application
     private FeedController feedController;
-
     private EventsController eventsController;
+    private MessagesController messagesController;
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -182,13 +182,19 @@ public class ContextHandler {
         this.feedController = feedController;
     }
 
-
     public EventsController getEventsController() {
         return eventsController;
     }
 
     public void setEventsController(EventsController eventsController) {
-
         this.eventsController = eventsController;
+    }
+
+    public MessagesController getMessagesController() {
+        return messagesController;
+    }
+
+    public void setMessagesController(MessagesController messagesController) {
+        this.messagesController = messagesController;
     }
 }
