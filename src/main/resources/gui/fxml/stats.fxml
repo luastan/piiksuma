@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import com.jfoenix.controls.JFXButton?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.deckControllers.StatsController"
+           prefHeight="450.0" prefWidth="400.0">
+    <StackPane.margin>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </StackPane.margin>
+    <VBox spacing="20">
+        <HBox spacing="125">
+            <ImageView>
+                <Image preserveRatio="true" requestedHeight="120" url="/imagenes/huevo.png"/>
+            </ImageView>
+            <Label text="Danimf" fx:id="User" translateY="22.5" />
+        </HBox>
+        <Line startX="0" endX="330" translateY="-80" translateX="120"/>
+        <HBox spacing="15">
+            <Label  text="Most liked post has: "/>
+            <Label  text="maxLikeIt" fx:id="maxLikeIt"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Most loved post has:"/>
+            <Label  text="maxLoveIt" fx:id="maxLoveIt"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Most hated post has:"/>
+            <Label  text="maxHateIt" fx:id="maxHateIt"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Most 'madeMeAngry' post has:"/>
+            <Label  text="maxMadeMeAngry" fx:id="maxMadeMeAngry"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Followers:"/>
+            <Label  text="5000" fx:id="followers"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Following:"/>
+            <Label  text="10" fx:id="following"/>
+        </HBox>
+        <HBox spacing="15">
+            <Label  text="Number of followback:"/>
+            <Label  text="10" fx:id="followBack"/>
+        </HBox>
+    </VBox>
+
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Close" styleClass="jfx-button-border" fx:id="closeButton"/>
+</StackPane>
