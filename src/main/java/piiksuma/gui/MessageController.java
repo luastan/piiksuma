@@ -28,8 +28,7 @@ public class MessageController implements Initializable {
     @FXML
     private Label messageText;
 
-    @FXML
-    private JFXButton chatButton;
+
 
     public MessageController(Message message) {
         this.message = message;
@@ -40,41 +39,8 @@ public class MessageController implements Initializable {
 
         //userName.setText(message.getSender().getId());
         messageText.setText(message.getText());
-        chatButton.setOnAction(this::handleChatButton);
+
     }
 
-    private void handleChatButton(Event event){
-        Stage registerStage = new Stage();
 
-        try {
-            ContextHandler.getContext().register("register", registerStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        registerStage.setTitle("Register");
-        registerStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/register.fxml"));
-        JFXDecorator decorator;
-
-        try {
-            decorator = new JFXDecorator(registerStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Scene scene = new Scene(decorator, 450, 550);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm()
-        );
-        registerStage.initModality(Modality.WINDOW_MODAL);
-        registerStage.initOwner(ContextHandler.getContext().getStage("login"));
-        registerStage.setScene(scene);
-        // Show and wait till it closes
-        registerStage.showAndWait();
-    }
 }
