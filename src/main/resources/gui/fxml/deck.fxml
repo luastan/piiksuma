@@ -27,19 +27,19 @@
                 <rightItems>
                     <StackPane styleClass="deck-small-button-container">
                         <HBox alignment="CENTER">
-                            <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <JFXButton text="der2" fx:id="userDataButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="PLUS" size="24"
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </JFXButton>
-                            <JFXButton text="der3" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <JFXButton text="der3" fx:id="messageButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="PLUS" size="24"
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </JFXButton>
-                            <JFXButton text="der1" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <JFXButton text="der1" fx:id="userButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
                                     <FontAwesomeIconView glyphName="USER" size="24"
                                                          styleClass="deck-small-button-graphic"/>

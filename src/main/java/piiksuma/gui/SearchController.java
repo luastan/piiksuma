@@ -1,8 +1,8 @@
 package piiksuma.gui;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.*;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +10,7 @@ import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.Post;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 
@@ -25,6 +26,13 @@ public class SearchController implements Initializable {
     @FXML
     private JFXButton Search;
 
+    @FXML
+    private JFXTextField searchText;
+
+    @FXML
+    private JFXMasonryPane searchMasonryPane;
+
+    private ObservableList<String> feed;
 
 
     @Override
@@ -50,40 +58,17 @@ public class SearchController implements Initializable {
 
     private void handleSearch(Event event){
 
-        Stage searchStage = new Stage();
 
-        try {
-            ContextHandler.getContext().register("search", searchStage);
-        }catch(PiikInvalidParameters e){
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        searchStage.setTitle("Search");
-        searchStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/searchWindow2.fxml"));
-        JFXDecorator decorator;
+    }
 
-        try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        }catch (IOException e){
-            e.printStackTrace();
-            return;
-        }
+    public void updateFeed(String update) {
 
-        Scene scene = new Scene(decorator, 450, 550);
+    }
 
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.showAndWait();
-
+    void setUpFeedListener() {
+        feed.addListener((ListChangeListener<? super String>) change -> {
+            // TODO: Define actions to be taken when the feed gets updated
+        });
     }
 
 

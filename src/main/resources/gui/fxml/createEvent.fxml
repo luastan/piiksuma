@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+            fx:controller="piiksuma.gui.CreateEventController"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <StackPane.margin>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+    </StackPane.margin>
+    <VBox spacing="40">
+        <HBox spacing="50">
+            <Label text="Name of the event:" />
+            <JFXTextField fx:id="eventName" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+        </HBox>
+        <HBox spacing="50">
+            <Label text="Location:" />
+            <JFXTextField translateX="67" fx:id="location" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label alignment="BOTTOM_LEFT" text="Date:"/>
+            <JFXTextField fx:id="date" translateX="131" styleClass="fx-text-field" maxWidth="250"  maxHeight="80" promptText="DD-MM-YYYY"/>
+        </HBox>
+        <HBox spacing="50">
+            <Label text="Event's Description:" />
+            <JFXTextArea translateX="-5" fx:id="descriptionEvent" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+        </HBox>
+    </VBox>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="jfx-button-border"/>
+</StackPane>

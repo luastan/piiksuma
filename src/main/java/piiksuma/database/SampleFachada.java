@@ -1,9 +1,11 @@
 package piiksuma.database;
 
 
-import piiksuma.Hashtag;
-import piiksuma.Post;
-import piiksuma.User;
+import piiksuma.*;
+import piiksuma.api.InsertionFacade;
+import piiksuma.api.MultimediaType;
+import piiksuma.api.dao.MessagesDao;
+import piiksuma.api.dao.MultimediaDao;
 import piiksuma.exceptions.PiikDatabaseException;
 
 import javax.management.Query;
@@ -202,6 +204,56 @@ public class SampleFachada {
         }
 
         Hashtag hashtag = new Hashtag("patata");
+    }
+
+    public void idGenerationTest() {
+
+        System.out.println(conexion);
+
+        User user = new User("Fran", "Cardama", "francardama@gmail.com");
+        user.setPass("pass");
+        user.setBirthday(new java.sql.Timestamp(1));
+        try {
+            new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user).insert();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+        Ticket ticket = new Ticket();
+        ticket.setUser(user);
+        ticket.setSection("section");
+        ticket.setTextProblem("something");
+
+        Ticket newTicket = null;
+
+        try {
+            newTicket = new MessagesDao(conexion).newTicket(ticket);
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(newTicket.getId() + "eeeeeeeeeeeeeeeeel id");
+
+        /*User user = new User("Fran", "Cardama", "francardama@gmail.com");
+        user.setPass("pass");
+        user.setBirthday(new java.sql.Timestamp(1));
+        try {
+            new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user).insert();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+        Multimedia multimedia = new Multimedia();
+        multimedia.setHash("12334");
+        multimedia.setResolution("2323");
+        multimedia.setUri("uri");
+        multimedia.setType(MultimediaType.image);
+
+        try {
+            new MultimediaDao(conexion).addMultimedia(multimedia);
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public void pruebasCheck(){

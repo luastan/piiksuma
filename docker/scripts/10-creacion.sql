@@ -166,7 +166,7 @@ CREATE TABLE phone
 CREATE TABLE administrator
 (
     id varchar(32) primary key references piiUser (id)
-        on delete set null on update cascade
+        on delete cascade on update cascade
 );
 
 CREATE TABLE associatedAccount
@@ -184,9 +184,11 @@ CREATE TABLE associatedAccount
       Tickets
 */
 
+CREATE SEQUENCE sequenceTicketID;
+
 CREATE TABLE ticket
 (
-    id           integer,
+    id           integer default nextval('sequenceTicketID'),
     usr          varchar(32)  not null,
     section      varchar(20)  not null,
     text         varchar(200) not null,
@@ -194,8 +196,10 @@ CREATE TABLE ticket
     closeDate    timestamp,
     adminClosing varchar(32),
     primary key (id),
-    foreign key (usr) references piiUser (id) on delete set null on update cascade,
-    foreign key (adminClosing) references administrator (id) on delete set null on update cascade
+    foreign key (usr) references piiUser (id)
+        on delete set null on update cascade,
+    foreign key (adminClosing) references administrator (id)
+        on delete set null on update cascade
 );
 
 
@@ -250,13 +254,14 @@ CREATE TABLE message
 
     primary key (author, id),
     foreign key (author) references piiUser (id)
-        on delete cascade on update cascade,
+        on delete set null on update cascade,
     foreign key (multimedia) references multimedia (hash)
         on delete set null on update cascade,
     foreign key (ticket) references ticket (id)
+        on delete cascade on update cascade
 );
 
--- Trigger to generate the ids propperly
+-- Trigger to generate the ids properly
 CREATE TRIGGER trigger_message_id_gen
     BEFORE INSERT
     ON message
@@ -273,7 +278,7 @@ CREATE TABLE receiveMessage
 
     primary key (message, author, receiver),
     foreign key (message, author) references message (id, author)
-        on delete cascade on update cascade,
+        on delete set null on update cascade,
     foreign key (receiver) references piiUser (id)
         on delete cascade on update cascade
 );
@@ -290,12 +295,15 @@ CREATE TABLE post
     multimedia      varchar(32),
 
     primary key (id, author),
-    foreign key (author) references piiUser (id),
-    foreign key (sugarDaddy, authorDaddy) references post (id, author),
+    foreign key (author) references piiUser (id)
+        on delete cascade on update cascade,
+    foreign key (sugarDaddy, authorDaddy) references post (id, author)
+        on delete set null on update cascade,
     foreign key (multimedia) references multimedia (hash)
+        on delete set null on update cascade
 );
 
--- Trigger to generate the ids propperly
+-- Trigger to generate the ids properly
 CREATE TRIGGER trigger_post_id_gen
     BEFORE INSERT
     ON post
@@ -321,7 +329,8 @@ CREATE TABLE ownHashtag
     author  varchar(32),
 
     primary key (hashtag, post, author),
-    foreign key (post, author) references post (id, author) on delete cascade on update cascade
+    foreign key (post, author) references post (id, author)
+        on delete cascade on update cascade
 );
 
 CREATE TABLE followHashtag
@@ -348,8 +357,10 @@ CREATE TABLE archivePost
     author varchar(32),
 
     primary key (author, post, usr),
-    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+    foreign key (post, author) references post (id, author)
+        on delete set null on update cascade,
+    foreign key (usr) references piiUser (id)
+        on delete cascade on update cascade
 );
 
 CREATE TABLE react
@@ -360,8 +371,10 @@ CREATE TABLE react
     author       varchar(32),
 
     primary key (author, post, usr),
-    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+    foreign key (post, author) references post (id, author)
+        on delete cascade on update cascade,
+    foreign key (usr) references piiUser (id)
+        on delete cascade on update cascade
 );
 
 CREATE TABLE repost
@@ -370,8 +383,10 @@ CREATE TABLE repost
     usr    varchar(32),
     author varchar(32),
     primary key (post, usr, author),
-    foreign key (post, author) references post (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+    foreign key (post, author) references post (id, author)
+        on delete set null on update cascade,
+    foreign key (usr) references piiUser (id)
+        on delete cascade on update cascade
 );
 
 
@@ -389,7 +404,8 @@ CREATE TABLE event
     author      varchar(32),
 
     primary key (id, author),
-    foreign key (author) references piiUser (id) on delete cascade on update cascade
+    foreign key (author) references piiUser (id)
+        on delete set null on update cascade
 );
 
 CREATE TRIGGER trigger_event_id_gen
@@ -406,8 +422,10 @@ CREATE TABLE participateEvent
     usr         varchar(32),
 
     primary key (event, eventauthor, usr),
-    foreign key (event, eventauthor) references event (id, author) on delete cascade on update cascade,
-    foreign key (usr) references piiUser (id) on delete cascade on update cascade
+    foreign key (event, eventauthor) references event (id, author)
+        on delete set null on update cascade,
+    foreign key (usr) references piiUser (id)
+        on delete cascade on update cascade
 );
 
 
@@ -473,7 +491,7 @@ CREATE TABLE haveNotification
 
     primary key (notification, usr),
     foreign key (notification) references notification (id)
-        on delete cascade on update cascade,
+        on delete set null on update cascade,
     foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.MessagesController"
+           prefHeight="400.0" prefWidth="600.0">
+    <StackPane.margin>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </StackPane.margin>
+    <JFXTextField fx:id="userField" promptText="Introduce a user name to start a chat" translateY="-50"/>
+    <JFXTextField fx:id="messageField" promptText="Introduce the first message"/>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" styleClass="deck-button" fx:id="mainButton"
+               ripplerFill="rgba(255, 255, 255, 0.70)">
+        <graphic>
+            <FontAwesomeIconView glyphName="PLUS" size="24" fill="#fffffb"/>
+        </graphic>
+    </JFXButton>
+
+</StackPane>

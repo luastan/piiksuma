@@ -2,7 +2,10 @@ package piiksuma.api.dao;
 
 import piiksuma.*;
 import piiksuma.api.ErrorMessage;
-import piiksuma.database.*;
+import piiksuma.database.DeleteMapper;
+import piiksuma.database.InsertionMapper;
+import piiksuma.database.MapperColumn;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -10,9 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class UserDao extends AbstractDao {
      */
     public void removeUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -44,14 +45,14 @@ public class UserDao extends AbstractDao {
      */
     public void createUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
 
 
         // Connection to the database
@@ -70,11 +71,11 @@ public class UserDao extends AbstractDao {
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                clause.append("INSERT INTO multimediaImage SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
             // TODO dates may need to be between ''
@@ -136,7 +137,7 @@ public class UserDao extends AbstractDao {
 
             // The user may be an administrator
             if (user.checkAdministrator()) {
-                clause.append("INSERT INTO administrator(id) VALUES('?'); ");
+                clause.append("INSERT INTO administrator(id) VALUES(?); ");
             }
 
 
@@ -194,14 +195,14 @@ public class UserDao extends AbstractDao {
 
     public void updateUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         boolean oldIDExists = user.getOldID() != null && !user.getOldID().isEmpty();
 
 
@@ -220,11 +221,11 @@ public class UserDao extends AbstractDao {
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                clause.append("INSERT INTO multimediaImage SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
             // TODO dates may need to be between ''
@@ -275,16 +276,16 @@ public class UserDao extends AbstractDao {
             }
 
             clause.deleteCharAt(clause.length() - 2);
-            clause.append(" WHERE id = '?'; ");
+            clause.append(" WHERE id = ?; ");
 
             // The user may haven been promoted to administrator
             if (user.checkAdministrator())
-                clause.append("INSERT INTO administrator(id) SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "administrator WHERE id = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+                        "administrator WHERE id = ? FOR UPDATE); ");
 
                 // Or he may have been downgraded
             else {
-                clause.append("DELETE FROM administrator WHERE id = '?'; ");
+                clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
             statement = con.prepareStatement(clause.toString());
@@ -349,14 +350,14 @@ public class UserDao extends AbstractDao {
 
     /*public void updateUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
         Multimedia multimedia = user.getMultimedia();
 
         // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
 
 
         // Connection to the database
@@ -555,7 +556,7 @@ public class UserDao extends AbstractDao {
      */
     public User getUser(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -572,7 +573,7 @@ public class UserDao extends AbstractDao {
      */
     public List<User> searchUser(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -588,7 +589,7 @@ public class UserDao extends AbstractDao {
 
     public List<Achievement> getAchievements(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -606,7 +607,7 @@ public class UserDao extends AbstractDao {
      */
     public User login(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -617,7 +618,7 @@ public class UserDao extends AbstractDao {
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
 
-        if (achievement == null || !achievement.checkPrimaryKey()) {
+        if (achievement == null || !achievement.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("achievement"));
         }
 
@@ -626,11 +627,11 @@ public class UserDao extends AbstractDao {
 
     public void unlockAchievement(Achievement achievement, User user) throws PiikDatabaseException {
 
-        if (achievement == null || !achievement.checkPrimaryKey()) {
+        if (achievement == null || !achievement.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("achievement"));
         }
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -647,11 +648,11 @@ public class UserDao extends AbstractDao {
      */
     public void followUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkPrimaryKey()) {
+        if (followed == null || !followed.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
         }
 
-        if (follower == null || !follower.checkPrimaryKey()) {
+        if (follower == null || !follower.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
@@ -670,11 +671,11 @@ public class UserDao extends AbstractDao {
      */
     public void unfollowUser(User followed, User follower) throws PiikDatabaseException {
 
-        if (followed == null || !followed.checkPrimaryKey()) {
+        if (followed == null || !followed.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
         }
 
-        if (follower == null || !follower.checkPrimaryKey()) {
+        if (follower == null || !follower.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
@@ -692,10 +693,10 @@ public class UserDao extends AbstractDao {
      */
     public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
 
-        if (blockedUser == null || !blockedUser.checkPrimaryKey()) {
+        if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
         }
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -711,11 +712,11 @@ public class UserDao extends AbstractDao {
      * @throws PiikDatabaseException
      */
     public void silenceUser(User silencedUser, User user) throws PiikDatabaseException {
-        if (silencedUser == null || !silencedUser.checkPrimaryKey()) {
+        if (silencedUser == null || !silencedUser.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("silencedUser"));
         }
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -731,7 +732,7 @@ public class UserDao extends AbstractDao {
      */
     public Statistics getUserStatistics(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -815,7 +816,7 @@ public class UserDao extends AbstractDao {
      */
     public UserType getUserType(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 

@@ -19,7 +19,7 @@
             <Image preserveRatio="true" requestedHeight="190" url="/imagenes/database.jpg"/>
          </ImageView>
       </StackPane>
-      <JFXTextField fx:id="user"  maxWidth="200" promptText="User"/>
+      <JFXTextField fx:id="userId"  maxWidth="200" promptText="UserId"/>
       <JFXPasswordField fx:id="password"  maxWidth="200" promptText="Password"/>
       <JFXButton fx:id="logIn" styleClass="jfx-button-border" text="Log In" />
       <JFXButton fx:id="register" styleClass="jfx-button-border" text="Register" />

@@ -69,8 +69,8 @@ INSERT INTO multimedia (hash, resolution, uri) VALUES ('aaac', '1080p', 'here');
 INSERT INTO multimedia (hash, resolution, uri) VALUES ('aaad', '1080p', 'here');
 
 -- Ticket
-INSERT INTO ticket (id, usr ,section ,text, creationdate)
-VALUES (1, 'usr1', 'easyGameEasyLife', 'dont know what to say', CURRENT_DATE);
+INSERT INTO ticket (usr ,section ,text, creationdate)
+VALUES ('usr1', 'easyGameEasyLife', 'dont know what to say', CURRENT_DATE);
 
 -- Message
 INSERT INTO message (id, author, text, date, multimedia)

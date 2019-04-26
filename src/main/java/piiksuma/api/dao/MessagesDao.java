@@ -13,9 +13,7 @@ import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class MessagesDao extends AbstractDao {
@@ -34,7 +32,7 @@ public class MessagesDao extends AbstractDao {
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
 
@@ -50,16 +48,16 @@ public class MessagesDao extends AbstractDao {
      */
     public void modifyMessage(Message newMessage) throws PiikDatabaseException {
 
-        if (newMessage == null || !newMessage.checkPrimaryKey()) {
+        if (newMessage == null || !newMessage.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("newMessage"));
         }
 
         Multimedia multimedia = newMessage.getMultimedia();
 
         // If multimedia will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         // If ticket will be inserted
-        boolean ticketExists = newMessage.getTicket() != null && newMessage.getTicket().checkPrimaryKey();
+        boolean ticketExists = newMessage.getTicket() != null && newMessage.getTicket().checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -76,21 +74,21 @@ public class MessagesDao extends AbstractDao {
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
                 String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
                         "multimediaVideo ";
-                clause.append("INSERT INTO ").append(type).append("SELECT '?' WHERE NOT EXISTS (SELECT * " +
-                        "FROM ").append(type).append("WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
+                        "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
             }
 
             // TODO date may need to be between ''
-            clause.append("UPDATE message SET text = '?', date = '?', multimedia = ");
+            clause.append("UPDATE message SET text = ?, date = ?, multimedia = ");
 
             // Multimedia or ticket may be null
             if (multimediaExists) {
-                clause.append("'?'");
+                clause.append("?");
             } else {
                 clause.append("NULL");
             }
@@ -98,12 +96,12 @@ public class MessagesDao extends AbstractDao {
             clause.append(", ticket = ");
 
             if(ticketExists) {
-                clause.append("'?'");
+                clause.append("?");
             } else {
                 clause.append("NULL");
             }
 
-            clause.append(" WHERE id = '?' AND author = '?'");
+            clause.append(" WHERE id = ? AND author = ?");
 
 
             statement = con.prepareStatement(clause.toString());
@@ -168,7 +166,7 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Message> readMessages(User user) throws PiikDatabaseException {
 
-        if (user == null || !user.checkPrimaryKey()) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -180,19 +178,23 @@ public class MessagesDao extends AbstractDao {
      * This function creates a private message to be sent to another users in the social network
      *
      * @param message    message to be sent
+     * @return message containing the given data and its generated ID
      */
-    public void createMessage(Message message) throws PiikDatabaseException {
+    public Message createMessage(Message message) throws PiikDatabaseException {
 
-        if (message == null || !message.checkPrimaryKey()) {
+        if (message == null || !message.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
+
+        // It will be returned when the method executes successfully
+        Message completeMessage = new Message(message);
 
         Multimedia multimedia = message.getMultimedia();
 
         // If multimedia will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey();
+        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         // If ticket will be inserted
-        boolean ticketExists = message.getTicket() != null && message.getTicket().checkPrimaryKey();
+        boolean ticketExists = message.getTicket() != null && message.getTicket().checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -204,35 +206,42 @@ public class MessagesDao extends AbstractDao {
 
         try {
 
+            /* Auto-commit */
+
+            // The post won't be created unless there's no error modifying all related tables and generating its ID
+            con.setAutoCommit(false);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                        " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
                 String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
                         "multimediaVideo ";
-                clause.append("INSERT INTO ").append(type).append("SELECT '?' WHERE NOT EXISTS (SELECT * " +
-                        "FROM ").append(type).append("WHERE hash = '?' FOR UPDATE); ");
+                clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
+                        "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
             }
 
-            // TODO date may need to be between ''
             // ID is autogenerated
-            clause.append("INSERT INTO message(sender, text, date, multimedia, ticket) VALUES('?', '?', '?', ?");
+            clause.append("INSERT INTO message(sender, text, date, multimedia, ticket) VALUES(?, ?, ?, ?");
 
             // Multimedia or ticket may be null
             if (multimediaExists) {
-                clause.append(", '?'");
+                clause.append(", ?");
             } else {
                 clause.append(", NULL");
             }
 
             if(ticketExists) {
-                clause.append(", '?') ");
+                clause.append(", ?) ");
             } else {
                 clause.append(", NULL) ");
             }
+
+            clause.append("RETURNING id");
 
 
             statement = con.prepareStatement(clause.toString());
@@ -267,9 +276,27 @@ public class MessagesDao extends AbstractDao {
             }
 
 
-            /* Execution */
+            /* Execution and key retrieval */
 
-            statement.executeUpdate();
+            ResultSet keys = statement.executeQuery();
+
+            // ID generation successful
+            if(keys.next()) {
+                completeMessage.setId(keys.getString("id"));
+            }
+
+            else {
+                throw new PiikDatabaseException("Message ID generation failed");
+            }
+
+
+            /* Commit */
+
+            con.commit();
+
+            // Restoring auto-commit to its default value
+            con.setAutoCommit(true);
+
 
         } catch (SQLException e) {
             throw new PiikDatabaseException(e.getMessage());
@@ -285,6 +312,8 @@ public class MessagesDao extends AbstractDao {
                 throw new PiikDatabaseException(e.getMessage());
             }
         }
+
+        return completeMessage;
     }
 // =====================================================================================================================
 
@@ -294,12 +323,16 @@ public class MessagesDao extends AbstractDao {
      * A new ticket, created by a user, is inserted into the database
      *
      * @param ticket ticket to insert
+     * @return ticket containing the given data and its generated ID
      */
-    public void newTicket(Ticket ticket) throws PiikDatabaseException {
+    public Ticket newTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkPrimaryKey()) {
+        if (ticket == null || !ticket.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
+
+        // It will be returned when the method executes successfully
+        Ticket completeTicket = new Ticket(ticket);
 
         // Connection to the database
         Connection con = getConnection();
@@ -311,18 +344,19 @@ public class MessagesDao extends AbstractDao {
 
         try {
 
+            /* Auto-commit */
+
+            // The ticket won't be created unless there's no error generating its ID
+            con.setAutoCommit(false);
+
+
             /* Statement */
 
             // "closeDate" and "adminClosing" are inserted as NULL because they are intended to be stored when closing
-            // a ticket; "creationDate" has "NOW()" as the default value
-            clause.append("INSERT INTO ticket(id, usr, section, text, closeDate, adminClosing) VALUES (");
-
-            // Ticket's IDs autoincrement as each ticket is created in the database; we need to make sure that the
-            // generated ID cannot be taken by another concurrent transaction which also is creating a ticket
-            clause.append("(SELECT MAX(id) FROM ticket FOR UPDATE) + 1, ");
-
-            clause.append("'?', '?', '?', NULL, NULL)");
-
+            // a ticket; "creationDate" has "NOW()" as the default value; ticket's IDs autoincrement as each ticket is
+            // created in the database
+            clause.append("INSERT INTO ticket(usr, section, text, closeDate, adminClosing) VALUES (?, ?, ?, NULL, " +
+                    "NULL) RETURNING id");
 
             statement = con.prepareStatement(clause.toString());
 
@@ -334,9 +368,27 @@ public class MessagesDao extends AbstractDao {
             statement.setString(3, ticket.getTextProblem());
 
 
-            /* Execution */
+            /* Execution and key retrieval */
 
-            statement.executeUpdate();
+            ResultSet keys = statement.executeQuery();
+
+            // ID generation successful
+            if(keys.next()) {
+                completeTicket.setId(keys.getInt("id"));
+            }
+
+            else {
+                throw new PiikDatabaseException("Ticket ID generation failed");
+            }
+
+
+            /* Commit */
+
+            con.commit();
+
+            // Restoring auto-commit to its default value
+            con.setAutoCommit(true);
+
 
         } catch (SQLException e) {
             throw new PiikDatabaseException(e.getMessage());
@@ -352,6 +404,8 @@ public class MessagesDao extends AbstractDao {
                 throw new PiikDatabaseException(e.getMessage());
             }
         }
+
+        return(completeTicket);
     }
 
     /**
@@ -362,7 +416,7 @@ public class MessagesDao extends AbstractDao {
 
     public void closeTicket(Ticket ticket) throws PiikDatabaseException {
 
-        if (ticket == null || !ticket.checkPrimaryKey()) {
+        if (ticket == null || !ticket.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 

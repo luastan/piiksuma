@@ -32,7 +32,7 @@ public class User extends PiikObject{
     private String city;
     @MapperColumn
     private String birthplace;
-    @MapperColumn(notNull = true)
+    @MapperColumn(notNull = true, columna = "birthdate")
     private Timestamp birthday;
     @MapperColumn(hasDefault = true, notNull = true)
     private Timestamp registrationDate;
@@ -73,6 +73,11 @@ public class User extends PiikObject{
         this.type = type;
         //this.birthday = new Timestamp(System.currentTimeMillis());
 
+    }
+
+    public User(String id, String pass) {
+        this.id = id;
+        this.pass = pass;
     }
 
     /**
