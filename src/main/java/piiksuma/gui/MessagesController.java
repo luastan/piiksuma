@@ -33,10 +33,10 @@ public class MessagesController implements Initializable {
         ContextHandler.getContext().setMessagesController(this);
         setUpFeedListener();
 
-        updateEventFeed();
+        updateMessageFeed();
     }
 
-    private void updateEventFeed() {
+    private void updateMessageFeed() {
 
         messagesFeed.clear();
         messagesFeed.addAll(new QueryMapper<Message>(ApiFacade.getEntrypoint().getConnection()).defineClass(Message.class).createQuery("SELECT * FROM message;").list());
@@ -46,15 +46,15 @@ public class MessagesController implements Initializable {
     private void setUpFeedListener() {
         messagesFeed.addListener((ListChangeListener<? super Message>) change -> {
             messageMasonryPane.getChildren().clear();
-            messagesFeed.forEach(this::insertEvent);
+            messagesFeed.forEach(this::insertMessage);
         });
     }
 
-    private void insertEvent(Message message) {
-        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/message.fxml"));
-        eventLoader.setController(new MessageController(message));
+    private void insertMessage(Message message) {
+        FXMLLoader messageLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/message.fxml"));
+        messageLoader.setController(new MessageController(message));
         try {
-            messageMasonryPane.getChildren().add(eventLoader.load());
+            messageMasonryPane.getChildren().add(messageLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();

@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.event.Event;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 
@@ -35,22 +36,70 @@ public class SearchController implements Initializable {
     @FXML
     private ScrollPane searchScrollPane;
 
-    private ObservableList<Post> feed;
+    @FXML
+    private JFXButton userButton;
+
+    @FXML
+    private JFXButton postButton;
+
+    @FXML
+    private JFXButton eventButton;
+
+    private ObservableList<Post> postFeed;
+
+    private ObservableList<User> userFeed;
+
+    private ObservableList<piiksuma.Event> eventFeed;
+
+    private boolean user = false;
+    private boolean post = true;
+    private boolean event = false;
 
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         back.setOnAction(this::backButton);
         Search.setOnAction(this::handleSearch);
 
-        feed = FXCollections.observableArrayList();
+        postFeed = FXCollections.observableArrayList();
+        userFeed = FXCollections.observableArrayList();
+        eventFeed = FXCollections.observableArrayList();
 
         ContextHandler.getContext().setSearchController(this);
         setUpFeedPostListener();
+        setUpFeedEventListener();
+        setUpFeedUserListener();
 
-        updateFeed();
+        userButton.setOnAction(this::handleUserButton);
+        eventButton.setOnAction(this::handleEventButton);
+        postButton.setOnAction(this::handlePostButton);
+
+        //updatePostFeed();
+        updateEventFeed();
     }
 
+
+
+    private void handleUserButton(Event eventW) {
+        user = true;
+        event = false;
+        post = false;
+    }
+
+    private void handleEventButton(Event eventW) {
+        user = false;
+        event = true;
+        post = false;
+
+        System.out.println(event);
+    }
+
+    private void handlePostButton(Event eventW) {
+        user = false;
+        event = false;
+        post = true;
+    }
 
     /**
      * Restores the original layout
@@ -66,18 +115,44 @@ public class SearchController implements Initializable {
 
     }
 
-    private void handleSearch(Event event){
-        updateFeed();
+    private void handleSearch(Event event) {
+        if (post) {
+            updatePostFeed();
+        }else if (user){
+            updateUserFeed();
+        }else{
+            updateEventFeed();
+        }
     }
 
-    public void updateFeed() {
+    public void updatePostFeed() {
         // TODO: update the feed propperly
-        feed.clear();
-        if (searchText.getText().isEmpty()){
+        postFeed.clear();
+        if (searchText.getText().isEmpty()) {
             searchText.setText("");
         }
-        feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post WHERE text LIKE ?;")
-                .defineParameters("%"+searchText.getText()+"%").list());
+        postFeed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post WHERE text LIKE ?;")
+                .defineParameters("%" + searchText.getText() + "%").list());
+    }
+
+    public void updateUserFeed() {
+        // TODO: update the feed propperly
+        userFeed.clear();
+        if (searchText.getText().isEmpty()) {
+            searchText.setText("");
+        }
+        userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT name FROM piiUser WHERE name LIKE ?;")
+                .defineParameters("%" + searchText.getText() + "%").list());
+    }
+
+    public void updateEventFeed() {
+        // TODO: update the feed propperly
+        eventFeed.clear();
+        if (searchText.getText().isEmpty()) {
+            searchText.setText("");
+        }
+        eventFeed.addAll(new QueryMapper<piiksuma.Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(piiksuma.Event.class).createQuery("SELECT * FROM event WHERE name LIKE ?;")
+                .defineParameters("%" + searchText.getText() + "%").list());
     }
 
     /**
@@ -87,22 +162,23 @@ public class SearchController implements Initializable {
      * Recieves change performed to the list via {@link ListChangeListener#onChanged(ListChangeListener.Change)}
      */
     private void setUpFeedPostListener() {
-        feed.addListener((ListChangeListener<? super Post>) change -> {
+        postFeed.addListener((ListChangeListener<? super Post>) change -> {
             searchMasonryPane.getChildren().clear();
-            feed.forEach(this::insertPost);
+            postFeed.forEach(this::insertPost);
         });
     }
 
     private void setUpFeedUserListener() {
-        feed.addListener((ListChangeListener<? super Post>) change -> {
+        userFeed.addListener((ListChangeListener<? super User>) change -> {
             searchMasonryPane.getChildren().clear();
-            feed.forEach(this::insertPost);
+            userFeed.forEach(this::insertUser);
         });
     }
+
     private void setUpFeedEventListener() {
-        feed.addListener((ListChangeListener<? super Post>) change -> {
+        eventFeed.addListener((ListChangeListener<? super piiksuma.Event>) change -> {
             searchMasonryPane.getChildren().clear();
-            feed.forEach(this::insertPost);
+            eventFeed.forEach(this::insertEvent);
         });
     }
 
@@ -110,6 +186,32 @@ public class SearchController implements Initializable {
     private void insertPost(Post post) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
         postLoader.setController(new SearchedPostController(post));
+        try {
+            searchMasonryPane.getChildren().add(postLoader.load());
+        } catch (IOException e) {
+            // TODO: Handle Exception
+            e.printStackTrace();
+        }
+        searchScrollPane.requestLayout();
+        searchScrollPane.requestFocus();
+    }
+
+    private void insertUser(User user) {
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
+        postLoader.setController(new SearchedUserController(user));
+        try {
+            searchMasonryPane.getChildren().add(postLoader.load());
+        } catch (IOException e) {
+            // TODO: Handle Exception
+            e.printStackTrace();
+        }
+        searchScrollPane.requestLayout();
+        searchScrollPane.requestFocus();
+    }
+
+    private void insertEvent(piiksuma.Event event) {
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
+        postLoader.setController(new SearchedEventController(event));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
