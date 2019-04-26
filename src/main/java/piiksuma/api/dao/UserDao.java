@@ -611,10 +611,17 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        // Get the list with the user and the phones
+        /*
+        select t.*, ad.id as type
+from (piiuser LEFT JOIN phone ON (id=usr)) as t LEFT JOIN administrator as ad ON (t.id=ad.id);
+
+
+         */
+
+        // Get the list with the user, the phones and the type of user
         List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(
-                "SELECT * " +
-                "FROM piiUser LEFT JOIN phone ON(id = usr) " +
+                "SELECT t.*, ad.id as type " +
+                "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad ON (t.id = ad.id) " +
                 "WHERE id LIKE ?").defineParameters(user.getPK()).mapList();
 
         User returnUser = new User();
@@ -625,6 +632,24 @@ public class UserDao extends AbstractDao {
 
             // The user information is found in the first item, except the phones
             Map<String, Object> columnsUsr = listObject.get(0);
+
+            // Get the type of user
+            Object typeUser = columnsUsr.get("type");
+
+            // If the typeUser is null or the string is empty, the type of user is "user"
+            if(typeUser == null){
+                returnUser.setType(UserType.user);
+            }
+
+            if(typeUser instanceof String){
+                String type = (String)typeUser;
+
+                if(type.isEmpty()){
+                    returnUser.setType(UserType.user);
+                } else {
+                    returnUser.setType(UserType.administrator);
+                }
+            }
 
             // User information is saved
             try {
