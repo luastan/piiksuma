@@ -4,6 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,6 +58,11 @@ public class User extends PiikObject{
         this.id = id;
         this.email = email;
         this.type = UserType.user;
+        phones=new ArrayList<>();
+    }
+
+    public void addPhone(String phone){
+        phones.add(phone);
     }
 
     /**
@@ -73,6 +79,7 @@ public class User extends PiikObject{
         this.email = email;
         this.pass = pass;
         this.type = type;
+        phones=new ArrayList<>();
         //this.birthday = new Timestamp(System.currentTimeMillis());
 
     }
@@ -80,6 +87,7 @@ public class User extends PiikObject{
     public User(String id, String pass) {
         this.id = id;
         this.pass = pass;
+        phones=new ArrayList<>();
     }
 
     /**

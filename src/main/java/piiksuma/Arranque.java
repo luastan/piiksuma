@@ -25,7 +25,7 @@ public class Arranque extends Application {
         // Stage configuration
         primaryStage.setTitle("Piiksuma");
         primaryStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/userData.fxml"));
 
         // Decorator which is the visual whindow frame, holding close button title and minimize
         JFXDecorator decorator = new JFXDecorator(primaryStage, loader.load(), false, false, true);
