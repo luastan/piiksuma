@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
@@ -24,29 +25,48 @@ public class DeckPopUpController implements Initializable {
     }
 
     public void selectItem() {
+        Stage stage = new Stage();
+        FXMLLoader loader;
+        JFXDecorator decorator;
 
         if (popup.getSelectionModel().getSelectedIndex() == 0) {
             /* Log-out */
             ContextHandler.getContext().setCurrentUser(null);
-            ContextHandler.getContext().stageJuggler();
+            ContextHandler.getContext().getCurrentStage().close();
+            // Now we show the login window
+            stage.setTitle("Login");
+            loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+            try {
+                decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+            }catch (IOException e){
+                return;
+            }
+
+            // Scene definition & binding to the Primary Stage
+            Scene scene = new Scene(decorator, 450, 550);
+            stage.setScene(scene);
+            scene.getStylesheets().addAll(
+                    getClass().getResource("/gui/css/global.css").toExternalForm(),
+                    getClass().getResource("/gui/css/main.css").toExternalForm()
+            );
+
+            // Show
+            stage.show();
             return;
         }
 
-        Stage stage = new Stage();
-        FXMLLoader loader;
-        JFXDecorator decorator;
         switch (popup.getSelectionModel().getSelectedIndex()) {
             case 1:
                 /* Show achievements */
                 // TODO: Define the fxml and the controller
-                stage.setTitle("Title1");
-                loader = new FXMLLoader(getClass().getResource("fxml1"));
+                stage.setTitle("Achievments");
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/achievments.fxml"));
                 break;
             case 2:
                 /* Show statistics */
                 // TODO: Define the fxml and the controller
-                stage.setTitle("Title2");
-                loader = new FXMLLoader(getClass().getResource("fxml2"));
+                stage.setTitle("Statistics");
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/stats.fxml"));
                 break;
             default:
                 return;
@@ -73,7 +93,10 @@ public class DeckPopUpController implements Initializable {
         }
         Scene scene = new Scene(decorator);
         scene.getStylesheets().addAll(ContextHandler.getContext().getCurrentStage().getScene().getStylesheets());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(ContextHandler.getContext().getStage("primary"));
         stage.setScene(scene);
+
         stage.show();
     }
 }

@@ -39,6 +39,8 @@ public class ContextHandler {
     private SearchController searchController;
 
     private TicketsController ticketsController;
+    private UserProfileController userProfileController;
+    private OtherUserProfileController otherUserProfileController;
 
 
     /**
@@ -223,6 +225,21 @@ public class ContextHandler {
         this.ticketsController = ticketsController;
     }
 
+    public UserProfileController getUserProfileController() {
+        return userProfileController;
+    }
+
+    public void setUserProfileController(UserProfileController userProfileController) {
+        this.userProfileController = userProfileController;
+    }
+
+    public OtherUserProfileController getOtherUserProfileController() {
+        return otherUserProfileController;
+    }
+
+    public void setOtherUserProfileController(OtherUserProfileController otherUserProfileController) {
+        this.otherUserProfileController = otherUserProfileController;
+    }
 
     /**
      * Closes and deletes all the registered stages. Then loads the

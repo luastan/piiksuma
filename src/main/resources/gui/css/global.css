@@ -131,6 +131,7 @@
 .jfx-button-border {
     -fx-text-fill: -white-high-emphasis;
     -fx-background-color: -primary-color-5;
+    -fx-cursor: hand;
 }
 
 
