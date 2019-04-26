@@ -32,7 +32,7 @@ public class Arranque extends Application {
         // TODO: Add a logo and a cool title to the JFXDecorator
 
         // Scene definition & binding to the Primary Stage
-        Scene scene = new Scene(decorator, 450, 900);
+        Scene scene = new Scene(decorator, 450, 850);
         primaryStage.setScene(scene);
         scene.getStylesheets().addAll(
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
