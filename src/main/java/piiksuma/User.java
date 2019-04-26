@@ -44,7 +44,7 @@ public class User extends PiikObject{
     private String emotionalSituation;
     @MapperColumn
     private String job;
-    @MapperColumn(fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
+    @MapperColumn(columna = "profilePicture", fKeys = "multimediaImage:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
     private UserType type;
     private String oldID;

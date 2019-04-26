@@ -125,7 +125,7 @@ public class RegisterController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
         } catch (PiikException e) {
             //TODO handle exceptions properly
-            System.out.println("PiikException");
+            System.out.println(e.getMessage());
             return;
         }
     }
