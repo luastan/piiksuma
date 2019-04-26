@@ -6,8 +6,12 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import piiksuma.User;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -52,6 +56,10 @@ public class UserDataController implements Initializable {
     private JFXTextField birthplace;
     @FXML
     private JFXTextField city;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private JFXButton multimediaButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -94,6 +102,26 @@ public class UserDataController implements Initializable {
 
         telephoneList.setEditable(true);
         telephoneList.setCellFactory(TextFieldListCell.forListView());
+        multimediaButton.setOnAction(this::handleMultimediaButton);
+
+
+    }
+
+    private void handleMultimediaButton(Event event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Escoja una imagen de fondo (150x65)");
+        File imagen = fileChooser.showOpenDialog(null);
+
+        // Si el usuario ha escogido una imagen
+        if (imagen != null) {
+            imageView.setImage(new Image(imagen.toURI().toString()));
+        }
+
+        // Si el usuario quiere provocar un SEGFAULT
+        else {
+            System.out.println("Operación cancelada");
+
+        }
     }
 
     private void handleRemove(Event event) {
