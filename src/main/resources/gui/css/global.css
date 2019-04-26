@@ -239,6 +239,23 @@
     -fx-alignment: CENTER;
 }
 
+
+.profile-pic {
+    -fx-background-radius: 80;
+    -fx-border-radius: 40;
+    -fx-pref-width: 40;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-pref-height: -fx-pref-width;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-cursor: hand;
+    /*-fx-background-color: #cacaca;*/
+    -fx-background-image: url('/imagenes/huevo.png');
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 40 40;
+}
 /* Alerts */
 .accept-dialog-button {
     -fx-text-fill: #1B1B1E;

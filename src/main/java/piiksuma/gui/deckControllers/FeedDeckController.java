@@ -57,22 +57,22 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         // TODO: Create a new Post. Which should be another method that might be better placed in another class.
 
         // Requests the feed controller to update the feed for the new Post to show up
-        Stage searchStage = new Stage();
+        Stage newPostStage = new Stage();
 
         try {
-            ContextHandler.getContext().register("Create Post", searchStage);
+            ContextHandler.getContext().register("Create Post", newPostStage);
         } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;
         }
         // Stage configuration
-        searchStage.setTitle("Create Post");
-        searchStage.setResizable(false);
+        newPostStage.setTitle("Create Post");
+        newPostStage.setResizable(false);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/createPost.fxml"));
         JFXDecorator decorator;
 
         try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
+            decorator = new JFXDecorator(newPostStage, loader.load(), false, false, true);
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -85,11 +85,11 @@ public class FeedDeckController extends AbstractDeckController implements Initia
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.show();
+        newPostStage.initModality(Modality.WINDOW_MODAL);
+        newPostStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        newPostStage.setScene(scene);
+        // Show
+        newPostStage.show();
     }
 
     private void handleUserButton(ActionEvent event) {
@@ -109,7 +109,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
         FXMLLoader loader;
         //This condition is to determinate if the user wants to see his own profile or another user's profile
         //It must be completed later, this version is only for testing.
-        if (true) {
+        if (false) {
             loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
 
         } else {

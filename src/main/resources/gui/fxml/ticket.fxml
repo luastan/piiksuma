@@ -15,9 +15,18 @@
     </top>
     <center>
         <VBox spacing="40">
-            <Label text="Id" fx:id="id" wrapText="true" styleClass="post-text"/>
-            <Label text="Section" fx:id="section" wrapText="true" styleClass="post-text"/>
-            <Label text="Description" fx:id="description" wrapText="true" styleClass="post-text" />
+            <HBox spacing="5">
+                <Label text="Id:" fx:id="idText" wrapText="true" translateX="175" styleClass="post-text"/>
+                <Label text="Id" fx:id="id" wrapText="true" translateX="175" styleClass="post-text"/>
+            </HBox>
+            <HBox spacing="5">
+                <Label text="Section:" fx:id="sectionText" wrapText="true" translateX="100" styleClass="post-text"/>
+                <Label text="Section" fx:id="section" wrapText="true" translateX="100" styleClass="post-text"/>
+            </HBox>
+            <HBox spacing="5">
+                <Label text="Description" fx:id="descriptionText" translateX="75" wrapText="true" styleClass="post-text"/>
+                <Label text="Description" fx:id="description" translateX="75" wrapText="true" styleClass="post-text"/>
+            </HBox>
         </VBox>
     </center>
     <bottom>
