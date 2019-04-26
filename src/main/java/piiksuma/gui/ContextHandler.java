@@ -1,11 +1,15 @@
 package piiksuma.gui;
 
+import com.jfoenix.controls.JFXDecorator;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +37,6 @@ public class ContextHandler {
     private EventsController eventsController;
     private MessagesController messagesController;
     private SearchController searchController;
-    private TicketController ticketController;
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -208,11 +211,46 @@ public class ContextHandler {
         this.searchController = searchController;
     }
 
-    public TicketController getTicketController() {
-        return ticketController;
-    }
 
-    public void setTicketController(TicketController ticketController) {
-        this.ticketController = ticketController;
+    /**
+     * Closes and deletes all the registered stages. Then loads the
+     * corresponding Window depending on whether or not the User is logged in
+     */
+    public void stageJuggler() {
+        this.contextStages.forEach((s, stage) -> stage.close());
+        this.contextStages.clear();
+        Stage stage = new Stage();
+        FXMLLoader loader;
+        // Stage configuration
+
+        stage.setResizable(false);
+
+        // Decorator which is the visual whindow frame, holding close button title and minimize
+        JFXDecorator decorator;
+        try {
+            if (currentUser != null) {
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
+                this.register("primary", stage);
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+                this.register("login", stage);
+            }
+            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+        } catch (IOException | PiikInvalidParameters e) {
+            e.printStackTrace();
+            return;
+        }
+        // TODO: Add a logo and a cool title to the JFXDecorator
+
+        // Scene definition & binding to the Primary Stage
+        Scene scene = new Scene(decorator, 450, 900);
+        stage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+
+        // Show
+        stage.show();
     }
 }
