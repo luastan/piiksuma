@@ -7,10 +7,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.ScrollPane;
 import piiksuma.Event;
-import piiksuma.Post;
+
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 
@@ -21,24 +21,47 @@ import java.util.ResourceBundle;
 public class EventsController implements Initializable {
 
     @FXML
-    private Label eventDescription;
-
+    private ScrollPane eventScrollPane;
     @FXML
-    private Label authorName;
+    private JFXMasonryPane eventMasonryPane;
 
-
-
-
-    private Event event;
-
-    public EventsController(Event event) {
-        this.event = event;
-    }
+    private ObservableList<Event> eventFeed;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        eventFeed = FXCollections.observableArrayList();
 
-        authorName.setText(event.getCreator().getName());
-        eventDescription.setText(event.getDescription());
+        ContextHandler.getContext().setEventsController(this);
+        setUpFeedListener();
+
+        updateEventFeed();
+    }
+
+    private void updateEventFeed(){
+
+        eventFeed.clear();
+        eventFeed.addAll(new QueryMapper<Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(Event.class).createQuery("SELECT * FROM event;").list());
+
+    }
+
+    private void setUpFeedListener() {
+        eventFeed.addListener((ListChangeListener<? super Event>) change -> {
+            eventMasonryPane.getChildren().clear();
+            eventFeed.forEach(this::insertEvent);
+        });
+    }
+
+    private void insertEvent(Event event){
+        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
+        eventLoader.setController(new EventController(event));
+        try {
+            eventMasonryPane.getChildren().add(eventLoader.load());
+        } catch (IOException e) {
+            // TODO: Handle Exception
+            e.printStackTrace();
+        }
+        eventScrollPane.requestLayout();
+        eventScrollPane.requestFocus();
+
     }
 }

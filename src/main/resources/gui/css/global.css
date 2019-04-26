@@ -227,3 +227,13 @@
     -fx-padding: 10 10 10 10;
     /*-fx-background-color: #cacacaca;*/
 }
+
+.event-container {
+    -fx-pref-width: 430;
+    /*-fx-pref-height: 100;*/
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-background-color: -white-high-emphasis;
+    -fx-padding: 20 20 20 20;
+    -fx-alignment: CENTER;
+}

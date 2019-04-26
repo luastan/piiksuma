@@ -69,6 +69,7 @@ public class RegisterController implements Initializable {
 
         removeTelephone.setOnAction(this::handleRemove);
 
+        telephoneList.getItems().add("Telephone. Click to edit!");
         telephoneList.setEditable(true);
         telephoneList.setCellFactory(TextFieldListCell.forListView());
     }
@@ -77,7 +78,10 @@ public class RegisterController implements Initializable {
         if (telephoneList.getSelectionModel().getSelectedIndex() == -1) {
             return;
         }
+
         telephoneList.getItems().remove(telephoneList.getSelectionModel().getSelectedIndex());
+        telephoneList.getSelectionModel().selectPrevious();
+        telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex()-1);
         telephoneList.layout();
     }
 

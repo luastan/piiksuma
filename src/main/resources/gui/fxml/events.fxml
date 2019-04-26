@@ -6,17 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.shape.Line?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.EventsPane">
-    <VBox spacing="0">
-        <ScrollPane fx:id="eventScroll" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
-            <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" maxHeight="1000" prefHeight="800" styleClass="main-masonry" translateY="10">
-            </JFXMasonryPane>
-        </ScrollPane>
-    </VBox>
+           fx:controller="piiksuma.gui.EventsController">
+    <ScrollPane fx:id="eventScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
+        <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" styleClass="main-masonry">
+        </JFXMasonryPane>
+    </ScrollPane>
+
 </StackPane>
