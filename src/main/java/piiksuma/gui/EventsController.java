@@ -34,7 +34,7 @@ public class EventsController implements Initializable {
         updateEventFeed();
     }
 
-    private void updateEventFeed(){
+    private void updateEventFeed() {
 
         eventFeed.clear();
         eventFeed.addAll(new QueryMapper<Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(Event.class).createQuery("SELECT * FROM event;").list());
@@ -48,7 +48,7 @@ public class EventsController implements Initializable {
         });
     }
 
-    private void insertEvent(Event event){
+    private void insertEvent(Event event) {
         FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
         eventLoader.setController(new EventController(event));
         try {

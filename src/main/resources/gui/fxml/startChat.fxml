@@ -17,8 +17,8 @@
     <StackPane.margin>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </StackPane.margin>
-    <JFXTextField fx:id="userField" promptText="Introduce a user name to start a chat" translateY="-50"/>
-    <JFXTextField fx:id="messageField" promptText="Introduce the first message"/>
+    <JFXTextField fx:id="userField" promptText="Introduce a user name" translateY="-50"/>
+    <JFXTextField fx:id="messageField" promptText="Introduce the message"/>
     <JFXButton StackPane.alignment="BOTTOM_CENTER" styleClass="deck-button" fx:id="mainButton"
                ripplerFill="rgba(255, 255, 255, 0.70)">
         <graphic>
