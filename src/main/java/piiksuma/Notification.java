@@ -3,6 +3,7 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable
@@ -10,7 +11,7 @@ public class Notification extends PiikObject{
     @MapperColumn(pkey = true, hasDefault = true)
     private String id;
     @MapperColumn
-    private String creationDate;
+    private Timestamp creationDate;
     @MapperColumn(notNull = true)
     private String content;
 
@@ -18,7 +19,13 @@ public class Notification extends PiikObject{
 
     }
 
-    public Notification(String id, String creationDate, String content) {
+    public Notification(Notification notification) {
+        this.id = notification.getId();
+        this.creationDate = notification.getCreationDate();
+        this.content = notification.getContent();
+    }
+
+    public Notification(String id, Timestamp creationDate, String content) {
         this.id = id;
         this.creationDate = creationDate;
         this.content = content;
@@ -32,11 +39,11 @@ public class Notification extends PiikObject{
         this.id = id;
     }
 
-    public String getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 

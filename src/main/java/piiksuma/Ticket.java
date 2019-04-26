@@ -41,6 +41,16 @@ public class Ticket extends PiikObject{
         closeDate = "";
     }
 
+    public Ticket(Ticket ticket) {
+        this.id = ticket.getId();
+        this.closeDate = ticket.getCloseDate();
+        this.user = ticket.getUser();
+        this.section = ticket.getSection();
+        this.textProblem = ticket.getTextProblem();
+        this.creationDate = ticket.getCreationDate();
+        this.adminClosing = ticket.getAdminClosing();
+    }
+
 
     /* Getters and setters */
 
