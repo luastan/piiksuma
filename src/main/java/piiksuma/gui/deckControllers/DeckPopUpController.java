@@ -28,8 +28,7 @@ public class DeckPopUpController implements Initializable {
         if (popup.getSelectionModel().getSelectedIndex() == 0) {
             /* Log-out */
             ContextHandler.getContext().setCurrentUser(null);
-            ContextHandler.getContext().getCurrentStage().close();
-            // TODO: SHOW LOGIN
+            ContextHandler.getContext().stageJuggler();
             return;
         }
 
