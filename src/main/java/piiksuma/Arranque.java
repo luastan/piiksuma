@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
 
 public class Arranque extends Application {
@@ -13,7 +12,7 @@ public class Arranque extends Application {
 
 //        SampleFachada.getDb().ejemploGETFK();
   //      SampleFachada.getDb().pruebasCheck();
-        SampleFachada.getDb().idGenerationTest();
+       // SampleFachada.getDb().idGenerationTest();
 
         launch(args);
     }

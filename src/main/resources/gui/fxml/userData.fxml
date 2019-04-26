@@ -4,19 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<<<<<<< HEAD
-=======
 
-<?import com.jfoenix.controls.JFXToolbar?>
-<?import javafx.geometry.Insets?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.text.Text?>
-<?import com.jfoenix.controls.JFXTextArea?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
->>>>>>> c6ae4d44813218f21995eb25c900dd2994353bdb
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.UserDataController"
