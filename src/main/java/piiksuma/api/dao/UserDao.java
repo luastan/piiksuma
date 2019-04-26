@@ -81,7 +81,7 @@ public class UserDao extends AbstractDao {
             if(user.getPhones() != null && !user.getPhones().isEmpty()){
                 for(String phone : user.getPhones()) {
                     if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
-                        clause.append("INSERT INTO phone(prefix, phone, usr) VALUES(?, ?, ?)");
+                        clause.append("INSERT INTO phone(prefix, phone, usr) VALUES(?, ?, ?);");
                     }
                 }
             }
@@ -258,6 +258,15 @@ public class UserDao extends AbstractDao {
                         "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
+            if(user.getPhones() != null && !user.getPhones().isEmpty()){
+                for(String phone : user.getPhones()) {
+                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+                        clause.append("INSERT INTO phone(prefix, phone, usr) SELECT ?, ?, ? WHERE NOT EXISTS" +
+                                " (SELECT * FROM phone WHERE prefix = ? and phone = ? and usr = ?);");
+                    }
+                }
+            }
+
             // TODO dates may need to be between ''
             clause.append("UPDATE piiUser SET ");
 
@@ -337,6 +346,17 @@ public class UserDao extends AbstractDao {
                 statement.setString(6, multimedia.getHash());
 
                 offset += 6;
+            }
+
+            for(String phone : user.getPhones()){
+                if(phone != null && !phone.isEmpty() && phone.length() >= 4){
+                    String prefix = phone.substring(0, 2);
+                    String withoutPrefix = phone.substring(3);
+
+                    statement.setString(offset++, prefix);
+                    statement.setString(offset++, withoutPrefix);
+                    statement.setString(offset++, user.getPK());
+                }
             }
 
             // User's data insertion
