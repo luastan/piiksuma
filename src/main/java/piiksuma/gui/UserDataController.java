@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import piiksuma.User;
+import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikException;
 
 import java.io.File;
 import java.net.URL;
@@ -82,7 +84,7 @@ public class UserDataController implements Initializable {
         telephoneList.setEditable(true);
         telephoneList.setCellFactory(TextFieldListCell.forListView());
         multimediaButton.setOnAction(this::handleMultimediaButton);
-
+        update.setOnAction(this::handleUpdate);
 
     }
 
@@ -141,6 +143,7 @@ public class UserDataController implements Initializable {
         telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex() - 1);
         telephoneList.layout();
     }
+
     /**
      * Function to handle when addTelephone button is clicked
      *
@@ -152,6 +155,22 @@ public class UserDataController implements Initializable {
         telephoneList.scrollTo(telephoneList.getItems().size() - 1);
         telephoneList.layout();
         telephoneList.edit(telephoneList.getItems().size() - 1);
+
+    }
+
+    private void handleUpdate(Event event) {
+        User currentUser = ContextHandler.getContext().getCurrentUser();
+
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(currentUser, currentUser);
+            //Update the user in the app
+            ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(currentUser, currentUser));
+            ContextHandler.getContext().getStage("userData").close();
+        } catch (PiikException e) {
+            System.out.println("EXCEPTION");
+            return;
+        }
+
 
     }
 }
