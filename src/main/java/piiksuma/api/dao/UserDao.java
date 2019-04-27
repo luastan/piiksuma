@@ -38,6 +38,45 @@ public class UserDao extends AbstractDao {
                 Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
+    private int setUserQuery(String clause, PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
+                             User user, Multimedia multimedia) throws SQLException {
+
+        statement = getConnection().prepareStatement(clause.toString());
+
+
+        /* Clause's data insertion */
+
+        int offset = 1;
+
+        // Multimedia insertion
+        if (multimediaExists) {
+            statement.setString(1, multimedia.getHash());
+            statement.setString(2, multimedia.getResolution());
+            statement.setString(3, multimedia.getUri());
+            statement.setString(4, multimedia.getHash());
+
+            statement.setString(5, multimedia.getHash());
+            statement.setString(6, multimedia.getHash());
+
+            offset += 6;
+        }
+
+        // Phones insertion
+        if (phonesExists) {
+            for (String phone : user.getPhones()) {
+                if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
+                    String prefix = phone.substring(0, 2);
+                    String withoutPrefix = phone.substring(3);
+                    statement.setString(offset++, prefix);
+                    statement.setString(offset++, withoutPrefix);
+                    statement.setString(offset++, user.getPK());
+                }
+            }
+        }
+
+        return offset;
+    }
+
     /**
      * Function to insert a new user into the database
      *
@@ -155,39 +194,9 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO administrator(id) VALUES(?); ");
             }
 
+            boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            statement = con.prepareStatement(clause.toString());
-
-
-            /* Clause's data insertion */
-
-            int offset = 1;
-
-            // Multimedia insertion
-            if (multimediaExists) {
-                statement.setString(1, multimedia.getHash());
-                statement.setString(2, multimedia.getResolution());
-                statement.setString(3, multimedia.getUri());
-                statement.setString(4, multimedia.getHash());
-
-                statement.setString(5, multimedia.getHash());
-                statement.setString(6, multimedia.getHash());
-
-                offset += 6;
-            }
-
-            // Phones insertion
-            if (user.getPhones() != null && !user.getPhones().isEmpty()) {
-                for (String phone : user.getPhones()) {
-                    if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
-                        String prefix = phone.substring(0, 2);
-                        String withoutPrefix = phone.substring(3);
-                        statement.setString(offset++, prefix);
-                        statement.setString(offset++, withoutPrefix);
-                        statement.setString(offset++, user.getPK());
-                    }
-                }
-            }
+            int offset = setUserQuery(clause.toString(), statement, multimediaExists, phonesExists, user, multimedia);
 
             // User's data insertion
             for (Object value : columnValues) {
@@ -326,36 +335,9 @@ public class UserDao extends AbstractDao {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
-            statement = con.prepareStatement(clause.toString());
+            boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-
-            /* Clause's data insertion */
-
-            int offset = 1;
-
-            // Multimedia insertion
-            if (multimediaExists) {
-                statement.setString(1, multimedia.getHash());
-                statement.setString(2, multimedia.getResolution());
-                statement.setString(3, multimedia.getUri());
-                statement.setString(4, multimedia.getHash());
-
-                statement.setString(5, multimedia.getHash());
-                statement.setString(6, multimedia.getHash());
-
-                offset += 6;
-            }
-
-            for (String phone : user.getPhones()) {
-                if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
-                    String prefix = phone.substring(0, 2);
-                    String withoutPrefix = phone.substring(3);
-
-                    statement.setString(offset++, prefix);
-                    statement.setString(offset++, withoutPrefix);
-                    statement.setString(offset++, user.getPK());
-                }
-            }
+            int offset = setUserQuery(clause.toString(), statement, multimediaExists, phonesExists, user, multimedia);
 
             // User's data insertion
             for (Object value : columnValues) {
