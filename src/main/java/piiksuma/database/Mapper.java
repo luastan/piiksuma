@@ -1,5 +1,7 @@
 package piiksuma.database;
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.Date;
@@ -60,7 +62,7 @@ public abstract class Mapper<T> {
      * @param isolationLevel desired transaction isolation level
      * @return mapper which is being built
      */
-    public Mapper<T> setIsolationLevel(int isolationLevel) {
+    public Mapper<T> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
 
         // We need to check that the given database supports the desired isolation level; if it doesn't support it,
         // the default value remains
@@ -73,7 +75,7 @@ public abstract class Mapper<T> {
 
         } catch (SQLException e) {
             System.err.println("Unable to set the given transaction isolation level");
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
 
         return this;
@@ -110,11 +112,11 @@ public abstract class Mapper<T> {
      * @param update String with the SQL code to be used in the update
      * @return The current Mapper instance
      */
-    public Mapper<T> createUpdate(String update) {
+    public Mapper<T> createUpdate(String update) throws PiikDatabaseException {
         try {
             statement = connection.prepareStatement(update);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new PiikDatabaseException(ex.getMessage());
         }
         return this;
     }
@@ -122,16 +124,14 @@ public abstract class Mapper<T> {
     /**
      * Executes the update whith the previously asigned parameters.
      */
-    public void executeUpdate() {
+    public void executeUpdate() throws PiikDatabaseException {
         try {
             /* Mapeado */
             statement.execute();
             statement.close();
             /* Excepciones */
         } catch (SQLException e) {
-            // TODO: Tratar excepciones SQL
-            System.out.println("SQL MOVIDA");
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ public abstract class Mapper<T> {
      * @return Mapped instance from the query result set. When the class isn't
      * annotated with {@link MapperTable MapperTable} returns null.
      */
-    protected Object getFK(Class<?> clase, Object pkObject) {
+    protected Object getFK(Class<?> clase, Object pkObject) throws PiikDatabaseException {
         if (!clase.isAnnotationPresent(MapperTable.class)) {
             return null;
         }
@@ -186,7 +186,7 @@ public abstract class Mapper<T> {
      * @return Mapped instance from the query result set. When the class isn't
      * annotated with {@link MapperTable MapperTable} returns null.
      */
-    protected Object getFK(Class<?> clase, Map<String, Object> pkeys) {
+    protected Object getFK(Class<?> clase, Map<String, Object> pkeys) throws PiikDatabaseException {
         if (!clase.isAnnotationPresent(MapperTable.class)) {
             return null;
         }
@@ -224,7 +224,7 @@ public abstract class Mapper<T> {
      * @param object object to get the foreign keys
      * @return the foreign keys indexed by the name of column
      */
-    public Map<String, Object> getFKs(T object) {
+    public Map<String, Object> getFKs(T object) throws PiikDatabaseException {
 
         // HashMap with the foreign keys indexed by the name of the column of the relation that contains the FKs
         HashMap<String, Object> containFK = new HashMap<>();
@@ -292,7 +292,7 @@ public abstract class Mapper<T> {
                 }
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
 
         return containFK;
@@ -304,7 +304,7 @@ public abstract class Mapper<T> {
      * @param object object from which the primary keys are obtained
      * @return a map with the primary keys indexed by the name of column
      */
-    protected Map<String, Object> getAtomicPK(Object object) {
+    protected Map<String, Object> getAtomicPK(Object object) throws PiikDatabaseException {
 
         // HashMap en el que se devolverá al usuario las claves primarias en clases atómicas
         HashMap<String, Object> pKeys = new HashMap<>();
@@ -351,7 +351,7 @@ public abstract class Mapper<T> {
                 }
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
 
         return pKeys;
@@ -427,7 +427,7 @@ public abstract class Mapper<T> {
      *                   in the same order as the parametes where passed
      * @return The mapper instance
      */
-    public Mapper<T> defineParameters(Object... parametros) {
+    public Mapper<T> defineParameters(Object... parametros) throws PiikDatabaseException {
         Object param;
         int index = 1;
         try {
@@ -435,7 +435,7 @@ public abstract class Mapper<T> {
                 statement.setObject(index++, parametro);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new PiikDatabaseException(ex.getMessage());
         }
 
         return this;
@@ -445,14 +445,14 @@ public abstract class Mapper<T> {
      * This method is intended to be executed before performing a transaction. It will set the connection's required
      * attributes to the ones stored in the Mapper.
      */
-    protected void configureConnection() {
+    protected void configureConnection() throws PiikDatabaseException {
 
         // Isolation level
         try {
             this.connection.setTransactionIsolation(this.isolationLevel);
         } catch (SQLException e) {
             System.err.println("Unable to set the desired transaction isolation level");
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
     }
 }

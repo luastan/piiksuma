@@ -175,6 +175,13 @@ public class InteractionDao extends AbstractDao {
 
 
         } catch (SQLException e) {
+            // Performed modifications in the database are rolled-back
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new PiikDatabaseException(ex.getMessage());
+            }
+
             throw new PiikDatabaseException(e.getMessage());
 
         } finally {
@@ -286,6 +293,13 @@ public class InteractionDao extends AbstractDao {
 
 
         } catch (SQLException e) {
+            // Performed modifications in the database are rolled-back
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new PiikDatabaseException(ex.getMessage());
+            }
+
             throw new PiikDatabaseException(e.getMessage());
 
         } finally {

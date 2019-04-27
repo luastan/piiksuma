@@ -81,7 +81,7 @@ public class InsertionMapper<E> extends Mapper<E> {
      * @return insertion mapper which is being built
      */
     @Override
-    public InsertionMapper<E> setIsolationLevel(int isolationLevel) {
+    public InsertionMapper<E> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
 
         return((InsertionMapper<E>)super.setIsolationLevel(isolationLevel));
     }
@@ -161,7 +161,7 @@ public class InsertionMapper<E> extends Mapper<E> {
                 this.customInsertion(insertion, mappedClass.getAnnotation(MapperTable.class).nombre());
             }
         } catch (IllegalAccessException ex) {
-            throw new PiikDatabaseException("Unable to map the insertion");
+            throw new PiikDatabaseException(ex.getMessage());
         }
     }
 
@@ -241,11 +241,7 @@ public class InsertionMapper<E> extends Mapper<E> {
             }
             statement.execute();
         } catch (SQLException sql) {
-            sql.printStackTrace();
             throw new PiikDatabaseException(sql.getMessage());
         }
-
     }
-
-
 }

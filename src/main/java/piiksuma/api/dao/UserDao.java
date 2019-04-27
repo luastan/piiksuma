@@ -86,7 +86,6 @@ public class UserDao extends AbstractDao {
                 }
             }
 
-            // TODO dates may need to be between ''
             clause.append("INSERT INTO piiUser (");
             clauseAux.append("VALUES (");
 

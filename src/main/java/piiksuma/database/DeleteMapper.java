@@ -1,5 +1,7 @@
 package piiksuma.database;
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -79,7 +81,7 @@ public class DeleteMapper<T> extends Mapper<T> {
      * @return deletion mapper which is being built
      */
     @Override
-    public DeleteMapper<T> setIsolationLevel(int isolationLevel) {
+    public DeleteMapper<T> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
 
         return((DeleteMapper<T>)super.setIsolationLevel(isolationLevel));
     }
@@ -87,7 +89,7 @@ public class DeleteMapper<T> extends Mapper<T> {
     /**
      * Extracts the primary keys and genterates the corresponding SQL code
      */
-    private void prepareDelete() {
+    private void prepareDelete() throws PiikDatabaseException {
         String columnName;
 
         // SQL code base. Needed info gets extracted from the mapped class
@@ -124,14 +126,14 @@ public class DeleteMapper<T> extends Mapper<T> {
             // TODO: This code seems redundant to me. It gets lost on the delete() method
             this.statement = super.connection.prepareStatement(deleteUpdate);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new PiikDatabaseException(ex.getMessage());
         }
     }
 
     /**
      * Deletes all the objects on the deletion pool
      */
-    public void delete() {
+    public void delete() throws PiikDatabaseException {
         prepareDelete();  // Builds the statement
 
         // Configures the connection to the database
@@ -151,9 +153,7 @@ public class DeleteMapper<T> extends Mapper<T> {
                 this.statement.executeUpdate();
             }
         } catch (SQLException | IllegalAccessException e) {
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
     }
-
-
 }

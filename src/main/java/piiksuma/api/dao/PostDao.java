@@ -181,6 +181,13 @@ public class PostDao extends AbstractDao {
 
 
         } catch (SQLException e) {
+            // Performed modifications in the database are rolled-back
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new PiikDatabaseException(ex.getMessage());
+            }
+
             throw new PiikDatabaseException(e.getMessage());
 
         } finally {
@@ -356,7 +363,15 @@ public class PostDao extends AbstractDao {
             // Restoring auto-commit to its default value
             con.setAutoCommit(true);
 
+
         } catch (SQLException e) {
+            // Performed modifications in the database are rolled-back
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                throw new PiikDatabaseException(ex.getMessage());
+            }
+
             throw new PiikDatabaseException(e.getMessage());
 
         } finally {
