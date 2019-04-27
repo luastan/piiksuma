@@ -28,7 +28,7 @@
         </HBox>
         <HBox spacing="50">
             <Label text="Event's Description:" />
-            <JFXTextArea translateX="-5" fx:id="descriptionEvent" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+            <JFXTextArea translateX="-5" fx:id="description" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
         </HBox>
     </VBox>
     <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="jfx-button-border"/>

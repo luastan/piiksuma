@@ -45,7 +45,7 @@
 
             <Label text="Date" fx:id="eventDate" wrapText="true"/>
 
-            <Label text="Actual Post content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
+            <Label text="Actual event content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
         </VBox>
     </center>
     <bottom>

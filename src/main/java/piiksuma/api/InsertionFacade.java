@@ -1,8 +1,6 @@
 package piiksuma.api;
 
 import piiksuma.*;
-import piiksuma.database.InsertionMapper;
-import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -500,9 +498,7 @@ public class InsertionFacade {
     }
 
     public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-        if (currentUser == null || !currentUser.checkNotNull(false)) {
-            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
-        }
+
 
         if (event == null || !event.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
