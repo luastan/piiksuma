@@ -498,7 +498,9 @@ public class InsertionFacade {
     }
 
     public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
-
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
 
         if (event == null || !event.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
