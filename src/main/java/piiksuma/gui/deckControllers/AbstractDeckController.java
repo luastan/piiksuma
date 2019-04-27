@@ -122,7 +122,7 @@ public class AbstractDeckController {
         Stage searchStage = new Stage();
 
         try {
-            ContextHandler.getContext().register("User Profile", searchStage);
+            ContextHandler.getContext().register("userData", searchStage);
         } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;
