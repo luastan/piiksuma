@@ -41,6 +41,4 @@ public class MessageController implements Initializable {
         messageText.setText(message.getText());
 
     }
-
-
 }

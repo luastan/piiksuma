@@ -118,14 +118,11 @@ public class UserDataController implements Initializable {
      */
     private void handleMultimediaButton(Event event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose an image (150x65)");
+        fileChooser.setTitle("Choose a profile picture");
         File imagen = fileChooser.showOpenDialog(null);
 
         if (imagen != null) {
             imageView.setImage(new Image(imagen.toURI().toString()));
-        } else {
-            System.out.println("Error");
-
         }
     }
 
