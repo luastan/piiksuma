@@ -12,6 +12,7 @@ import piiksuma.Event;
 import piiksuma.Message;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,10 +34,14 @@ public class MessagesController implements Initializable {
         ContextHandler.getContext().setMessagesController(this);
         setUpFeedListener();
 
-        updateMessageFeed();
+        try {
+            updateMessageFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void updateMessageFeed() {
+    private void updateMessageFeed() throws PiikDatabaseException {
 
         messagesFeed.clear();
         messagesFeed.addAll(new QueryMapper<Message>(ApiFacade.getEntrypoint().getConnection()).defineClass(Message.class).createQuery("SELECT * FROM message;").list());

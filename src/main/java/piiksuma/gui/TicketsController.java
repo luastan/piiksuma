@@ -15,6 +15,7 @@ import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,15 +42,23 @@ public class TicketsController implements Initializable {
         ContextHandler.getContext().setTicketsController(this);
         setUpFeedListener();
 
-        updateTicketFeed();
+        try {
+            updateTicketFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
         Search.setOnAction(this::handleSearch);
     }
 
     private void handleSearch(Event event){
-        updateTicketFeed();
+        try {
+            updateTicketFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void updateTicketFeed() {
+    private void updateTicketFeed() throws PiikDatabaseException {
 
         ticketFeed.clear();
         if (searchText.getText().isEmpty()){

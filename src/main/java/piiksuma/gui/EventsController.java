@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import piiksuma.Event;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,10 +32,14 @@ public class EventsController implements Initializable {
         ContextHandler.getContext().setEventsController(this);
         setUpFeedListener();
 
-        updateEventFeed();
+        try {
+            updateEventFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void updateEventFeed() {
+    private void updateEventFeed() throws PiikDatabaseException {
 
         eventFeed.clear();
         eventFeed.addAll(new QueryMapper<Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(Event.class).createQuery("SELECT * FROM event;").list());

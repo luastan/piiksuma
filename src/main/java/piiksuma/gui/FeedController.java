@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import piiksuma.Post;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,14 +43,18 @@ public class FeedController implements Initializable {
         ContextHandler.getContext().setFeedController(this);
         setUpFeedListener();
 
-        updateFeed();
+        try {
+            updateFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
 
     /**
      * Reloads feed retrieving last posts from  the database
      */
-    public void updateFeed() {
+    public void updateFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         feed.clear();
         feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post;").list());

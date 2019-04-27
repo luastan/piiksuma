@@ -537,6 +537,7 @@ public class PostDao extends AbstractDao {
             resultPost.addInfo(columnsPost);
 
             // The post may already be in the list, because a row is generated for each combination idPost - Hashtag
+            // combination
             boolean postContains = false;
             if(posts.contains(resultPost)){
                 resultPost = posts.get(posts.indexOf(resultPost));
@@ -865,7 +866,7 @@ public class PostDao extends AbstractDao {
         return (result);
     }
 
-    public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters {
+    public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters, PiikDatabaseException {
 
         if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());

@@ -13,6 +13,7 @@ import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 
 
 import java.io.IOException;
@@ -76,7 +77,11 @@ public class SearchController implements Initializable {
         postButton.setOnAction(this::handlePostButton);
 
         //updatePostFeed();
-        updateEventFeed();
+        try {
+            updateEventFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -115,17 +120,29 @@ public class SearchController implements Initializable {
 
     }
 
-    private void handleSearch(Event event) {
+    private void handleSearch(Event event){
         if (post) {
-            updatePostFeed();
+            try {
+                updatePostFeed();
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            }
         }else if (user){
-            updateUserFeed();
+            try {
+                updateUserFeed();
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            }
         }else{
-            updateEventFeed();
+            try {
+                updateEventFeed();
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void updatePostFeed() {
+    public void updatePostFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         postFeed.clear();
         if (searchText.getText().isEmpty()) {
@@ -135,7 +152,7 @@ public class SearchController implements Initializable {
                 .defineParameters("%" + searchText.getText() + "%").list());
     }
 
-    public void updateUserFeed() {
+    public void updateUserFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         userFeed.clear();
         if (searchText.getText().isEmpty()) {
@@ -145,7 +162,7 @@ public class SearchController implements Initializable {
                 .defineParameters("%" + searchText.getText() + "%").list());
     }
 
-    public void updateEventFeed() {
+    public void updateEventFeed() throws PiikDatabaseException{
         // TODO: update the feed propperly
         eventFeed.clear();
         if (searchText.getText().isEmpty()) {

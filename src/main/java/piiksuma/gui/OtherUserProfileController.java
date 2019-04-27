@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import piiksuma.Post;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.awt.*;
@@ -48,11 +49,15 @@ public class OtherUserProfileController implements Initializable {
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
 
-        updateFeed();
+        try {
+            updateFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
         messageButton.setOnAction(this::handleMessageButton);
     }
 
-    public void updateFeed() {
+    public void updateFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         feed.clear();
         feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post;").list());
