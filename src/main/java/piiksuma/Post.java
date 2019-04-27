@@ -17,7 +17,7 @@ public class Post extends PiikObject{
     @MapperColumn(notNull = true)
     private String text;
     @MapperColumn(hasDefault = true, columna = "publicationdate")
-    private Timestamp publicationDate;/*Date when the father post was creaetd*/
+    private Timestamp publicationDate;
     @MapperColumn(fKeys = "sugarDaddy:id authorDaddy:author", targetClass = Post.class)
     private Post fatherPost;
     @MapperColumn(fKeys = "multimedia:hash", targetClass = Multimedia.class)
