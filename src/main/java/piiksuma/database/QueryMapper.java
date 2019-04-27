@@ -95,20 +95,28 @@ public class QueryMapper<T> extends Mapper<T> {
                                     if (useForeignKeys) {
                                         // FKEYS
                                         if (field.getAnnotation(MapperColumn.class).fKeys().equals("")) {
-                                            field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                            if(columnas.contains(nombreColumna)) {
+                                                field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                            }
                                         } else {
                                             fkValues = new HashMap<>();
                                             matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
                                             while (matcher.find()) {
-                                                fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                                if(columnas.contains(nombreColumna)) {
+                                                    fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                                }
                                             }
-                                            field.set(elemento, getFK(foreignClass, fkValues));
+                                            if(columnas.contains(nombreColumna)) {
+                                                field.set(elemento, getFK(foreignClass, fkValues));
+                                            }
                                         }
 
                                     }
 
                                 } else {
-                                    field.set(elemento, set.getObject(nombreColumna));
+                                    if(columnas.contains(nombreColumna)) {
+                                        field.set(elemento, set.getObject(nombreColumna));
+                                    }
                                 }
                             }
                         }
