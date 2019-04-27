@@ -21,7 +21,7 @@
         </StackPane.margin>
         <HBox spacing="50">
             <Text text="Section:" translateX="20" translateY="10"/>
-            <JFXTextField fx:id="issue"/>
+            <JFXTextField fx:id="section"/>
         </HBox>
         <HBox spacing="50">
             <Text text="Issue:" translateX="20" translateY="5"/>
