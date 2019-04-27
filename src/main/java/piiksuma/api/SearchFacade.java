@@ -101,18 +101,11 @@ public class SearchFacade {
      */
 
     public User login(User user) throws PiikInvalidParameters, PiikDatabaseException {
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        User result = parentFacade.getUserDao().login(user);
-
-        // Also get user's type
-        if(result != null ) {
-            result.setType(parentFacade.getUserDao().getUserType(user.getPK()));
-        }
-
-        return(result);
+        return parentFacade.getUserDao().login(user);
     }
 
     /**

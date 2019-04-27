@@ -708,9 +708,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiuser WHERE id = ? and " +
-                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).findFirst();
+        return getUser(user);
     }
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
