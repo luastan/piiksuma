@@ -73,7 +73,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
         }
 
-        if (follower == null || follower.checkNotNull(false)) {
+        if (follower == null || !follower.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
         }
 

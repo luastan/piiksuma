@@ -26,6 +26,8 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class OtherUserProfileController implements Initializable {
@@ -153,16 +155,24 @@ public class OtherUserProfileController implements Initializable {
     }
 
     private void handleBlockButton(Event event){
-        User blocked = null;
+        boolean blocked = false;
+        List<Map<String,Object>> lista;
         try {
-            blocked = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from blockUser WHERE usr = ? AND blocked = ?")
-                    .defineClass(User.class).defineParameters(ContextHandler.getContext().getCurrentUser().getId(),user.getId()).findFirst();
+            lista = new QueryMapper<>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT blocked from blockUser WHERE usr = ?")
+                    .defineParameters(ContextHandler.getContext().getCurrentUser().getId()).mapList();
+            for (Map<String,Object> row : lista){
+                if (row.containsValue(user.getId())){
+                    blocked=true;
+                    break;
+                }
+            }
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
         }
-        if (blocked == null) {
+        if (!blocked) {
             try {
                 ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("BLOCKED");
             } catch (PiikDatabaseException e) {
                 e.printStackTrace();
             } catch (PiikInvalidParameters piikInvalidParameters) {
@@ -170,7 +180,8 @@ public class OtherUserProfileController implements Initializable {
             }
         }else{
             try {
-                ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(blocked,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("UNBLOCKED");
             } catch (PiikDatabaseException e) {
                 e.printStackTrace();
             } catch (PiikInvalidParameters piikInvalidParameters) {
@@ -180,14 +191,20 @@ public class OtherUserProfileController implements Initializable {
     }
 
     private void handleFollowButton(Event event){
-        User folllowed = null;
+        boolean followed = false;
+        List<Map<String,Object>> lista;
         try {
-            folllowed = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from followUser WHERE followed = ? AND follower = ?")
-                    .defineClass(User.class).defineParameters(user.getId(),ContextHandler.getContext().getCurrentUser().getId()).findFirst();
+            lista = new QueryMapper<>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT followed from followUser WHERE follower = ?")
+                    .defineParameters(ContextHandler.getContext().getCurrentUser().getId()).mapList();
+            for (Map<String,Object> row : lista){
+                if(row.containsValue(user.getId())){
+                    followed=true;
+                }
+            }
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
         }
-        if (folllowed == null){
+        if (!followed){
             try {
                 ApiFacade.getEntrypoint().getInsertionFacade().followUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
                 System.out.println("SEGUIDO");
