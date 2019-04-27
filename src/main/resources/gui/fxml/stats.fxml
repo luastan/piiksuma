@@ -21,7 +21,7 @@
             </ImageView>
             <Label text="Danimf" fx:id="User" translateY="22.5" />
         </HBox>
-        <Line startX="0" endX="330" translateY="-80" translateX="120"/>
+        <Line startX="20" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="15">
             <Label  text="Most liked post has: "/>
             <Label  text="maxLikeIt" fx:id="maxLikeIt"/>
