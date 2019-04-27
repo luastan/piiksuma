@@ -63,6 +63,18 @@ public class InteractionDao extends AbstractDao {
         new InsertionMapper<Reaction>(super.getConnection()).add(reaction).defineClass(Reaction.class).insert();
     }
 
+    public void participateEvent(Event event, User user) throws PiikDatabaseException {
+        if (event == null || !event.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateEvent VALUES(?,?,?)").defineParameters(
+                event.getId(),
+                event.getCreator().getId(),
+                user.getId()
+        ).executeUpdate();
+    }
+
     public Event createEvent(Event event) throws PiikDatabaseException {
 
         if (event == null || !event.checkPrimaryKey(true)) {

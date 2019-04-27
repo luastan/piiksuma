@@ -509,6 +509,18 @@ public class InsertionFacade {
         return parentFacade.getInteractionDao().createEvent(event);
     }
 
+    public void participateEvent(Event event, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (event == null || !event.checkNotNull(true)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
+        }
+
+        parentFacade.getInteractionDao().participateEvent(event, currentUser);
+    }
+
     /**
      * Inserts into the database a given reaction
      *
