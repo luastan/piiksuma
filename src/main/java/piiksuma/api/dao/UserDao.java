@@ -2,10 +2,7 @@ package piiksuma.api.dao;
 
 import piiksuma.*;
 import piiksuma.api.ErrorMessage;
-import piiksuma.database.DeleteMapper;
-import piiksuma.database.InsertionMapper;
-import piiksuma.database.MapperColumn;
-import piiksuma.database.QueryMapper;
+import piiksuma.database.*;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
@@ -143,7 +140,7 @@ public class UserDao extends AbstractDao {
                     // Database's column name:
                     //  True -> equals to the attribute's name
                     //  False -> they don't match; the proper name is put in the class
-                    String column = mapperColumn.columna().equals("") ? field.getName() : mapperColumn.columna();
+                    String column = Mapper.extractColumnName(field);
 
                     Object value = null;
 
@@ -291,7 +288,7 @@ public class UserDao extends AbstractDao {
                     // Database's column name:
                     //  True -> equals to the attribute's name
                     //  False -> they don't match; the proper name is put in the class
-                    String column = mapperColumn.columna().equals("") ? field.getName() : mapperColumn.columna();
+                    String column = Mapper.extractColumnName(field);
                     clause.append(column).append(" = ");
 
                     Object value = null;

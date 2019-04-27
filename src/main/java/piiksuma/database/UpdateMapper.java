@@ -121,8 +121,7 @@ public class UpdateMapper<T> extends Mapper<T> {
                             (allowNullValues || field.get(objectUpdate) != null) &&
                             !field.getAnnotation(MapperColumn.class).pkey()) {
                         // Colum name for the current Field. If it's not annotated, field name gets used
-                        columnName = field.getAnnotation(MapperColumn.class).columna();
-                        columnName = columnName.equals("") ? field.getName() : columnName;
+                        columnName = extractColumnName(field);
 
                         // Value assignment
                         updateBuilder.append(columnName).append(" = ?,");

@@ -136,6 +136,24 @@ public abstract class Mapper<T> {
     }
 
     /**
+     * Function to extract the column name of the field
+     *
+     * @param field field to extract the column name
+     * @return the column name
+     */
+    public static String extractColumnName(Field field){
+
+        String nameColumn = null;
+
+        if (field.isAnnotationPresent(MapperColumn.class)) {
+            nameColumn = field.getAnnotation(MapperColumn.class).columna();
+            nameColumn = nameColumn.equals("") ? field.getName() : nameColumn;
+        }
+
+        return nameColumn;
+    }
+
+    /**
      * Queries a foreign key and maps it automatically
      *
      * @param clase    Class to be looped over

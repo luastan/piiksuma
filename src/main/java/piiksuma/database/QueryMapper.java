@@ -84,8 +84,7 @@ public class QueryMapper<T> extends Mapper<T> {
                     for (Field field : mappedClass.getDeclaredFields()) {
                         field.setAccessible(true);
                         if (field.isAnnotationPresent(MapperColumn.class)) {
-                            nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                            nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
+                            nombreColumna = extractColumnName(field);
                             if (columnas.contains(nombreColumna) || field.getAnnotation(MapperColumn.class).targetClass() != Object.class) {
                                 foreignClass = field.getAnnotation(MapperColumn.class).targetClass();
                                 // Checks if the Field class has the MapperTable anotation. This means that it's a

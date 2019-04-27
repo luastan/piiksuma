@@ -104,8 +104,7 @@ public class DeleteMapper<T> extends Mapper<T> {
             if (field.isAnnotationPresent(MapperColumn.class) && field.getAnnotation(MapperColumn.class).pkey()) {
                 // Column name extraction
                 // On empty / default column name specification uses the field name
-                columnName = field.getAnnotation(MapperColumn.class).columna();
-                columnName = columnName.equals("") ? field.getName() : columnName;
+                columnName = extractColumnName(field);
 
                 // Adds check conditions on every primary key
                 deleteBuilder.append(columnName).append(" = ? and ");

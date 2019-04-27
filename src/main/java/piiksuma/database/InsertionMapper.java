@@ -99,8 +99,7 @@ public class InsertionMapper<E> extends Mapper<E> {
         for (Field field : mappedClass.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(MapperColumn.class) && !field.getAnnotation(MapperColumn.class).hasDefault()) {
-                nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
+                nombreColumna = extractColumnName(field);
                 queryBuilder.append(nombreColumna).append(",");
                 this.columnas.add(nombreColumna);
                 this.atributos.put(nombreColumna, field);
@@ -142,8 +141,7 @@ public class InsertionMapper<E> extends Mapper<E> {
                         field.setAccessible(true);
                         fieldClass = field.getAnnotation(MapperColumn.class).targetClass();
                         if (fieldClass == Object.class) { // Normal field
-                            columnName = field.getAnnotation(MapperColumn.class).columna();
-                            columnName = columnName.equals("") ? field.getName() : columnName;
+                            columnName = extractColumnName(field);
                             atrib = field.get(element);
                             // Checks for default values
                             if (field.getAnnotation(MapperColumn.class).hasDefault() && atrib == null) {
