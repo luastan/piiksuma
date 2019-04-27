@@ -84,6 +84,26 @@ public class PostDao extends AbstractDao {
                         "multimediavideo ";
                 clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
                         "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
+
+                statement = con.prepareStatement(clause.toString());
+
+
+                /* Clause's data insertion */
+
+                statement.setString(1, multimedia.getHash());
+                statement.setString(2, multimedia.getResolution());
+                statement.setString(3, multimedia.getUri());
+                statement.setString(4, multimedia.getHash());
+
+                statement.setString(5, multimedia.getHash());
+                statement.setString(6, multimedia.getHash());
+
+
+                /* Execution */
+
+                statement.executeUpdate();
+
+                clause = new StringBuilder();
             }
 
             // Publication date will automatically be set as "NOW()" because it is its default value
@@ -117,18 +137,6 @@ public class PostDao extends AbstractDao {
             /* Clause's data insertion */
 
             int offset = 1;
-
-            if (multimediaExists) {
-                statement.setString(1, multimedia.getHash());
-                statement.setString(2, multimedia.getResolution());
-                statement.setString(3, multimedia.getUri());
-                statement.setString(4, multimedia.getHash());
-
-                statement.setString(5, multimedia.getHash());
-                statement.setString(6, multimedia.getHash());
-
-                offset += 6;
-            }
 
             statement.setString(offset++, post.getAuthor().getPK());
             statement.setString(offset++, post.getText());
