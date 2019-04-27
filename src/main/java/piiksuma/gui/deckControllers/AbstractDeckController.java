@@ -90,7 +90,7 @@ public class AbstractDeckController {
         FXMLLoader loader;
         //This condition is to determinate if the user wants to see his own profile or another user's profile
         //It must be completed later, this version is only for testing.
-        if (false) {
+        if (true) {
             loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
 
         } else {
