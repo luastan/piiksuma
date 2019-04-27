@@ -30,6 +30,7 @@ public class MessageFromProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        mainButton.setOnAction(this::handleMainButton);
 
     }
 

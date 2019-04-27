@@ -129,6 +129,7 @@ public class OtherUserProfileController implements Initializable {
         searchStage.setResizable(false);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/startChatFromProfile.fxml"));
         JFXDecorator decorator;
+        loader.setController(new MessageFromProfileController(user));
 
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
