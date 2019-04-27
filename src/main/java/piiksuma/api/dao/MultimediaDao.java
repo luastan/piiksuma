@@ -43,8 +43,8 @@ public class MultimediaDao extends AbstractDao {
             clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
                     " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-            String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
-                    "multimediaVideo ";
+            String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaimage " :
+                    "multimediavideo ";
             clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
                     "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
 

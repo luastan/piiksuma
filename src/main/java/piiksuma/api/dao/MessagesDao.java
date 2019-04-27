@@ -77,13 +77,12 @@ public class MessagesDao extends AbstractDao {
                 clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
-                        "multimediaVideo ";
+                String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaimage " :
+                        "multimediavideo ";
                 clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
                         "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
             }
 
-            // TODO date may need to be between ''
             clause.append("UPDATE message SET text = ?, date = ?, multimedia = ");
 
             // Multimedia or ticket may be null
@@ -170,8 +169,8 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE reciever = ? ").
-                defineClass(Message.class).defineParameters(user.getPK()).list();
+        return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE " +
+                "receiver = ? ").defineClass(Message.class).defineParameters(user.getPK()).list();
     }
 
     /**
@@ -219,8 +218,8 @@ public class MessagesDao extends AbstractDao {
                 clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
-                String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaImage " :
-                        "multimediaVideo ";
+                String type = multimedia.getType().equals(MultimediaType.image) ? "multimediaimage " :
+                        "multimediavideo ";
                 clause.append("INSERT INTO ").append(type).append("SELECT ? WHERE NOT EXISTS (SELECT * " +
                         "FROM ").append(type).append("WHERE hash = ? FOR UPDATE); ");
             }
@@ -362,7 +361,7 @@ public class MessagesDao extends AbstractDao {
             // "closeDate" and "adminClosing" are inserted as NULL because they are intended to be stored when closing
             // a ticket; "creationDate" has "NOW()" as the default value; ticket's IDs autoincrement as each ticket is
             // created in the database
-            clause.append("INSERT INTO ticket(usr, section, text, closeDate, adminClosing) VALUES (?, ?, ?, NULL, " +
+            clause.append("INSERT INTO ticket(usr, section, text, closedate, adminclosing) VALUES (?, ?, ?, NULL, " +
                     "NULL) RETURNING id");
 
             statement = con.prepareStatement(clause.toString());
@@ -434,8 +433,8 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
-        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closeDate = NOW(), " +
-                "adminClosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
+                "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
 

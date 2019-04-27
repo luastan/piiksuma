@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Notification extends PiikObject{
     @MapperColumn(pkey = true, hasDefault = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(columna = "creationdate")
     private Timestamp creationDate;
     @MapperColumn(notNull = true)
     private String content;

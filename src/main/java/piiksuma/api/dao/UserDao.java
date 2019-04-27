@@ -113,7 +113,7 @@ public class UserDao extends AbstractDao {
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
                 clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
+                        "multimediaimage WHERE hash = ? FOR UPDATE); ");
             }
 
             if (user.getPhones() != null && !user.getPhones().isEmpty()) {
@@ -124,7 +124,7 @@ public class UserDao extends AbstractDao {
                 }
             }
 
-            clause.append("INSERT INTO piiUser (");
+            clause.append("INSERT INTO piiuser (");
             clauseAux.append("VALUES (");
 
             ArrayList<Object> columnValues = new ArrayList<>();
@@ -261,7 +261,7 @@ public class UserDao extends AbstractDao {
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
 
                 clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = ? FOR UPDATE); ");
+                        "multimediaimage WHERE hash = ? FOR UPDATE); ");
             }
 
             if (user.getPhones() != null && !user.getPhones().isEmpty()) {
@@ -273,8 +273,7 @@ public class UserDao extends AbstractDao {
                 }
             }
 
-            // TODO dates may need to be between ''
-            clause.append("UPDATE piiUser SET ");
+            clause.append("UPDATE piiuser SET ");
 
             ArrayList<Object> columnValues = new ArrayList<>();
 
@@ -345,7 +344,7 @@ public class UserDao extends AbstractDao {
 
             // Row to be modified
             String id = oldIDExists ? user.getOldID() : user.getId();
-            statement.setObject(offset++, id);
+            statement.setString(offset++, id);
 
             // Upgrades and downgrades from admin
             if (user.checkAdministrator()) {
@@ -661,7 +660,7 @@ public class UserDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser " +
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiuser " +
                 "WHERE id LIKE '%?%' and name LIKE '%?%' LIMIT ?").defineClass(User.class).defineParameters(
                 user.getPK(), user.getName(), limit).list();
     }
@@ -673,7 +672,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownAchievement as o, " +
+        return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownachievement as o, " +
                 "achievement as a WHERE o.usr = ? AND o.achiev = a.id").defineClass(Achievement.class).defineParameters(
                 user.getPK()).list();
     }
@@ -685,11 +684,10 @@ public class UserDao extends AbstractDao {
         }
 
         List<Map<String, Object>> queryResults = new QueryMapper<>(super.getConnection()).createQuery("SELECT * FROM " +
-                "ownAchievement WHERE usr = ?").defineParameters(user.getPK()).mapList();
+                "ownachievement WHERE usr = ?").defineParameters(user.getPK()).mapList();
 
         HashMap<String, Timestamp> result = new HashMap<>();
 
-        System.out.println("hay " + queryResults.size() + " resultados");
         for(Map<String, Object> row : queryResults) {
             result.put((String)row.get("achiev"), (Timestamp)row.get("acquisitiondate"));
         }
@@ -710,7 +708,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiUser WHERE id = ? and " +
+        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiuser WHERE id = ? and " +
                 "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).setIsolationLevel(
                 Connection.TRANSACTION_SERIALIZABLE).findFirst();
     }
@@ -734,7 +732,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO ownAchievement VALUES " +
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO ownachievement VALUES " +
                 "(?, ?)").defineParameters(achievement.getId(), user.getPK()).executeUpdate();
     }
 
@@ -778,7 +776,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
-        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followUser WHERE followed=? AND " +
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM followuser WHERE followed=? AND " +
                 "follower=?").defineClass(Object.class).defineParameters(followed.getPK(), follower.getPK())
                 .executeUpdate();
     }
@@ -799,7 +797,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockUser(usr,blocked) VALUES " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockuser(usr,blocked) VALUES " +
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
@@ -819,7 +817,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceUser(usr,silenced) VALUES " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO silenceuser(usr,silenced) VALUES " +
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), silencedUser.getPK()).executeUpdate();
     }
 
