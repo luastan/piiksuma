@@ -1,6 +1,8 @@
 package piiksuma.database;
 
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,7 +74,7 @@ public class UpdateMapper<T> extends Mapper<T> {
     }
 
     @Override
-    public UpdateMapper<T> defineParameters(Object... parametros) {
+    public UpdateMapper<T> defineParameters(Object... parametros) throws PiikDatabaseException {
         super.defineParameters(parametros);
         return this;
     }
@@ -84,7 +86,7 @@ public class UpdateMapper<T> extends Mapper<T> {
      * @return update mapper which is being built
      */
     @Override
-    public UpdateMapper<T> setIsolationLevel(int isolationLevel) {
+    public UpdateMapper<T> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
 
         return((UpdateMapper<T>)super.setIsolationLevel(isolationLevel));
     }
@@ -94,7 +96,7 @@ public class UpdateMapper<T> extends Mapper<T> {
      *
      * @param allowNullValues On true allows null values to be inserted into the database
      */
-    public void update(boolean allowNullValues) {
+    public void update(boolean allowNullValues) throws PiikDatabaseException {
         PreparedStatement statement;
         String columnName;
         StringBuilder updateBuilder = new StringBuilder("UPDATE ").append(mappedClass.getAnnotation(MapperTable.class)
@@ -130,7 +132,7 @@ public class UpdateMapper<T> extends Mapper<T> {
                         this.attributes.put(columnName, field);
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    throw new PiikDatabaseException(e.getMessage());
                 }
             }
 
@@ -174,7 +176,7 @@ public class UpdateMapper<T> extends Mapper<T> {
                 statement.executeUpdate();
                 statement.close();
             } catch (SQLException | IllegalAccessException e) {
-                e.printStackTrace();
+                throw new PiikDatabaseException(e.getMessage());
             }
 
             // Temporary data gets cleared
@@ -188,7 +190,7 @@ public class UpdateMapper<T> extends Mapper<T> {
      * Performs an update without allowing NULL values into the database.
      * Check {@link UpdateMapper#update(boolean)} for more info
      */
-    public void update() {
+    public void update() throws PiikDatabaseException {
         this.update(false);
     }
 

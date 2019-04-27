@@ -66,15 +66,24 @@ public class SampleFachada {
 
 
     public List<User> usuarios() {
-        return (new QueryMapper<User>(this.conexion)).createQuery("SELECT * FROM piiUser;").
-                defineClass(User.class).list();
+        try {
+            return (new QueryMapper<User>(this.conexion)).createQuery("SELECT * FROM piiUser;").
+                    defineClass(User.class).list();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
     public List<Map<String, Object>> test() {
 
-
-        return (new QueryMapper<Object>(this.conexion)).createQuery("SELECT * FROM piiUser;").mapList();
+        try {
+            return (new QueryMapper<Object>(this.conexion)).createQuery("SELECT * FROM piiUser;").mapList();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 /*
 
@@ -182,7 +191,12 @@ public class SampleFachada {
         }
 
         // Se obtienen las claves primarias
-        Map<String, Object> fks = new QueryMapper<>(getConexion()).getFKs(postHijo);
+        Map<String, Object> fks = null;
+        try {
+            fks = new QueryMapper<>(getConexion()).getFKs(postHijo);
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
 
         /*try {
             new InsertionMapper<User>(conexion).defineClass(User.class).addAll(user, user2).insert();
@@ -197,7 +211,12 @@ public class SampleFachada {
             System.out.println(column + " " + fks.get(column).toString());
         }
 
-        List<Post> posts = new QueryMapper<Post>(conexion).defineClass(Post.class).createQuery("SELECT * FROM post").list();
+        List<Post> posts = null;
+        try {
+            posts = new QueryMapper<Post>(conexion).defineClass(Post.class).createQuery("SELECT * FROM post").list();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
 
         for(Post post : posts) {
             System.out.println(post);
@@ -288,8 +307,13 @@ public class SampleFachada {
     }
 
     public void imprimirUsuarios() {
-        List<User> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
-                "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
+        List<User> usuarios = null;
+        try {
+            usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                    "LIKE ?").defineParameters("%gmail.com").defineClass(User.class).list();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
         for (User user : usuarios) {
             System.out.println(user);
         }
@@ -299,8 +323,13 @@ public class SampleFachada {
      *
      */
     public void mapaSample() {
-        List<Map<String, Object>> usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
-                "LIKE ?").defineParameters("%@gmail.com").mapList();
+        List<Map<String, Object>> usuarios = null;
+        try {
+            usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
+                    "LIKE ?").defineParameters("%@gmail.com").mapList();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
         usuarios.forEach(System.out::println);
     }
 

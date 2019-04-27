@@ -1,5 +1,7 @@
 package piiksuma.database;
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -36,11 +38,11 @@ public class QueryMapper<T> extends Mapper<T> {
      * @param query String representing the query
      * @return Returns the Mapper instance
      */
-    public QueryMapper<T> createQuery(String query) {
+    public QueryMapper<T> createQuery(String query) throws PiikDatabaseException {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new PiikDatabaseException(ex.getMessage());
         }
         return this;
     }
@@ -54,7 +56,7 @@ public class QueryMapper<T> extends Mapper<T> {
      *                       {@link MapperTable} annotation present
      * @return Mapped objects from the query
      */
-    public List<T> list(boolean useForeignKeys) {
+    public List<T> list(boolean useForeignKeys) throws PiikDatabaseException {
         ArrayList<T> resultado = new ArrayList<>();
         String nombreColumna;
         Matcher matcher;
@@ -117,13 +119,9 @@ public class QueryMapper<T> extends Mapper<T> {
             statement.close();
 
             // Exception handling
-        } catch (SQLException e) {
-            // TODO: SQL Exception Handling
-            System.out.println("SQL EXCEPTION IN THE QUERY MAPPER");
-            e.printStackTrace();
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-            // TODO: Treat Reflection Exceptions
-            e.printStackTrace();
+        } catch (SQLException | IllegalAccessException | InvocationTargetException | InstantiationException |
+                NoSuchMethodException e) {
+            throw new PiikDatabaseException(e.getMessage());
         }
         return resultado;
     }
@@ -134,7 +132,7 @@ public class QueryMapper<T> extends Mapper<T> {
      *
      * @return Mapped objects list
      */
-    public List<T> list() {
+    public List<T> list() throws PiikDatabaseException {
         return this.list(true);
     }
 
@@ -159,7 +157,7 @@ public class QueryMapper<T> extends Mapper<T> {
      *                   used to query the database
      * @return The QueryMapper instance
      */
-    public QueryMapper<T> defineParameters(Object... parametros) {
+    public QueryMapper<T> defineParameters(Object... parametros) throws PiikDatabaseException {
         super.defineParameters(parametros);
         return this;
     }
@@ -171,7 +169,7 @@ public class QueryMapper<T> extends Mapper<T> {
      * @return query mapper which is being built
      */
     @Override
-    public QueryMapper<T> setIsolationLevel(int isolationLevel) {
+    public QueryMapper<T> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
 
         return((QueryMapper<T>)super.setIsolationLevel(isolationLevel));
     }
@@ -186,7 +184,7 @@ public class QueryMapper<T> extends Mapper<T> {
      *
      * @return Map list with the query Results
      */
-    public List<Map<String, Object>> mapList() {
+    public List<Map<String, Object>> mapList() throws PiikDatabaseException {
         List<Map<String, Object>> resultadosMapeados = new ArrayList<>();
         Map<String, Object> element;
         ArrayList<String> columnas = new ArrayList<>();
@@ -209,8 +207,7 @@ public class QueryMapper<T> extends Mapper<T> {
                 resultadosMapeados.add(element);
             }
         } catch (SQLException e) {
-            // TODO: Handle exceptions
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
         return resultadosMapeados;
     }
@@ -223,7 +220,7 @@ public class QueryMapper<T> extends Mapper<T> {
      * @param useForeignkeys Same atribute as in {@link QueryMapper#list(boolean)}
      * @return First element from the results
      */
-    public T findFirst(boolean useForeignkeys) {
+    public T findFirst(boolean useForeignkeys) throws PiikDatabaseException {
         List<T> result = list(useForeignkeys);
 
         if (result == null || result.isEmpty()) {
@@ -239,7 +236,7 @@ public class QueryMapper<T> extends Mapper<T> {
      *
      * @return First element from the results
      */
-    public T findFirst() {
+    public T findFirst() throws PiikDatabaseException {
         return findFirst(true);
     }
 }
