@@ -1,5 +1,6 @@
 package piiksuma;
 
+import piiksuma.database.Mapper;
 import piiksuma.database.MapperColumn;
 
 import java.lang.reflect.Field;
@@ -172,8 +173,7 @@ public abstract class PiikObject {
 
                 if(field.isAnnotationPresent(MapperColumn.class)){
 
-                    String columnName = field.getAnnotation(MapperColumn.class).columna();
-                    columnName = columnName.equals("") ? field.getName() : columnName;
+                    String columnName = Mapper.extractColumnName(field);
 
                     if(information.containsKey(columnName)){
                         field.set(this, information.get(columnName));

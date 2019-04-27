@@ -28,7 +28,7 @@
             <rightItems>
                 <!-- Share button -->
                 <StackPane>
-                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton text="der2" fx:id="share" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <FontAwesomeIconView glyphName="SHARE" size="24"
                                                  styleClass="deck-small-button-graphic"/>
@@ -45,7 +45,7 @@
 
             <Label text="Date" fx:id="eventDate" wrapText="true"/>
 
-            <Label text="Actual Post content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
+            <Label text="Actual event content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
         </VBox>
     </center>
     <bottom>

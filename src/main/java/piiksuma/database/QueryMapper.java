@@ -84,8 +84,7 @@ public class QueryMapper<T> extends Mapper<T> {
                     for (Field field : mappedClass.getDeclaredFields()) {
                         field.setAccessible(true);
                         if (field.isAnnotationPresent(MapperColumn.class)) {
-                            nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                            nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
+                            nombreColumna = extractColumnName(field);
                             if (columnas.contains(nombreColumna) || field.getAnnotation(MapperColumn.class).targetClass() != Object.class) {
                                 foreignClass = field.getAnnotation(MapperColumn.class).targetClass();
                                 // Checks if the Field class has the MapperTable anotation. This means that it's a
@@ -95,20 +94,28 @@ public class QueryMapper<T> extends Mapper<T> {
                                     if (useForeignKeys) {
                                         // FKEYS
                                         if (field.getAnnotation(MapperColumn.class).fKeys().equals("")) {
-                                            field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                            if(columnas.contains(nombreColumna)) {
+                                                field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                            }
                                         } else {
                                             fkValues = new HashMap<>();
                                             matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
                                             while (matcher.find()) {
-                                                fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                                if(columnas.contains(nombreColumna)) {
+                                                    fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                                }
                                             }
-                                            field.set(elemento, getFK(foreignClass, fkValues));
+                                            if(columnas.contains(nombreColumna)) {
+                                                field.set(elemento, getFK(foreignClass, fkValues));
+                                            }
                                         }
 
                                     }
 
                                 } else {
-                                    field.set(elemento, set.getObject(nombreColumna));
+                                    if(columnas.contains(nombreColumna)) {
+                                        field.set(elemento, set.getObject(nombreColumna));
+                                    }
                                 }
                             }
                         }

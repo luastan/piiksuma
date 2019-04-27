@@ -36,17 +36,17 @@
             <ImageView>
                 <Image preserveRatio="true"  requestedHeight="120" url="/imagenes/huevo.png"/>
             </ImageView>
-            <Label text="userName" fx:id="Name" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
+            <Label text="userName" wrapText="true" styleClass="post-text" fx:id="Name" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
         </HBox>
         <Line startX="0" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="20">
             <JFXButton fx:id="ticketsButton" styleClass="jfx-button-border" text="Show Tickets" translateY="-95" translateX="227.5"/>
             <JFXButton fx:id="newticketButton" styleClass="jfx-button-border" text="New Ticket" translateY="-95" translateX="227.5"/>
         </HBox>
-        <Label text="userDescription" translateX="10" translateY="-70"/>
+        <Label text="userDescription" wrapText="true" styleClass="post-text" fx:id="description" translateX="10" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
-        <Label alignment="CENTER" text="USER POSTS" translateX="175" scaleX="1.5" scaleY="1.5"/>
-        <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
+
+        <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
             <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
             </JFXMasonryPane>
         </ScrollPane>

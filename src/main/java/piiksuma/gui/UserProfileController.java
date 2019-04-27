@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 public class UserProfileController implements Initializable {
 
     @FXML
-    private JFXButton backButton;
+    private JFXButton feedButton;
 
     @FXML
     private JFXButton newticketButton;
@@ -42,6 +42,9 @@ public class UserProfileController implements Initializable {
     private Label Name;
 
     @FXML
+    private Label description;
+
+    @FXML
     private ScrollPane postScrollPane;
 
     @FXML
@@ -51,9 +54,11 @@ public class UserProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        User user = new User("OswaldOswin", "user1", "@yahoo.es");
-        ContextHandler.getContext().setCurrentUser(user);
+        //User user = new User("OswaldOswin", "user1", "@yahoo.es");
+        //ContextHandler.getContext().setCurrentUser(user);
+        ContextHandler.getContext().getCurrentUser().toString();
         Name.setText(ContextHandler.getContext().getCurrentUser().getName());
+        description.setText(ContextHandler.getContext().getCurrentUser().getDescription());
         newticketButton.setOnAction(this::handleNewTicektButton);
         ticketsButton.setOnAction(this::handleTicketsButton);
 
@@ -61,6 +66,7 @@ public class UserProfileController implements Initializable {
 
         ContextHandler.getContext().setUserProfileController(this);
         setUpFeedListener();
+
 
         try {
             updateFeed();
@@ -75,12 +81,6 @@ public class UserProfileController implements Initializable {
      *
      * @param event Click Event
      */
-    private void backButton(javafx.event.Event event) {
-        // Just by selecting another tab will renew the contents
-        JFXTabPane tabPane = (JFXTabPane) ContextHandler.getContext().getElement("mainTabPane");
-        tabPane.getSelectionModel().select(0);
-        event.consume();  // Consumes it just in case another residual handler was listening to it
-    }
 
     /**
      * Function to open a create ticket window if newTicketButton is clicked
@@ -172,7 +172,8 @@ public class UserProfileController implements Initializable {
     public void updateFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         feed.clear();
-        feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post;").list());
+        feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post WHERE author = ?;")
+                .defineParameters(ContextHandler.getContext().getCurrentUser().getId()).list());
     }
 
     /**
