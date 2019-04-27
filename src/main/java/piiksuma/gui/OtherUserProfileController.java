@@ -11,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -29,7 +31,10 @@ import java.util.ResourceBundle;
 public class OtherUserProfileController implements Initializable {
 
     @FXML
-    private Text userName;
+    private Label userName;
+
+    @FXML
+    private Label description;
     @FXML
     private ScrollPane postScrollPane;
 
@@ -40,11 +45,31 @@ public class OtherUserProfileController implements Initializable {
     @FXML
     private JFXButton messageButton;
 
+    @FXML
+    private JFXButton blockButton;
+
+    @FXML
+    private JFXButton followButton;
+
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        ContextHandler.getContext().getCurrentUser().setName("OswaldOswin");
         // userName.setText(ContextHandler.getContext().getCurrentUser().getName());
         feed = FXCollections.observableArrayList();
+        userName.setText(user.getName());
+        description.setText(user.getDescription());
+        blockButton.setOnAction(this::handleBlockButton);
+        followButton.setOnAction(this::handleFollowButton);
 
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
@@ -89,6 +114,7 @@ public class OtherUserProfileController implements Initializable {
         postScrollPane.requestFocus();
     }
     private void handleMessageButton(Event event) {
+
         Stage searchStage = new Stage();
 
         try {
@@ -103,6 +129,7 @@ public class OtherUserProfileController implements Initializable {
         searchStage.setResizable(false);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/startChatFromProfile.fxml"));
         JFXDecorator decorator;
+        loader.setController(new MessageFromProfileController(user));
 
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
@@ -123,5 +150,63 @@ public class OtherUserProfileController implements Initializable {
         searchStage.setScene(scene);
         // Show and wait till it closes
         searchStage.showAndWait();
+    }
+
+    private void handleBlockButton(Event event){
+        User blocked = null;
+        try {
+            blocked = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from blockUser WHERE usr = ? AND blocked = ?")
+                    .defineClass(User.class).defineParameters(ContextHandler.getContext().getCurrentUser().getId(),user.getId()).findFirst();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+        if (blocked == null) {
+            try {
+                ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+        }else{
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(blocked,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+        }
+    }
+
+    private void handleFollowButton(Event event){
+        User folllowed = null;
+        try {
+            folllowed = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from followUser WHERE followed = ? AND follower = ?")
+                    .defineClass(User.class).defineParameters(user.getId(),ContextHandler.getContext().getCurrentUser().getId()).findFirst();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+        if (folllowed == null){
+            try {
+                ApiFacade.getEntrypoint().getInsertionFacade().followUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("SEGUIDO");
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+
+        }else{
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().unfollowUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("DEJADO DE SEGUIR");
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+
+        }
     }
 }

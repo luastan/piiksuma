@@ -36,7 +36,7 @@ public class User extends PiikObject{
     private String birthplace;
     @MapperColumn(notNull = true, columna = "birthdate")
     private Timestamp birthday;
-    @MapperColumn(hasDefault = true, notNull = true)
+    @MapperColumn(hasDefault = true, notNull = true, columna = "registrationdate")
     private Timestamp registrationDate;
     @MapperColumn
     private Timestamp deathdate;

@@ -376,214 +376,14 @@ public class UserDao extends AbstractDao {
         }
     }
 
-    /*public void updateUser(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
-        }
-
-        Multimedia multimedia = user.getMultimedia();
-
-        // If not null required attributes will be inserted
-        boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
-
-
-        // Connection to the database
-        Connection con = getConnection();
-        // SQL clause
-        PreparedStatement statement = null;
-
-        // Built clause
-        StringBuilder clause = new StringBuilder();
-
-        ArrayList<Boolean> attributesExist = new ArrayList<>();
-
-        attributesExist.add(user.getGender() != null && !user.getGender().isEmpty());
-        attributesExist.add(user.getDescription() != null && !user.getDescription().isEmpty());
-        attributesExist.add(user.getHome() != null && !user.getHome().isEmpty());
-        attributesExist.add(user.getPostalCode() != null && !user.getPostalCode().isEmpty());
-        attributesExist.add(user.getProvince() != null && !user.getProvince().isEmpty());
-        attributesExist.add(user.getCountry() != null && !user.getCountry().isEmpty());
-        attributesExist.add(user.getCity() != null && !user.getCity().isEmpty());
-        attributesExist.add(user.getBirthplace() != null && !user.getBirthplace().isEmpty());
-        attributesExist.add(user.getDeathdate() != null);
-        attributesExist.add(user.getReligion() != null && !user.getReligion().isEmpty());
-        attributesExist.add(user.getEmotionalSituation() != null && !user.getEmotionalSituation().isEmpty());
-        attributesExist.add(user.getJob() != null && !user.getJob().isEmpty());
-        attributesExist.add(multimediaExists);
-
-
-        ArrayList<String> attributesNames = new ArrayList<>();
-
-        attributesNames.add("gender");
-        attributesNames.add("description");
-        attributesNames.add("home");
-        attributesNames.add("postalCode");
-        attributesNames.add("province");
-        attributesNames.add("country");
-        attributesNames.add("city");
-        attributesNames.add("birthplace");
-        attributesNames.add("deathdate");
-        attributesNames.add("religion");
-        attributesNames.add("emotionalSituation");
-        attributesNames.add("job");
-        attributesNames.add("profilePicture");
-
-        ArrayList<Object> attributesValues = new ArrayList<>();
-
-        attributesValues.add(user.getGender());
-        attributesValues.add(user.getDescription());
-        attributesValues.add(user.getHome());
-        attributesValues.add(user.getPostalCode());
-        attributesValues.add(user.getProvince());
-        attributesValues.add(user.getCountry());
-        attributesValues.add(user.getCity());
-        attributesValues.add(user.getBirthplace());
-        attributesValues.add(user.getDeathdate());
-        attributesValues.add(user.getReligion());
-        attributesValues.add(user.getEmotionalSituation());
-        attributesValues.add(user.getJob());
-        if(multimediaExists) {
-            attributesValues.add(multimedia.getHash());
-        }
-
-
-
-        try {
-
-            ///// Statement
-
-            // If the message will display some kind of media, it gets inserted if it does not exist in the database
-            // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
-            if (multimediaExists) {
-                clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT '?', '?', '?' WHERE NOT EXISTS" +
-                        " (SELECT * FROM multimedia WHERE hash = '?' FOR UPDATE); ");
-
-                clause.append("INSERT INTO multimediaImage SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "multimediaImage WHERE hash = '?' FOR UPDATE); ");
-            }
-
-            // TODO dates may need to be between ''
-            clause.append("UPDATE user SET id = '?', email = '?', name = '?', pass = '?', birthdate = ?, " +
-                    "registrationDate = ?");
-
-            // Some attributes may be null
-            for(int i = 0; i < attributesNames.size(); i++) {
-
-                // ", attribute = "
-                clause.append(", ").append(attributesNames.get(i)).append(" = ");
-
-                // If the attribute exists
-                if(attributesExist.get(i)) {
-
-                    Object value = attributesValues.get(i);
-
-                    if(value instanceof String) {
-                        clause.append("'?'");
-                    }
-
-                    else if(value instanceof Timestamp) {
-                        clause.append("?");
-                    }
-
-                } else {
-                    clause.append("NULL");
-                }
-            }
-
-            clause.append(" WHERE id = '?'; ");
-
-            // The user may haven been promoted to administrator
-            if(user.checkAdministrator())
-                clause.append("INSERT INTO administrator(id) SELECT '?' WHERE NOT EXISTS (SELECT * FROM " +
-                        "administrator WHERE id = '?' FOR UPDATE); ");
-
-            // Or he may have been downgraded
-            else {
-                clause.append("DELETE FROM administrator WHERE id = '?'; ");
-            }
-
-            statement = con.prepareStatement(clause.toString());
-
-
-            ///// Clause's data insertion
-
-            int offset = 1;
-
-            // Multimedia insertion
-            if(multimediaExists) {
-                statement.setString(1, multimedia.getHash());
-                statement.setString(2, multimedia.getResolution());
-                statement.setString(3, multimedia.getUri());
-                statement.setString(4, multimedia.getHash());
-
-                statement.setString(5, multimedia.getHash());
-                statement.setString(6, multimedia.getHash());
-
-                offset += 6;
-            }
-
-            // User's data insertion
-            statement.setString(offset++, user.getId());
-            statement.setString(offset++, user.getEmail());
-            statement.setString(offset++, user.getName());
-            statement.setString(offset++, user.getPass());
-            statement.setTimestamp(offset++, user.getBirthday());
-            statement.setTimestamp(offset++, user.getRegistrationDate());
-
-            // Some attributes may be null
-            for(int i = 0; i < attributesNames.size(); i++) {
-
-                // If the attribute exists
-                if(attributesExist.get(i)) {
-
-                    Object value = attributesValues.get(i);
-
-                    if(value instanceof String) {
-                        statement.setString(offset++, (String)value);
-                    }
-
-                    else if(value instanceof Timestamp) {
-                        statement.setTimestamp(offset++, (Timestamp)value);
-                    }
-                }
-            }
-
-
-            // Upgrades and downgrades from admin
-            statement.setString(offset++, user.getId());
-            statement.setString(offset, user.getId());
-
-
-            ///// Execution
-
-            statement.executeUpdate();
-
-
-        } catch (SQLException e) {
-            throw new PiikDatabaseException(e.getMessage());
-
-        } finally {
-
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-
-            } catch (SQLException e) {
-                throw new PiikDatabaseException(e.getMessage());
-            }
-        }
-    }*/
-
     /**
      * Function to get the user that matches the given specifications
      *
      * @param user user that contains the requirements that will be applied in the search
+     * @param typeTransaction nivel of isolation
      * @return user that meets the given information
      */
-    public User getUser(User user) throws PiikDatabaseException {
-
+    public User getUser(User user, Integer typeTransaction) throws PiikDatabaseException {
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
@@ -591,8 +391,9 @@ public class UserDao extends AbstractDao {
         // Get the list with the user, the phones and the type of user
         List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(
                 "SELECT t.*, ad.id as type " +
-                        "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad ON (t.id = ad.id) " +
-                        "WHERE id LIKE ?").defineParameters(user.getPK()).mapList();
+                        "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad " +
+                        "ON (t.id = ad.id) WHERE id LIKE ?").defineParameters(user.getPK())
+                        .setIsolationLevel(typeTransaction).mapList();
 
         User returnUser = new User();
 
@@ -641,6 +442,16 @@ public class UserDao extends AbstractDao {
         }
 
         return returnUser;
+    }
+
+    /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param user user that contains the requirements that will be applied in the search
+     * @return user that meets the given information
+     */
+    public User getUser(User user) throws PiikDatabaseException {
+        return getUser(user, Connection.TRANSACTION_READ_COMMITTED);
     }
 
     /**
@@ -708,9 +519,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<User>(super.getConnection()).createQuery("SELECT * FROM piiuser WHERE id = ? and " +
-                "pass = ?").defineClass(User.class).defineParameters(user.getPK(), user.getPass()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).findFirst();
+        return getUser(user, Connection.TRANSACTION_SERIALIZABLE);
     }
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
@@ -799,6 +608,19 @@ public class UserDao extends AbstractDao {
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockuser(usr,blocked) VALUES " +
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
+    }
+
+    public void unblockUser(User blockedUser, User user) throws PiikDatabaseException {
+
+        if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
+        }
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("DELETE FROM blockuser WHERE usr = ? AND blocked = ?")
+                .defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
     /**

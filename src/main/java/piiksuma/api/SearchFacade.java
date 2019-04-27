@@ -57,14 +57,37 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        List<User> result = parentFacade.getUserDao().searchUser(user, limit);
+        return parentFacade.getUserDao().searchUser(user, limit);
+    }
 
-        // Search for each user's type
-        for(User u : result) {
-            u.setType(parentFacade.getUserDao().getUserType(u.getPK()));
+    /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param user user that contains the requirements that will be applied in the search
+     * @param typeTransaction nivel of isolation
+     * @param current current user
+     * @return user that meets the given information
+     */
+    public User getUser(User user, Integer typeTransaction, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        return result;
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        try {
+            if(!getConnection().getMetaData().supportsTransactionIsolationLevel(typeTransaction)){
+                throw new PiikDatabaseException("Transaction does not support isolation level");
+            }
+        } catch (SQLException e) {
+            throw new PiikDatabaseException("Transaction does not support isolation level");
+        }
+
+        return parentFacade.getUserDao().getUser(user);
     }
 
     /**
@@ -85,11 +108,6 @@ public class SearchFacade {
 
         User result = parentFacade.getUserDao().getUser(user);
 
-        // Also get user's type
-        if(result != null ) {
-            result.setType(parentFacade.getUserDao().getUserType(user.getPK()));
-        }
-
         return result;
     }
 
@@ -101,18 +119,11 @@ public class SearchFacade {
      */
 
     public User login(User user) throws PiikInvalidParameters, PiikDatabaseException {
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        User result = parentFacade.getUserDao().login(user);
-
-        // Also get user's type
-        if(result != null ) {
-            result.setType(parentFacade.getUserDao().getUserType(user.getPK()));
-        }
-
-        return(result);
+        return parentFacade.getUserDao().login(user);
     }
 
     /**

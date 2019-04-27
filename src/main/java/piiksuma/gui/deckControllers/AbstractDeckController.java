@@ -38,7 +38,6 @@ public class AbstractDeckController {
     }
 
 
-
     /**
      * Applies Common behaviour to the Hamburguer Button on the deck
      *
@@ -88,14 +87,9 @@ public class AbstractDeckController {
         searchStage.setTitle("UserProfile");
         searchStage.setResizable(false);
         FXMLLoader loader;
-        //This condition is to determinate if the user wants to see his own profile or another user's profile
-        //It must be completed later, this version is only for testing.
-        if (true) {
-            loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
 
-        } else {
-            loader = new FXMLLoader(getClass().getResource("/gui/fxml/otherUserProfile.fxml"));
-        }
+        loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
+
         JFXDecorator decorator;
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
@@ -123,12 +117,12 @@ public class AbstractDeckController {
         userDataButton.setOnAction(this::handleUserDataButton);
     }
 
-    private void handleUserDataButton(Event event){
+    private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
         Stage searchStage = new Stage();
 
         try {
-            ContextHandler.getContext().register("User Profile", searchStage);
+            ContextHandler.getContext().register("userData", searchStage);
         } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;

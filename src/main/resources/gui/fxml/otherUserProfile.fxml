@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Text?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.OtherUserProfileController"
+
            prefHeight="400.0" prefWidth="600.0">
 
     <BorderPane>
@@ -43,7 +43,7 @@
             <ImageView>
                 <Image preserveRatio="true" requestedHeight="120" url="/imagenes/huevo.png"/>
             </ImageView>
-            <Text text="userName" fx:id="userName" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
+            <Label text="userName" fx:id="userName" wrapText="true" styleClass="post-text" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
         </HBox>
         <Line startX="0" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="20">
@@ -54,9 +54,9 @@
             <JFXButton fx:id="messageButton" styleClass="jfx-button-border" text="Message" translateY="-95"
                        translateX="145"/>
         </HBox>
-        <Label text="userDescription" translateX="10" translateY="-70"/>
+        <Label text="userDescription" fx:id="description" translateX="10" wrapText="true" styleClass="post-text" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
-        <Label alignment="CENTER" text="USER POSTS" translateX="175" scaleX="1.5" scaleY="1.5"/>
+
         <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
             <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
             </JFXMasonryPane>
