@@ -10,9 +10,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +47,7 @@ public class FeedController implements Initializable {
 
         try {
             updateFeed();
-        } catch (PiikDatabaseException e) {
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
     }
@@ -54,10 +56,11 @@ public class FeedController implements Initializable {
     /**
      * Reloads feed retrieving last posts from  the database
      */
-    public void updateFeed() throws PiikDatabaseException {
+    public void updateFeed() throws PiikDatabaseException, PiikInvalidParameters {
         // TODO: update the feed propperly
+        User currentUser = ContextHandler.getContext().getCurrentUser();
         feed.clear();
-        feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post;").list());
+        feed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getFeed(currentUser, 10, currentUser));
     }
 
     /**
