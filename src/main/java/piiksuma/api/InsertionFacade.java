@@ -514,7 +514,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (event == null || !event.checkNotNull(true)) {
+        if (event == null || !event.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
