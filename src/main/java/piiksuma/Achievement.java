@@ -3,6 +3,7 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @MapperTable
@@ -13,6 +14,8 @@ public class Achievement extends PiikObject{
     private String name;
     @MapperColumn
     private String description;
+    // Needed to show unlock date in GUI
+    private Timestamp unlockDate;
 
     public Achievement() {
     }
@@ -45,6 +48,14 @@ public class Achievement extends PiikObject{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Timestamp getUnlockDate() {
+        return unlockDate;
+    }
+
+    public void setUnlockDate(Timestamp unlockDate) {
+        this.unlockDate = unlockDate;
     }
 
     /**

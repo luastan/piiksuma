@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EventsController implements Initializable {
+
     @FXML
     private ScrollPane eventScrollPane;
     @FXML

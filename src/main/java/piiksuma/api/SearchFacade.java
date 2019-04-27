@@ -8,8 +8,10 @@ import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchFacade {
 
@@ -153,6 +155,23 @@ public class SearchFacade {
         }
 
         return parentFacade.getUserDao().getAchievements(user);
+    }
+
+    public Map<String, Timestamp> getUnlockDates(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (!current.checkAdministrator() && !user.equals(current)) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        return parentFacade.getUserDao().getUnlockDates(user);
     }
 
     /* MULTIMEDIA related methods */

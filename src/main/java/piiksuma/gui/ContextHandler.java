@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.deckControllers.AchievementsController;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class ContextHandler {
     private EventsController eventsController;
     private MessagesController messagesController;
     private SearchController searchController;
+    private AchievementsController achievementsController;
 
     private TicketsController ticketsController;
     private UserProfileController userProfileController;
@@ -198,6 +200,14 @@ public class ContextHandler {
 
     public void setEventsController(EventsController eventsController) {
         this.eventsController = eventsController;
+    }
+
+    public AchievementsController getAchievementsController() {
+        return achievementsController;
+    }
+
+    public void setAchievementsController(AchievementsController achievementsController) {
+        this.achievementsController = achievementsController;
     }
 
     public MessagesController getMessagesController() {

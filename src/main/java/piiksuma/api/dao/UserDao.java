@@ -13,7 +13,9 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -677,6 +679,25 @@ public class UserDao extends AbstractDao {
         return new QueryMapper<Achievement>(super.getConnection()).createQuery("SELECT a.* FROM ownAchievement as o, " +
                 "achievement as a WHERE o.usr = ? AND o.achiev = a.id").defineClass(Achievement.class).defineParameters(
                 user.getPK()).list();
+    }
+
+    public Map<String, Timestamp> getUnlockDates(User user) throws PiikDatabaseException {
+
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        List<Map<String, Object>> queryResults = new QueryMapper<>(super.getConnection()).createQuery("SELECT * FROM " +
+                "ownAchievement WHERE usr = ?").defineParameters(user.getPK()).mapList();
+
+        HashMap<String, Timestamp> result = new HashMap<>();
+
+        System.out.println("hay " + queryResults.size() + " resultados");
+        for(Map<String, Object> row : queryResults) {
+            result.put((String)row.get("achiev"), (Timestamp)row.get("acquisitiondate"));
+        }
+
+        return result;
     }
 
 

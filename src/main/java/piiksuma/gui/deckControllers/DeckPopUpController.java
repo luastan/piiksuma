@@ -59,8 +59,8 @@ public class DeckPopUpController implements Initializable {
             case 1:
                 /* Show achievements */
                 // TODO: Define the fxml and the controller
-                stage.setTitle("Achievments");
-                loader = new FXMLLoader(getClass().getResource("/gui/fxml/achievments.fxml"));
+                stage.setTitle("Achievements");
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/achievements.fxml"));
                 break;
             case 2:
                 /* Show statistics */
@@ -97,6 +97,7 @@ public class DeckPopUpController implements Initializable {
         stage.initOwner(ContextHandler.getContext().getStage("primary"));
         stage.setScene(scene);
 
+        // Show and wait
         stage.show();
     }
 }

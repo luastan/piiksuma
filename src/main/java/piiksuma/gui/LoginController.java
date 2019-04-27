@@ -81,7 +81,7 @@ public class LoginController implements Initializable {
     }
 
     /**
-     * Function to enter the main window if logIn is succesfull
+     * Function to enter the main window if logIn is successful
      */
     private void enterMainWindow() {
         Stage mainStage = new Stage();
