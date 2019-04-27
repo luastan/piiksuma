@@ -39,11 +39,12 @@
         </JFXToolbar>
     </top>
     <center>
+        <!-- Event info -->
         <VBox alignment="CENTER">
             <Label text="Location---->" fx:id="eventLocation" wrapText="true"/>
 
             <Label text="Date" fx:id="eventDate" wrapText="true"/>
-            <!-- Atual Post Content -->
+
             <Label text="Actual Post content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
         </VBox>
     </center>

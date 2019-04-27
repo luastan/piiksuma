@@ -74,6 +74,11 @@ public class RegisterController implements Initializable {
         telephoneList.setCellFactory(TextFieldListCell.forListView());
     }
 
+    /**
+     * Function to remove selected telephone from list if button clicked
+     *
+     * @param event
+     */
     private void handleRemove(Event event) {
         if (telephoneList.getSelectionModel().getSelectedIndex() == -1) {
             return;
@@ -81,10 +86,15 @@ public class RegisterController implements Initializable {
 
         telephoneList.getItems().remove(telephoneList.getSelectionModel().getSelectedIndex());
         telephoneList.getSelectionModel().selectPrevious();
-        telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex()-1);
+        telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex() - 1);
         telephoneList.layout();
     }
 
+    /**
+     * Function to add a telephone
+     *
+     * @param event
+     */
     private void handleAddTelephone(Event event) {
 
         telephoneList.getItems().add("Edit!");
@@ -94,6 +104,11 @@ public class RegisterController implements Initializable {
 
     }
 
+    /**
+     * Function to register an user if registerButton is clicked
+     *
+     * @param event
+     */
     private void handleRegister(Event event) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date;
@@ -134,6 +149,11 @@ public class RegisterController implements Initializable {
         }
     }
 
+    /**
+     * Function to check if *fields are not empty
+     *
+     * @return true if *fields are not empty, otherwise false
+     */
     private boolean checkFields() {
         if (userId.getText().isEmpty() || userName.getText().isEmpty() || email.getText().isEmpty()
                 || password.getText().isEmpty() || birthday.getText().isEmpty()) {

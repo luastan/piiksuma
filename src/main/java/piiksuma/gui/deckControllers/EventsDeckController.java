@@ -31,12 +31,15 @@ public class EventsDeckController extends AbstractDeckController implements Init
 
     @FXML
     private JFXButton userButton;
+    @FXML
+    private JFXButton userDataButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
         super.setHamburguerButton(hamburguerButton);
-
+        super.setUserProfileButton(userButton);
+        super.setUserDataButton(userDataButton);
         // TODO: EventsDeck initialization
 
         FontAwesomeIconView buttonIcon = new FontAwesomeIconView(FontAwesomeIcon.BOOKMARK);
@@ -44,10 +47,14 @@ public class EventsDeckController extends AbstractDeckController implements Init
         mainButton.setGraphic(buttonIcon);
 
         mainButton.setOnAction(this::handleNewEvent);
-        userButton.setOnAction(this::handleUserButton);
     }
 
-    private void handleNewEvent(Event event){
+    /**
+     * Function to open a window to create a new event
+     *
+     * @param event
+     */
+    private void handleNewEvent(Event event) {
         // TODO: Create a new Post. Which should be another method that might be better placed in another class.
 
         // Requests the feed controller to update the feed for the new Post to show up
@@ -55,7 +62,7 @@ public class EventsDeckController extends AbstractDeckController implements Init
 
         try {
             ContextHandler.getContext().register("createEvent", eventStage);
-        }catch(PiikInvalidParameters e){
+        } catch (PiikInvalidParameters e) {
 
             e.printStackTrace();
             return;
@@ -69,7 +76,7 @@ public class EventsDeckController extends AbstractDeckController implements Init
 
         try {
             decorator = new JFXDecorator(eventStage, loader.load(), false, false, true);
-        }catch (IOException e){
+        } catch (IOException e) {
 
             e.printStackTrace();
             return;
@@ -89,48 +96,5 @@ public class EventsDeckController extends AbstractDeckController implements Init
         eventStage.showAndWait();
     }
 
-    private void handleUserButton(Event event){
-        // Requests the feed controller to update the feed for the new Post to show up
-        Stage searchStage = new Stage();
-
-        try {
-            ContextHandler.getContext().register("User Profile", searchStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        searchStage.setTitle("UserProfile");
-        searchStage.setResizable(false);
-        FXMLLoader loader;
-        //This condition is to determinate if the user wants to see his own profile or another user's profile
-        //It must be completed later, this version is only for testing.
-        if (true) {
-            loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
-
-        } else {
-            loader = new FXMLLoader(getClass().getResource("/gui/fxml/otherUserProfile.fxml"));
-        }
-        JFXDecorator decorator;
-        try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Scene scene = new Scene(decorator, 450, 800);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.showAndWait();
-    }
 }
 

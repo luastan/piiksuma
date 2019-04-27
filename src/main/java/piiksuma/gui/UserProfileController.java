@@ -12,11 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.junit.FixMethodOrder;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Label;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
@@ -24,7 +23,6 @@ import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -84,6 +82,11 @@ public class UserProfileController implements Initializable {
         event.consume();  // Consumes it just in case another residual handler was listening to it
     }
 
+    /**
+     * Function to open a create ticket window if newTicketButton is clicked
+     *
+     * @param event
+     */
     private void handleNewTicektButton(Event event) {
         Stage searchStage = new Stage();
 
@@ -120,6 +123,11 @@ public class UserProfileController implements Initializable {
         searchStage.showAndWait();
     }
 
+    /**
+     * Function to open a window with the tickets
+     *
+     * @param event
+     */
     private void handleTicketsButton(Event event) {
         Stage searchStage = new Stage();
 
@@ -156,6 +164,11 @@ public class UserProfileController implements Initializable {
         searchStage.showAndWait();
     }
 
+    /**
+     * Function to update the feed
+     *
+     * @throws PiikDatabaseException
+     */
     public void updateFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         feed.clear();

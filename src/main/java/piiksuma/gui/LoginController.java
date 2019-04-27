@@ -37,6 +37,11 @@ public class LoginController implements Initializable {
         logIn.setOnAction(this::handleLogIn);
     }
 
+    /**
+     * Function to log in if logIn button is clicked
+     *
+     * @param event
+     */
     private void handleLogIn(Event event) {
 
         if (!checkFields()) {
@@ -62,6 +67,11 @@ public class LoginController implements Initializable {
         ContextHandler.getContext().setCurrentUser(userLoggin);
     }
 
+    /**
+     * Function to check if fields are not empty
+     *
+     * @return true if fields are not empty, otherwise false
+     */
     private boolean checkFields() {
         if (userId.getText().isEmpty() || password.getText().isEmpty()) {
             return false;
@@ -70,12 +80,15 @@ public class LoginController implements Initializable {
         return true;
     }
 
+    /**
+     * Function to enter the main window if logIn is succesfull
+     */
     private void enterMainWindow() {
         Stage mainStage = new Stage();
 
         try {
             ContextHandler.getContext().register("primary", mainStage);
-        }catch (PiikException e){
+        } catch (PiikException e) {
             //TODO
             return;
         }
@@ -88,7 +101,7 @@ public class LoginController implements Initializable {
 
         try {
             decorator = new JFXDecorator(mainStage, loader.load(), false, false, true);
-        }catch (IOException e){
+        } catch (IOException e) {
             return;
         }
 
@@ -103,6 +116,11 @@ public class LoginController implements Initializable {
         mainStage.show();
     }
 
+    /**
+     * Function to open the register window if register button is clicked
+     *
+     * @param event
+     */
     private void handleRegister(Event event) {
 
         Stage registerStage = new Stage();

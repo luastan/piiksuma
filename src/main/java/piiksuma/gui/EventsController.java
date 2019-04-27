@@ -39,6 +39,11 @@ public class EventsController implements Initializable {
         }
     }
 
+    /**
+     * Function to updates the feed on event's tab
+     *
+     * @throws PiikDatabaseException
+     */
     private void updateEventFeed() throws PiikDatabaseException {
 
         eventFeed.clear();

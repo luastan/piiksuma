@@ -63,7 +63,7 @@ public class UserDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       // User user = ContextHandler.getContext().getCurrentUser();
+        // User user = ContextHandler.getContext().getCurrentUser();
         User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
 
         user.setBirthday(Timestamp.from(Instant.now()));
@@ -73,6 +73,20 @@ public class UserDataController implements Initializable {
         user.addPhone("12345");
         user.addPhone("573643736");
 
+        initFields(user);
+
+        addTelephone.setOnAction(this::handleAddTelephone);
+
+        removeTelephone.setOnAction(this::handleRemove);
+
+        telephoneList.setEditable(true);
+        telephoneList.setCellFactory(TextFieldListCell.forListView());
+        multimediaButton.setOnAction(this::handleMultimediaButton);
+
+
+    }
+
+    private void initFields(User user) {
         genderBox.setItems(FXCollections.observableArrayList("M", "V", "O"));
         //We add to the fields all the info about the user
         userId.setText(user.getId());
@@ -92,38 +106,34 @@ public class UserDataController implements Initializable {
         religion.setText(user.getReligion());
         genderBox.getSelectionModel().select(user.getGender());
 
-        for(String telephone: user.getPhones()){
+        for (String telephone : user.getPhones()) {
             telephoneList.getItems().add(telephone);
         }
-
-        addTelephone.setOnAction(this::handleAddTelephone);
-
-        removeTelephone.setOnAction(this::handleRemove);
-
-        telephoneList.setEditable(true);
-        telephoneList.setCellFactory(TextFieldListCell.forListView());
-        multimediaButton.setOnAction(this::handleMultimediaButton);
-
-
     }
 
+    /**
+     * Function to handle the plus button to add an image
+     *
+     * @param event
+     */
     private void handleMultimediaButton(Event event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Escoja una imagen de fondo (150x65)");
+        fileChooser.setTitle("Choose an image (150x65)");
         File imagen = fileChooser.showOpenDialog(null);
 
-        // Si el usuario ha escogido una imagen
         if (imagen != null) {
             imageView.setImage(new Image(imagen.toURI().toString()));
-        }
-
-        // Si el usuario quiere provocar un SEGFAULT
-        else {
-            System.out.println("Operación cancelada");
+        } else {
+            System.out.println("Error");
 
         }
     }
 
+    /**
+     * Function to handle when removeTelephone button is clicked
+     *
+     * @param event
+     */
     private void handleRemove(Event event) {
         if (telephoneList.getSelectionModel().getSelectedIndex() == -1) {
             return;
@@ -131,10 +141,14 @@ public class UserDataController implements Initializable {
 
         telephoneList.getItems().remove(telephoneList.getSelectionModel().getSelectedIndex());
         telephoneList.getSelectionModel().selectPrevious();
-        telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex()-1);
+        telephoneList.scrollTo(telephoneList.getSelectionModel().getSelectedIndex() - 1);
         telephoneList.layout();
     }
-
+    /**
+     * Function to handle when addTelephone button is clicked
+     *
+     * @param event
+     */
     private void handleAddTelephone(Event event) {
 
         telephoneList.getItems().add("Edit!");
