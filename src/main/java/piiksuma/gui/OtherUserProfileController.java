@@ -45,6 +45,12 @@ public class OtherUserProfileController implements Initializable {
     @FXML
     private JFXButton messageButton;
 
+    @FXML
+    private JFXButton blockButton;
+
+    @FXML
+    private JFXButton followButton;
+
     private User user;
 
     public User getUser() {
@@ -62,6 +68,8 @@ public class OtherUserProfileController implements Initializable {
         feed = FXCollections.observableArrayList();
         userName.setText(user.getName());
         description.setText(user.getDescription());
+        blockButton.setOnAction(this::handleBlockButton);
+        followButton.setOnAction(this::handleFollowButton);
 
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
@@ -141,5 +149,44 @@ public class OtherUserProfileController implements Initializable {
         searchStage.setScene(scene);
         // Show and wait till it closes
         searchStage.showAndWait();
+    }
+
+    private void handleBlockButton(Event event){
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user,ContextHandler.getContext().getCurrentUser());
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleFollowButton(Event event){
+        User folllowed = null;
+        try {
+            folllowed = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from followUser WHERE followed = ? AND follower = ?")
+                    .defineClass(User.class).defineParameters(user.getId(),ContextHandler.getContext().getCurrentUser().getId()).findFirst();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+        if (folllowed == null){
+            try {
+                ApiFacade.getEntrypoint().getInsertionFacade().followUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("SEGUIDO");
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+
+        }else{
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().unfollowUser(user,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                System.out.println("DEJADO DE SEGUIR");
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+
+        }
     }
 }
