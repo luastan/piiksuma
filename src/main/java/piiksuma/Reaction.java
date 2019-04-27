@@ -14,7 +14,7 @@ public class Reaction extends PiikObject{
 
     private ReactionType reactionType;
 
-    @MapperColumn(columna = "reactionType")
+    @MapperColumn(columna = "reactiontype")
     private String strReactionType;
 
     public Reaction() {

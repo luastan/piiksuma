@@ -68,7 +68,7 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
 
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateEvent VALUES(?,?,?)").defineParameters(
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateevent VALUES(?,?,?)").defineParameters(
                 event.getId(),
                 event.getCreator().getId(),
                 user.getId()
@@ -227,8 +227,8 @@ public class InteractionDao extends AbstractDao {
 
         // We get the reactions associated with the post and we group them by type
         List<Map<String, Object>> query = new QueryMapper<Object>(super.getConnection()).createQuery(
-                "SELECT reactionType as type, count(usr) as number FROM react WHERE post = ? AND author = ? GROUP BY " +
-                        "reactionType").defineParameters(post.getId(), post.getPostAuthor().getId()).mapList();
+                "SELECT reactiontype as type, count(usr) as number FROM react WHERE post = ? AND author = ? GROUP BY " +
+                        "reactiontype").defineParameters(post.getId(), post.getPostAuthor().getId()).mapList();
 
         for (Map<String, Object> row : query) {
             result.put(ReactionType.stringToReactionType((String) row.get("type")), (Integer) row.get("number"));
@@ -271,7 +271,7 @@ public class InteractionDao extends AbstractDao {
             /* Statement */
 
             // Notification's IDs are generated automatically when inserted
-            clause.append("INSERT INTO notification(creationDate, content) VALUES (?, ?) RETURNING id");
+            clause.append("INSERT INTO notification(creationdate, content) VALUES (?, ?) RETURNING id");
 
             statement = con.prepareStatement(clause.toString());
 
@@ -346,7 +346,7 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO haveNotification (notification,usr) " +
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO havenotification (notification,usr) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getPK()).executeUpdate();
 
     }
@@ -364,7 +364,7 @@ public class InteractionDao extends AbstractDao {
         }
 
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
-                "haveNotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
+                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
                 user.getPK()).list();
     }
 }
