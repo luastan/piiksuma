@@ -8,12 +8,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.event.Event;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 
 
 import java.io.IOException;
@@ -83,6 +87,8 @@ public class SearchController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 
 
 
@@ -158,7 +164,7 @@ public class SearchController implements Initializable {
         if (searchText.getText().isEmpty()) {
             searchText.setText("");
         }
-        userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT name FROM piiUser WHERE name LIKE ?;")
+        userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiUser WHERE name LIKE ?;")
                 .defineParameters("%" + searchText.getText() + "%").list());
     }
 
@@ -201,8 +207,8 @@ public class SearchController implements Initializable {
 
 
     private void insertPost(Post post) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
-        postLoader.setController(new SearchedPostController(post));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
+        postLoader.setController(new PostController(post));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
@@ -214,7 +220,7 @@ public class SearchController implements Initializable {
     }
 
     private void insertUser(User user) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/user.fxml"));
         postLoader.setController(new SearchedUserController(user));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());
@@ -227,8 +233,8 @@ public class SearchController implements Initializable {
     }
 
     private void insertEvent(piiksuma.Event event) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/searched.fxml"));
-        postLoader.setController(new SearchedEventController(event));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
+        postLoader.setController(new EventController(event));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {

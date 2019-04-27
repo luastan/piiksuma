@@ -14,7 +14,14 @@ public class SearchedUserController implements Initializable {
     private User user;
 
     @FXML
-    private Label search;
+    private Label id;
+
+    @FXML
+    private Label name;
+
+    @FXML
+    private Label description;
+
 
     public SearchedUserController(User user) {
         this.user = user;
@@ -22,6 +29,8 @@ public class SearchedUserController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        search.setText(user.getName());
+        name.setText(user.getName());
+        id.setText(user.getId());
+        description.setText(user.getDescription());
     }
 }

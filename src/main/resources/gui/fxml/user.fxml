@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="post-container">
+    <top>
+        <ImageView>
+            <Image preserveRatio="true" requestedHeight="350" url="/imagenes/huevo.png"/>
+        </ImageView>
+        <Label text="ID" fx:id="id" wrapText="true" styleClass="post-text" translateX="180"/>
+    </top>
+    <center>
+        <VBox spacing="20">
+            <Label text="Name" fx:id="name" wrapText="true" styleClass="post-text" alignment="CENTER" translateX="175" />
+            <Label text="Description" fx:id="description" wrapText="true" styleClass="post-text" translateX="165" />
+        </VBox>
+    </center>
+    <bottom>
+        <JFXButton fx:id="profileButton" text="Profile" styleClass="jfx-button-border" translateX="170"/>
+    </bottom>
+</BorderPane>
