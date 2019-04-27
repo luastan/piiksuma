@@ -801,6 +801,19 @@ public class UserDao extends AbstractDao {
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
+    public void unblockUser(User blockedUser, User user) throws PiikDatabaseException {
+
+        if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
+        }
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("DELETE FROM blockuser WHERE usr = ? AND blocked = ?")
+                .defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
+    }
+
     /**
      * Function to silence a user
      *

@@ -1,6 +1,7 @@
 package piiksuma.api;
 
 import piiksuma.*;
+import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -164,6 +165,22 @@ public class DeletionFacade {
         parentFacade.getPostDao().removeRepost(repost);
     }
 
+
+    public void unblockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
+        }
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        parentFacade.getUserDao().unblockUser(blockedUser, user);
+    }
     /* MESSAGE related methods */
 
     /**

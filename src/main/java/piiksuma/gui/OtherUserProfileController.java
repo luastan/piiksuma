@@ -114,7 +114,7 @@ public class OtherUserProfileController implements Initializable {
         postScrollPane.requestFocus();
     }
     private void handleMessageButton(Event event) {
-        System.out.println("asdjfasdf");
+
         Stage searchStage = new Stage();
 
         try {
@@ -152,10 +152,29 @@ public class OtherUserProfileController implements Initializable {
     }
 
     private void handleBlockButton(Event event){
+        User blocked = null;
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user,ContextHandler.getContext().getCurrentUser());
+            blocked = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT * from blockUser WHERE usr = ? AND blocked = ?")
+                    .defineClass(User.class).defineParameters(ContextHandler.getContext().getCurrentUser().getId(),user.getId()).findFirst();
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
+        }
+        if (blocked == null) {
+            try {
+                ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+        }else{
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(blocked,ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
         }
     }
 

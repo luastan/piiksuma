@@ -117,7 +117,12 @@ public class InsertionFacade {
      * @param user        User who wants to block the other user
      * @throws PiikDatabaseException
      */
-    public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
+    public void blockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+
+
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
 
         if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
