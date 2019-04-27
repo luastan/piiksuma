@@ -4,6 +4,7 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +46,7 @@ public class Post extends PiikObject{
 
         this.fatherPost = null;
         this.multimedia = null;
+        this.hashtags = new ArrayList<>();
     }
 
     public Post(User author, String id, String text, Timestamp publicationDate, Post father, Multimedia multimedia) {
@@ -54,6 +56,7 @@ public class Post extends PiikObject{
         this.publicationDate = publicationDate;
         this.fatherPost = father;
         this.multimedia = multimedia;
+        this.hashtags = new ArrayList<>();
     }
 
     public Post(String idAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy,

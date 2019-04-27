@@ -78,9 +78,9 @@ public class UserDao extends AbstractDao {
                         "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
-            if(user.getPhones() != null && !user.getPhones().isEmpty()){
-                for(String phone : user.getPhones()) {
-                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+            if (user.getPhones() != null && !user.getPhones().isEmpty()) {
+                for (String phone : user.getPhones()) {
+                    if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
                         clause.append("INSERT INTO phone(prefix, phone, usr) VALUES(?, ?, ?);");
                     }
                 }
@@ -116,7 +116,7 @@ public class UserDao extends AbstractDao {
                     }
 
                     // Default values are skipped (registration date)
-                    if(!mapperColumn.hasDefault()) {
+                    if (!mapperColumn.hasDefault()) {
                         // The iterated field cannot be null and have a default value
                         if (mapperColumn.pkey() || mapperColumn.notNull()) {
                             clauseAux.append("?");
@@ -124,15 +124,14 @@ public class UserDao extends AbstractDao {
                             columnValues.add(value);
                         } else {
                             // Unable to set a value in prepared statement or it is an empty string
-                            if (value == null || (value instanceof String && ((String)value).isEmpty())) {
+                            if (value == null || (value instanceof String && ((String) value).isEmpty())) {
                                 clauseAux.append("NULL");
                             } else {
                                 clauseAux.append("?");
                                 // To preserve the order when filling values in the prepared statement
-                                if(value instanceof Multimedia) {
-                                    columnValues.add(((Multimedia)value).getHash());
-                                }
-                                else {
+                                if (value instanceof Multimedia) {
+                                    columnValues.add(((Multimedia) value).getHash());
+                                } else {
                                     columnValues.add(value);
                                 }
                             }
@@ -179,9 +178,9 @@ public class UserDao extends AbstractDao {
             }
 
             // Phones insertion
-            if(user.getPhones() != null && !user.getPhones().isEmpty()){
-                for(String phone : user.getPhones()) {
-                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+            if (user.getPhones() != null && !user.getPhones().isEmpty()) {
+                for (String phone : user.getPhones()) {
+                    if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
                         String prefix = phone.substring(0, 2);
                         String withoutPrefix = phone.substring(3);
                         statement.setString(offset++, prefix);
@@ -258,9 +257,9 @@ public class UserDao extends AbstractDao {
                         "multimediaImage WHERE hash = ? FOR UPDATE); ");
             }
 
-            if(user.getPhones() != null && !user.getPhones().isEmpty()){
-                for(String phone : user.getPhones()) {
-                    if(phone != null && !phone.isEmpty() && phone.length() >= 4) {
+            if (user.getPhones() != null && !user.getPhones().isEmpty()) {
+                for (String phone : user.getPhones()) {
+                    if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
                         clause.append("INSERT INTO phone(prefix, phone, usr) SELECT ?, ?, ? WHERE NOT EXISTS" +
                                 " (SELECT * FROM phone WHERE prefix = ? and phone = ? and usr = ?);");
                     }
@@ -302,7 +301,7 @@ public class UserDao extends AbstractDao {
                         columnValues.add(value);
                     } else {
                         // Unable to set a value in prepared statement or it is an empty string
-                        if (value == null || (value instanceof String && ((String)value).isEmpty())) {
+                        if (value == null || (value instanceof String && ((String) value).isEmpty())) {
                             clause.append("NULL");
                         } else {
                             clause.append("?");
@@ -348,8 +347,8 @@ public class UserDao extends AbstractDao {
                 offset += 6;
             }
 
-            for(String phone : user.getPhones()){
-                if(phone != null && !phone.isEmpty() && phone.length() >= 4){
+            for (String phone : user.getPhones()) {
+                if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
                     String prefix = phone.substring(0, 2);
                     String withoutPrefix = phone.substring(3);
 
@@ -372,8 +371,7 @@ public class UserDao extends AbstractDao {
             if (user.checkAdministrator()) {
                 statement.setString(offset++, user.getId());
                 statement.setString(offset, user.getId());
-            }
-            else {
+            } else {
                 statement.setString(offset, id);
             }
 
@@ -611,22 +609,15 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        /*
-        select t.*, ad.id as type
-from (piiuser LEFT JOIN phone ON (id=usr)) as t LEFT JOIN administrator as ad ON (t.id=ad.id);
-
-
-         */
-
         // Get the list with the user, the phones and the type of user
         List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(
                 "SELECT t.*, ad.id as type " +
-                "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad ON (t.id = ad.id) " +
-                "WHERE id LIKE ?").defineParameters(user.getPK()).mapList();
+                        "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad ON (t.id = ad.id) " +
+                        "WHERE id LIKE ?").defineParameters(user.getPK()).mapList();
 
         User returnUser = new User();
 
-        if(listObject == null || listObject.isEmpty()){
+        if (listObject == null || listObject.isEmpty()) {
             return null;
         } else {
 
@@ -637,14 +628,14 @@ from (piiuser LEFT JOIN phone ON (id=usr)) as t LEFT JOIN administrator as ad ON
             Object typeUser = columnsUsr.get("type");
 
             // If the typeUser is null or the string is empty, the type of user is "user"
-            if(typeUser == null){
+            if (typeUser == null) {
                 returnUser.setType(UserType.user);
             }
 
-            if(typeUser instanceof String){
-                String type = (String)typeUser;
+            if (typeUser instanceof String) {
+                String type = (String) typeUser;
 
-                if(type.isEmpty()){
+                if (type.isEmpty()) {
                     returnUser.setType(UserType.user);
                 } else {
                     returnUser.setType(UserType.administrator);
@@ -652,31 +643,20 @@ from (piiuser LEFT JOIN phone ON (id=usr)) as t LEFT JOIN administrator as ad ON
             }
 
             // User information is saved
-            try {
-
-                for (Field field : returnUser.getClass().getDeclaredFields()) {
-                    field.setAccessible(true);
-
-                    if (field.isAnnotationPresent(MapperColumn.class)) {
-
-                        String columnName = field.getAnnotation(MapperColumn.class).columna();
-                        columnName = columnName.equals("") ? field.getName() : columnName;
-
-                        if (columnsUsr.containsKey(columnName)) {
-                            field.set(returnUser, columnsUsr.get(columnName));
-                        }
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            returnUser.addInfo(columnsUsr);
 
             // Get the phones
             for (Map<String, Object> usrInfo : listObject) {
                 if (usrInfo.containsKey("phone")) {
-                    String phone = (String) usrInfo.get("prefix");
-                    phone += usrInfo.get("phone");
-                    returnUser.addPhone(phone);
+                    String prefix = (String) usrInfo.get("prefix");
+
+                    if(prefix != null && !prefix.isEmpty()) {
+                        String numPhone = (String) usrInfo.get("phone");
+
+                        if(numPhone != null && !numPhone.isEmpty()){
+                            returnUser.addPhone(prefix + numPhone);
+                        }
+                    }
                 }
             }
         }

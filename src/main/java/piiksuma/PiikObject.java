@@ -158,4 +158,30 @@ public abstract class PiikObject {
         }
         return true;
     }
+
+    /**
+     * Function to insert in the object all the information of the Map
+     *
+     * @param information information to add in the object
+     */
+    public void addInfo(Map<String, Object> information){
+        try {
+
+            for (Field field : this.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+
+                if(field.isAnnotationPresent(MapperColumn.class)){
+
+                    String columnName = field.getAnnotation(MapperColumn.class).columna();
+                    columnName = columnName.equals("") ? field.getName() : columnName;
+
+                    if(information.containsKey(columnName)){
+                        field.set(this, information.get(columnName));
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 }
