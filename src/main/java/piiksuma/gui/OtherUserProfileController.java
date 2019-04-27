@@ -11,11 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -29,7 +31,10 @@ import java.util.ResourceBundle;
 public class OtherUserProfileController implements Initializable {
 
     @FXML
-    private Text userName;
+    private Label userName;
+
+    @FXML
+    private Label description;
     @FXML
     private ScrollPane postScrollPane;
 
@@ -40,11 +45,23 @@ public class OtherUserProfileController implements Initializable {
     @FXML
     private JFXButton messageButton;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        ContextHandler.getContext().getCurrentUser().setName("OswaldOswin");
         // userName.setText(ContextHandler.getContext().getCurrentUser().getName());
         feed = FXCollections.observableArrayList();
+        userName.setText(user.getName());
+        description.setText(user.getDescription());
 
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
@@ -89,6 +106,7 @@ public class OtherUserProfileController implements Initializable {
         postScrollPane.requestFocus();
     }
     private void handleMessageButton(Event event) {
+        System.out.println("asdjfasdf");
         Stage searchStage = new Stage();
 
         try {

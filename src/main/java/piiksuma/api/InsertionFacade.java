@@ -1,6 +1,7 @@
 package piiksuma.api;
 
 import piiksuma.*;
+import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -107,6 +108,25 @@ public class InsertionFacade {
         }
 
         parentFacade.getUserDao().followUser(followed, follower);
+    }
+
+    /**
+     * Function to block a user
+     *
+     * @param blockedUser User to be blocked
+     * @param user        User who wants to block the other user
+     * @throws PiikDatabaseException
+     */
+    public void blockUser(User blockedUser, User user) throws PiikDatabaseException {
+
+        if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("blockedUser"));
+        }
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+       parentFacade.getUserDao().blockUser(blockedUser, user);
     }
 
 

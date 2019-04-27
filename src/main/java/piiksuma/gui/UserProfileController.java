@@ -52,6 +52,7 @@ public class UserProfileController implements Initializable {
     private ObservableList<Post> feed;
 
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //User user = new User("OswaldOswin", "user1", "@yahoo.es");
