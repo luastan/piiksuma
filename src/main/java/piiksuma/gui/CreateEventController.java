@@ -10,6 +10,10 @@ import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class CreateEventController implements Initializable {
@@ -44,11 +48,21 @@ public class CreateEventController implements Initializable {
         newEvent.setDescription(description.getText());
         newEvent.setLocation(location.getText());
         newEvent.setName(eventName.getText());
+
+        if(!date.getText().isEmpty()) {
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                Date d = dateFormat.parse(date.getText());
+                newEvent.setDate(new java.sql.Timestamp(d.getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             newEvent=ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
         }catch (PiikException e){
-            //TODO handle with exceptions
-            System.out.println("ERROR");
+            System.out.println(e.getMessage());
             return;
         }
 
