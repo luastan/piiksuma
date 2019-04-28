@@ -31,7 +31,7 @@ public class MessagesDao extends AbstractDao {
     public void deleteMessage(Message message) throws PiikDatabaseException {
         // Check if event or primary key are null
         if (message == null || !message.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
         }
 
         // We delete the message from the system
@@ -39,24 +39,24 @@ public class MessagesDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-    /**
-     * This function replaces the content of a message stored in the database because the user wants to modify it or
-     * because an admin wants to censor its content
+    /*******************************************************************************************************************
+     * Replace the content of a message that the user wants to modify or the admin decides to censor
      *
      * @param newMessage message to be updated
+     * @throws PiikDatabaseException Thrown if message or its primary key are null
      */
-    public void modifyMessage(Message newMessage) throws PiikDatabaseException {
-
-        if (newMessage == null || !newMessage.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("newMessage"));
+    public void modifyMessage(Message message) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (message == null || !message.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
         }
 
-        Multimedia multimedia = newMessage.getMultimedia();
+        Multimedia multimedia = message.getMultimedia();
 
         // If multimedia will be inserted
         boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
         // If ticket will be inserted
-        boolean ticketExists = newMessage.getTicket() != null && newMessage.getTicket().checkPrimaryKey(false);
+        boolean ticketExists = message.getTicket() != null && message.getTicket().checkPrimaryKey(false);
 
         // Connection to the database
         Connection con = getConnection();
@@ -121,19 +121,19 @@ public class MessagesDao extends AbstractDao {
                 offset += 6;
             }
 
-            statement.setString(offset++, newMessage.getText());
-            statement.setTimestamp(offset++, newMessage.getDate());
+            statement.setString(offset++, message.getText());
+            statement.setTimestamp(offset++, message.getDate());
 
             if (multimediaExists) {
                 statement.setString(offset++, multimedia.getHash());
             }
 
             if (ticketExists) {
-                statement.setInt(offset++, newMessage.getTicket().getId());
+                statement.setInt(offset++, message.getTicket().getId());
             }
 
-            statement.setString(offset++, newMessage.getId());
-            statement.setString(offset, newMessage.getSender().getPK());
+            statement.setString(offset++, message.getId());
+            statement.setString(offset, message.getSender().getPK());
 
 
             /* Execution */
