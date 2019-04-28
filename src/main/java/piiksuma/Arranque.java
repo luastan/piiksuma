@@ -27,7 +27,7 @@ public class Arranque extends Application {
         user.setPass("supercontraseña");
 
         // Comment to use the login
-//        ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().login(user));
+        ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().login(user));
 
         ContextHandler.getContext().stageJuggler(primaryStage);
     }

@@ -146,7 +146,7 @@ CREATE TABLE piiUser
     job                varchar(35),
 
     -- Aqui hay que pensar como va a funcionar por defecto
-    profilePicture     varchar(32) references multimediaImage (hash)
+    profilePicture     varchar(256) references multimediaImage (hash)
         on delete set null on update cascade
 );
 
@@ -249,7 +249,7 @@ CREATE TABLE message
     author     varchar(32),
     text       varchar(200) not null,
     date       timestamp    not null default now(),
-    multimedia varchar(32),
+    multimedia varchar(256),
     ticket     integer,
 
     primary key (author, id),
@@ -292,7 +292,7 @@ CREATE TABLE post
     publicationDate timestamp default now() not null,
     sugarDaddy      varchar(32),
     authorDaddy     varchar(32),
-    multimedia      varchar(32),
+    multimedia      varchar(256),
 
     primary key (id, author),
     foreign key (author) references piiUser (id)
