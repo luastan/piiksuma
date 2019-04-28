@@ -1,10 +1,8 @@
 package piiksuma;
 
-import org.junit.runners.Parameterized;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -12,7 +10,7 @@ import java.util.Objects;
 public class Event extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
+    @MapperColumn(pkey = true,columna = "author", fKeys = "author:id", targetClass = User.class)
     private User creator;
     @MapperColumn(hasDefault = true)
     private String description;

@@ -74,8 +74,8 @@ public class EventController implements Initializable {
 
     private void setEventInfo() {
         eventDescription.setText(eventP.getDescription());
-//        authorName.setText(eventP.getCreator().getName());
-//        authorId.setText(eventP.getCreator().getId());
+        authorName.setText(eventP.getCreator().getName());
+        authorId.setText(eventP.getCreator().getId());
         eventDate.setText(eventP.getDate().toString());
         eventLocation.setText(eventP.getLocation());
     }

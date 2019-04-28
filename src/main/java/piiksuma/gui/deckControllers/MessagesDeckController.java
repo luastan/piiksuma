@@ -83,7 +83,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
         searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
         searchStage.setScene(scene);
         // Show and wait till it closes
-        searchStage.showAndWait();
+        searchStage.show();
 
     }
 

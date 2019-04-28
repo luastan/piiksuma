@@ -539,7 +539,7 @@ public class SearchFacade {
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
-        
+
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
