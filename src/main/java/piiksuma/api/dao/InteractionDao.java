@@ -223,8 +223,27 @@ public class InteractionDao extends AbstractDao {
     //******************************************************************************************************************
 
     //==================================================================================================================
+    // ================================================== REACTIONS ====================================================
 
-    /**
+    /*******************************************************************************************************************
+     *  Inserts a reaction to a post from a user
+     * @param reaction Reaction to insert
+     * @throws PiikDatabaseException Thrown if reaction or the primary key are null
+     */
+    public void react(Reaction reaction) throws PiikDatabaseException {
+        // Check if reaction or primary key are null
+        if (reaction == null || !reaction.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
+        }
+
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
+                "author) VALUES(?,?,?,?)")
+                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                        reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
      * Removes an user reaction to a post
      *
      * @param reaction Reaction to be removed
@@ -240,24 +259,8 @@ public class InteractionDao extends AbstractDao {
                 " post = ? and usr = ? and author = ?").defineParameters(reaction.getPost().getId(),
                 reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
-
-
-    /**
-     * Inserts into the database a given reaction
-     *
-     * @param reaction reaction to be inserted
-     */
-    public void react(Reaction reaction) throws PiikDatabaseException {
-
-        if (reaction == null || !reaction.checkPrimaryKey(true)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
-        }
-
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
-                "author) VALUES(?,?,?,?)")
-                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
-                        reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
-    }
+    //******************************************************************************************************************
+    //==================================================================================================================
 
     /**
      * Gets the number of reactions that a post has, classified by type
