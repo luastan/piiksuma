@@ -7,7 +7,6 @@ import piiksuma.User;
 import piiksuma.api.ErrorMessage;
 import piiksuma.api.MultimediaType;
 import piiksuma.database.DeleteMapper;
-import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -23,15 +22,14 @@ public class MessagesDao extends AbstractDao {
     }
 //====================================================== Message =======================================================
 
-    /**
-     * This function allows deleting a message:
-     * - An admin decides to delete it because the sender has used unappropriated words
-     * - The sender wants to delete it
+    /*******************************************************************************************************************
+     * Delete a message you sent or a not allowed message checked by the admin
      *
-     * @param message message to delete
+     * @param message Message to delete
+     * @throws PiikDatabaseException Thrown if message or its primary key are null
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
-
+        // Check if event or primary key are null
         if (message == null || !message.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("message"));
         }
@@ -39,6 +37,7 @@ public class MessagesDao extends AbstractDao {
         // We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
     }
+    //******************************************************************************************************************
 
     /**
      * This function replaces the content of a message stored in the database because the user wants to modify it or
@@ -94,7 +93,7 @@ public class MessagesDao extends AbstractDao {
 
             clause.append(", ticket = ");
 
-            if(ticketExists) {
+            if (ticketExists) {
                 clause.append("?");
             } else {
                 clause.append("NULL");
@@ -110,7 +109,7 @@ public class MessagesDao extends AbstractDao {
 
             int offset = 1;
 
-            if(multimediaExists) {
+            if (multimediaExists) {
                 statement.setString(1, multimedia.getHash());
                 statement.setString(2, multimedia.getResolution());
                 statement.setString(3, multimedia.getUri());
@@ -125,11 +124,11 @@ public class MessagesDao extends AbstractDao {
             statement.setString(offset++, newMessage.getText());
             statement.setTimestamp(offset++, newMessage.getDate());
 
-            if(multimediaExists) {
+            if (multimediaExists) {
                 statement.setString(offset++, multimedia.getHash());
             }
 
-            if(ticketExists) {
+            if (ticketExists) {
                 statement.setInt(offset++, newMessage.getTicket().getId());
             }
 
@@ -176,7 +175,7 @@ public class MessagesDao extends AbstractDao {
     /**
      * This function creates a private message to be sent to another users in the social network
      *
-     * @param message    message to be sent
+     * @param message message to be sent
      * @return message containing the given data and its generated ID
      */
     public Message createMessage(Message message) throws PiikDatabaseException {
@@ -234,7 +233,7 @@ public class MessagesDao extends AbstractDao {
                 clause.append(", NULL");
             }
 
-            if(ticketExists) {
+            if (ticketExists) {
                 clause.append(", ?) ");
             } else {
                 clause.append(", NULL) ");
@@ -250,7 +249,7 @@ public class MessagesDao extends AbstractDao {
 
             int offset = 1;
 
-            if(multimediaExists) {
+            if (multimediaExists) {
                 statement.setString(1, multimedia.getHash());
                 statement.setString(2, multimedia.getResolution());
                 statement.setString(3, multimedia.getUri());
@@ -266,11 +265,11 @@ public class MessagesDao extends AbstractDao {
             statement.setString(offset++, message.getText());
             statement.setTimestamp(offset++, message.getDate());
 
-            if(multimediaExists) {
+            if (multimediaExists) {
                 statement.setString(offset++, multimedia.getHash());
             }
 
-            if(ticketExists) {
+            if (ticketExists) {
                 statement.setInt(offset, message.getTicket().getId());
             }
 
@@ -280,11 +279,9 @@ public class MessagesDao extends AbstractDao {
             ResultSet keys = statement.executeQuery();
 
             // ID generation successful
-            if(keys.next()) {
+            if (keys.next()) {
                 completeMessage.setId(keys.getString("id"));
-            }
-
-            else {
+            } else {
                 throw new PiikDatabaseException("Message ID generation failed");
             }
 
@@ -379,11 +376,9 @@ public class MessagesDao extends AbstractDao {
             ResultSet keys = statement.executeQuery();
 
             // ID generation successful
-            if(keys.next()) {
+            if (keys.next()) {
                 completeTicket.setId(keys.getInt("id"));
-            }
-
-            else {
+            } else {
                 throw new PiikDatabaseException("Ticket ID generation failed");
             }
 
@@ -418,7 +413,7 @@ public class MessagesDao extends AbstractDao {
             }
         }
 
-        return(completeTicket);
+        return (completeTicket);
     }
 
     /**
