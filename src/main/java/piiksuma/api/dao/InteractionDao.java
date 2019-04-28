@@ -425,8 +425,9 @@ public class InteractionDao extends AbstractDao {
         }
 
         // Send the notification
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO havenotification (notification,usr) " +
-                "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getPK()).executeUpdate();
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO havenotification " +
+                "(notification,usr) VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(),
+                user.getPK()).executeUpdate();
 
     }
 
@@ -446,8 +447,9 @@ public class InteractionDao extends AbstractDao {
         }
         // Returns the list of notifications
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
-                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class).defineParameters(
-                user.getPK()).list();
+                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class)
+                .defineParameters(
+                        user.getPK()).list();
     }
 
     //******************************************************************************************************************
