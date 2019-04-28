@@ -9,7 +9,9 @@ VALUES ('usr1', 'usr1@gmail.com', 'user1',
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
-VALUES ('usr2', 'usr2@gmail.com', 'user2', 'user2', 'M', 'dasdasd',
+VALUES ('usr2', 'usr2@gmail.com', 'user2',
+        'LhRjG6dPpDNSOqBvE/+KTA==$4Ne3Q+T6DrXeIZCSAAo1GBeuot7+krcQjoC5cf2B4OfqAcwl5ne6tFJtKSMZiR4IqpnckHxw0vutdAokJVbGew==',
+        'M', 'dasdasd',
         'somewhere', '231', 'someProvince', 'someCountry', 'someCity', '2019-04-12', '2019-04-12');
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
