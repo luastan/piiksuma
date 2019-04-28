@@ -112,16 +112,22 @@ public class RegisterController implements Initializable {
     private void handleRegister(Event event) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date;
+        Alert alert = new Alert(ContextHandler.getContext().getStage("register"));
         try {
             date = dateFormat.parse(birthday.getText());
         } catch (ParseException e) {
-            System.out.println("ERROR DATE");
+            alert.setHeading("Fields wrong!");
+            alert.addText("Date field is incorrect");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
 
         if (!checkFields()) {
-            //TODO display an alert
-            System.out.println("ERROR FIELDS");
+            alert.setHeading("Fields empty!");
+            alert.addText("Fields with * cannot be empty");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
 

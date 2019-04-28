@@ -21,7 +21,6 @@ public class Arranque extends Application {
         // Registers current stage into the Application Context
 
         ContextHandler.getContext().setCurrentUser(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiuser;").findFirst());
-        ContextHandler.getContext().stageJuggler();
-//        ContextHandler.getContext().register("primary", primaryStage);
+        ContextHandler.getContext().stageJuggler(primaryStage);
     }
 }

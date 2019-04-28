@@ -54,7 +54,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
         Stage searchStage = new Stage();
 
         try {
-            ContextHandler.getContext().register("Start chat", searchStage);
+            ContextHandler.getContext().register("startChat", searchStage);
         } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;

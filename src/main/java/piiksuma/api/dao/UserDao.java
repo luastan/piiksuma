@@ -694,7 +694,7 @@ public class UserDao extends AbstractDao {
                         "SELECT COUNT(*) AS followback " +
                         "FROM followedtable, followerstable " +
                         "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
+        ).defineParameters(user.getPK(),user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 

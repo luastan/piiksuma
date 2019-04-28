@@ -43,10 +43,13 @@ public class LoginController implements Initializable {
      * @param event
      */
     private void handleLogIn(Event event) {
-
+        Alert alert = new Alert(ContextHandler.getContext().getStage("logIn"));
         if (!checkFields()) {
-            //TODO alert
-            System.out.println("Fields not filled");
+
+            alert.setHeading("Fields empty!");
+            alert.addText("Fields cannot be empty");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
         User user = new User(userId.getText(), password.getText());
@@ -59,8 +62,10 @@ public class LoginController implements Initializable {
         }
 
         if (userLoggin == null) {
-            //TODO alert with invalid credentials
-            System.out.println("User == null");
+            alert.setHeading("Invalid!");
+            alert.addText("Invalid credentials, try again.");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
 
