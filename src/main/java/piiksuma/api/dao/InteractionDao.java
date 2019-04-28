@@ -235,7 +235,7 @@ public class InteractionDao extends AbstractDao {
         if (reaction == null || !reaction.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
-
+        // Insert reaction
         new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
                 "author) VALUES(?,?,?,?)")
                 .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
@@ -260,16 +260,16 @@ public class InteractionDao extends AbstractDao {
                 reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
     //******************************************************************************************************************
-    //==================================================================================================================
 
-    /**
-     * Gets the number of reactions that a post has, classified by type
+    /*******************************************************************************************************************
+     * Gets the number of reactions from a post classified by type
      *
-     * @param post post whose reactions will be counted
-     * @return number of reactions classified by type
+     * @param post Post you will get the reactions from
+     * @return HahsMap with the reaction type and the number from each type
+     * @throws PiikDatabaseException Thrown if reaction or the primary key are null
      */
     public HashMap<ReactionType, Long> getPostReactionsCount(Post post) throws PiikDatabaseException {
-
+        // Check if reaction or primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -287,6 +287,8 @@ public class InteractionDao extends AbstractDao {
 
         return result;
     }
+    //******************************************************************************************************************
+    //==================================================================================================================
 
     /**
      * Inserts a new notification on a user
