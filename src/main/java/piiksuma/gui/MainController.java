@@ -1,8 +1,6 @@
 package piiksuma.gui;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
@@ -33,8 +31,6 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXTabPane mainPane;
-
-
 
 
     private List<Node> nodesMainContainer;
@@ -110,7 +106,6 @@ public class MainController implements Initializable {
         });
 
 
-
         // Messages
         Tab messagesTab = new Tab();
         FontAwesomeIconView messagesTabIcon = new FontAwesomeIconView(FontAwesomeIcon.ENVELOPE);
@@ -157,7 +152,7 @@ public class MainController implements Initializable {
         FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
         eventTab.setContent(eventViewLoader.load());
 
-       // Finally loads tabs into the pane
+        // Finally loads tabs into the pane
         mainPane.getTabs().addAll(
                 feedTab,
                 //profileTab,
@@ -182,7 +177,6 @@ public class MainController implements Initializable {
 
         // Sets code to be executed on exit event
         ContextHandler.getContext().getStage("primary").setOnCloseRequest(this::handleExit);
-
     }
 
 
