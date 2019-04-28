@@ -1,6 +1,5 @@
 package piiksuma;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import piiksuma.api.ApiFacade;

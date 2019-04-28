@@ -328,14 +328,15 @@ public class MessagesDao extends AbstractDao {
 
 // ============================================ Tickets ================================================================
 
-    /**
+    /*******************************************************************************************************************
      * A new ticket, created by a user, is inserted into the database
      *
      * @param ticket ticket to insert
      * @return ticket containing the given data and its generated ID
+     * @throws PiikDatabaseException Thrown if ticket or its primary key are null
      */
     public Ticket newTicket(Ticket ticket) throws PiikDatabaseException {
-
+        // Check if ticket or its primary key are null
         if (ticket == null || !ticket.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
@@ -421,6 +422,7 @@ public class MessagesDao extends AbstractDao {
 
         return (completeTicket);
     }
+    //******************************************************************************************************************
 
     /**
      * The admin closes a ticket, marking it as "resolved"
