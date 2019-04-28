@@ -21,12 +21,19 @@ public class InteractionDao extends AbstractDao {
         super(connection);
     }
 
+    /**
+     * Removes an event from the db
+     *
+     * @param event Event you want to remove
+     * @throws PiikDatabaseException Thrown if event or the primary key are null
+     */
     public void removeEvent(Event event) throws PiikDatabaseException {
 
+        // Check if event or primary key are null
         if (event == null || !event.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
-
+        // Delete event
         new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
     }
 
@@ -117,19 +124,19 @@ public class InteractionDao extends AbstractDao {
             clause.append("INSERT INTO event(name, description, location, date, author) VALUES (?");
 
             // Some attributes may be null
-            if(descriptionExists) {
+            if (descriptionExists) {
                 clause.append(", ?");
             } else {
                 clause.append(", NULL");
             }
 
-            if(locationExists) {
+            if (locationExists) {
                 clause.append(", ?");
             } else {
                 clause.append(", NULL");
             }
 
-            if(dateExists) {
+            if (dateExists) {
                 clause.append(", ?");
             } else {
                 clause.append(", NULL");
@@ -152,19 +159,19 @@ public class InteractionDao extends AbstractDao {
 
             int offset = 2;
 
-            if(descriptionExists) {
+            if (descriptionExists) {
                 statement.setString(offset++, event.getDescription());
             }
 
-            if(locationExists) {
+            if (locationExists) {
                 statement.setString(offset++, event.getDescription());
             }
 
-            if(dateExists) {
+            if (dateExists) {
                 statement.setTimestamp(offset++, event.getDate());
             }
 
-            if(authorExists) {
+            if (authorExists) {
                 statement.setString(offset, event.getCreator().getPK());
             }
 
@@ -174,11 +181,9 @@ public class InteractionDao extends AbstractDao {
             ResultSet keys = statement.executeQuery();
 
             // ID generation successful
-            if(keys.next()) {
+            if (keys.next()) {
                 completeEvent.setId(keys.getString("id"));
-            }
-
-            else {
+            } else {
                 throw new PiikDatabaseException("Event ID generation failed");
             }
 
@@ -213,7 +218,7 @@ public class InteractionDao extends AbstractDao {
             }
         }
 
-        return(completeEvent);
+        return (completeEvent);
     }
 
     /**
@@ -292,11 +297,9 @@ public class InteractionDao extends AbstractDao {
             ResultSet keys = statement.executeQuery();
 
             // ID generation successful
-            if(keys.next()) {
+            if (keys.next()) {
                 completeNotification.setId(keys.getString("id"));
-            }
-
-            else {
+            } else {
                 throw new PiikDatabaseException("Notification ID generation failed");
             }
 
@@ -331,7 +334,7 @@ public class InteractionDao extends AbstractDao {
             }
         }
 
-        return(completeNotification);
+        return (completeNotification);
     }
 
     /**
@@ -376,18 +379,18 @@ public class InteractionDao extends AbstractDao {
     /**
      * Function to get the events
      *
-     * @param user user
-     * @param current   current user logged
-     * @return  list of the events that the followed users created
+     * @param user    user
+     * @param current current user logged
+     * @return list of the events that the followed users created
      */
     public List<Event> getEvents(User user, User current, Integer limit) throws PiikDatabaseException {
 
         return new QueryMapper<Event>(super.getConnection()).createQuery(
                 "SELECT e.* " +
-                "FROM event as e " +
-                "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
-                "ORDER BY e.date DESC " +
-                "LIMIT ?;"
-        ).defineClass(Event.class).defineParameters(user.getId(),limit).list();
+                        "FROM event as e " +
+                        "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
+                        "ORDER BY e.date DESC " +
+                        "LIMIT ?;"
+        ).defineClass(Event.class).defineParameters(user.getId(), limit).list();
     }
 }
