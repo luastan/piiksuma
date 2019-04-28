@@ -29,7 +29,7 @@ public class MessagesDao extends AbstractDao {
      * @throws PiikDatabaseException Thrown if message or its primary key are null
      */
     public void deleteMessage(Message message) throws PiikDatabaseException {
-        // Check if event or primary key are null
+        // Check if message or its primary key are null
         if (message == null || !message.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
         }
@@ -46,7 +46,7 @@ public class MessagesDao extends AbstractDao {
      * @throws PiikDatabaseException Thrown if message or its primary key are null
      */
     public void modifyMessage(Message message) throws PiikDatabaseException {
-        // Check if event or primary key are null
+        // Check if message or its primary key are null
         if (message == null || !message.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
         }
@@ -155,22 +155,25 @@ public class MessagesDao extends AbstractDao {
             }
         }
     }
+    //******************************************************************************************************************
 
-    /**
+    /*******************************************************************************************************************
      * Allows the user to read his messages
      *
      * @param user user whose messages will be retrieved
      * @return list of messages for the user
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
      */
     public List<Message> readMessages(User user) throws PiikDatabaseException {
-
+        // Check if user or its primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
-
+        // Returns the list of messages
         return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE " +
-                "receiver = ? ").defineClass(Message.class).defineParameters(user.getPK()).list();
+                "receiver = ? LIMIT 10").defineClass(Message.class).defineParameters(user.getPK()).list();
     }
+    //******************************************************************************************************************
 
     /**
      * This function creates a private message to be sent to another users in the social network
