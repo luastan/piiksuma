@@ -18,12 +18,20 @@ import java.util.List;
 import java.util.Map;
 
 public class MultimediaDao extends AbstractDao {
-
     public MultimediaDao(Connection connection) {
         super(connection);
     }
 
+//===================================================== MULTIMEDIA =====================================================
+
+    /*******************************************************************************************************************
+     * Add a new multimedia content to the db
+     *
+     * @param multimedia content to add
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
     public void addMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
@@ -83,7 +91,9 @@ public class MultimediaDao extends AbstractDao {
             }
         }
     }
-    
+    //******************************************************************************************************************
+//======================================================================================================================
+
     /**
      * Function to return the multimedia from the database
      *
@@ -108,7 +118,7 @@ public class MultimediaDao extends AbstractDao {
      * @throws PiikDatabaseException
      */
     public boolean existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        return(getMultimedia(multimedia) != null);
+        return (getMultimedia(multimedia) != null);
     }
 
     /**
@@ -122,7 +132,7 @@ public class MultimediaDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) "+
+        List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) " +
                 "as numPostMultimedia FROM post WHERE multimedia = ?").defineClass(Object.class)
                 .defineParameters(multimedia.getPK()).mapList();
 
@@ -162,11 +172,11 @@ public class MultimediaDao extends AbstractDao {
      * @throws PiikDatabaseException
      */
     public Image getImage(Multimedia multimedia) throws PiikDatabaseException, PiikInvalidParameters {
-        if(multimedia == null || !multimedia.checkPrimaryKey(false)){
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        if(multimedia.getType() != MultimediaType.image){
+        if (multimedia.getType() != MultimediaType.image) {
             throw new PiikInvalidParameters("The multimedia type is not 'photo'");
         }
 
