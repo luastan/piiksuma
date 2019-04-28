@@ -37,12 +37,18 @@ public class InteractionDao extends AbstractDao {
         new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
     }
 
+    /**
+     * Removes an user reaction to a post
+     *
+     * @param reaction Reaction to be removed
+     * @throws PiikDatabaseException Thrown if reaction or the primary key are null
+     */
     public void removeReaction(Reaction reaction) throws PiikDatabaseException {
-
+        // Check if reaction or primary key are null
         if (reaction == null || !reaction.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
-
+        // Delete reaction
         new DeleteMapper<Reaction>(super.getConnection()).createUpdate("DELETE FROM react WHERE" +
                 " post = ? and usr = ? and author = ?").defineParameters(reaction.getPost().getId(),
                 reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
@@ -55,7 +61,6 @@ public class InteractionDao extends AbstractDao {
         }
 
         new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
-
     }
 
     /**
