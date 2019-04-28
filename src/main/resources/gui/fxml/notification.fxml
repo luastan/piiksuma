@@ -6,8 +6,58 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
+            styleClass="post-container">
+    <top>
+        <BorderPane>
+            <!-- Header with user info -->
+            <left>
+                <!-- Avatar + User's  name + username -->
+                <StackPane>
+                    <HBox alignment="CENTER" spacing="10">
+                        <VBox alignment="CENTER_LEFT">
+                            <Label fx:id="creationDate" style="-fx-font-weight: BOLD;"/>
 
-</AnchorPane>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+            </left>
+            <right>
+
+            </right>
+        </BorderPane>
+    </top>
+    <center>
+        <StackPane>
+            <VBox alignment="CENTER_LEFT">
+
+                <Label text="Content of the notification" fx:id="notificationContent" wrapText="true" styleClass="post-text"/>
+            </VBox>
+        </StackPane>
+
+    </center>
+    <bottom>
+        <BorderPane>
+
+            <left>
+                <HBox alignment="BOTTOM_LEFT">
+                    <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="TRASH" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+                </HBox>
+            </left>
+        </BorderPane>
+    </bottom>
+
+
+</BorderPane>

@@ -33,12 +33,16 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     @FXML
     private JFXButton userDataButton;
 
+    @FXML
+    private JFXButton viewNotificationsButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
         super.setHamburguerButton(hamburguerButton);
         super.setUserProfileButton(userButton);
         super.setUserDataButton(userDataButton);
+        super.setViewNotificationsButton(viewNotificationsButton);
         // TODO feed deck
         FontAwesomeIconView buttonIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS);
         buttonIcon.getStyleClass().add("deck-button-graphic");

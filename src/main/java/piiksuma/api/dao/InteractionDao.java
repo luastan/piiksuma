@@ -415,7 +415,7 @@ public class InteractionDao extends AbstractDao {
         }
 
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
-                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
+                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class).defineParameters(
                 user.getPK()).list();
     }
 
