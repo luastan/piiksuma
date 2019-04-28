@@ -476,7 +476,7 @@ public class SearchFacade {
      * @param current current user logged into the app
      * @return number of reactions classified by type
      */
-    public HashMap<ReactionType, Integer> getPostReactionCount(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
+    public HashMap<ReactionType, Long> getPostReactionCount(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null || post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
@@ -521,7 +521,7 @@ public class SearchFacade {
      * @throws PiikDatabaseException
      */
     public Image getImage(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if(multimedia == null || !multimedia.checkNotNull(false)){
+        if(multimedia == null){
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 

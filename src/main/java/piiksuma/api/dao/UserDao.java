@@ -521,7 +521,7 @@ public class UserDao extends AbstractDao {
 
         User returnUser = getUser(user, Connection.TRANSACTION_SERIALIZABLE);
 
-        if(returnUser.getPass().equals(user.getPass())){
+        if(returnUser != null && returnUser.getPass().equals(user.getPass())){
             return returnUser;
         } else {
             return null;

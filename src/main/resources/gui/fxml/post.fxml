@@ -62,13 +62,13 @@
             <!-- Social button container -->
             <leftItems>
                 <HBox>
-                    <JFXButton styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="buttonLike" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <FontAwesomeIconView glyphName="HEART" size="24"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
-                    <JFXButton styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <FontAwesomeIconView glyphName="PLUS" size="24"
                                                  styleClass="deck-small-button-graphic"/>

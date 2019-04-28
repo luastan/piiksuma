@@ -306,7 +306,11 @@ public class User extends PiikObject{
      * @return Returns "true" if the user is an admin, otherwise return "false"
      */
     public boolean checkAdministrator() {
-        return type.equals(UserType.administrator);
+        if(type != null) {
+            return type.equals(UserType.administrator);
+        } else {
+            return false;
+        }
     }
 
     /**

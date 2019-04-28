@@ -5,11 +5,11 @@ import piiksuma.database.MapperTable;
 
 import java.util.Objects;
 
-@MapperTable
+@MapperTable(nombre = "react")
 public class Reaction extends PiikObject{
-    @MapperColumn(columna = "usr", pkey = true, fKeys = "usr", targetClass = User.class)
+    @MapperColumn(columna = "usr", pkey = true, fKeys = "usr:id", targetClass = User.class)
     private User user;
-    @MapperColumn(pkey = true, fKeys = "post,author", targetClass = Post.class)
+    @MapperColumn(pkey = true, fKeys = "post:id author:author", targetClass = Post.class)
     private Post post;
 
     private ReactionType reactionType;
@@ -24,6 +24,7 @@ public class Reaction extends PiikObject{
         this.user = user;
         this.post = post;
         this.reactionType = reactionType;
+        this.strReactionType = reactionType.toString();
     }
 
     public User getUser() {

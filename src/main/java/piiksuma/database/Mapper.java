@@ -349,19 +349,12 @@ public abstract class Mapper<T> {
                     // Se inicializa un contador a 0
                     int count = 0;
 
-                    // Se separan el nombre de las columnas en la base de datos en caso de que la clave primaria
-                    // esté separada en distintos atributos
-                    String[] columnNames = columnName.split(":");
-
                     // El número de claves que se han devuelto en getAtomicPK debería ser el mismo número de columnas
                     // que se generó en el anterior split
                     for (String columnExtern : pAux.keySet()) {
                         // La función getAtomicPK devuelve las claves primarias indexadas por su columna en dicha
                         // relación, por lo tanto hay que indexarlo en función de columnNames y no de columnExtern
-                        pKeys.put(columnNames[count], pAux.get(columnExtern));
-
-                        // Se incrementa cuenta
-                        count += 2;
+                        pKeys.put(columnName, pAux.get(columnExtern));
                     }
                 } else {
                     // En caso de que la clase sea atómica se añade la clave primaria

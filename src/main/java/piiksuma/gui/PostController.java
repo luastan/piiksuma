@@ -1,11 +1,15 @@
 package piiksuma.gui;
 
+import com.jfoenix.controls.JFXButton;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import piiksuma.Post;
+import piiksuma.Reaction;
+import piiksuma.ReactionType;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -25,6 +29,11 @@ public class PostController implements Initializable {
     @FXML
     private Label postContent;
 
+    @FXML
+    private JFXButton buttonLike;
+
+    @FXML
+    private JFXButton buttonAnswer;
 
     private Post post;
 
@@ -49,5 +58,31 @@ public class PostController implements Initializable {
         postContent.setText(post.getText());
         authorName.setText(post.getAuthor().getName());
         authorId.setText(post.getAuthor().getId());
+
+        buttonLike.setOnAction(this::handleLike);
+    }
+
+    private void handleLike(Event event){
+        User current = ContextHandler.getContext().getCurrentUser();
+        Reaction react = new Reaction(current, post, ReactionType.LikeIt);
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
+
+            System.out.println("Like!");
+        } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+
+            // TODO Este contains podría modificarse con una excepción nueva. O que dentro de las excepciones
+            // haya códigos de error
+            if(piikInvalidParameters.getMessage().contains("duplicate key")){
+                try {
+                    ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
+                    System.out.println("Dislike!");
+                } catch (PiikDatabaseException | PiikInvalidParameters e) {
+                    e.printStackTrace();
+                }
+            } else {
+                piikInvalidParameters.getStackTrace();
+            }
+        }
     }
 }

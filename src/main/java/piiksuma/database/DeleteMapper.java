@@ -5,10 +5,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -143,15 +140,26 @@ public class DeleteMapper<T> extends Mapper<T> {
             for (T object : this.elementsDelete) {
                 // Statement gets created
                 this.statement = connection.prepareStatement(this.deleteUpdate);
+
+                // The atomic PKs
+                Map<String, Object> atomicPKs = getAtomicPK(object);
                 // Inserts all the primary key atributes previously extracted into the statement
                 for (int i = 0; i < this.columnsName.size(); i++) {
-                    statement.setObject(i + 1, this.attributes.get(this.columnsName.get(i)).get(object));
+                    Field field = this.attributes.get(this.columnsName.get(i));
+                    Object obj = field.get(object);
+
+                    if(!isAtomicClass(obj.getClass())){
+                        obj = atomicPKs.get(this.columnsName.get(i));
+                    }
+
+                    statement.setObject(i + 1, obj);
                 }
 
                 // Deletion gets performed
                 this.statement.executeUpdate();
             }
         } catch (SQLException | IllegalAccessException e) {
+            e.printStackTrace();
             throw new PiikDatabaseException(e.getMessage());
         }
     }

@@ -217,13 +217,13 @@ public class InteractionDao extends AbstractDao {
      * @param post post whose reactions will be counted
      * @return number of reactions classified by type
      */
-    public HashMap<ReactionType, Integer> getPostReactionsCount(Post post) throws PiikDatabaseException {
+    public HashMap<ReactionType, Long> getPostReactionsCount(Post post) throws PiikDatabaseException {
 
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
 
-        HashMap<ReactionType, Integer> result = new HashMap<>();
+        HashMap<ReactionType, Long> result = new HashMap<>();
 
         // We get the reactions associated with the post and we group them by type
         List<Map<String, Object>> query = new QueryMapper<Object>(super.getConnection()).createQuery(
@@ -231,7 +231,7 @@ public class InteractionDao extends AbstractDao {
                         "reactiontype").defineParameters(post.getId(), post.getPostAuthor().getId()).mapList();
 
         for (Map<String, Object> row : query) {
-            result.put(ReactionType.stringToReactionType((String) row.get("type")), (Integer) row.get("number"));
+            result.put(ReactionType.stringToReactionType((String) row.get("type")), (Long) row.get("number"));
         }
 
         return result;
