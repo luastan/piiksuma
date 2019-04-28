@@ -3,7 +3,6 @@ package piiksuma.gui;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXMasonryPane;
-import com.jfoenix.controls.JFXTabPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,14 +13,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Post;
-import piiksuma.User;
 import piiksuma.api.ApiFacade;
-import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
@@ -54,6 +51,9 @@ public class UserProfileController implements Initializable {
     @FXML
     private JFXMasonryPane postMasonryPane;
 
+    @FXML
+    private JFXButton deleteButton;
+
     private ObservableList<Post> posts;
 
     // Which tab is selected
@@ -72,6 +72,7 @@ public class UserProfileController implements Initializable {
         ticketsButton.setOnAction(this::handleTicketsButton);
         feedButton.setOnAction(this::handleFeedButton);
         archivedPostsButton.setOnAction(this::handleArchivedPostsButton);
+        deleteButton.setOnAction(this::handleDelete);
 
         posts = FXCollections.observableArrayList();
 
@@ -86,6 +87,51 @@ public class UserProfileController implements Initializable {
         }
     }
 
+    private void handleDelete(Event event){
+        try{
+            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+        }catch (PiikException e){
+            //TODO handle exception
+            return;
+        }
+        Stage stage = new Stage();
+        FXMLLoader loader;
+        JFXDecorator decorator;
+        //We remove the user from the database
+        try {
+            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
+        } catch (PiikException e) {
+            //TODO handle exception
+            return;
+        }
+        ContextHandler.getContext().setCurrentUser(null);
+        ContextHandler.getContext().getCurrentStage().close();
+        // Now we show the login window
+        stage.setTitle("Login");
+        loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
+        try {
+            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            return;
+        }
+
+        // Scene definition & binding to the Primary Stage
+        Scene scene = new Scene(decorator, 450, 550);
+        stage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+
+        try {
+            ContextHandler.getContext().register("login", stage);
+        } catch (PiikInvalidParameters piikInvalidParameters) {
+            piikInvalidParameters.printStackTrace();
+        }
+        // Show
+        ContextHandler.getContext().getCurrentStage().close();
+        stage.show();
+    }
     /**
      * Restores the original layout
      *

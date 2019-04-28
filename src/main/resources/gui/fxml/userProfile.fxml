@@ -42,6 +42,7 @@
         <HBox spacing="20">
             <JFXButton fx:id="ticketsButton" styleClass="jfx-button-border" text="Show Tickets" translateY="-95" translateX="227.5"/>
             <JFXButton fx:id="newticketButton" styleClass="jfx-button-border" text="New Ticket" translateY="-95" translateX="227.5"/>
+            <JFXButton fx:id="deleteButton" styleClass="jfx-button-border" text="Delete" translateY="0" translateX="0"/>
         </HBox>
         <Label text="userDescription" wrapText="true" styleClass="post-text" fx:id="description" translateX="10" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
