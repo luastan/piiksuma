@@ -256,25 +256,34 @@ public class ContextHandler {
      * corresponding Window depending on whether or not the User is logged in
      */
     public void stageJuggler() {
+        stageJuggler(new Stage());
+    }
+
+    /**
+     * Closes and deletes all the registered stages. Then loads the
+     * corresponding Window depending on whether or not the User is logged in
+     *
+     * @param newStage Uninitialized Stage to be used
+     */
+    public void stageJuggler(Stage newStage) {
         this.contextStages.forEach((s, stage) -> stage.close());
         this.contextStages.clear();
-        Stage stage = new Stage();
         FXMLLoader loader;
         // Stage configuration
 
-        stage.setResizable(false);
+        newStage.setResizable(false);
 
         // Decorator which is the visual whindow frame, holding close button title and minimize
         JFXDecorator decorator;
         try {
             if (currentUser != null) {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
-                this.register("primary", stage);
+                this.register("primary", newStage);
             } else {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
-                this.register("login", stage);
+                this.register("login", newStage);
             }
-            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+            decorator = new JFXDecorator(newStage, loader.load(), false, false, true);
         } catch (IOException | PiikInvalidParameters e) {
             e.printStackTrace();
             return;
@@ -283,14 +292,14 @@ public class ContextHandler {
 
         // Scene definition & binding to the Primary Stage
         Scene scene = new Scene(decorator, 450, 900);
-        stage.setScene(scene);
+        newStage.setScene(scene);
         scene.getStylesheets().addAll(
                 getClass().getResource("/gui/css/global.css").toExternalForm(),
                 getClass().getResource("/gui/css/main.css").toExternalForm()
         );
 
         // Show
-        stage.show();
+        newStage.show();
 
     }
 }
