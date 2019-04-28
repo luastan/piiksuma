@@ -1,7 +1,6 @@
 package piiksuma.api;
 
 import piiksuma.*;
-import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -53,6 +52,17 @@ public class DeletionFacade {
         parentFacade.getUserDao().removeUser(user);
     }
 
+    public void unsileceUser(User user, User currentUser) throws PiikDatabaseException,PiikInvalidParameters{
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        parentFacade.getUserDao().unsilenceUser(user, currentUser);
+    }
     /**
      * Function to unfollow the user followed by the user follower, we have to delete it from the database
      *

@@ -95,13 +95,43 @@ public class OtherUserProfileController implements Initializable {
     }
 
     private void handleSilence(Event event){
-        try{
-            ApiFacade.getEntrypoint().getInsertionFacade().silenceUser(user, ContextHandler.getContext().getCurrentUser());
-        }catch (PiikException e){
-            System.out.println(e.getMessage());
-            return;
+
+        boolean silenced = false;
+        List<Map<String,Object>> lista;
+        try {
+            lista = new QueryMapper<>(ApiFacade.getEntrypoint().getConnection()).createQuery("SELECT silenced from silenceuser WHERE usr = ?")
+                    .defineParameters(ContextHandler.getContext().getCurrentUser().getId()).mapList();
+            for (Map<String,Object> row : lista){
+                if (row.containsValue(user.getId())){
+                    silenced=true;
+                    break;
+                }
+            }
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
         }
-        System.out.println("Silenciado");
+        if (!silenced) {
+            try{
+                ApiFacade.getEntrypoint().getInsertionFacade().silenceUser(user, ContextHandler.getContext().getCurrentUser());
+            }catch (PiikDatabaseException e){
+                System.out.println(e.getMessage());
+                return;
+            }catch (PiikInvalidParameters e1){
+                System.out.println(e1.getMessage());
+                return;
+            }
+            System.out.println("SILENCED");
+
+        }else{
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().unsileceUser(user,ContextHandler.getContext().getCurrentUser());
+                System.out.println("UNSILENCED");
+            } catch (PiikDatabaseException e) {
+                e.printStackTrace();
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
+        }
     }
 
     public void updateFeed() throws PiikDatabaseException {

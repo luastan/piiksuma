@@ -37,6 +37,12 @@ public class UserDao extends AbstractDao {
                 Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
+    public void unsilenceUser(User user, User currentUser) throws PiikDatabaseException{
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM silenceuser WHERE silenced=? AND " +
+                "usr=?").defineClass(Object.class).defineParameters(user.getPK(), currentUser.getPK())
+                .executeUpdate();
+    }
+
     private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
                              User user, Multimedia multimedia) throws SQLException {
 
