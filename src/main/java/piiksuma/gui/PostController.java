@@ -100,6 +100,17 @@ public class PostController implements Initializable {
         try{
             ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
             ContextHandler.getContext().getFeedController().updateFeed();
+            if(ContextHandler.getContext().getUserProfileController() != null){
+                ContextHandler.getContext().getUserProfileController().updateFeed();
+            }
+            if(ContextHandler.getContext().getOtherUserProfileController() != null){
+                ContextHandler.getContext().getOtherUserProfileController().updateFeed();
+            }
+            if(ContextHandler.getContext().getSearchController() != null){
+                ContextHandler.getContext().getSearchController().updatePostFeed();
+            }
+
+
         }catch (PiikException e){
             System.out.println("PROBLEM");
             return;
