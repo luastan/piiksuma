@@ -65,6 +65,9 @@ public class LoginController implements Initializable {
         }
 
         ContextHandler.getContext().setCurrentUser(userLoggin);
+        ContextHandler.getContext().getCurrentStage().close();
+        ContextHandler.getContext().stageJuggler();
+
     }
 
     /**

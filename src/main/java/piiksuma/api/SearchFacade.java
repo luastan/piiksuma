@@ -98,11 +98,11 @@ public class SearchFacade {
      * @return user that meets the given information
      */
     public User getUser(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull(false)) {
+        if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 

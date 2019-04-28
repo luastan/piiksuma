@@ -392,7 +392,7 @@ public class UserDao extends AbstractDao {
         List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(
                 "SELECT t.*, ad.id as type " +
                         "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad " +
-                        "ON (t.id = ad.id) WHERE id LIKE ?").defineParameters(user.getPK())
+                        "ON (t.id = ad.id) WHERE t.id LIKE ?").defineParameters(user.getPK())
                         .setIsolationLevel(typeTransaction).mapList();
 
         User returnUser = new User();
@@ -519,7 +519,13 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return getUser(user, Connection.TRANSACTION_SERIALIZABLE);
+        User returnUser = getUser(user, Connection.TRANSACTION_SERIALIZABLE);
+
+        if(returnUser.getPass().equals(user.getPass())){
+            return returnUser;
+        } else {
+            return null;
+        }
     }
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {

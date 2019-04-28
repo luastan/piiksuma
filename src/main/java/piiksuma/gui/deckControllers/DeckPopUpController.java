@@ -50,6 +50,11 @@ public class DeckPopUpController implements Initializable {
                     getClass().getResource("/gui/css/main.css").toExternalForm()
             );
 
+            try {
+                ContextHandler.getContext().register("login", stage);
+            } catch (PiikInvalidParameters piikInvalidParameters) {
+                piikInvalidParameters.printStackTrace();
+            }
             // Show
             stage.show();
             return;
