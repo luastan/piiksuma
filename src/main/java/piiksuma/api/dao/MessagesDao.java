@@ -42,7 +42,7 @@ public class MessagesDao extends AbstractDao {
     /*******************************************************************************************************************
      * Replace the content of a message that the user wants to modify or the admin decides to censor
      *
-     * @param newMessage message to be updated
+     * @param message message to be updated
      * @throws PiikDatabaseException Thrown if message or its primary key are null
      */
     public void modifyMessage(Message message) throws PiikDatabaseException {
