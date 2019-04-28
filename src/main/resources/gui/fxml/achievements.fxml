@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.deckControllers.AchievementsController"
+           prefHeight="700.0">
+    <ScrollPane fx:id="eventScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
+        <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" styleClass="main-masonry">
+        </JFXMasonryPane>
+    </ScrollPane>
+</StackPane>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXTabPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.MainController">
+    <StackPane fx:id="mainContainer" StackPane.alignment="TOP_CENTER">
+        <JFXTabPane fx:id="mainPane"/>
+    </StackPane>
+    <StackPane fx:id="deckContainer" StackPane.alignment="BOTTOM_CENTER" styleClass="deck-hitbox">
+        <Label text="BottomBar"/>
+    </StackPane>
+
+
+</StackPane>

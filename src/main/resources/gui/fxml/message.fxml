@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="post-container">
+    <top>
+        <JFXToolbar>
+            <!-- Header with user info -->
+            <leftItems>
+                <!-- Avatar + User's  name + username -->
+                <StackPane translateY="-30">
+                    <HBox spacing="20">
+                        <ImageView translateY="20" >
+                            <Image preserveRatio="true" requestedHeight="40" url="/imagenes/huevo.png"/>
+                        </ImageView>
+                        <VBox>
+                            <Label text="username" fx:id="userName" translateY="20"/>
+
+                        </VBox>
+                    </HBox>
+                </StackPane>
+            </leftItems>
+            <rightItems>
+                <!-- Share button -->
+                <StackPane>
+                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="SHARE" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+                </StackPane>
+            </rightItems>
+        </JFXToolbar>
+    </top>
+    <center>
+        <VBox alignment="CENTER">
+            <Label text="Last Message" fx:id="messageText" wrapText="true" styleClass="post-text" translateY="-20" translateX="-100"/>
+        </VBox>
+    </center>
+</BorderPane>

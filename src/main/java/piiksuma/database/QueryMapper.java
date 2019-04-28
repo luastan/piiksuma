@@ -1,78 +1,122 @@
 package piiksuma.database;
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
- * Un builder para mapear la base de datos en memoria
+ * Database conection and data retrieving wrapper. Automatically maps retreved
+ * data
  *
- * @param <T>
+ * @param <T> Mapped class type. Used to check asigments when returning query
+ *            results.
+ * @author luastan
+ * @author CardamaS99
+ * @author danimf99
+ * @author alvrogd
+ * @author OswaldOswin1
+ * @author Marcos-marpin
  */
-public class QueryMapper<T> extends Mapper<T>{
+public class QueryMapper<T> extends Mapper<T> {
 
     /**
-     * @param conexion Conexion a la base de datos
+     * @param conexion Database conection object
      */
     public QueryMapper(Connection conexion) {
         super(conexion);
     }
 
     /**
-     * Define la consulta que se hará a la base de datos
+     * Defines the sentence to be queried to the database
      *
-     * @param query String con la consulta a realizar
-     * @return El propio mapper
+     * @param query String representing the query
+     * @return Returns the Mapper instance
      */
-    public QueryMapper<T> createQuery(String query){
+    public QueryMapper<T> createQuery(String query) throws PiikDatabaseException {
         try {
             statement = connection.prepareStatement(query);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new PiikDatabaseException(ex.getMessage());
         }
         return this;
     }
 
     /**
-     * Genera una lista con el resultado de la consulta mapeado
+     * Returns a list with the query results propperly mapped to the Class
+     * defined at {@link QueryMapper#defineClass(Class)}
      *
-     * @param useForeignKeys Booleano que indica si se deben guardar las claves foraneas o no
-     * @return Lista de objetos mapeados
+     * @param useForeignKeys When true will attempt to find foreign keys when
+     *                       the class representing the atributes has the
+     *                       {@link MapperTable} annotation present
+     * @return Mapped objects from the query
      */
-    public List<T> list(boolean useForeignKeys) {
+    public List<T> list(boolean useForeignKeys) throws PiikDatabaseException {
         ArrayList<T> resultado = new ArrayList<>();
         String nombreColumna;
+        Matcher matcher;
+        HashMap<String, Object> fkValues;
         HashSet<String> columnas = new HashSet<>();
         T elemento;
         Class<?> foreignClass;
+        Boolean notPresent;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
-            /* Mapeado */
             statement.execute();
             ResultSet set = statement.getResultSet();
 
             // Metadata parsing
-            if(set != null) {
+            if (set != null) {
                 for (int i = 1; i <= set.getMetaData().getColumnCount(); i++) {
                     columnas.add(set.getMetaData().getColumnName(i));
                 }
 
                 while (set.next()) {
-                    // Constructor y atributos con reflection
+                    // Extracts required empty constructor and Fields to map the resutls
                     elemento = mappedClass.getConstructor(new Class[]{}).newInstance();
                     for (Field field : mappedClass.getDeclaredFields()) {
                         field.setAccessible(true);
                         if (field.isAnnotationPresent(MapperColumn.class)) {
-                            nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                            nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
-                            if (columnas.contains(nombreColumna)) {
+                            nombreColumna = extractColumnName(field);
+                            if (columnas.contains(nombreColumna) || field.getAnnotation(MapperColumn.class).targetClass() != Object.class) {
                                 foreignClass = field.getAnnotation(MapperColumn.class).targetClass();
-                                // Comprueba si el objeto es una clase Custom
-                                if (useForeignKeys && foreignClass != Object.class &&
-                                        foreignClass.isAnnotationPresent(MapperColumn.class)) {
-                                    field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                // Checks if the Field class has the MapperTable anotation. This means that it's a
+                                // foreign key and special actions are required
+                                if (foreignClass != Object.class &&
+                                        foreignClass.isAnnotationPresent(MapperTable.class)) {
+                                    if (useForeignKeys) {
+                                        // FKEYS
+                                        if (field.getAnnotation(MapperColumn.class).fKeys().equals("")) {
+                                            if(columnas.contains(nombreColumna)) {
+                                                field.set(elemento, getFK(foreignClass, set.getObject(nombreColumna)));
+                                            }
+                                        } else {
+                                            notPresent = false;
+                                            fkValues = new HashMap<>();
+                                            matcher = regexFKeys.matcher(field.getAnnotation(MapperColumn.class).fKeys());
+                                            while (matcher.find()) {
+                                                if (columnas.contains(matcher.group(1))) {
+                                                    fkValues.put(matcher.group(2), set.getObject(matcher.group(1)));
+                                                } else {
+                                                    notPresent = true;
+                                                }
+                                            }
+                                            if (!notPresent) {
+                                                field.set(elemento, getFK(foreignClass, fkValues));
+                                            }
+
+                                        }
+
+                                    }
+
                                 } else {
                                     field.set(elemento, set.getObject(nombreColumna));
                                 }
@@ -84,34 +128,30 @@ public class QueryMapper<T> extends Mapper<T>{
             }
             statement.close();
 
-            /* Excepciones */
-        } catch (SQLException e) {
-            // TODO: Tratar excepciones SQL
-            System.out.println("SQL MOVIDA");
-            e.printStackTrace();
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-            // TODO: Tratar excepciones Reflection
-            e.printStackTrace();
+            // Exception handling
+        } catch (SQLException | IllegalAccessException | InvocationTargetException | InstantiationException |
+                NoSuchMethodException e) {
+            throw new PiikDatabaseException(e.getMessage());
         }
         return resultado;
     }
 
     /**
-     * Lista con el resultado de la consulta
+     * Does the same as {@link QueryMapper#list(boolean)} with the foreign keys
+     * boolean as true
      *
-     * @return Lista de objetos mapeados con el tipo indicado
+     * @return Mapped objects list
      */
-    public List<T> list() {
+    public List<T> list() throws PiikDatabaseException {
         return this.list(true);
     }
 
 
     /**
-     * Imprescindible definir la clase a la que pertenecen los objetos
-     * que devuelve la consulta si no es de escritura/modificacion
+     * Defines the class to be used in the mapping process.
      *
-     * @param mappedClass Clase a la que se mapea el resultado
-     * @return El propio mapper porque es un builder
+     * @param mappedClass Class used to map the query results
+     * @return The QueryMapper instance
      */
     @Override
     public QueryMapper<T> defineClass(Class<? extends T> mappedClass) {
@@ -120,29 +160,49 @@ public class QueryMapper<T> extends Mapper<T>{
     }
 
     /**
-     * Permite definir parametros en caso de que la consulta los requiera
+     * Defines the parameters used when executing the query. This parameters
+     * are defined with ? in the {@link QueryMapper#createQuery(String)} String
      *
-     * @param parametros Lista de parametros que se pasan al prepared statement
-     *                   en orden
-     * @return El propio mapper
+     * @param parametros Parameter list to be inserted into the {@link java.sql.PreparedStatement}
+     *                   used to query the database
+     * @return The QueryMapper instance
      */
-    public QueryMapper<T> defineParameters(Object... parametros) {
+    public QueryMapper<T> defineParameters(Object... parametros) throws PiikDatabaseException {
         super.defineParameters(parametros);
         return this;
     }
 
-    /* Métodos de finalización */
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return query mapper which is being built
+     */
+    @Override
+    public QueryMapper<T> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
+
+        return((QueryMapper<T>)super.setIsolationLevel(isolationLevel));
+    }
+
+    /* Closing methods */
 
     /**
-     * Crea un Hashmap con los nombres de las columnas como claves y los atribs como valores
+     * When the Cass to be used wasn't defined with {@link QueryMapper#defineClass(Class)}
+     * this method resturns the query results mapped into a list containing
+     * {@link Map} instances with the column names used as keys in the Map, and
+     * the values from the result tuples
      *
-     * @return Lista de Hashmaps todos iguales con los resultados de una consulta
+     * @return Map list with the query Results
      */
-    public List<Map<String, Object>> mapList() {
+    public List<Map<String, Object>> mapList() throws PiikDatabaseException {
         List<Map<String, Object>> resultadosMapeados = new ArrayList<>();
         Map<String, Object> element;
         ArrayList<String> columnas = new ArrayList<>();
         ResultSet set;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
             statement.execute();
             set = statement.getResultSet();
@@ -157,23 +217,23 @@ public class QueryMapper<T> extends Mapper<T>{
                 resultadosMapeados.add(element);
             }
         } catch (SQLException e) {
-            // TODO: Tratar excepciones
-            e.printStackTrace();
+            throw new PiikDatabaseException(e.getMessage());
         }
         return resultadosMapeados;
     }
 
     /**
-     * Devuelve un unico elemento esperado en la consulta
+     * From the results, returns the first one. Usefull when querying a single
+     * item. It performs the whole Mapping process which can be seen as
+     * ineficient. For increased efficiency add limit(1) to de query.
      *
-     * @param useForeignkeys Activa el uso de la consulta recursiva y mapeado
-     *                       de claves foraneas
-     * @return Primer elemento devuelto por el ResultSet
+     * @param useForeignkeys Same atribute as in {@link QueryMapper#list(boolean)}
+     * @return First element from the results
      */
-    public T findFirst(boolean useForeignkeys) {
+    public T findFirst(boolean useForeignkeys) throws PiikDatabaseException {
         List<T> result = list(useForeignkeys);
 
-        if(result == null || result.isEmpty()){
+        if (result == null || result.isEmpty()) {
             return null;
         }
 
@@ -182,12 +242,11 @@ public class QueryMapper<T> extends Mapper<T>{
 
 
     /**
-     * Devuelve un unico elemento esperado en la consulta
-     * Recorre claves foraneas
+     * Check {@link QueryMapper#findFirst(boolean)}. Does the same as findFirst(true)
      *
-     * @return Primer elemento devuelto por el ResultSet
+     * @return First element from the results
      */
-    public T findFirst() {
+    public T findFirst() throws PiikDatabaseException {
         return findFirst(true);
     }
 }

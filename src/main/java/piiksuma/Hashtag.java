@@ -3,8 +3,10 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable
-public class Hashtag {
+public class Hashtag extends PiikObject{
 
     /* Attributes */
     @MapperColumn(pkey = true)
@@ -13,7 +15,7 @@ public class Hashtag {
 
     /* Constructors */
 
-    public Hashtag() {
+    public Hashtag(){
     }
 
     public Hashtag(String name) {
@@ -37,27 +39,39 @@ public class Hashtag {
 
     /**
      * Function to check that the attributes with restriction 'not null' are not null
+     *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
+    /*public boolean checkNotNull() {
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         // Check that the primary keys are not null
-        if(!checkPrimaryKey()) {
-            return false;
-        }
+        return checkPrimaryKey();
 
-        return true;
-    }
+    }*/
 
     /**
      * Function to check that the primary keys are not null
+     *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
+    /*public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if(getName() == null || getName().isEmpty()){
-            return false;
-        }
+        return getName() != null && !getName().isEmpty();
 
-        return true;
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+
+    }*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hashtag hashtag = (Hashtag) o;
+        return name.equals(hashtag.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

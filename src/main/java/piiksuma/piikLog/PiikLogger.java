@@ -1,0 +1,69 @@
+package piiksuma.piikLog;
+
+
+import java.io.IOException;
+import java.util.logging.*;
+
+/*
+ * =====================================================================================================================
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Info:
+ *  1.- The PiikLogger will show all the message on console and will save them in a log file on the resources folder
+ * ---------------------------------------------------------------------------------------------------------------------
+ * How to use:
+ *  1.- To use it just call PiikLogger.getInstance(Level.levelWanted, message, exceptionError (optional))
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Log levels:
+ *  1.- SEVERE
+ *  2.- WARNING
+ *  3.- CONFIG
+ *  4.- FINE
+ *  5.- FINER
+ *  6.- FINEST
+ * ---------------------------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------------------------
+ * =====================================================================================================================
+ */
+
+/**
+ * Singleton log class for error handling
+ */
+public class PiikLogger {
+    private static PiikLogger piikLogger;
+    private static Logger logger;
+
+    /**
+     * Constructor that generates the log console and file
+     */
+    private PiikLogger() {
+        logger = Logger.getLogger(PiikLogger.class.getName());
+        LogManager.getLogManager().reset();
+        logger.setLevel(Level.ALL);
+
+        ConsoleHandler ch = new ConsoleHandler();
+        ch.setLevel(Level.ALL);
+        logger.addHandler(ch);
+
+        FileHandler fh;
+
+        try {
+            fh = new FileHandler("src/main/resources/log/PiikLogger.log");
+            fh.setLevel(Level.ALL);
+            logger.addHandler(fh);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Couldn't create log file", e);
+        }
+    }
+
+    /**
+     * Returns the logger, if it has not been called before gets created
+     *
+     * @return Logger
+     */
+    public static Logger getInstance() {
+        if (piikLogger == null) {
+            piikLogger = new PiikLogger();
+        }
+        return logger;
+    }
+}

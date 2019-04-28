@@ -4,84 +4,98 @@ import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @MapperTable(nombre = "piiUser")
-public class User {
-
-    @MapperColumn
+public class User extends PiikObject{
+    @MapperColumn(notNull = true)
+    private String email;
+    @MapperColumn(notNull = true)
     private String name;
-    @MapperColumn
+    @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String pass;
     @MapperColumn
     private String gender;
-    @MapperColumn(columna = "description")
-    private String bio;
-    @MapperColumn(columna = "home")
-    private String direction;
-    @MapperColumn(columna = "postalCode")
-    private String postCode;
-    @MapperColumn(columna = "province")
-    private String state;
+    @MapperColumn
+    private String description;
+    @MapperColumn
+    private String home;
+    @MapperColumn
+    private String postalCode;
+    @MapperColumn
+    private String province;
     @MapperColumn
     private String country;
     @MapperColumn
     private String city;
-    @MapperColumn(columna = "birthPlace")
-    private String birthPlace;
-    @MapperColumn(columna = "birthdate")
+    @MapperColumn
+    private String birthplace;
+    @MapperColumn(notNull = true, columna = "birthdate")
     private Timestamp birthday;
-    @MapperColumn(columna = "registrationDate", hasDefault = true)
+    @MapperColumn(hasDefault = true, notNull = true, columna = "registrationdate")
     private Timestamp registrationDate;
-    @MapperColumn(columna = "deathdate")
-    private Timestamp deadDate;
+    @MapperColumn
+    private Timestamp deathdate;
     @MapperColumn
     private String religion;
-    @MapperColumn(columna = "emotionalSituation")
-    private String loveStatus;
+    @MapperColumn
+    private String emotionalSituation;
     @MapperColumn
     private String job;
-    @MapperColumn(pkey = true)
-    private String email;
+    @MapperColumn(columna = "profilepicture", fKeys = "profilepicture:hash", targetClass = Multimedia.class)
+    private Multimedia multimedia;
     private UserType type;
+    private String oldID;
+    private List<String> phones;
+
 
     public User(String name, String id, String email) {
         this.name = name;
         this.id = id;
         this.email = email;
         this.type = UserType.user;
+        phones=new ArrayList<>();
+    }
+
+    public void addPhone(String phone){
+        phones.add(phone);
     }
 
     /**
-     * Necesario constructor vacío para que se pueda crear con reflección
+     * Constructor for testing -> removeUser
+     *
+     * @param name
+     * @param id
+     * @param email
+     * @param type  Test if user is of type Admin
      */
-    public User() {
-    }
-
-
-    public String getNombre() {
-        return name;
-    }
-
-    public void setNombre(String name) {
-        this.name = name;
-    }
-
-    public UserType getType() {
-        return type;
-    }
-
-    public void setType(UserType type) {
-        this.type = type;
-    }
-
-    public String getIdUsuario() {
-        return id;
-    }
-
-    public void setIdUsuario(String id) {
+    public User(String id, String name, String email, String pass, UserType type) {
         this.id = id;
+        this.name = name;
+        this.email = email;
+        this.pass = pass;
+        this.type = type;
+        phones=new ArrayList<>();
+        //this.birthday = new Timestamp(System.currentTimeMillis());
+
+    }
+
+    public User(String id, String pass) {
+        this.id = id;
+        this.pass = pass;
+        phones=new ArrayList<>();
+    }
+
+    /**
+     * A empty constructor is needed to be created by reflexion
+     */
+
+    public User() {
+        phones = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -124,36 +138,36 @@ public class User {
         this.gender = gender;
     }
 
-    public String getBio() {
-        return bio;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getDirection() {
-        return direction;
+    public String getHome() {
+        return home;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setHome(String home) {
+        this.home = home;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
-    public String getState() {
-        return state;
+    public String getProvince() {
+        return province;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public String getCountry() {
@@ -172,12 +186,12 @@ public class User {
         this.city = city;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
+    public String getBirthplace() {
+        return birthplace;
     }
 
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
+    public void setBirthplace(String birthplace) {
+        this.birthplace = birthplace;
     }
 
     public Timestamp getBirthday() {
@@ -196,12 +210,12 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
-    public Timestamp getDeadDate() {
-        return deadDate;
+    public Timestamp getDeathdate() {
+        return deathdate;
     }
 
-    public void setDeadDate(Timestamp deadDate) {
-        this.deadDate = deadDate;
+    public void setDeathdate(Timestamp deathdate) {
+        this.deathdate = deathdate;
     }
 
     public String getReligion() {
@@ -212,12 +226,12 @@ public class User {
         this.religion = religion;
     }
 
-    public String getLoveStatus() {
-        return loveStatus;
+    public String getEmotionalSituation() {
+        return emotionalSituation;
     }
 
-    public void setLoveStatus(String loveStatus) {
-        this.loveStatus = loveStatus;
+    public void setEmotionalSituation(String emotionalSituation) {
+        this.emotionalSituation = emotionalSituation;
     }
 
     public String getJob() {
@@ -228,48 +242,107 @@ public class User {
         this.job = job;
     }
 
+    public Multimedia getMultimedia() {
+        return multimedia;
+    }
+
+    public void setMultimedia(Multimedia multimedia) {
+        this.multimedia = multimedia;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
+    }
+
+    public String getPK()
+    {
+        return id;
+    }
+
+    public String getOldID() {
+        return oldID;
+    }
+
+    public void setOldID(String oldID) {
+        this.oldID = oldID;
+    }
+
+    public List<String> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<String> phones) {
+        this.phones = phones;
+    }
+
     /**
      * Function to check that the attributes with restriction 'not null' are not null
+     *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
+   /*
+    public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if(!checkPrimaryKey()){
+        if (!checkPrimaryKey()) {
             return false;
         }
 
         // Check the attributes with restriction 'not null'
-        if(getPass() == null || getPass().isEmpty()){
+        if (getPass() == null || getPass().isEmpty()) {
             return false;
         }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+        return getBirthday() != null;
 
-        if(getBirthday() == null){
+    }*/
+
+    /**
+     * Function to know if an user is an administrator or a normal user
+     *
+     * @return Returns "true" if the user is an admin, otherwise return "false"
+     */
+    public boolean checkAdministrator() {
+        if(type != null) {
+            return type.equals(UserType.administrator);
+        } else {
             return false;
         }
-
-        return getRegistrationDate() != null;
     }
 
     /**
      * Function to check that the primary keys are not null
+     *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
+    /*public boolean checkPrimaryKey() {
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
         // Check that the primary keys are not null
-        if(getEmail() == null || getEmail().isEmpty()){
-            return false;
-        }
-
-        return true;
-    }
+        return getId() != null && !getId().isEmpty();
+    }*/
 
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", pass='" + pass + '\'' +
-                ", gender='" + gender + '\'' +
+                ", type='" + this.getType() + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 }

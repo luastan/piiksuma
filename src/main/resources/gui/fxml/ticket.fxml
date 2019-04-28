@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import javafx.scene.text.Text?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="post-container">
+    <top>
+    </top>
+    <center>
+        <VBox spacing="40">
+            <HBox spacing="5">
+                <Label text="Id:" fx:id="idText" wrapText="true" translateX="175" styleClass="post-text"/>
+                <Label text="Id" fx:id="id" wrapText="true" translateX="175" styleClass="post-text"/>
+            </HBox>
+            <HBox spacing="5">
+                <Label text="Section:" fx:id="sectionText" wrapText="true" translateX="100" styleClass="post-text"/>
+                <Label text="Section" fx:id="section" wrapText="true" translateX="100" styleClass="post-text"/>
+            </HBox>
+            <HBox spacing="5">
+                <Label text="Description" fx:id="descriptionText" translateX="75" wrapText="true" styleClass="post-text"/>
+                <Label text="Description" fx:id="description" translateX="75" wrapText="true" styleClass="post-text"/>
+            </HBox>
+        </VBox>
+    </center>
+    <bottom>
+    </bottom>
+</BorderPane>

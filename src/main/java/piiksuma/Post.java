@@ -3,56 +3,69 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @MapperTable(nombre = "post")
-public class Post {
-    @MapperColumn(pkey = true, columna="author")
-    private String postAuthor;
-    @MapperColumn(pkey = true)
+public class Post extends PiikObject{
+    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
+    private User author;
+    @MapperColumn(pkey = true, hasDefault = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String text;
-    @MapperColumn(hasDefault = true)
-    private Timestamp publicationDate;/*Date when the father post was creaetd*/
-    @MapperColumn
-    private String sugarDaddy;
-    @MapperColumn(columna = "authorDaddy")
-    private String fatherPost;
-    @MapperColumn
-    private String multimedia;
+    @MapperColumn(hasDefault = true, columna = "publicationdate")
+    private Timestamp publicationDate;
+    @MapperColumn(fKeys = "sugarDaddy:id authorDaddy:author", targetClass = Post.class)
+    private Post fatherPost;
+    @MapperColumn(fKeys = "multimedia:hash", targetClass = Multimedia.class)
+    private Multimedia multimedia;
+    private List<Hashtag> hashtags;
 
     public Post() {
-
+        this.hashtags = new ArrayList<>();
     }
 
-    public Post(String postAuthor, Timestamp publicationDate) {
-
-        if (postAuthor == null) {
-            this.postAuthor = "";
-        } else {
-            this.postAuthor = postAuthor;
-        }
-
-        if (publicationDate == null) {
-            this.publicationDate = null;
-        } else {
-            this.publicationDate = publicationDate;
-        }
-
-        this.fatherPost = "";
-        this.multimedia = "";
+    public Post(Post post) {
+        this.author = post.getAuthor();
+        this.id = post.getId();
+        this.text = post.getText();
+        this.publicationDate = post.getPublicationDate();
+        this.fatherPost = post.getFatherPost();
+        this.multimedia = post.getMultimedia();
+        this.hashtags = post.getHashtags();
+        this.hashtags = new ArrayList<>();
     }
 
-    public Post(String postAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy, String fatherPost, String multimedia) {
-        this.postAuthor = postAuthor;
+    public Post(User author, Timestamp publicationDate) {
+
+        this.author = author;
+
+        this.publicationDate = publicationDate;
+
+        this.fatherPost = null;
+        this.multimedia = null;
+        this.hashtags = new ArrayList<>();
+    }
+
+    public Post(User author, String id, String text, Timestamp publicationDate, Post father, Multimedia multimedia) {
+        this.author = author;
         this.id = id;
         this.text = text;
         this.publicationDate = publicationDate;
-        this.sugarDaddy = sugarDaddy;
-        this.fatherPost = fatherPost;
+        this.fatherPost = father;
         this.multimedia = multimedia;
+        this.hashtags = new ArrayList<>();
+    }
+
+    public Post(String idAuthor, String id, String text, Timestamp publicationDate, String sugarDaddy,
+                String authorDaddy, String idMultimedia){
+
+        this(new User("", idAuthor, ""), id, text, publicationDate,
+                new Post(new User("", authorDaddy, ""), null),
+                new Multimedia(idMultimedia, "", ""));
     }
 
     public String getId() {
@@ -61,6 +74,26 @@ public class Post {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<Hashtag> getHashtags() {
+        return hashtags;
+    }
+
+    public void setHashtags(List<Hashtag> hashtags) {
+        this.hashtags = hashtags;
+    }
+
+    public void addHashtag(Hashtag hashtag){
+        if(hashtag != null) {
+            this.hashtags.add(hashtag);
+        }
+    }
+
+    public void addAllHashtags(List<Hashtag> hashtags){
+        if(hashtags != null){
+            this.hashtags.addAll(hashtags);
+        }
     }
 
     public String getText() {
@@ -79,74 +112,90 @@ public class Post {
         this.publicationDate = publicationDate;
     }
 
-    public String getFatherPost() {
+    public Post getFatherPost() {
         return fatherPost;
     }
 
-    public void setFatherPost(String fatherPost) {
+    public void setFatherPost(Post fatherPost) {
         this.fatherPost = fatherPost;
     }
 
-    public String getSugarDaddy() {
-        return sugarDaddy;
+    // TODO duplicated
+    public User getPostAuthor() {
+        return author;
     }
 
-    public void setSugarDaddy(String sugarDaddy) {
-        this.sugarDaddy = sugarDaddy;
+    public void setPostAuthor(User postAuthor) {
+        this.author = postAuthor;
     }
 
-    public String getPostAuthor() {
-        return postAuthor;
-    }
-
-    public void setPostAuthor(String postAuthor) {
-        this.postAuthor = postAuthor;
-    }
-
-    public String getMultimedia() {
+    public Multimedia getMultimedia() {
         return multimedia;
     }
 
-    public void setMultimedia(String multimedia) {
+    public void setMultimedia(Multimedia multimedia) {
         this.multimedia = multimedia;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    // TODO hashtags are missing
     /**
      * Function to check that the attributes with restriction 'not null' are not null
+     *
      * @return the function return "true" if the attributes are not null, otherwise return "false"
      */
-    public boolean checkNotNull(){
+    /*public boolean checkNotNull() {
         // Check that the primary keys are not null
-        if(!checkPrimaryKey()){
+        if (!checkPrimaryKey()) {
             return false;
         }
-
-        return(text != null && !text.isEmpty());
-    }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+        return (text != null && !text.isEmpty());
+    }*/
 
     /**
      * Function to check that the primary keys are not null
+     *
      * @return the function return "true" if the primary keys are not null, otherwise return "false"
      */
-    public boolean checkPrimaryKey(){
+    /*public boolean checkPrimaryKey() {
         // Check that the primary keys are not null
-        if(getId() == null || getId().isEmpty()){
+        if (getId() == null || getId().isEmpty()) {
             return false;
         }
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+        return getPostAuthor() != null && getPostAuthor().checkPrimaryKey();
 
-        if(getPostAuthor() == null || getPostAuthor().isEmpty()){
-            return false;
-        }
-
-        return true;
-    }
+    }*/
 
 
     public String toString() {
         return "Post{" +
                 " Id:" + '\'' + this.id + '\'' +
+                " Parent:" + '\'' + this.fatherPost + '\'' +
                 " Texto:" + '\'' + this.text + '\'' +
-                " Author:" + '\'' + this.postAuthor + '\'' + "}";
+                " Author:" + '\'' + this.author + '\'' + "}";
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return author.equals(post.author) &&
+                id.equals(post.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, id);
     }
 }

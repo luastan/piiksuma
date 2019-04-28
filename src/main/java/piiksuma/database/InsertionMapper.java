@@ -1,20 +1,30 @@
 package piiksuma.database;
 
+import piiksuma.exceptions.PiikDatabaseException;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Matcher;
 
 
 /**
- * Wrapper de conexion a la base de datos. Permite insertar datos sin necesidad
- * de construir sentencias SQL a mano.
+ * Database conection and data insertion wrapper. Performs insertions from
+ * given objects without actually specifying SQL sentences.
  *
- * @param <E> Clase de los objetos que se van a insertar
+ * @param <E> Mapped class type. Used to check asigments when returning query
+ *            results.
+ * @author luastan
+ * @author CardamaS99
+ * @author danimf99
+ * @author alvrogd
+ * @author OswaldOswin1
+ * @author Marcos-marpin
  */
 public class InsertionMapper<E> extends Mapper<E> {
-    private List<E> inserciones;
+    private List<E> insertions;
     private String query;
     private ArrayList<String> columnas;
     private HashMap<String, Field> atributos;
@@ -22,7 +32,7 @@ public class InsertionMapper<E> extends Mapper<E> {
 
     public InsertionMapper(Connection conexion) {
         super(conexion);
-        inserciones = new ArrayList<>();
+        insertions = new ArrayList<>();
         query = "";
         columnas = new ArrayList<>();
         atributos = new HashMap<>();
@@ -30,9 +40,10 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Define la clase de los elementos que se están insertando
-     * @param mappedClass Clase de los elementos que se van a insertar
-     * @return Instancia del propio InsertionMapper
+     * Defines the Class of the insertions
+     *
+     * @param mappedClass Class corresponding the elements to be inserted
+     * @return The IsertionMapper instance
      */
     @Override
     public InsertionMapper<E> defineClass(Class<? extends E> mappedClass) {
@@ -41,52 +52,63 @@ public class InsertionMapper<E> extends Mapper<E> {
     }
 
     /**
-     * Añade un objeto para insertarlo
+     * Adds an object to be inserted
      *
-     * @param objeto Objeto que se quiere insertar
-     * @return El propio insertionMapper
+     * @param objeto Object to be inserted
+     * @return The current InsertionMapper instance
      */
     public InsertionMapper<E> add(E objeto) {
-        inserciones.add(objeto);
+        insertions.add(objeto);
         return this;
     }
 
 
     /**
-     * Añade múltiples objetos para insertarlos
+     * Adds multiple objects to the insertion tool
      *
      * @param objetos Objetos que se quieren insertar
      * @return El propio insertionMapper
      */
     public InsertionMapper<E> addAll(E... objetos) {
-        inserciones.addAll(Arrays.asList(objetos));
+        insertions.addAll(Arrays.asList(objetos));
         return this;
     }
 
+    /**
+     * Stores the given isolation level to apply it when executing the constructed transaction
+     *
+     * @param isolationLevel desired transaction isolation level
+     * @return insertion mapper which is being built
+     */
+    @Override
+    public InsertionMapper<E> setIsolationLevel(int isolationLevel) throws PiikDatabaseException {
+
+        return((InsertionMapper<E>)super.setIsolationLevel(isolationLevel));
+    }
 
     /**
-     * Extrae los atributos que serán insertados en la base de datos y genera
-     * el esqueleto de la sentencia SQL correspondiente para insertarlos
+     * Extracts the atributes and fields to be inserted into the database and
+     * generates the corresponding SQL sentence base for the insertions
      */
     private void prepareQuery() {
         String nombreColumna;
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO ")
                 .append(mappedClass.getAnnotation(MapperTable.class).nombre()).append("(");
 
-        // Fetching de atributos a insertar
+        // Fetches all the fields to be mapped
         for (Field field : mappedClass.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(MapperColumn.class) && !field.getAnnotation(MapperColumn.class).hasDefault()) {
-                nombreColumna = field.getAnnotation(MapperColumn.class).columna();
-                nombreColumna = nombreColumna.equals("") ? field.getName() : nombreColumna;
+                nombreColumna = extractColumnName(field);
                 queryBuilder.append(nombreColumna).append(",");
                 this.columnas.add(nombreColumna);
                 this.atributos.put(nombreColumna, field);
             }
         }
-        queryBuilder.deleteCharAt(queryBuilder.length() - 1);  // Borra la última coma
+        queryBuilder.deleteCharAt(queryBuilder.length() - 1);   // Deletes last comma ","
         queryBuilder.append(") VALUES (?");
-        for (int i = 0; i < this.atributos.size() - 1; i++) {  // Ya se pone un ? antes por eso se resta 1
+        for (int i = 0; i < this.atributos.size() - 1; i++) {   // as there's a ? before, it's necessary to decrement the
+            // size by one
             queryBuilder.append(",?");
         }
         queryBuilder.append(");");
@@ -95,39 +117,58 @@ public class InsertionMapper<E> extends Mapper<E> {
 
 
     /**
-     * Realiza la insercion de todos los elementos que se añadieron al mapper
+     * Inserts all the given elements into the database. When following
+     * foreign keys while inserting; It won't go into infinite recursion.
+     * At most It will propperly insert a foreign key from a foreign key. For
+     * example: A post wich has a parent wich is partially identified by its
+     * user which is actually a custom declared Class, not a String or an
+     * integer.
      */
-    public void insert() {
-        PreparedStatement statement = null;
-        // Peparar la sentencia
-        prepareQuery();
+    public void insert() throws PiikDatabaseException {
+        Map<String, Object> insertion;
+        Class fieldClass;
+        String columnName;
+        Object atrib;
+
+        // Configures the connection to the database
+        configureConnection();
+
         try {
-            for (E insercion : this.inserciones) {
-                statement = connection.prepareStatement(this.query);  // Construir PreparedStatement
-                for (int i = 0; i < this.columnas.size(); i++) {  // Insertar datos
-                    Object object = this.atributos.get(this.columnas.get(i)).get(insercion);
-                    if (object != null && this.atributos.get(this.columnas.get(i)).get(insercion).getClass().
-                            isAnnotationPresent(MapperTable.class)) {
-                        statement.setObject(i + 1, fkValue(this.atributos.get(this.columnas.get(i)).get(insercion)));
-                    } else {
-                        statement.setObject(i + 1, this.atributos.get(this.columnas.get(i)).get(insercion));
+            for (E element : this.insertions) {
+                insertion = new HashMap<>();
+                for (Field field : this.mappedClass.getDeclaredFields()) {
+                    if (field.isAnnotationPresent(MapperColumn.class)) {
+                        field.setAccessible(true);
+                        fieldClass = field.getAnnotation(MapperColumn.class).targetClass();
+                        if (fieldClass == Object.class) { // Normal field
+                            columnName = extractColumnName(field);
+                            atrib = field.get(element);
+                            // Checks for default values
+                            if (field.getAnnotation(MapperColumn.class).hasDefault() && atrib == null) {
+                                insertion.put(columnName, new Mapper.DEFAULT());
+                            } else {
+                                insertion.put(columnName, atrib);
+                            }
+                        } else { // Foreign keys
+                            if (field.get(element) != null) {   // Asumes that a foreign key can't be null
+                                insertion.putAll(getFKs(element));
+                            }
+                        }
                     }
                 }
-                // Ejecutar
-                statement.execute();
+                this.customInsertion(insertion, mappedClass.getAnnotation(MapperTable.class).nombre());
             }
-        } catch (SQLException e) {
-            System.out.println("SQL movida");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            throw new PiikDatabaseException(ex.getMessage());
         }
     }
 
 
     /**
-     * Devuelve un Map que sirve como plantilla para s
-     * @return Map con la estructura para insertar datos
+     * Generates a Map to be used as a template in custom insertions performed
+     * by the custom insertion mapper.
+     *
+     * @return Map template
      */
     public static Map<String, Object> customInsertionTemplate() {
         HashMap<String, Object> insertionTemplate = new HashMap<>();
@@ -140,35 +181,65 @@ public class InsertionMapper<E> extends Mapper<E> {
     }
 
     /**
-     * Genera las sentencias necesarias para insertar los elementos colocados
-     * en un mapa con la siguiente extructura:
-     *
+     * Automatically inserts values indicated by a list containing maps with
+     * the following structure:
+     * <p>
+     * [
      * {
-     *     "table" : "Nombre de la tabla",
-     *     "set" : [
-     *          {
-     *              "nombre columna" : "valor"
-     *          },
-     *          {
-     *              "nombre columna" : "valor puede ser un numero y no String"
-     *          }
-     *     ],
-     *     "where" : [
-     *          {
-     *              "nombre columna" : "valor"
-     *          },
-     *          {
-     *              "nombre columna" : "valor"
-     *          }
-     *     ]
+     * "Column name" : "value"
+     * },
+     * {
+     * "Column name that has an Integer" : 445
+     * },
+     * {
+     * "Column name that has a default value" : new Mapper.DEFAULT()
      * }
+     * ]
      *
-     *
-     * @param insertions Lista de hashmaps con la estructura exeplicada
+     * @param insertions Map list to be used as a guide to perform the
+     *                   insertions
      */
-    public void customInsertion(List<Map<String, Object>> insertions) {
-
+    public void customInsertion(List<Map<String, Object>> insertions, String table) throws PiikDatabaseException {
+        for (Map<String, Object> insertion : insertions) {
+            customInsertion(insertion, table);
+        }
     }
 
+    public void customInsertion(Map<String, Object> insertion, String table) throws PiikDatabaseException {
+        /*
+         *
+         * INSERT INTO post (author, id, text, publicationDate, sugarDaddy, authorDaddy, multimedia)
+         * values ('id2', 'post2', 'Respuesta', default, 'post2', 'id2', null)
+         *
+         * */
 
+        ArrayList<Object> params = new ArrayList<>();
+        StringBuilder insertionBuilder = new StringBuilder("INSERT INTO ");
+        StringBuilder valueBuilder = new StringBuilder("values (");
+        insertionBuilder.append(table).append(" (");
+
+        insertion.forEach((s, o) -> {
+            if (o instanceof Mapper.DEFAULT) {
+                insertionBuilder.append(s).append(",");
+                valueBuilder.append("default,");
+            } else {
+                insertionBuilder.append(s).append(",");
+                valueBuilder.append("?,");
+                params.add(o);
+            }
+
+        });
+        insertionBuilder.delete(insertionBuilder.length() - 1, insertionBuilder.length()).append(") ");
+        valueBuilder.delete(valueBuilder.length() - 1, valueBuilder.length()).append(")");
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(insertionBuilder.toString() + valueBuilder.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            statement.execute();
+        } catch (SQLException sql) {
+            throw new PiikDatabaseException(sql.getMessage());
+        }
+    }
 }

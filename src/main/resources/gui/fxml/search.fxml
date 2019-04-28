@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.SearchController">
+    <BorderPane>
+        <top>
+            <JFXToolbar styleClass="top-toolbar">
+
+            </JFXToolbar>
+        </top>
+
+    </BorderPane>
+
+    <VBox spacing="40">
+        <StackPane.margin>
+            <Insets bottom="25.0" left="10.0" right="25.0" top="10.0"/>
+        </StackPane.margin>
+        <HBox spacing="40" alignment="TOP_LEFT">
+            <JFXButton text="Back" fx:id="back" styleClass="classic-button" translateX="10"/>
+            <JFXButton text="Users" fx:id="userButton" styleClass="classic-button" translateX="50"/>
+            <JFXButton text="Posts" fx:id="postButton" styleClass="classic-button" translateX="50"/>
+            <JFXButton text="Events" fx:id="eventButton" styleClass="classic-button" translateX="50"/>
+
+        </HBox>
+        <HBox alignment="TOP_LEFT" spacing="100">
+            <JFXTextField fx:id="searchText" maxWidth="300" promptText="Introduce your search" translateX="20"/>
+            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
+        </HBox>
+        <ScrollPane fx:id="searchScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
+            <JFXMasonryPane fx:id="searchMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
+            </JFXMasonryPane>
+        </ScrollPane>
+    </VBox>
+</StackPane>

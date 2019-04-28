@@ -3,14 +3,19 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.sql.Timestamp;
+import java.util.Objects;
+
 @MapperTable
-public class Achievement {
+public class Achievement extends PiikObject{
     @MapperColumn(pkey = true)
     private String id;
-    @MapperColumn
+    @MapperColumn(notNull = true)
     private String name;
     @MapperColumn
     private String description;
+    // Needed to show unlock date in GUI
+    private Timestamp unlockDate;
 
     public Achievement() {
     }
@@ -43,5 +48,43 @@ public class Achievement {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Timestamp getUnlockDate() {
+        return unlockDate;
+    }
+
+    public void setUnlockDate(Timestamp unlockDate) {
+        this.unlockDate = unlockDate;
+    }
+
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+   /* public boolean checkPrimaryKey() {
+        return id != null && !id.isEmpty();
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+    }*/
+
+    /*public boolean checkNotNull() {
+        if (!checkPrimaryKey()) {
+            return false;
+        }
+        return name != null && !name.isEmpty();
+    }*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Achievement that = (Achievement) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

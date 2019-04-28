@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            styleClass="post-container">
+    <top>
+        <JFXToolbar>
+            <!-- Header with user info -->
+            <leftItems>
+                <!-- Avatar + User's  name + username -->
+                <StackPane>
+                    <HBox>
+                        <!--TODO: Insert Avatar here-->
+                        <!-- Avatar goes here-->
+                        <VBox>
+                            <Label text="username" fx:id="authorName"/>
+                            <Label text="username aka id" fx:id="authorId"/>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+            </leftItems>
+            <rightItems>
+                <!-- Share button -->
+                <StackPane>
+                    <JFXButton text="der2" fx:id="share" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="SHARE" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+                </StackPane>
+            </rightItems>
+        </JFXToolbar>
+    </top>
+    <center>
+        <!-- Event info -->
+        <VBox alignment="CENTER">
+            <Label text="Location---->" fx:id="eventLocation" wrapText="true"/>
+
+            <Label text="Date" fx:id="eventDate" wrapText="true"/>
+
+            <Label text="Actual event content goes here" fx:id="eventDescription" wrapText="true" styleClass="post-text"/>
+        </VBox>
+    </center>
+    <bottom>
+        <JFXToolbar>
+            <!-- Social button container -->
+            <leftItems>
+                <HBox>
+                    <JFXButton fx:id="participate" text="Join event" styleClass="jfx-button-border" ripplerFill="rgba(0, 0, 0, 0.80)">
+
+                    </JFXButton>
+                    <JFXButton fx:id="moreInfo" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="PLUS" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+                </HBox>
+            </leftItems>
+        </JFXToolbar>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXRippler?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           styleClass="deck-hitbox">
+    <BorderPane styleClass="deck-container" StackPane.alignment="BOTTOM_CENTER">
+        <center>
+            <JFXToolbar>
+                <leftItems>
+                    <StackPane styleClass="deck-small-button-container">
+                        <JFXRippler styleClass="rippler-hamburguer" maskType="RECT" fx:id="hamburguerRippler">
+                            <StackPane styleClass="hamburguer-space">
+                                <JFXHamburger styleClass="hamburguer-button, deck-small-button-graphic"
+                                              fx:id="hamburguerButton"/>
+                            </StackPane>
+                        </JFXRippler>
+                    </StackPane>
+                </leftItems>
+                <rightItems>
+                    <StackPane styleClass="deck-small-button-container">
+                        <HBox alignment="CENTER">
+                            <JFXButton text="der2" fx:id="userDataButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="PLUS" size="24"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </JFXButton>
+                            <JFXButton text="der3" fx:id="messageButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="PLUS" size="24"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </JFXButton>
+                            <JFXButton text="der1" fx:id="userButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="USER" size="24"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </JFXButton>
+                        </HBox>
+                    </StackPane>
+                </rightItems>
+            </JFXToolbar>
+        </center>
+    </BorderPane>
+    <JFXButton StackPane.alignment="TOP_CENTER" styleClass="deck-button" fx:id="mainButton"
+               ripplerFill="rgba(255, 255, 255, 0.70)"/>
+</StackPane>

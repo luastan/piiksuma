@@ -3,25 +3,27 @@ package piiksuma;
 import piiksuma.database.MapperColumn;
 import piiksuma.database.MapperTable;
 
+import java.util.Objects;
+
 @MapperTable(nombre = "ticket")
 
-public class Ticket extends Message {
+public class Ticket extends PiikObject{
 
     /* Attributes */
-    @MapperColumn(pkey = true)
-    private String id;
-    @MapperColumn(columna = "deadline")
+    @MapperColumn(pkey = true, hasDefault = true)
+    private Integer id;
+    @MapperColumn(columna = "closedate")
     private String closeDate;
-    @MapperColumn(columna = "usr")
-    private String user;
-    @MapperColumn
+    @MapperColumn(fKeys = "usr", targetClass = User.class, notNull = true)
+    private User user;
+    @MapperColumn(notNull = true)
     private String section;
-    @MapperColumn(columna = "text")
+    @MapperColumn(columna = "text", notNull = true)
     private String textProblem;
     @MapperColumn
     private String creationDate;
-    @MapperColumn
-    private String adminClosing;
+    @MapperColumn(fKeys = "adminclosing", targetClass = User.class)
+    private User adminClosing;
 
     /* Constructors */
 
@@ -29,9 +31,6 @@ public class Ticket extends Message {
     }
 
     public Ticket(String section) {
-
-        // todo add message fields to constructor
-        super();
 
         if (section != null) {
             this.section = section;
@@ -42,24 +41,32 @@ public class Ticket extends Message {
         closeDate = "";
     }
 
+    public Ticket(Ticket ticket) {
+        this.id = ticket.getId();
+        this.closeDate = ticket.getCloseDate();
+        this.user = ticket.getUser();
+        this.section = ticket.getSection();
+        this.textProblem = ticket.getTextProblem();
+        this.creationDate = ticket.getCreationDate();
+        this.adminClosing = ticket.getAdminClosing();
+    }
+
 
     /* Getters and setters */
 
-    @Override
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    @Override
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -71,11 +78,11 @@ public class Ticket extends Message {
         this.creationDate = creationDate;
     }
 
-    public String getAdminClosing() {
+    public User getAdminClosing() {
         return adminClosing;
     }
 
-    public void setAdminClosing(String adminClosing) {
+    public void setAdminClosing(User adminClosing) {
         this.adminClosing = adminClosing;
     }
 
@@ -103,11 +110,51 @@ public class Ticket extends Message {
         this.textProblem = textProblem;
     }
 
-    public boolean checkPrimaryKey(){
+    /**
+     * This function checks if the values of the primary keys are not null or are not empty
+     *
+     * @return the function return "true" if the primary keys are not null, otherwise return "false"
+     */
+    /*public boolean checkPrimaryKey() {
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+        return id != null;
+    }*/
 
-        if(id==null){
+    /**
+     * Function to check that the attributes with restriction 'not null' are not null
+     *
+     * @return the function return "true" if the attributes are not null, otherwise return "false"
+     */
+    /*public boolean checkNotNull() {
+        // Check that the primary keys are not null
+        if (!checkPrimaryKey()) {
             return false;
         }
-        return true;
+
+        if (getTextProblem() == null || getTextProblem().isEmpty()) {
+            return false;
+        }
+
+        if (getSection() == null || getSection().isEmpty()) {
+            return false;
+        }
+
+        // TODO Eliminar esto una vez se compruebe el funcionamiento del PiikObject
+
+        return getUser() != null && getUser().checkPrimaryKey();
+    }*/
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return id.equals(ticket.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
