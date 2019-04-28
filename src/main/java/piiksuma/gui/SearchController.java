@@ -1,24 +1,22 @@
 package piiksuma.gui;
 
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.event.Event;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
-import piiksuma.exceptions.PiikInvalidParameters;
-
 
 import java.io.IOException;
 import java.net.URL;
@@ -164,8 +162,9 @@ public class SearchController implements Initializable {
         if (searchText.getText().isEmpty()) {
             searchText.setText("");
         }
-        userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiUser WHERE name LIKE ?;")
-                .defineParameters("%" + searchText.getText() + "%").list());
+        userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiUser WHERE name LIKE ?" +
+                " AND id != ?;")
+                .defineParameters("%" + searchText.getText() + "%",ContextHandler.getContext().getCurrentUser().getId()).list());
     }
 
     public void updateEventFeed() throws PiikDatabaseException{
