@@ -372,4 +372,22 @@ public class InteractionDao extends AbstractDao {
                 "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineParameters(
                 user.getPK()).list();
     }
+
+    /**
+     * Function to get the events
+     *
+     * @param user user
+     * @param current   current user logged
+     * @return  list of the events that the followed users created
+     */
+    public List<Event> getEvents(User user, User current, Integer limit) throws PiikDatabaseException {
+
+        return new QueryMapper<Event>(super.getConnection()).createQuery(
+                "SELECT e.* " +
+                "FROM event as e " +
+                "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
+                "ORDER BY e.date DESC " +
+                "LIMIT ?;"
+        ).defineClass(Event.class).defineParameters(user.getId(),limit).list();
+    }
 }

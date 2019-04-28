@@ -527,4 +527,26 @@ public class SearchFacade {
 
         return parentFacade.getMultimediaDao().getImage(multimedia);
     }
+
+    /**
+     * Function to get the events
+     *
+     * @param user user
+     * @param current   current user logged
+     * @return  list of the events that the followed users created
+     */
+    public List<Event> getEvents(User user, User current, Integer limit) throws PiikDatabaseException, PiikInvalidParameters{
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+        
+        if (limit == null || limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+        return parentFacade.getInteractionDao().getEvents(user, current, limit);
+    }
 }

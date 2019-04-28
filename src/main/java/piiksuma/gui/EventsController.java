@@ -9,9 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Event;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
-import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,9 +47,14 @@ public class EventsController implements Initializable {
      * @throws PiikDatabaseException
      */
     private void updateEventFeed() throws PiikDatabaseException {
-
+        User user = ContextHandler.getContext().getCurrentUser();
         eventFeed.clear();
-        eventFeed.addAll(new QueryMapper<Event>(ApiFacade.getEntrypoint().getConnection()).defineClass(Event.class).createQuery("SELECT * FROM event;").list());
+        try {
+            eventFeed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getEvents(user, user, 20));
+        }catch (PiikException e){
+            System.out.println(e.getMessage());
+            return;
+        }
 
     }
 
