@@ -145,6 +145,16 @@ public class RegisterController implements Initializable {
         user.setCity(city.getText());
         user.setEmotionalSituation(emotionalSituation.getText());
 
+        for(String s: telephoneList.getItems()){
+
+            try{
+                Integer.parseInt(s);
+                user.addPhone(s);
+            }catch (NumberFormatException e){
+                System.out.println("Not a telephone");
+            }
+
+        }
         //TODO add telephones to an arraylist or somethng
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
