@@ -45,7 +45,8 @@ public class PostController implements Initializable {
 
         User author = post.getAuthor();
 
-        if (ContextHandler.getContext().getCurrentUser().getType() == null) { //TODO fix this
+        if (ContextHandler.getContext().getCurrentUser().getType() == null &&
+                !ContextHandler.getContext().getCurrentUser().getId().equals(post.getAuthor().getId())) { //TODO fix this
             deleteButton.setVisible(false);
         }
 
