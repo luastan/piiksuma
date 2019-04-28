@@ -55,6 +55,9 @@ public class OtherUserProfileController implements Initializable {
     @FXML
     private JFXButton deleteButton;
 
+    @FXML
+    private JFXButton silenceButton;
+
     private User user;
 
     public User getUser() {
@@ -78,6 +81,8 @@ public class OtherUserProfileController implements Initializable {
         blockButton.setOnAction(this::handleBlockButton);
         followButton.setOnAction(this::handleFollowButton);
         deleteButton.setOnAction(this::handleDeleteButton);
+        silenceButton.setOnAction(this::handleSilence);
+
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
 
@@ -87,6 +92,16 @@ public class OtherUserProfileController implements Initializable {
             e.printStackTrace();
         }
         messageButton.setOnAction(this::handleMessageButton);
+    }
+
+    private void handleSilence(Event event){
+        try{
+            ApiFacade.getEntrypoint().getInsertionFacade().silenceUser(user, ContextHandler.getContext().getCurrentUser());
+        }catch (PiikException e){
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Silenciado");
     }
 
     public void updateFeed() throws PiikDatabaseException {

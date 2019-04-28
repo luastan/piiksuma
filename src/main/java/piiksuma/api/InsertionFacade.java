@@ -1,17 +1,14 @@
 package piiksuma.api;
 
 import piiksuma.*;
-import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Connection;
-import java.util.Arrays;
 import java.util.Base64;
 
 public class InsertionFacade {
@@ -515,6 +512,17 @@ public class InsertionFacade {
         return parentFacade.getInteractionDao().createNotification(notification);
     }
 
+    public void silenceUser(User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        parentFacade.getUserDao().silenceUser(user,currentUser);
+    }
 
     /**
      * This function associates a notification with a user

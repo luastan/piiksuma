@@ -63,7 +63,7 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         buttonLike.setOnAction(this::handleLike);
-        deleteButton.setOnAction(this::handleDelete);
+       // deleteButton.setOnAction(this::handleDelete);
     }
 
     private void handleLike(Event event) {
