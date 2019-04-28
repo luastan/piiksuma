@@ -12,6 +12,8 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class MessageFromProfileController implements Initializable {
@@ -40,8 +42,13 @@ public class MessageFromProfileController implements Initializable {
             return;
         }
         message.setText(messageField.getText());
+        message.setSender(ContextHandler.getContext().getCurrentUser());
+        Date date = new Date();
+        long time = date.getTime();
+        message.setDate(new Timestamp(time));
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,ContextHandler.getContext().getCurrentUser());
+            message.toString();
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
         } catch (PiikInvalidParameters piikInvalidParameters) {
