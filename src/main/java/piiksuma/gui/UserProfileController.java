@@ -34,6 +34,9 @@ public class UserProfileController implements Initializable {
     private JFXButton feedButton;
 
     @FXML
+    private JFXButton archivedPostsButton;
+
+    @FXML
     private JFXButton newticketButton;
 
     @FXML
@@ -50,7 +53,11 @@ public class UserProfileController implements Initializable {
 
     @FXML
     private JFXMasonryPane postMasonryPane;
-    private ObservableList<Post> feed;
+
+    private ObservableList<Post> posts;
+
+    // Which tab is selected
+    boolean feedSelected = true;
 
 
 
@@ -63,19 +70,20 @@ public class UserProfileController implements Initializable {
         description.setText(ContextHandler.getContext().getCurrentUser().getDescription());
         newticketButton.setOnAction(this::handleNewTicektButton);
         ticketsButton.setOnAction(this::handleTicketsButton);
+        feedButton.setOnAction(this::handleFeedButton);
+        archivedPostsButton.setOnAction(this::handleArchivedPostsButton);
 
-        feed = FXCollections.observableArrayList();
+        posts = FXCollections.observableArrayList();
 
         ContextHandler.getContext().setUserProfileController(this);
-        setUpFeedListener();
+        setUpPostsListener();
 
-
-        try {
+        if(feedSelected) {
             updateFeed();
-        } catch (PiikDatabaseException e) {
-            e.printStackTrace();
         }
-
+        else {
+            updateArchivedPosts();
+        }
     }
 
     /**
@@ -171,23 +179,56 @@ public class UserProfileController implements Initializable {
      *
      * @throws PiikDatabaseException
      */
-    public void updateFeed() throws PiikDatabaseException {
+    public void updateFeed()  {
         // TODO: update the feed propperly
-        feed.clear();
-        feed.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(Post.class).createQuery("SELECT * FROM post WHERE author = ?;")
-                .defineParameters(ContextHandler.getContext().getCurrentUser().getId()).list());
+        posts.clear();
+
+            /*posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getPost(ContextHandler.getContext().getCurrentUser(),
+                    ContextHandler.getContext().getCurrentUser()));*/
+        try {
+            posts.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(
+                    Post.class).createQuery("SELECT * FROM post WHERE author = ?").defineParameters(
+                    ContextHandler.getContext().getCurrentUser().getPK()).list());
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+        postScrollPane.requestLayout();
+        postScrollPane.requestFocus();
+
+        postMasonryPane.requestLayout();
+    }
+
+    public void updateArchivedPosts() {
+        posts.clear();
+
+            /*posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));*/
+        try {
+            posts.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(
+                    Post.class).createQuery("SELECT p.* FROM post as p WHERE EXISTS (SELECT * FROM " +
+                    "archivepost as a WHERE a.post = p.id AND a.author = p.author AND a.usr = ?)").defineParameters(
+                    ContextHandler.getContext().getCurrentUser().getPK()).list());
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+
+        postScrollPane.requestLayout();
+        postScrollPane.requestFocus();
+
+        postMasonryPane.requestLayout();
     }
 
     /**
-     * Code to be executed when the feed gets updated. Posts at the interface
+     * Code to be executed when the shown posts get updated. Posts at the interface
      * have to be updated.
      * <p>
      * Recieves change performed to the list via {@link ListChangeListener#onChanged(ListChangeListener.Change)}
      */
-    private void setUpFeedListener() {
-        feed.addListener((ListChangeListener<? super Post>) change -> {
+    private void setUpPostsListener() {
+        posts.addListener((ListChangeListener<? super Post>) change -> {
             postMasonryPane.getChildren().clear();
-            feed.forEach(this::insertPost);
+            posts.forEach(this::insertPost);
         });
     }
 
@@ -204,4 +245,11 @@ public class UserProfileController implements Initializable {
         postScrollPane.requestFocus();
     }
 
+    public void handleFeedButton(Event event) {
+        updateFeed();
+    }
+
+    public void handleArchivedPostsButton(Event event) {
+        updateArchivedPosts();
+    }
 }
