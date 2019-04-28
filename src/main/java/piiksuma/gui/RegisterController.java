@@ -151,7 +151,6 @@ public class RegisterController implements Initializable {
         } catch (PiikException e) {
             //TODO handle exceptions properly
             System.out.println(e.getMessage());
-            return;
         }
     }
 

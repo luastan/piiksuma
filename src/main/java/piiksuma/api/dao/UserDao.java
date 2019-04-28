@@ -37,13 +37,8 @@ public class UserDao extends AbstractDao {
                 Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
-    private int setUserQuery(String clause, PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
+    private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
                              User user, Multimedia multimedia) throws SQLException {
-
-        statement = getConnection().prepareStatement(clause.toString());
-
-
-        /* Clause's data insertion */
 
         int offset = 1;
 
@@ -193,9 +188,14 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO administrator(id) VALUES(?); ");
             }
 
+            statement = getConnection().prepareStatement(clause.toString());
+
+
+            /* Clause's data insertion */
+
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(clause.toString(), statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
 
             // User's data insertion
             for (Object value : columnValues) {
@@ -328,14 +328,19 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "administrator WHERE id = ? FOR UPDATE); ");
 
-                // Or he may have been downgraded
+            // Or he may have been downgraded
             else {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
+            statement = getConnection().prepareStatement(clause.toString());
+
+
+            /* Clause's data insertion */
+
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(clause.toString(), statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
 
             // User's data insertion
             for (Object value : columnValues) {

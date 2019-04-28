@@ -36,6 +36,12 @@ public class NewTicketController implements Initializable {
     public void handleSendButton(Event event) {
         Ticket ticket = new Ticket();
         if (section.getText().isEmpty() || description.getText().isEmpty()) {
+            Alert alert = new Alert(ContextHandler.getContext().getStage("newTicket"));
+            alert.setHeading("Fields empty!");
+            alert.addText("Section and description cannot be empty");
+            alert.addCloseButton();
+            alert.show();
+
             return;
         }
         ticket.setSection(section.getText());
