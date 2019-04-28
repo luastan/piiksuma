@@ -289,15 +289,16 @@ public class InteractionDao extends AbstractDao {
     }
     //******************************************************************************************************************
     //==================================================================================================================
+    // ================================================ NOTIFICATIONS ==================================================
 
-    /**
-     * Inserts a new notification on a user
-     *
-     * @param notification notification given to the user
-     * @return ticket containing the given data and its generated ID
+    /*******************************************************************************************************************
+     * Sends a new notification to a user
+     * @param notification Notification sent to the user
+     * @return Returns the Notification sent
+     * @throws PiikDatabaseException Thrown if notification or the primary key are null
      */
     public Notification createNotification(Notification notification) throws PiikDatabaseException {
-
+        // Check if notification or primary key are null
         if (notification == null || !notification.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("notification"));
         }
@@ -379,6 +380,8 @@ public class InteractionDao extends AbstractDao {
 
         return (completeNotification);
     }
+    //******************************************************************************************************************
+    //==================================================================================================================
 
     /**
      * This function associates a notification with a user
