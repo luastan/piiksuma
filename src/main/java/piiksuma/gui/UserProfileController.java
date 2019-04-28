@@ -183,13 +183,10 @@ public class UserProfileController implements Initializable {
         // TODO: update the feed propperly
         posts.clear();
 
-            /*posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getPost(ContextHandler.getContext().getCurrentUser(),
-                    ContextHandler.getContext().getCurrentUser()));*/
         try {
-            posts.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(
-                    Post.class).createQuery("SELECT * FROM post WHERE author = ?").defineParameters(
-                    ContextHandler.getContext().getCurrentUser().getPK()).list());
-        } catch (PiikDatabaseException e) {
+            posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getPost(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
 
@@ -202,16 +199,12 @@ public class UserProfileController implements Initializable {
     public void updateArchivedPosts() {
         posts.clear();
 
-            /*posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));*/
-        try {
-            posts.addAll(new QueryMapper<Post>(ApiFacade.getEntrypoint().getConnection()).defineClass(
-                    Post.class).createQuery("SELECT p.* FROM post as p WHERE EXISTS (SELECT * FROM " +
-                    "archivepost as a WHERE a.post = p.id AND a.author = p.author AND a.usr = ?)").defineParameters(
-                    ContextHandler.getContext().getCurrentUser().getPK()).list());
-        } catch (PiikDatabaseException e) {
+        /*try {
+            posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
-        }
+        }*/
 
         postScrollPane.requestLayout();
         postScrollPane.requestFocus();

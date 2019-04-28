@@ -6,6 +6,9 @@ import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
+import piiksuma.piikLog.PiikLogger;
+
+import java.util.logging.Level;
 
 public class Arranque extends Application {
     public static void main(String[] args) {
@@ -13,6 +16,7 @@ public class Arranque extends Application {
         //      SampleFachada.getDb().pruebasCheck();
         // SampleFachada.getDb().idGenerationTest();
         SampleFachada.getDb().aTest();
+        PiikLogger.getInstance().log(Level.SEVERE, "prueba");
         launch(args);
     }
 
