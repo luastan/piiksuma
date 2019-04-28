@@ -43,21 +43,5 @@
         </StackPane>
 
     </center>
-    <bottom>
-        <BorderPane>
-
-            <left>
-                <HBox alignment="BOTTOM_LEFT">
-                    <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
-                        <graphic>
-                            <FontAwesomeIconView glyphName="TRASH" size="24"
-                                                 styleClass="deck-small-button-graphic"/>
-                        </graphic>
-                    </JFXButton>
-                </HBox>
-            </left>
-        </BorderPane>
-    </bottom>
-
 
 </BorderPane>

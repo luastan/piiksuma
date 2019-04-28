@@ -1,6 +1,5 @@
 package piiksuma.gui.deckControllers;
 
-import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -17,9 +16,6 @@ public class NotificationController implements Initializable {
     @FXML
     private Label notificationContent;
 
-    @FXML
-    private JFXButton deleteButton;
-
     private Notification notification;
 
     public NotificationController(Notification notification) {
@@ -30,5 +26,7 @@ public class NotificationController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         creationDate.setText(notification.getCreationDate().toString());
         notificationContent.setText(notification.getContent());
+
     }
+
 }
