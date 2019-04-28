@@ -5,6 +5,10 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import piiksuma.Statistics;
+import piiksuma.User;
+import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikException;
 import piiksuma.gui.ContextHandler;
 
 import java.net.URL;
@@ -37,10 +41,32 @@ public class StatsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         closeButton.setOnAction(this::handleClose);
+
+        searchStats();
     }
 
-    private void handleClose(Event event){
+    private void searchStats() {
+        User user = ContextHandler.getContext().getCurrentUser();
+
+        try {
+            Statistics statistics = ApiFacade.getEntrypoint().getSearchFacade().getUserStatistics(user, user);
+            maxHateIt.setText(""+statistics.getMaxHateIt());
+            maxLikeIt.setText(""+statistics.getMaxLikeIt());
+            maxLoveIt.setText(""+statistics.getMaxLoveIt());
+            maxMadeMeAngry.setText(""+statistics.getMaxMakesMeAngry());
+            followers.setText(""+statistics.getFollowers());
+            following.setText(""+statistics.getFollowing());
+//            followback.setText(""+statistics.getFollowBack());
+        } catch (PiikException e) {
+            //TODO logger and alert
+            System.out.println(e.getMessage());
+            return;
+        }
+    }
+
+    private void handleClose(Event event) {
         ContextHandler.getContext().getStage("Statistics").close();
     }
 }
