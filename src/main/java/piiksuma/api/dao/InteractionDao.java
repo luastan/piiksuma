@@ -36,7 +36,9 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
 
-        new DeleteMapper<Reaction>(super.getConnection()).add(reaction).defineClass(Reaction.class).delete();
+        new DeleteMapper<Reaction>(super.getConnection()).createUpdate("DELETE FROM react WHERE" +
+                " post = ? and usr = ? and author = ?").defineParameters(reaction.getPost().getId(),
+                reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
 
     public void updateEvent(Event event) throws PiikDatabaseException {
@@ -60,7 +62,10 @@ public class InteractionDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
         }
 
-        new InsertionMapper<Reaction>(super.getConnection()).add(reaction).defineClass(Reaction.class).insert();
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
+                "author) VALUES(?,?,?,?)")
+                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                        reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
 
     public void participateEvent(Event event, User user) throws PiikDatabaseException {
