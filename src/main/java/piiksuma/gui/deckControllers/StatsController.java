@@ -34,7 +34,7 @@ public class StatsController implements Initializable {
     private Label following;
 
     @FXML
-    private Label followback;
+    private Label followBack;
 
     @FXML
     private JFXButton closeButton;
@@ -58,7 +58,7 @@ public class StatsController implements Initializable {
             maxMadeMeAngry.setText(""+statistics.getMaxMakesMeAngry());
             followers.setText(""+statistics.getFollowers());
             following.setText(""+statistics.getFollowing());
-//            followback.setText(""+statistics.getFollowBack());
+            followBack.setText(""+statistics.getFollowBack());
         } catch (PiikException e) {
             //TODO logger and alert
             System.out.println(e.getMessage());
