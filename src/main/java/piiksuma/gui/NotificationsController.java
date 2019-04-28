@@ -54,9 +54,9 @@ public class NotificationsController implements Initializable {
         User user = ContextHandler.getContext().getCurrentUser();
 
         try {
-            List<Notification> notifications = ApiFacade.getEntrypoint().getSearchFacade().getNotifications(user, user);
+            List<Notification> notifications1 = ApiFacade.getEntrypoint().getSearchFacade().getNotifications(user, user);
 
-            notifications.addAll(notifications);
+            notifications.addAll(notifications1);
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
             piikInvalidParameters.printStackTrace();
@@ -70,7 +70,7 @@ public class NotificationsController implements Initializable {
         notifications.addListener((ListChangeListener<? super Notification>) change -> {
             // Visual representation gets cleared
             notificationMasonryPane.getChildren().clear();
-            
+
             notifications.forEach(this::insertNotification);
         });
     }
