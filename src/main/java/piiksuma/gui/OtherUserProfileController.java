@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Post;
@@ -21,9 +20,9 @@ import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -53,6 +52,12 @@ public class OtherUserProfileController implements Initializable {
     @FXML
     private JFXButton followButton;
 
+    @FXML
+    private JFXButton deleteButton;
+
+    @FXML
+    private JFXButton silenceButton;
+
     private User user;
 
     public User getUser() {
@@ -67,11 +72,16 @@ public class OtherUserProfileController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 //        ContextHandler.getContext().getCurrentUser().setName("OswaldOswin");
         // userName.setText(ContextHandler.getContext().getCurrentUser().getName());
+        if(ContextHandler.getContext().getCurrentUser().getType() == null){ //TODO me daba error con getType.equals(UserType.USER),puse esto de momento
+            deleteButton.setVisible(false);
+        }
         feed = FXCollections.observableArrayList();
         userName.setText(user.getName());
         description.setText(user.getDescription());
         blockButton.setOnAction(this::handleBlockButton);
         followButton.setOnAction(this::handleFollowButton);
+        deleteButton.setOnAction(this::handleDeleteButton);
+        silenceButton.setOnAction(this::handleSilence);
 
         ContextHandler.getContext().setOtherUserProfileController(this);
         setUpFeedListener();
@@ -82,6 +92,16 @@ public class OtherUserProfileController implements Initializable {
             e.printStackTrace();
         }
         messageButton.setOnAction(this::handleMessageButton);
+    }
+
+    private void handleSilence(Event event){
+        try{
+            ApiFacade.getEntrypoint().getInsertionFacade().silenceUser(user, ContextHandler.getContext().getCurrentUser());
+        }catch (PiikException e){
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Silenciado");
     }
 
     public void updateFeed() throws PiikDatabaseException {
@@ -225,5 +245,17 @@ public class OtherUserProfileController implements Initializable {
             }
 
         }
+    }
+
+    private void handleDeleteButton(Event event){
+        //We remove the user from the database
+        try{
+            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(user,ContextHandler.getContext().getCurrentUser());
+        }catch (PiikException e){
+            //TODO handle exception
+            return;
+        }
+        //Now we close the profile window
+        ContextHandler.getContext().getStage("User Profile").close();
     }
 }
