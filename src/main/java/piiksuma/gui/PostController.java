@@ -69,6 +69,7 @@ public class PostController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
 
             System.out.println("Like!");
+            //buttonLike.setStyle("-icons-color: #FF0000;");
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
 
             // TODO Este contains podría modificarse con una excepción nueva. O que dentro de las excepciones

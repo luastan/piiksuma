@@ -256,6 +256,10 @@
     -fx-background-repeat: no-repeat;
     -fx-background-size: 40 40;
 }
+
+.post-like {
+    -fx-text-fill: #FF0000;
+}
 /* Alerts */
 .accept-dialog-button {
     -fx-text-fill: #1B1B1E;
