@@ -6,7 +6,13 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class InsertionFacade {
     private ApiFacade parentFacade;
@@ -35,12 +41,25 @@ public class InsertionFacade {
      *                               values on primary keys
      */
     public void createUser(User newUser) throws PiikDatabaseException, PiikInvalidParameters {
-
         if (newUser == null || !newUser.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("newUser"));
         }
+        MessageDigest messageDigest;
 
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new PiikInvalidParameters(ErrorMessage.getNotExistsMessage("hashAlgorithm"));
+        }
+
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        messageDigest.update(salt);
+        byte[] hashedPassword = messageDigest.digest(newUser.getPass().getBytes());
+        newUser.setPass(Base64.getEncoder().encodeToString(salt) + '$' + Base64.getEncoder().encodeToString(hashedPassword));
         parentFacade.getUserDao().createUser(newUser);
+        newUser.setPass(" ");
     }
 
     public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,

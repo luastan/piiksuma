@@ -22,9 +22,13 @@ public class Arranque extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Registers current stage into the Application Context
 
-        ContextHandler.getContext().setCurrentUser(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiuser;").findFirst());
+        User user = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiuser where id='usr1';").findFirst();
+        user.setPass("supercontraseña");
+
+        // Comment to use the login
+//        ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().login(user));
+
         ContextHandler.getContext().stageJuggler(primaryStage);
     }
 }

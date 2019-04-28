@@ -524,13 +524,7 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        User returnUser = getUser(user, Connection.TRANSACTION_SERIALIZABLE);
-
-        if(returnUser != null && returnUser.getPass().equals(user.getPass())){
-            return returnUser;
-        } else {
-            return null;
-        }
+        return getUser(user, Connection.TRANSACTION_SERIALIZABLE);
     }
 
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {

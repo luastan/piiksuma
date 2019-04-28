@@ -6,12 +6,15 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SearchFacade {
 
@@ -123,7 +126,28 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        return parentFacade.getUserDao().login(user);
+        User candidate = parentFacade.getUserDao().login(user);
+        if (candidate == null) {
+            return null;
+        }
+
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            throw new PiikInvalidParameters(ErrorMessage.getNotExistsMessage("hashAlgorithm"));
+        }
+
+        Matcher matcher = Pattern.compile("(.*)\\$(.*)").matcher(candidate.getPass());
+        if (!matcher.find()) {
+            return null;
+        }
+        byte[] salt = Base64.getDecoder().decode(matcher.group(1));
+        messageDigest.update(salt);
+        String storedHash = matcher.group(2);
+        String calculatedHash = Base64.getEncoder().encodeToString(messageDigest.digest(user.getPass().getBytes()));
+        candidate.setPass(" ");
+        return storedHash.equals(calculatedHash) ? candidate : null;
     }
 
     /**
