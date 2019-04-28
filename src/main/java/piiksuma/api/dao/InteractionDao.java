@@ -24,102 +24,13 @@ public class InteractionDao extends AbstractDao {
     // ==================================================== EVENTS =====================================================
 
     /*******************************************************************************************************************
-     * Removes an event from the db
-     *
-     * @param event Event you want to remove
+     * Creates a new event
+     * @param event Event to create
+     * @return Returns the newly created event
      * @throws PiikDatabaseException Thrown if event or the primary key are null
      */
-    public void removeEvent(Event event) throws PiikDatabaseException {
-
-        // Check if event or primary key are null
-        if (event == null || !event.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
-        }
-        // Delete event
-        new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
-    }
-    //******************************************************************************************************************
-
-    /*******************************************************************************************************************
-     * Update an event already on the db
-     *
-     * @param event Event you want to update
-     * @throws PiikDatabaseException Thrown if event or the primary key are null
-     */
-    public void updateEvent(Event event) throws PiikDatabaseException {
-        // Check if event or primary key are null
-        if (event == null || !event.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
-        }
-        // Update event
-        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
-    }
-    //******************************************************************************************************************
-
-    /*******************************************************************************************************************
-     * Allows an user to participate in one event
-     * @param event Event you want to participate in
-     * @param user  User that wants to participate in the event
-     * @throws PiikDatabaseException Thrown if event/user or the primary key of event/user the are null
-     */
-    public void participateEvent(Event event, User user) throws PiikDatabaseException {
-        // Check if event or primary key are null
-        if (event == null || !event.checkPrimaryKey(true)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
-        }
-
-        if (user == null || !user.checkPrimaryKey(true)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
-        }
-        // Insert user as an attendant of the event
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateevent VALUES(?,?,?)")
-                .defineParameters(
-                        event.getId(),
-                        event.getCreator().getId(),
-                        user.getId()
-                ).executeUpdate();
-    }
-    //******************************************************************************************************************
-
-    //==================================================================================================================
-
-    /**
-     * Removes an user reaction to a post
-     *
-     * @param reaction Reaction to be removed
-     * @throws PiikDatabaseException Thrown if reaction or the primary key are null
-     */
-    public void removeReaction(Reaction reaction) throws PiikDatabaseException {
-        // Check if reaction or primary key are null
-        if (reaction == null || !reaction.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
-        }
-        // Delete reaction
-        new DeleteMapper<Reaction>(super.getConnection()).createUpdate("DELETE FROM react WHERE" +
-                " post = ? and usr = ? and author = ?").defineParameters(reaction.getPost().getId(),
-                reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
-    }
-
-
-    /**
-     * Inserts into the database a given reaction
-     *
-     * @param reaction reaction to be inserted
-     */
-    public void react(Reaction reaction) throws PiikDatabaseException {
-
-        if (reaction == null || !reaction.checkPrimaryKey(true)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
-        }
-
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
-                "author) VALUES(?,?,?,?)")
-                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
-                        reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
-    }
-
     public Event createEvent(Event event) throws PiikDatabaseException {
-
+        // Check if event or primary key are null
         if (event == null || !event.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
         }
@@ -250,6 +161,102 @@ public class InteractionDao extends AbstractDao {
         }
 
         return (completeEvent);
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Removes an event from the db
+     *
+     * @param event Event you want to remove
+     * @throws PiikDatabaseException Thrown if event or the primary key are null
+     */
+    public void removeEvent(Event event) throws PiikDatabaseException {
+
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+        // Delete event
+        new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Update an event already on the db
+     *
+     * @param event Event you want to update
+     * @throws PiikDatabaseException Thrown if event or the primary key are null
+     */
+    public void updateEvent(Event event) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+        // Update event
+        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Allows an user to participate in one event
+     * @param event Event you want to participate in
+     * @param user  User that wants to participate in the event
+     * @throws PiikDatabaseException Thrown if event/user or the primary key of event/user the are null
+     */
+    public void participateEvent(Event event, User user) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+
+        if (user == null || !user.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+        // Insert user as an attendant of the event
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateevent VALUES(?,?,?)")
+                .defineParameters(
+                        event.getId(),
+                        event.getCreator().getId(),
+                        user.getId()
+                ).executeUpdate();
+    }
+    //******************************************************************************************************************
+
+    //==================================================================================================================
+
+    /**
+     * Removes an user reaction to a post
+     *
+     * @param reaction Reaction to be removed
+     * @throws PiikDatabaseException Thrown if reaction or the primary key are null
+     */
+    public void removeReaction(Reaction reaction) throws PiikDatabaseException {
+        // Check if reaction or primary key are null
+        if (reaction == null || !reaction.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
+        }
+        // Delete reaction
+        new DeleteMapper<Reaction>(super.getConnection()).createUpdate("DELETE FROM react WHERE" +
+                " post = ? and usr = ? and author = ?").defineParameters(reaction.getPost().getId(),
+                reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
+    }
+
+
+    /**
+     * Inserts into the database a given reaction
+     *
+     * @param reaction reaction to be inserted
+     */
+    public void react(Reaction reaction) throws PiikDatabaseException {
+
+        if (reaction == null || !reaction.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
+        }
+
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
+                "author) VALUES(?,?,?,?)")
+                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                        reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
 
     /**
