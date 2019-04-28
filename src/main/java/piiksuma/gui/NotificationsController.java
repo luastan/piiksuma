@@ -17,9 +17,7 @@ import piiksuma.gui.deckControllers.NotificationController;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class NotificationsController implements Initializable {
@@ -58,8 +56,6 @@ public class NotificationsController implements Initializable {
         try {
             List<Notification> notifications = ApiFacade.getEntrypoint().getSearchFacade().getNotifications(user, user);
 
-            Map<String, Timestamp> unlockDates = ApiFacade.getEntrypoint().getSearchFacade().getUnlockDates(user, user);
-
             notifications.addAll(notifications);
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
@@ -74,7 +70,7 @@ public class NotificationsController implements Initializable {
         notifications.addListener((ListChangeListener<? super Notification>) change -> {
             // Visual representation gets cleared
             notificationMasonryPane.getChildren().clear();
-            // Each achievement is represented
+            
             notifications.forEach(this::insertNotification);
         });
     }
