@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Event extends PiikObject{
     @MapperColumn(pkey = true, hasDefault = true)
     private String id;
-    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class)
+    @MapperColumn(pkey = true, fKeys = "author:id", targetClass = User.class, columna = "author")
     private User creator;
     @MapperColumn(hasDefault = true)
     private String description;
