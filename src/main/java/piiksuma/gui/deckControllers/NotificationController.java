@@ -1,0 +1,34 @@
+package piiksuma.gui.deckControllers;
+
+import com.jfoenix.controls.JFXButton;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import piiksuma.Notification;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class NotificationController implements Initializable {
+
+    @FXML
+    private Label creationDate;
+
+    @FXML
+    private Label notificationContent;
+
+    @FXML
+    private JFXButton deleteButton;
+
+    private Notification notification;
+
+    public NotificationController(Notification notification) {
+        this.notification = notification;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        creationDate.setText(notification.getCreationDate().toString());
+        notificationContent.setText(notification.getContent());
+    }
+}

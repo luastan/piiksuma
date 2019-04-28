@@ -39,11 +39,20 @@ public class ContextHandler {
     private MessagesController messagesController;
     private SearchController searchController;
     private AchievementsController achievementsController;
+    private NotificationsController notificationsController;
 
     private TicketsController ticketsController;
     private UserProfileController userProfileController;
     private OtherUserProfileController otherUserProfileController;
 
+
+    public NotificationsController getNotificationsController() {
+        return notificationsController;
+    }
+
+    public void setNotificationsController(NotificationsController notificationsController) {
+        this.notificationsController = notificationsController;
+    }
 
     /**
      * Private Contrstructor since this is a Singleton Class
