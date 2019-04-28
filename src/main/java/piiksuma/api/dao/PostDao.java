@@ -564,6 +564,14 @@ public class PostDao extends AbstractDao {
 
         for(Map<String, Object> columnsPost : result){
             Post resultPost = new Post();
+            User user = new User();
+
+            Object idUser = columnsPost.get("author");
+
+            if(idUser instanceof String){
+                user.setId((String) idUser);
+                columnsPost.put("author", user);
+            }
 
             resultPost.addInfo(columnsPost);
 
