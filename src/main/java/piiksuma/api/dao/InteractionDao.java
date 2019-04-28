@@ -225,12 +225,10 @@ public class InteractionDao extends AbstractDao {
     /*******************************************************************************************************************
      * Gets the events followed by the user
      * @param user User you want to get events from
-     * @param current User of the application
-     * @param limit Limit of events to return
      * @return List of events
      * @throws PiikDatabaseException Thrown if event/user or the primary key of event/user the are null
      */
-    public List<Event> getEvents(User user, User current, Integer limit) throws PiikDatabaseException {
+    public List<Event> getEvents(User user) throws PiikDatabaseException {
         // Check if user or primary key are null
         if (user == null || !user.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
@@ -242,8 +240,8 @@ public class InteractionDao extends AbstractDao {
                         "FROM event as e " +
                         "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
                         "ORDER BY e.date DESC " +
-                        "LIMIT ?;"
-        ).defineClass(Event.class).defineParameters(user.getId(), limit).list();
+                        "LIMIT 10;"
+        ).defineClass(Event.class).defineParameters(user.getId()).list();
     }
     //******************************************************************************************************************
     //==================================================================================================================

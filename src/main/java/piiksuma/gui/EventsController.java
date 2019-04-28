@@ -50,7 +50,7 @@ public class EventsController implements Initializable {
         User user = ContextHandler.getContext().getCurrentUser();
         eventFeed.clear();
         try {
-            eventFeed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getEvents(user, user, 20));
+            eventFeed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getEvents(user, user));
         }catch (PiikException e){
             System.out.println(e.getMessage());
             return;

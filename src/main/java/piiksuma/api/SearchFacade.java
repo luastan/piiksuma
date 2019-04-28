@@ -6,13 +6,15 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -559,18 +561,14 @@ public class SearchFacade {
      * @param current   current user logged
      * @return  list of the events that the followed users created
      */
-    public List<Event> getEvents(User user, User current, Integer limit) throws PiikDatabaseException, PiikInvalidParameters{
+    public List<Event> getEvents(User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
-        }
-
-        if (limit == null || limit <= 0) {
-            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
-        return parentFacade.getInteractionDao().getEvents(user, current, limit);
+        return parentFacade.getInteractionDao().getEvents(user);
     }
 }
