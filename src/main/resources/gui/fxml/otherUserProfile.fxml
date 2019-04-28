@@ -44,6 +44,7 @@
                 <Image preserveRatio="true" requestedHeight="120" url="/imagenes/huevo.png"/>
             </ImageView>
             <Label text="userName" fx:id="userName" wrapText="true" styleClass="post-text" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
+
         </HBox>
         <Line startX="0" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="20">
@@ -53,6 +54,7 @@
                        translateX="145"/>
             <JFXButton fx:id="messageButton" styleClass="jfx-button-border" text="Message" translateY="-95"
                        translateX="145"/>
+            <JFXButton text="Delete" fx:id="deleteButton" wrapText="true" styleClass="jfx-button-border" translateX="65" translateY="45"/>
         </HBox>
         <Label text="userDescription" fx:id="description" translateX="10" wrapText="true" styleClass="post-text" translateY="-70"/>
         <Line startX="0" endX="450" translateY="-24"/>
