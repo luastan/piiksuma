@@ -21,7 +21,9 @@ public class InteractionDao extends AbstractDao {
         super(connection);
     }
 
-    /**
+    // ==================================================== EVENTS =====================================================
+
+    /*******************************************************************************************************************
      * Removes an event from the db
      *
      * @param event Event you want to remove
@@ -36,6 +38,23 @@ public class InteractionDao extends AbstractDao {
         // Delete event
         new DeleteMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).delete();
     }
+    //******************************************************************************************************************
+
+    /**
+     * Update already on the db
+     *
+     * @param event Event you want to update
+     * @throws PiikDatabaseException Thrown if event or the primary key are null
+     */
+    public void updateEvent(Event event) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+        // Update event
+        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
+    }
+    //==================================================================================================================
 
     /**
      * Removes an user reaction to a post
@@ -54,14 +73,6 @@ public class InteractionDao extends AbstractDao {
                 reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
 
-    public void updateEvent(Event event) throws PiikDatabaseException {
-
-        if (event == null || !event.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
-        }
-
-        new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
-    }
 
     /**
      * Inserts into the database a given reaction
