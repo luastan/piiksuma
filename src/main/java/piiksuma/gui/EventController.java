@@ -65,7 +65,6 @@ public class EventController implements Initializable {
 
         if (moreInfoClicked == true) {
             moreInfo.setVisible(false);
-            return;
         }
 
         participate.setOnAction(this::handleParticipate);
@@ -94,7 +93,7 @@ public class EventController implements Initializable {
         Stage registerStage = new Stage();
 
         try {
-            ContextHandler.getContext().register("moreInfo", registerStage);
+            ContextHandler.getContext().register("moreInfoEvent", registerStage);
         } catch (PiikInvalidParameters e) {
             e.printStackTrace();
             return;

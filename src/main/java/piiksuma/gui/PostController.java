@@ -5,14 +5,10 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import piiksuma.Post;
-import piiksuma.Reaction;
-import piiksuma.ReactionType;
-import piiksuma.User;
+import piiksuma.*;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.net.URL;
@@ -35,6 +31,9 @@ public class PostController implements Initializable {
     @FXML
     private JFXButton buttonAnswer;
 
+    @FXML
+    private JFXButton deleteButton;
+
     private Post post;
 
     public PostController(Post post) {
@@ -45,6 +44,10 @@ public class PostController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         User author = post.getAuthor();
+
+        if (ContextHandler.getContext().getCurrentUser().getType() == null) { //TODO fix this
+            deleteButton.setVisible(false);
+        }
 
         try {
             author = ApiFacade.getEntrypoint().getSearchFacade().getUser(
@@ -60,9 +63,10 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         buttonLike.setOnAction(this::handleLike);
+        deleteButton.setOnAction(this::handleDelete);
     }
 
-    private void handleLike(Event event){
+    private void handleLike(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
         try {
@@ -74,7 +78,7 @@ public class PostController implements Initializable {
 
             // TODO Este contains podría modificarse con una excepción nueva. O que dentro de las excepciones
             // haya códigos de error
-            if(piikInvalidParameters.getMessage().contains("duplicate key")){
+            if (piikInvalidParameters.getMessage().contains("duplicate key")) {
                 try {
                     ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
                     System.out.println("Dislike!");
@@ -85,5 +89,17 @@ public class PostController implements Initializable {
                 piikInvalidParameters.getStackTrace();
             }
         }
+    }
+
+    private void handleDelete(Event event){
+        try{
+            ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
+            ContextHandler.getContext().getFeedController().updateFeed();
+        }catch (PiikException e){
+            System.out.println("PROBLEM");
+            return;
+        }
+
+        System.out.println("Eliminado con exito");
     }
 }
