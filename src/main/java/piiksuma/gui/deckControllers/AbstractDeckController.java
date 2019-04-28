@@ -22,8 +22,15 @@ public class AbstractDeckController {
 
     private JFXButton userDataButton;
 
+    private JFXButton viewNotificationsButton;
+
     public AbstractDeckController() {
     }
+
+    public JFXButton getViewNotificationsButton() {
+        return viewNotificationsButton;
+    }
+
 
     public JFXHamburger getHamburguerButton() {
         return hamburguerButton;
@@ -152,5 +159,15 @@ public class AbstractDeckController {
         searchStage.setScene(scene);
         // Show and wait till it closes
         searchStage.show();
+    }
+
+    public void setViewNotificationsButton(JFXButton viewNotificationsButton) {
+        this.viewNotificationsButton = viewNotificationsButton;
+
+        viewNotificationsButton.setOnAction(this::handleNotification);
+    }
+
+    private void handleNotification(Event event){
+
     }
 }
