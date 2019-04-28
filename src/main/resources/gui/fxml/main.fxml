@@ -7,11 +7,38 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.MainController">
     <StackPane fx:id="mainContainer" StackPane.alignment="TOP_CENTER">
-        <JFXTabPane fx:id="mainPane"/>
+        <JFXTabPane fx:id="mainPane">
+            <Tab fx:id="feedTab">
+                <graphic>
+                    <FontAwesomeIconView glyphName="COMMENT"
+                                         style="-fx-fill: -white-medium-emphasis;"/>
+                </graphic>
+            </Tab>
+
+            <Tab fx:id="messagesTab">
+                <graphic>
+                    <FontAwesomeIconView glyphName="ENVELOPE"
+                                         style="-fx-fill: -white-medium-emphasis;"/>
+                </graphic>
+            </Tab>
+            <Tab fx:id="eventTab">
+                <graphic>
+                    <FontAwesomeIconView glyphName="CALENDAR"
+                                         style="-fx-fill: -white-medium-emphasis;"/>
+                </graphic>
+            </Tab>
+            <Tab fx:id="searchTab">
+                <graphic>
+                    <FontAwesomeIconView glyphName="SEARCH_MINUS"
+                                         style="-fx-fill: -white-medium-emphasis;"/>
+                </graphic>
+            </Tab>
+        </JFXTabPane>
     </StackPane>
     <StackPane fx:id="deckContainer" StackPane.alignment="BOTTOM_CENTER" styleClass="deck-hitbox">
         <Label text="BottomBar"/>

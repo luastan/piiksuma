@@ -75,7 +75,11 @@
                         </graphic>
                     </JFXButton>
                     <!--This button is for admins, to modify or delete a post-->
-                    <JFXButton fx:id="deleteButton"  text="Delete" styleClass="jfx-button-border" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="TRASH" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
                     </JFXButton>
 
 
