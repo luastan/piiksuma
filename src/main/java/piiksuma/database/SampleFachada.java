@@ -103,6 +103,14 @@ public class SampleFachada {
         return new ArrayList<>();
     }
 
+    public void aTest() {
+        try {
+            List<Event> result = new QueryMapper<Event>(conexion).defineClass(Event.class).createQuery("SELECT * FROM event;").list();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * //TODO borrar esto cuando ya no sea necesario
      * Ejemplo para el uso de los mappers :)
