@@ -424,22 +424,24 @@ public class MessagesDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-    /**
+    /*******************************************************************************************************************
      * The admin closes a ticket, marking it as "resolved"
      *
      * @param ticket the ticket which is going to be closed
+     * @throws PiikDatabaseException Thrown if ticket or its primary key are null
      */
 
     public void closeTicket(Ticket ticket) throws PiikDatabaseException {
-
+        // Check if ticket or its primary key are null
         if (ticket == null || !ticket.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
-
+        // Set ticket as closed
         new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
                 "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
+    //******************************************************************************************************************
 
     /**
      * This function allows the admins to retrieve the current unresolved tickets
