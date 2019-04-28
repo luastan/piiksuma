@@ -279,9 +279,11 @@ public class ContextHandler {
             if (currentUser != null) {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
                 this.register("primary", newStage);
+                newStage.setTitle("Piiksuma");
             } else {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
                 this.register("login", newStage);
+                newStage.setTitle("Piiksuma - Login");
             }
             decorator = new JFXDecorator(newStage, loader.load(), false, false, true);
         } catch (IOException | PiikInvalidParameters e) {

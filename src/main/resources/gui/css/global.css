@@ -219,13 +219,13 @@
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
     -fx-background-color: -white-high-emphasis;
-    -fx-effect: dropshadow(gaussian, #515151, 20, 0.01, 0, 3);
-    -fx-padding: 20 20 20 20;
+    -fx-effect: dropshadow(gaussian, #515151, 20, 0.001, 0, 3);
+    -fx-padding: 17 17 17 17;
     -fx-alignment: CENTER;
 }
 
 .post-text {
-    -fx-padding: 10 10 10 10;
+    -fx-padding: 10 0 10 0;
     /*-fx-background-color: #cacacaca;*/
 }
 
