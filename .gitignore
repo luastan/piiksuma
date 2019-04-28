@@ -3,4 +3,4 @@
 build
 out
 *.iml
-src/main/resources/log
+src/main/resources/log/PiikLogger.log
