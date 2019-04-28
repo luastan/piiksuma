@@ -612,7 +612,7 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a" +
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
     }
 

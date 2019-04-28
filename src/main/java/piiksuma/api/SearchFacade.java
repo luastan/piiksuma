@@ -402,7 +402,7 @@ public class SearchFacade {
         }
 
         // A user's archived posts can be retrieved by an user or by an admin
-        if (!current.getType().equals(UserType.administrator) && !current.equals(user)) {
+        if (!current.checkAdministrator() && !current.equals(user)) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 

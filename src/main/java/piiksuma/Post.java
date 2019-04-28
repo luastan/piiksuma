@@ -25,7 +25,7 @@ public class Post extends PiikObject{
     private List<Hashtag> hashtags;
 
     public Post() {
-
+        this.hashtags = new ArrayList<>();
     }
 
     public Post(Post post) {
@@ -36,6 +36,7 @@ public class Post extends PiikObject{
         this.fatherPost = post.getFatherPost();
         this.multimedia = post.getMultimedia();
         this.hashtags = post.getHashtags();
+        this.hashtags = new ArrayList<>();
     }
 
     public Post(User author, Timestamp publicationDate) {
