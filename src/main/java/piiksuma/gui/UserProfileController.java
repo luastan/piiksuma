@@ -94,43 +94,8 @@ public class UserProfileController implements Initializable {
             //TODO handle exception
             return;
         }
-        Stage stage = new Stage();
-        FXMLLoader loader;
-        JFXDecorator decorator;
-        //We remove the user from the database
-        try {
-            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
-        } catch (PiikException e) {
-            //TODO handle exception
-            return;
-        }
         ContextHandler.getContext().setCurrentUser(null);
-        ContextHandler.getContext().getCurrentStage().close();
-        // Now we show the login window
-        stage.setTitle("Login");
-        loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
-        try {
-            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            return;
-        }
-
-        // Scene definition & binding to the Primary Stage
-        Scene scene = new Scene(decorator, 450, 550);
-        stage.setScene(scene);
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-
-        try {
-            ContextHandler.getContext().register("login", stage);
-        } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
-        }
-        // Show
-        ContextHandler.getContext().getCurrentStage().close();
-        stage.show();
+        ContextHandler.getContext().stageJuggler();
     }
     /**
      * Restores the original layout
