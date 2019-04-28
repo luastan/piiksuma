@@ -65,9 +65,13 @@ public class CreatePostController implements Initializable {
     }
 
     private void publishPost(Event event) {
-
+        Alert alert = new Alert (ContextHandler.getContext().getStage("Publish Post"));
         // Check if the required data is filled
         if(checkEmptyFields()) {
+            alert.setHeading("Fields empty!");
+            alert.addText("Fields cannot be empty");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
 

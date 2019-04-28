@@ -38,7 +38,13 @@ public class MessageFromProfileController implements Initializable {
 
     private void handleMainButton(Event event){
         Message message = new Message();
-        if (messageField.getText().isEmpty()){
+        Alert alert = new Alert(ContextHandler.getContext().getStage("Message"));
+        if (messageField.getText().isEmpty()) {
+
+            alert.setHeading("Fields empty!");
+            alert.addText("Fields cannot be empty");
+            alert.addCloseButton();
+            alert.show();
             return;
         }
         message.setText(messageField.getText());
@@ -48,11 +54,13 @@ public class MessageFromProfileController implements Initializable {
         message.setDate(new Timestamp(time));
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,ContextHandler.getContext().getCurrentUser());
-            message.toString();
+            System.out.println("Enviado");
+
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
         } catch (PiikInvalidParameters piikInvalidParameters) {
             piikInvalidParameters.printStackTrace();
         }
+
     }
 }
