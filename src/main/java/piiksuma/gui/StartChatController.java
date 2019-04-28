@@ -34,7 +34,7 @@ public class StartChatController implements Initializable {
         Message message = new Message();
 
         if(!checkFields()){
-            Alert alert = new Alert(ContextHandler.getContext().getStage("createEvent"));
+            Alert alert = new Alert(ContextHandler.getContext().getStage("startChat"));
             alert.setHeading("Fields empty!");
             alert.addText("Fields cannot be empty");
             alert.addCloseButton();
