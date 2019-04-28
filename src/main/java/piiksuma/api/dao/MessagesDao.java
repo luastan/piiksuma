@@ -443,11 +443,13 @@ public class MessagesDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-    /**
+    /*******************************************************************************************************************
      * This function allows the admins to retrieve the current unresolved tickets
      *
      * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
+     * @throws PiikDatabaseException Thrown on query gone wrong
+     * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
      */
     public List<Ticket> getAdminTickets(Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
@@ -458,5 +460,6 @@ public class MessagesDao extends AbstractDao {
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
                 "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
     }
+    //******************************************************************************************************************
 // =====================================================================================================================
 }
