@@ -407,24 +407,27 @@ public class InteractionDao extends AbstractDao {
     }
 
     //******************************************************************************************************************
-    //==================================================================================================================
 
-    /**
-     * Retrieves the notifications that a user has received
+    /*******************************************************************************************************************
+     * Retrieves all the notifications from an user
      *
-     * @param user user whose notifications will be retrieved
-     * @return found notifications
+     * @param user User you get notifications from
+     * @return List of all the notifications
+     * @throws PiikDatabaseException Thrown if notification or the primary key are null
      */
     public List<Notification> getNotifications(User user) throws PiikDatabaseException {
-
+        // Check if user or primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
-
+        // Returns the list of notifications
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
                 "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class).defineParameters(
                 user.getPK()).list();
     }
+
+    //******************************************************************************************************************
+    //==================================================================================================================
 
     /**
      * Function to get the events
