@@ -292,8 +292,8 @@ public class InteractionDao extends AbstractDao {
     // ================================================ NOTIFICATIONS ==================================================
 
     /*******************************************************************************************************************
-     * Sends a new notification to a user
-     * @param notification Notification sent to the user
+     * Creates a new notification
+     * @param notification Notification, can be sent to more then 1 user
      * @return Returns the Notification sent
      * @throws PiikDatabaseException Thrown if notification or the primary key are null
      */
@@ -381,29 +381,33 @@ public class InteractionDao extends AbstractDao {
         return (completeNotification);
     }
     //******************************************************************************************************************
-    //==================================================================================================================
 
-    /**
-     * This function associates a notification with a user
-     *
-     * @param notification notification that we want the user to see
-     * @param user         user that we want to notify
+    /*******************************************************************************************************************
+     * Notifies an user that has a new notification
+     * @param notification Notification that has been sent to the user
+     * @param user User whom recieves the notification
+     * @throws PiikDatabaseException Thrown if notification or the primary key are null
      */
     public void notifyUser(Notification notification, User user) throws PiikDatabaseException {
 
-        // We check that the given objects are not null and that the primary keys are correct
+        // Check if notification or primary key are null
         if (notification == null || !notification.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("notification"));
         }
 
+        // Check if user or primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
+        // Send the notification
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO havenotification (notification,usr) " +
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(notification.getId(), user.getPK()).executeUpdate();
 
     }
+
+    //******************************************************************************************************************
+    //==================================================================================================================
 
     /**
      * Retrieves the notifications that a user has received
