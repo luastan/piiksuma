@@ -40,8 +40,8 @@ public class InteractionDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-    /**
-     * Update already on the db
+    /*******************************************************************************************************************
+     * Update an event already on the db
      *
      * @param event Event you want to update
      * @throws PiikDatabaseException Thrown if event or the primary key are null
@@ -54,6 +54,33 @@ public class InteractionDao extends AbstractDao {
         // Update event
         new UpdateMapper<Event>(super.getConnection()).add(event).defineClass(Event.class).update();
     }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Allows an user to participate in one event
+     * @param event Event you want to participate in
+     * @param user  User that wants to participate in the event
+     * @throws PiikDatabaseException Thrown if event/user or the primary key of event/user the are null
+     */
+    public void participateEvent(Event event, User user) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+
+        if (user == null || !user.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+        // Insert user as an attendant of the event
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateevent VALUES(?,?,?)")
+                .defineParameters(
+                        event.getId(),
+                        event.getCreator().getId(),
+                        user.getId()
+                ).executeUpdate();
+    }
+    //******************************************************************************************************************
+
     //==================================================================================================================
 
     /**
@@ -89,18 +116,6 @@ public class InteractionDao extends AbstractDao {
                 "author) VALUES(?,?,?,?)")
                 .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
                         reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
-    }
-
-    public void participateEvent(Event event, User user) throws PiikDatabaseException {
-        if (event == null || !event.checkPrimaryKey(true)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
-        }
-
-        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO participateevent VALUES(?,?,?)").defineParameters(
-                event.getId(),
-                event.getCreator().getId(),
-                user.getId()
-        ).executeUpdate();
     }
 
     public Event createEvent(Event event) throws PiikDatabaseException {
