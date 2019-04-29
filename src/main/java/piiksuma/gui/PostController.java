@@ -50,10 +50,14 @@ public class PostController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         User author = post.getAuthor();
+        User current = ContextHandler.getContext().getCurrentUser();
 
-        if (ContextHandler.getContext().getCurrentUser().getType() == null &&
-                !ContextHandler.getContext().getCurrentUser().getId().equals(post.getAuthor().getId())) { //TODO fix this
+
+        if ((current.getType() == null || current.getType() == UserType.user) &&
+                !current.getPK().equals(post.getAuthor().getPK())) {
             deleteButton.setVisible(false);
+        } else {
+            deleteButton.setVisible(true);
         }
 
         try {
@@ -120,24 +124,18 @@ public class PostController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
 
-            System.out.println("Like!");
-            //buttonLike.setStyle("-icons-color: #FF0000;");
-        } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-
-            // TODO Este contains podría modificarse con una excepción nueva. O que dentro de las excepciones
-            // haya códigos de error
-            if (piikInvalidParameters.getMessage().contains("duplicate key")) {
-                try {
-                    ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
-                    System.out.println("Dislike!");
-                } catch (PiikDatabaseException | PiikInvalidParameters e) {
-                    e.printStackTrace();
-                }
+            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
+                ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
+                System.out.println("Like!");
+                buttonLike.setStyle("-fx-background-color: #FF0000;");
             } else {
-                piikInvalidParameters.getStackTrace();
+                ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
+                System.out.println("Dislike!");
+                buttonLike.setStyle("-fx-background-color: rgba(255,255,255,0);");
             }
+        } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+            piikInvalidParameters.printStackTrace();
         }
     }
 

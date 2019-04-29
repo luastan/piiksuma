@@ -378,6 +378,31 @@ public class SearchFacade {
     }
 
     /**
+     * Function that determines if a user has reacted to a concrete post with a concrete reaction
+     *
+     * @param reaction reaction to check
+     * @param user user who wants to check if he reacted
+     * @param current current user
+     * @return
+     */
+    public boolean isReact(Reaction reaction, User user, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
+        if(reaction == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("reaction"));
+        }
+
+        if(user == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(current == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
+        }
+
+        return parentFacade.getInteractionDao().isReact(reaction, user);
+    }
+
+    /**
      * Function that composes a user's feed; the following posts are included:
      * - Posts made by followed users
      * - Posts made by the user

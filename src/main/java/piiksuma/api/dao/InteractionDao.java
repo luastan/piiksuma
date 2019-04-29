@@ -8,6 +8,7 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
+import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -262,6 +263,34 @@ public class InteractionDao extends AbstractDao {
                 "author) VALUES(?,?,?,?)")
                 .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
                         reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
+    }
+
+    /**
+     * Function that determines if a user has reacted to a concrete post with a concrete reaction
+     *
+     * @param reaction reaction to check
+     * @param user user who wants to check if he reacted
+     * @return
+     */
+    public boolean isReact(Reaction reaction, User user) throws PiikDatabaseException {
+
+        // Check if reaction or primary key are null
+        if (reaction == null || !reaction.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("reaction"));
+        }
+
+        // Check if reaction or primary key are null
+        if (user == null || !user.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        List<Map<String, Object>> reactions =new QueryMapper<>(getConnection())
+                .createQuery("SELECT * FROM react WHERE reactiontype = ? and post = ? and  author = ? and usr = ?")
+                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                        reaction.getPost().getAuthor().getPK(), user.getPK()).mapList();
+
+        return (!reactions.isEmpty());
+
     }
     //******************************************************************************************************************
 
