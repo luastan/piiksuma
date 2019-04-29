@@ -167,18 +167,25 @@ public class MultimediaDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-//======================================================================================================================
-
-
+    /*******************************************************************************************************************
+     * Gets all post containing multimedia
+     *
+     * @param multimedia Multimedia we are looking for on posts
+     * @return List of post containing multimedia
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
     public List<Post> postWithMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
+        // Return list of posts
         return new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
                 "SELECT * FROM post WHERE multimedia = ?").defineParameters(multimedia.getPK()).list();
     }
+    //******************************************************************************************************************
+//======================================================================================================================
 
     /**
      * Function to get the image of the multimedia
