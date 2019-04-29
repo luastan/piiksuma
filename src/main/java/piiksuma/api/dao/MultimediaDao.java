@@ -92,6 +92,23 @@ public class MultimediaDao extends AbstractDao {
         }
     }
     //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Function to remove the given multimedia from the database
+     *
+     * @param multimedia Multimedia to remove
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
+    public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
+        // Delete multimedia
+        new DeleteMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).delete();
+    }
+    //******************************************************************************************************************
+
 //======================================================================================================================
 
     /**
@@ -147,21 +164,6 @@ public class MultimediaDao extends AbstractDao {
 
         return new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
                 "SELECT * FROM post WHERE multimedia = ?").defineParameters(multimedia.getPK()).list();
-    }
-
-    /**
-     * Function to remove the given multimedia from the database
-     *
-     * @param multimedia Multimedia to remove
-     * @throws PiikDatabaseException
-     */
-    public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-
-        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
-        }
-
-        new DeleteMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).delete();
     }
 
     /**
