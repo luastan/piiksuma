@@ -146,15 +146,15 @@ public class MultimediaDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-//======================================================================================================================
-
-    /**
-     * Function to count the number of post which contains the given multimedia
+    /*******************************************************************************************************************
+     * Count the number of post which contains the given multimedia
      *
-     * @param multimedia Multimedia about which we want to know on how many posts is included
-     * @return Number of post which contains the multimedia
+     * @param multimedia Multimedia we want to count
+     * @return Number of post containing multimedia
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public Long numPostMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
@@ -162,9 +162,13 @@ public class MultimediaDao extends AbstractDao {
         List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) " +
                 "as numPostMultimedia FROM post WHERE multimedia = ?").defineClass(Object.class)
                 .defineParameters(multimedia.getPK()).mapList();
-
+        // Return count
         return (Long) count.get(0).get("numPostMultimedia");
     }
+    //******************************************************************************************************************
+
+//======================================================================================================================
+
 
     public List<Post> postWithMultimedia(Multimedia multimedia) throws PiikDatabaseException {
 
