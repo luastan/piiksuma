@@ -207,7 +207,9 @@
 /* TextFields and TextAreas*/
 
 .fx-text-field{
-    -fx-background-color: #d7d7d7;
+    -fx-background-color: #e2e2e2;
+    -jfx-focus-color: -primary-color-5;
+    -jfx-unfocus-color: -jfx-focus-color;
 }
 
 
@@ -220,12 +222,16 @@
     -fx-max-width: -fx-pref-width;
     -fx-background-color: -white-high-emphasis;
     -fx-effect: dropshadow(gaussian, #515151, 20, 0.001, 0, 3);
-    -fx-padding: 17 17 17 17;
+    -fx-padding: 17 0 17 0;
     -fx-alignment: CENTER;
 }
 
+.post-inner-container {
+    -fx-padding: 0 14 0 14;
+}
+
 .post-text {
-    -fx-padding: 10 0 10 0;
+    -fx-padding: 10 17 10 17;
     /*-fx-background-color: #cacacaca;*/
 }
 

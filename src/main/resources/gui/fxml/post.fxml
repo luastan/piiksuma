@@ -12,6 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.geometry.Rectangle2D?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container">
@@ -20,14 +21,15 @@
             <!-- Header with user info -->
             <left>
                 <!-- Avatar + User's  name + username -->
-                <StackPane>
+                <StackPane styleClass="post-inner-container">
                     <HBox alignment="CENTER" spacing="10">
                         <!-- Avatar goes here-->
-                        <ImageView>
+                        <ImageView fx:id="profilePicture">
                             <!--TODO: Clip Avatar to make it rounded -->
-                            <Image preserveRatio="true" requestedHeight="50" url="/imagenes/huevo.png"/>
-                        </ImageView>
 
+                            <Image preserveRatio="true" requestedWidth="50" requestedHeight="50"
+                                   url="/imagenes/huevo.png"/>
+                        </ImageView>
                         <VBox alignment="CENTER_LEFT">
                             <Label fx:id="authorName" style="-fx-font-weight: BOLD;"/>
                             <Label fx:id="authorId"/>
@@ -37,7 +39,7 @@
             </left>
             <right>
                 <!-- Share button -->
-                <StackPane>
+                <StackPane styleClass="post-inner-container">
                     <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <MaterialIconView glyphName="SHARE" size="30"
@@ -50,10 +52,11 @@
     </top>
     <center>
         <StackPane>
-            <VBox alignment="CENTER_LEFT">
+            <VBox alignment="CENTER_LEFT" spacing="10">
 
                 <!-- Multimedia goes here -->
-                <!--TODO: Insert Multimedia here-->
+                <ImageView fx:id="boxImage" preserveRatio="true">
+                </ImageView>
 
                 <!-- Atual Post Content -->
                 <Label text="Actual Post content goes here" fx:id="postContent" wrapText="true" styleClass="post-text"/>
@@ -62,7 +65,7 @@
 
     </center>
     <bottom>
-        <BorderPane>
+        <BorderPane styleClass="post-inner-container">
             <!-- Social button container -->
             <left>
                 <HBox alignment="BOTTOM_LEFT">

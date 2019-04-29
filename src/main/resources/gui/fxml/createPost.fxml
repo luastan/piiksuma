@@ -22,7 +22,8 @@
         </StackPane.margin>
         <HBox spacing="100">
             <VBox alignment="TOP_LEFT" spacing="25">
-                <JFXTextArea fx:id="postText" maxWidth="200" maxHeight="50" promptText="¿What's happening?"/>
+                <JFXTextArea fx:id="postText" maxWidth="200" maxHeight="50" promptText="¿What's happening?"
+                             styleClass="fx-text-field"/>
                 <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" ripplerFill="rgba(0, 50, 255, 0.24)" >
                     <graphic>
                         <FontAwesomeIconView glyphName="PLUS" size="32"
@@ -37,7 +38,7 @@
         </HBox>
 
         <VBox alignment="CENTER">
-            <ImageView fx:id="boxImage" disable="true" fitHeight="300" fitWidth="300"/>
+            <ImageView fx:id="boxImage" visible="false" fitHeight="300" fitWidth="300"/>
         </VBox>
     </VBox>
 
