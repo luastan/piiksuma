@@ -460,23 +460,15 @@ public class PostDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-
-//======================================================================================================================
-
-    private String getQueryPost() {
-        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
-                "o.author ";
-    }
-
-    /**
-     * Function to get the indicated post from the database
+    /*******************************************************************************************************************
+     * Returns a post form db
      *
-     * @param post post to search from the database
-     * @return the post
-     * @throws PiikDatabaseException
+     * @param post Post wanted
+     * @return Post
+     * @throws PiikDatabaseException Thrown if post or its primary keys are null
      */
     public Post getPost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -514,6 +506,16 @@ public class PostDao extends AbstractDao {
 
         return resultPost;
     }
+    //******************************************************************************************************************
+
+
+//======================================================================================================================
+
+    private String getQueryPost() {
+        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
+                "o.author ";
+    }
+
 
     /**
      * Funcion that return a list with all the posts that have the indicated hashtag
