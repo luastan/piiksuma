@@ -185,25 +185,27 @@ public class MultimediaDao extends AbstractDao {
                 "SELECT * FROM post WHERE multimedia = ?").defineParameters(multimedia.getPK()).list();
     }
     //******************************************************************************************************************
-//======================================================================================================================
 
-    /**
-     * Function to get the image of the multimedia
+    /*******************************************************************************************************************
+     * Get the image from multimedia
      *
      * @param multimedia Multimedia that contains the information of the image
      * @return the image of the multimedia
-     * @throws PiikDatabaseException
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     * @throws PiikInvalidParameters Thrown if the type of multimedia isn't an image
      */
     public Image getImage(Multimedia multimedia) throws PiikDatabaseException, PiikInvalidParameters {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
-
+        // Check if the type of multimedia is image
         if (multimedia.getType() != MultimediaType.image) {
             throw new PiikInvalidParameters("The multimedia type is not 'photo'");
         }
-
+        // Return the image
         return new Image(getClass().getResource("/imagenes/" + multimedia.getUri()).toString());
     }
-
+    //******************************************************************************************************************
+//======================================================================================================================
 }
