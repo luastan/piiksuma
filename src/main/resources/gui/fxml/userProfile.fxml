@@ -13,44 +13,63 @@
 <?import javafx.scene.shape.Line?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXTabPane?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.UserProfileController"
-           prefHeight="400.0" prefWidth="600.0">
+           fx:controller="piiksuma.gui.UserProfileController">
+
     <BorderPane>
         <top>
-            <JFXToolbar styleClass="top-toolbar">
-            </JFXToolbar>
+            <VBox styleClass="profile-header-container" spacing="20">
+                <!-- Profile picture + username + functionality butons -->
+                <StackPane>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView>
+                            <Image preserveRatio="true" requestedHeight="75" url="/imagenes/huevo.png"/>
+                        </ImageView>
+                        <VBox alignment="CENTER" spacing="10">
+                            <VBox alignment="CENTER_LEFT">
+                                <!-- Username and User's name -->
+                                <Label text="User's name" style="-fx-font-weight: BOLD" fx:id="Name"/>
+                                <Label text="id"/>
+                            </VBox>
+                            <HBox alignment="CENTER" spacing="10">
+                                <!--
+                                Some usefull buttons.
+                                Their name and code should be replaced depending on who is
+                                the current user and who is the profile owner
+                                -->
+                                <JFXButton text="buttonLeft" styleClass="jfx-button-border" fx:id="buttonLeft"/>
+                                <JFXButton text="buttonCenter" styleClass="jfx-button-border" fx:id="buttonCenter"/>
+                                <JFXButton text="buttonRight" styleClass="jfx-button-border" fx:id="buttonRight"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+                <!-- User description -->
+                <StackPane alignment="CENTER_LEFT">
+                    <Label text="Description" fx:id="description" wrapText="true"/>
+                </StackPane>
+            </VBox>
         </top>
-        <bottom>
-            <JFXToolbar styleClass="bottom-toolbar"/>
-        </bottom>
+        <center>
+            <!-- Feed -->
+            <JFXTabPane>
+                <Tab text="Published">
+                    <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                styleClass="profile-post-feed">
+                        <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                    </ScrollPane>
+                </Tab>
+                <Tab text="Archived">
+                    <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                styleClass="profile-post-feed">
+                        <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                    </ScrollPane>
+                </Tab>
+            </JFXTabPane>
+
+        </center>
     </BorderPane>
-
-    <VBox spacing="24">
-        <HBox spacing="125">
-            <JFXButton fx:id="feedButton" styleClass="jfx-button-border" text="Feed" scaleX="1.25" scaleY="1.25" translateX="65"/>
-            <JFXButton fx:id="archivedPostsButton" styleClass="jfx-button-border" text="Show Archived Posts" scaleX="1.25" scaleY="1.25" translateX="50"/>
-        </HBox>
-        <HBox spacing="125">
-            <ImageView>
-                <Image preserveRatio="true"  requestedHeight="120" url="/imagenes/huevo.png"/>
-            </ImageView>
-            <Label text="userName" wrapText="true" styleClass="post-text" fx:id="Name" translateY="22.5" scaleX="1.25" scaleY="1.25"/>
-        </HBox>
-        <Line startX="0" endX="330" translateY="-80" translateX="120"/>
-        <HBox spacing="20">
-            <JFXButton fx:id="ticketsButton" styleClass="jfx-button-border" text="Show Tickets" translateY="-95" translateX="227.5"/>
-            <JFXButton fx:id="newticketButton" styleClass="jfx-button-border" text="New Ticket" translateY="-95" translateX="227.5"/>
-            <JFXButton fx:id="deleteButton" styleClass="jfx-button-border" text="Delete" translateY="0" translateX="0"/>
-        </HBox>
-        <Label text="userDescription" wrapText="true" styleClass="post-text" fx:id="description" translateX="10" translateY="-70"/>
-        <Line startX="0" endX="450" translateY="-24"/>
-
-        <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
-            <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
-            </JFXMasonryPane>
-        </ScrollPane>
-    </VBox>
 
 </StackPane>

@@ -28,17 +28,13 @@ import java.util.ResourceBundle;
 
 public class UserProfileController implements Initializable {
 
-    @FXML
-    private JFXButton feedButton;
-
-    @FXML
-    private JFXButton archivedPostsButton;
-
-    @FXML
-    private JFXButton newticketButton;
-
-    @FXML
-    private JFXButton ticketsButton;
+    public JFXButton buttonLeft;
+    public ScrollPane publishedPosts;
+    public JFXMasonryPane publishedPostsMasonry;
+    public ScrollPane archivedPosts;
+    public JFXMasonryPane archivedPostsMasonry;
+    public JFXButton buttonCenter;
+    public JFXButton buttonRight;
 
     @FXML
     private Label Name;
@@ -46,16 +42,9 @@ public class UserProfileController implements Initializable {
     @FXML
     private Label description;
 
-    @FXML
-    private ScrollPane postScrollPane;
 
-    @FXML
-    private JFXMasonryPane postMasonryPane;
-
-    @FXML
-    private JFXButton deleteButton;
-
-    private ObservableList<Post> posts;
+    private ObservableList<Post> publishedPostsList;
+    private ObservableList<Post> archivedPostsList;
 
     // Which tab is selected
     boolean feedSelected = true;
@@ -67,13 +56,14 @@ public class UserProfileController implements Initializable {
 
         Name.setText(ContextHandler.getContext().getCurrentUser().getName());
         description.setText(ContextHandler.getContext().getCurrentUser().getDescription());
-        newticketButton.setOnAction(this::handleNewTicektButton);
-        ticketsButton.setOnAction(this::handleTicketsButton);
-        feedButton.setOnAction(this::handleFeedButton);
-        archivedPostsButton.setOnAction(this::handleArchivedPostsButton);
-        deleteButton.setOnAction(this::handleDelete);
+//        newticketButton.setOnAction(this::handleNewTicektButton);
+//        ticketsButton.setOnAction(this::handleTicketsButton);
+//        feedButton.setOnAction(this::handleFeedButton);
+//        archivedPostsButton.setOnAction(this::handleArchivedPostsButton);
+//        deleteButton.setOnAction(this::handleDelete);
 
-        posts = FXCollections.observableArrayList();
+        publishedPostsList = FXCollections.observableArrayList();
+        archivedPostsList = FXCollections.observableArrayList();
 
         ContextHandler.getContext().setUserProfileController(this);
         setUpPostsListener();
@@ -96,11 +86,6 @@ public class UserProfileController implements Initializable {
         ContextHandler.getContext().setCurrentUser(null);
         ContextHandler.getContext().stageJuggler();
     }
-    /**
-     * Restores the original layout
-     *
-     * @param event Click Event
-     */
 
     /**
      * Function to open a create ticket window if newTicketButton is clicked
@@ -191,27 +176,27 @@ public class UserProfileController implements Initializable {
      */
     public void updateFeed()  {
         // TODO: update the feed propperly
-        posts.clear();
+        publishedPostsList.clear();
 
         try {
             List<Post> searchPosts = ApiFacade.getEntrypoint().getSearchFacade().getPost(
                     ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
 
             if(searchPosts != null && !searchPosts.isEmpty()) {
-                posts.addAll(searchPosts);
+                publishedPostsList.addAll(searchPosts);
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
 
-        postScrollPane.requestLayout();
-        postScrollPane.requestFocus();
+        publishedPosts.requestLayout();
+        publishedPosts.requestFocus();
 
-        postMasonryPane.requestLayout();
+        publishedPostsMasonry.requestLayout();
     }
 
     public void updateArchivedPosts() {
-        posts.clear();
+        archivedPostsList.clear();
 
         /*try {
             posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
@@ -220,10 +205,10 @@ public class UserProfileController implements Initializable {
             e.printStackTrace();
         }*/
 
-        postScrollPane.requestLayout();
-        postScrollPane.requestFocus();
+        archivedPosts.requestLayout();
+        archivedPosts.requestFocus();
 
-        postMasonryPane.requestLayout();
+        archivedPostsMasonry.requestLayout();
     }
 
     /**
@@ -233,9 +218,9 @@ public class UserProfileController implements Initializable {
      * Recieves change performed to the list via {@link ListChangeListener#onChanged(ListChangeListener.Change)}
      */
     private void setUpPostsListener() {
-        posts.addListener((ListChangeListener<? super Post>) change -> {
-            postMasonryPane.getChildren().clear();
-            posts.forEach(this::insertPost);
+        publishedPostsList.addListener((ListChangeListener<? super Post>) change -> {
+            publishedPostsMasonry.getChildren().clear();
+            publishedPostsList.forEach(this::insertPost);
         });
     }
 
@@ -243,13 +228,26 @@ public class UserProfileController implements Initializable {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         postLoader.setController(new PostController(post));
         try {
-            postMasonryPane.getChildren().add(postLoader.load());
+            publishedPostsMasonry.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        postScrollPane.requestLayout();
-        postScrollPane.requestFocus();
+        publishedPosts.requestLayout();
+        publishedPosts.requestFocus();
+    }
+
+    private void archivePost(Post post) {
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
+        postLoader.setController(new PostController(post));
+        try {
+            archivedPostsMasonry.getChildren().add(postLoader.load());
+        } catch (IOException e) {
+            // TODO: Handle Exception
+            e.printStackTrace();
+        }
+        archivedPosts.requestLayout();
+        archivedPosts.requestFocus();
     }
 
     public void handleFeedButton(Event event) {
