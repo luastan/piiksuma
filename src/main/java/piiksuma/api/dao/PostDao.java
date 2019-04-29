@@ -608,13 +608,31 @@ public class PostDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
+    /*******************************************************************************************************************
+     * Function to remove a repost
+     *
+     * @param repost Repost to be removed
+     * @throws PiikDatabaseException Thrown if repost or its primary key are null
+     */
+    public void removeRepost(Post repost) throws PiikDatabaseException {
+        // Check if repost or its primary key are null
+        if (repost == null || !repost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
+        }
+        // Delete repost
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
+                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
+
+    }
+    //******************************************************************************************************************
+
 //======================================================================================================================
 
     private String getQueryPost() {
         return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
                 "o.author ";
     }
-
 
     /**
      * Function to swap information from the database to the Post class
@@ -667,24 +685,6 @@ public class PostDao extends AbstractDao {
         return posts;
     }
 
-
-    /**
-     * Function to remove a repost
-     *
-     * @param repost repost to remove from the database
-     * @throws PiikDatabaseException
-     */
-    public void removeRepost(Post repost) throws PiikDatabaseException {
-
-        if (repost == null || !repost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
-        }
-
-        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
-                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
-                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
-
-    }
 
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
