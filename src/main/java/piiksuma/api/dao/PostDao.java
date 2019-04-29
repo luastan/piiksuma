@@ -508,33 +508,34 @@ public class PostDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
+    /*******************************************************************************************************************
+     * Gets a list of post containing a given hashtag
+     *
+     * @param hashtag Hashtag to be searched for
+     * @return List with all the posts that have the hashtag
+     * @throws PiikDatabaseException Thrown if hashtag or its primary keys are null
+     */
+    public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
+
+        // Check if hashtag or its primary key are null
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
+        }
+
+        // Get the List
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
+                " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
+                .defineParameters(hashtag.getName()).mapList();
+        // Return List
+        return getPosts(result);
+    }
+    //******************************************************************************************************************
 
 //======================================================================================================================
 
     private String getQueryPost() {
         return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
                 "o.author ";
-    }
-
-
-    /**
-     * Funcion that return a list with all the posts that have the indicated hashtag
-     *
-     * @param hashtag hashtag to search in the posts
-     * @return a list with all the posts that have the hashtag
-     * @throws PiikDatabaseException
-     */
-    public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
-
-        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
-        }
-
-        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
-                " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
-                .defineParameters(hashtag.getName()).mapList();
-
-        return getPosts(result);
     }
 
     /**
