@@ -181,11 +181,11 @@ public class MessagesDao extends AbstractDao {
     public void sendPrivateMessage(Message message, User user) throws PiikDatabaseException {
         // Check if message or its primary key are null
         System.out.println(message);
-        if (message == null || !message.checkPrimaryKey(false)) {
+        if (message == null || !message.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
         }
 
-        if(user == null || !user.checkPrimaryKey(false)){
+        if (user == null || !user.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 

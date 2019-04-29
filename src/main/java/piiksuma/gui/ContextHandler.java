@@ -40,10 +40,9 @@ public class ContextHandler {
     private SearchController searchController;
     private AchievementsController achievementsController;
     private NotificationsController notificationsController;
-
+    private ConversationController conversationController;
     private TicketsController ticketsController;
     private UserProfileController userProfileController;
-    private OtherUserProfileController otherUserProfileController;
 
 
     public NotificationsController getNotificationsController() {
@@ -252,14 +251,6 @@ public class ContextHandler {
         this.userProfileController = userProfileController;
     }
 
-    public OtherUserProfileController getOtherUserProfileController() {
-        return otherUserProfileController;
-    }
-
-    public void setOtherUserProfileController(OtherUserProfileController otherUserProfileController) {
-        this.otherUserProfileController = otherUserProfileController;
-    }
-
     /**
      * Closes and deletes all the registered stages. Then loads the
      * corresponding Window depending on whether or not the User is logged in
@@ -312,5 +303,13 @@ public class ContextHandler {
         // Show
         newStage.show();
 
+    }
+
+    public ConversationController getConversationController() {
+        return conversationController;
+    }
+
+    public void setConversationController(ConversationController conversationController) {
+        this.conversationController = conversationController;
     }
 }

@@ -2,6 +2,11 @@ package piiksuma.gui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
+import com.jfoenix.validation.base.ValidatorBase;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,47 +31,51 @@ public class StartChatController implements Initializable {
     @FXML
     private JFXButton mainButton;
 
+    private Message message = new Message();
+
+    private User receiver = new User();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mainButton.setOnAction(this::handleNewMessage);
+
+        ValidatorBase validator = new RequiredFieldValidator("Required field");
+        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
+                .glyph(FontAwesomeIcon.WARNING)
+                .build());
+        userField.getValidators().addAll(validator);
+        messageField.getValidators().addAll(validator);
+
+        messageField.textProperty().addListener((observable, oldValue, newValue) -> {
+            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            message.setText(messageField.getText());
+        });
+
+        userField.textProperty().addListener((observable, oldValue, newValue) -> {
+            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            receiver.setId(userField.getText());
+        });
     }
 
     private void handleNewMessage(Event event){
-        Message message = new Message();
-        User userReceiver = new User();
-        User current = ContextHandler.getContext().getCurrentUser();
-
-        if(!checkFields()){
-            Alert alert = new Alert(ContextHandler.getContext().getStage("startChat"));
-            alert.setHeading("Fields empty!");
-            alert.addText("Fields cannot be empty");
-            alert.addCloseButton();
-            alert.show();
+        if (!messageField.validate() && !userField.validate()) {
             return;
         }
-
-        // TODO comprobar si existe el usuario
-
-        userReceiver.setId(userField.getText());
-        message.setText(messageField.getText());
+        User current = ContextHandler.getContext().getCurrentUser();
         message.setSender(current);
-        Date date = new Date();
-        long time = date.getTime();
-        message.setDate(new Timestamp(time));
+
         try {
             message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,current);
-            ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, userReceiver, current);
-        } catch (PiikDatabaseException e) {
+            ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
-        } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
         }
-    }
 
-    private boolean checkFields(){
-        if(userField.getText().isEmpty() || messageField.getText().isEmpty()){
-            return false;
+        try {
+            ContextHandler.getContext().getMessagesController().updateMessageFeed();
+        } catch (PiikDatabaseException e) {
+            // TODO: Handle exceptions
+            e.printStackTrace();
         }
-        return true;
     }
 }

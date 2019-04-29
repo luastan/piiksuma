@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml">
+    <BorderPane>
+        <top>
+            <!-- Peer data -->
+            <StackPane style="-fx-background-color: WHITE; -fx-padding: 10 10 10 10">
+                <VBox alignment="CENTER" spacing="1">
+                    <Label fx:id="username" text="User's name"
+                           style="-fx-text-fill: rgba(0, 0, 0, 0.80); -fx-font-weight: BOLD;"/>
+                    <Label fx:id="userId" text="username" style="-fx-text-fill: rgba(0, 0, 0, 0.80)"/>
+                </VBox>
+            </StackPane>
+        </top>
+        <center>
+            <!-- MEssage list -->
+            <StackPane>
+                <ScrollPane fx:id="messageScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                            styleClass="conv-message-container"
+                            StackPane.alignment="TOP_CENTER">
+                    <JFXMasonryPane fx:id="messageMasonryPane" VSpacing="1" styleClass="main-masonry"/>
+                </ScrollPane>
+            </StackPane>
+        </center>
+        <bottom>
+            <!-- Message send -->
+            <StackPane style="-fx-background-color: WHITE; -fx-padding: 25 10 25 10">
+                <HBox alignment="CENTER" spacing="20">
+                    <JFXTextField fx:id="messageField" promptText="Introduce the message" styleClass="fx-text-field"/>
+                    <JFXButton styleClass="jfx-button-border" text="Send" fx:id="sendButton"
+                               ripplerFill="rgba(255, 255, 255, 0.70)" disable="true">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="PLUS" size="24" fill="#fffffb"/>
+                        </graphic>
+                    </JFXButton>
+                </HBox>
+            </StackPane>
+        </bottom>
+    </BorderPane>
+</StackPane>

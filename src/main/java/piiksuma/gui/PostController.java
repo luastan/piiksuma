@@ -170,9 +170,7 @@ public class PostController implements Initializable {
             ContextHandler.getContext().getFeedController().updateFeed();
             if(ContextHandler.getContext().getUserProfileController() != null){
                 ContextHandler.getContext().getUserProfileController().updateFeed();
-            }
-            if(ContextHandler.getContext().getOtherUserProfileController() != null){
-                ContextHandler.getContext().getOtherUserProfileController().updateFeed();
+                ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
             }
             if(ContextHandler.getContext().getSearchController() != null){
                 ContextHandler.getContext().getSearchController().updatePostFeed();

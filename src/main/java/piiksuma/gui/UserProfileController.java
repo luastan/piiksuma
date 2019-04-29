@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Post;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
@@ -42,38 +43,31 @@ public class UserProfileController implements Initializable {
     @FXML
     private Label description;
 
+    private User user;
 
     private ObservableList<Post> publishedPostsList;
     private ObservableList<Post> archivedPostsList;
 
-    // Which tab is selected
-    boolean feedSelected = true;
 
-
+    public UserProfileController(User user) {
+        this.user = user;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ContextHandler.getContext().setUserProfileController(this);
 
-        Name.setText(ContextHandler.getContext().getCurrentUser().getName());
-        description.setText(ContextHandler.getContext().getCurrentUser().getDescription());
-//        newticketButton.setOnAction(this::handleNewTicektButton);
-//        ticketsButton.setOnAction(this::handleTicketsButton);
-//        feedButton.setOnAction(this::handleFeedButton);
-//        archivedPostsButton.setOnAction(this::handleArchivedPostsButton);
-//        deleteButton.setOnAction(this::handleDelete);
+        Name.setText(user.getName());
+        description.setText(user.getDescription());
+
 
         publishedPostsList = FXCollections.observableArrayList();
         archivedPostsList = FXCollections.observableArrayList();
 
-        ContextHandler.getContext().setUserProfileController(this);
+        // TODO: Initialize the buttons
         setUpPostsListener();
-
-        if(feedSelected) {
-            updateFeed();
-        }
-        else {
-            updateArchivedPosts();
-        }
+        updateFeed();
+        updateArchivedPosts();
     }
 
     private void handleDelete(Event event){

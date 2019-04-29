@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           styleClass="message-preview-container">
+    <Label fx:id="hiddenUserId" visible="false"/>
+    <BorderPane>
+        <left>
+            <!-- Other person's profile -->
+            <StackPane style="-fx-padding: 10 10 10 10">
+                <ImageView preserveRatio="true" fitHeight="40" fitWidth="40" fx:id="profilePicture">
+                    <Image url="/imagenes/huevo.png"/>
+                </ImageView>
+            </StackPane>
+        </left>
+        <center>
+            <VBox spacing="4" style="-fx-padding: 15 10 0 0">
+                <HBox spacing="10">
+                    <!-- User's name and username (id)-->
+                    <Label fx:id="username" text="User's name"
+                           style="-fx-text-fill: rgba(0, 0, 0, 0.80); -fx-font-weight: BOLD;"/>
+                    <Label fx:id="userId" text="username" style="-fx-text-fill: rgba(0, 0, 0, 0.80)"/>
+                </HBox>
+                <Label fx:id="lastMessage" text="Last message" wrapText="true"
+                       style="-fx-text-fill: rgba(0, 0, 0, 0.60)"/>
+            </VBox>
+        </center>
+        <right>
+            <StackPane style="-fx-padding: 0 10 0 0">
+                <Label text="3 days ago"/>
+            </StackPane>
+        </right>
+    </BorderPane>
+
+</StackPane>
