@@ -23,6 +23,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class UserProfileController implements Initializable {
@@ -63,9 +64,7 @@ public class UserProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //User user = new User("OswaldOswin", "user1", "@yahoo.es");
-        //ContextHandler.getContext().setCurrentUser(user);
-        ContextHandler.getContext().getCurrentUser().toString();
+
         Name.setText(ContextHandler.getContext().getCurrentUser().getName());
         description.setText(ContextHandler.getContext().getCurrentUser().getDescription());
         newticketButton.setOnAction(this::handleNewTicektButton);
@@ -195,8 +194,12 @@ public class UserProfileController implements Initializable {
         posts.clear();
 
         try {
-            posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getPost(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+            List<Post> searchPosts = ApiFacade.getEntrypoint().getSearchFacade().getPost(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
+
+            if(searchPosts != null && !searchPosts.isEmpty()) {
+                posts.addAll(searchPosts);
+            }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }

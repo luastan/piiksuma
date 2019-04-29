@@ -542,8 +542,10 @@ public class PostDao extends AbstractDao {
         String query = getQueryPost();
 
         query += "WHERE post.author = ?";
-        return new QueryMapper<Post>(super.getConnection()).createQuery(query).defineClass(Post.class)
-                .defineParameters(user.getPK()).list();
+        List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(query)
+                .defineClass(Post.class).defineParameters(user.getPK()).mapList();
+
+        return getPosts(result);
     }
 
     /**
