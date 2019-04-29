@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import piiksuma.*;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -65,6 +66,7 @@ public class CreatePostController implements Initializable {
             post.setText(newValue);
             postButton.setDisable(!postText.validate());
         });
+        PiikTextLimiter.addTextLimiter(postText, 20);
         // Checks if the input is empty
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("Field required");
