@@ -6,7 +6,7 @@ import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
-import piiksuma.piikLog.PiikLogger;
+import piiksuma.Utilities.PiikLogger;
 
 import java.util.logging.Level;
 
