@@ -531,22 +531,16 @@ public class PostDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-//======================================================================================================================
-
-    private String getQueryPost() {
-        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
-                "o.author ";
-    }
-
-    /**
-     * Function that return a list with all the user's post
+    /*******************************************************************************************************************
+     * Gets a list of post containing a given user
      *
-     * @param user user who created the post
-     * @return a list with all the user's posts
-     * @throws PiikDatabaseException
+     * @param user User to be searched for
+     * @return List post created by the user
+     * @throws PiikDatabaseException Thrown if user or its primary keys are null
      */
     public List<Post> getPost(User user) throws PiikDatabaseException {
 
+        // Check if hashtag or its primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
@@ -558,8 +552,18 @@ public class PostDao extends AbstractDao {
         List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(query)
                 .defineClass(Post.class).defineParameters(user.getPK()).mapList();
 
+        // Return posts
         return getPosts(result);
     }
+    //******************************************************************************************************************
+
+//======================================================================================================================
+
+    private String getQueryPost() {
+        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
+                "o.author ";
+    }
+
 
     /**
      * Function to swap information from the database to the Post class
