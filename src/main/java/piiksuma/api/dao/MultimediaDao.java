@@ -109,23 +109,27 @@ public class MultimediaDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-//======================================================================================================================
-
-    /**
+    /*******************************************************************************************************************
      * Function to return the multimedia from the database
      *
      * @param multimedia Given multimedia to search into database
      * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
-     * @throws PiikDatabaseException
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public Multimedia getMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
+        // Return multimedia
         return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
                 "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getPK()).findFirst();
     }
+    //******************************************************************************************************************
+
+//======================================================================================================================
+
 
     /**
      * Function to return the multimedia from the database to check if it exists
