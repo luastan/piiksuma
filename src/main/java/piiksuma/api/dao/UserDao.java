@@ -37,12 +37,36 @@ public class UserDao extends AbstractDao {
                 Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
-    public void unsilenceUser(User user, User currentUser) throws PiikDatabaseException{
+    /**
+     * Allow you to unsilence a user you have previously silence
+     *
+     * @param user        User to unsilence
+     * @param currentUser
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
+     */
+    public void unsilenceUser(User user, User currentUser) throws PiikDatabaseException {
+
+        // Check if repost or its primary key are null
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
+        }
+
         new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM silenceuser WHERE silenced=? AND " +
                 "usr=?").defineClass(Object.class).defineParameters(user.getPK(), currentUser.getPK())
                 .executeUpdate();
     }
 
+    /**
+     * Secondary function used to build multimedia and phones for the user
+     *
+     * @param statement        Sql sentence
+     * @param multimediaExists To check if multimedia is already in use
+     * @param phonesExists     To check if phone is already in use
+     * @param user             User we build the query for
+     * @param multimedia       Multimedia
+     * @return Returns the offset of the query
+     * @throws SQLException Thrown if the build fails
+     */
     private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
                              User user, Multimedia multimedia) throws SQLException {
 
@@ -235,6 +259,12 @@ public class UserDao extends AbstractDao {
         }
     }
 
+    /**
+     * Updates an user data on the db
+     *
+     * @param user User to update
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
+     */
     public void updateUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -334,7 +364,7 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "administrator WHERE id = ? FOR UPDATE); ");
 
-            // Or he may have been downgraded
+                // Or he may have been downgraded
             else {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
@@ -390,7 +420,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function to get the user that matches the given specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
+     * @param user            user that contains the requirements that will be applied in the search
      * @param typeTransaction nivel of isolation
      * @return user that meets the given information
      */
@@ -404,7 +434,7 @@ public class UserDao extends AbstractDao {
                 "SELECT t.*, ad.id as type " +
                         "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad " +
                         "ON (t.id = ad.id) WHERE t.id LIKE ?").defineParameters(user.getPK())
-                        .setIsolationLevel(typeTransaction).mapList();
+                .setIsolationLevel(typeTransaction).mapList();
 
         User returnUser = new User();
 
@@ -441,10 +471,10 @@ public class UserDao extends AbstractDao {
                 if (usrInfo.containsKey("phone")) {
                     String prefix = (String) usrInfo.get("prefix");
 
-                    if(prefix != null && !prefix.isEmpty()) {
+                    if (prefix != null && !prefix.isEmpty()) {
                         String numPhone = (String) usrInfo.get("phone");
 
-                        if(numPhone != null && !numPhone.isEmpty()){
+                        if (numPhone != null && !numPhone.isEmpty()) {
                             returnUser.addPhone(prefix + numPhone);
                         }
                     }
@@ -487,7 +517,13 @@ public class UserDao extends AbstractDao {
                 user.getPK(), user.getName(), limit).list();
     }
 
-
+    /**
+     * Get the achievements that the user has obtained
+     *
+     * @param user User whom's achievements are search for
+     * @return Returns a list of achievements
+     * @throws PiikDatabaseException
+     */
     public List<Achievement> getAchievements(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -499,6 +535,13 @@ public class UserDao extends AbstractDao {
                 user.getPK()).list();
     }
 
+    /**
+     * Gets the dates when the achievements were unlocked by the user
+     *
+     * @param user User whom we get the dates from
+     * @return Returns a map with the name of the achievement and the date
+     * @throws PiikDatabaseException
+     */
     public Map<String, Timestamp> getUnlockDates(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -510,8 +553,8 @@ public class UserDao extends AbstractDao {
 
         HashMap<String, Timestamp> result = new HashMap<>();
 
-        for(Map<String, Object> row : queryResults) {
-            result.put((String)row.get("achiev"), (Timestamp)row.get("acquisitiondate"));
+        for (Map<String, Object> row : queryResults) {
+            result.put((String) row.get("achiev"), (Timestamp) row.get("acquisitiondate"));
         }
 
         return result;
@@ -533,6 +576,12 @@ public class UserDao extends AbstractDao {
         return getUser(user, Connection.TRANSACTION_SERIALIZABLE);
     }
 
+    /**
+     * Creates a new achievement for the users
+     *
+     * @param achievement Achievement we want to create
+     * @throws PiikDatabaseException Thrown if achievement or its primary key are null
+     */
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
 
         if (achievement == null || !achievement.checkPrimaryKey(true)) {
@@ -621,6 +670,12 @@ public class UserDao extends AbstractDao {
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
+    /**
+     * Unblock an user
+     * @param blockedUser user that was blocked
+     * @param user
+     * @throws PiikDatabaseException
+     */
     public void unblockUser(User blockedUser, User user) throws PiikDatabaseException {
 
         if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
@@ -699,7 +754,7 @@ public class UserDao extends AbstractDao {
                         "SELECT COUNT(*) AS followback " +
                         "FROM followedtable, followerstable " +
                         "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK(),user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
+        ).defineParameters(user.getPK(), user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 

@@ -685,7 +685,11 @@ public class PostDao extends AbstractDao {
         return posts;
     }
 
-
+    /**
+     * Creates a new hashtag
+     * @param hashtag Hashtag you want to create
+     * @throws PiikDatabaseException Thrown if hashtag or its primary key are null
+     */
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkPrimaryKey(true)) {
