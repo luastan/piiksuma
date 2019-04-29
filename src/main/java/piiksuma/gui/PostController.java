@@ -1,16 +1,22 @@
 package piiksuma.gui;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDecorator;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import piiksuma.*;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -69,7 +75,45 @@ public class PostController implements Initializable {
     }
 
     private void handleAnswer(Event event){
+        Stage newPostStage = new Stage();
 
+        try {
+            ContextHandler.getContext().register("Answer Post", newPostStage);
+        } catch (PiikInvalidParameters e) {
+            e.printStackTrace();
+            return;
+        }
+        // Stage configuration
+        newPostStage.setTitle("Answer Post");
+        newPostStage.setResizable(false);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/createAnswer.fxml"));
+
+        CreatePostController controller = new CreatePostController();
+
+        controller.setPostFather(post);
+
+        loader.setController(controller);
+        JFXDecorator decorator;
+
+        try {
+            decorator = new JFXDecorator(newPostStage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Scene scene = new Scene(decorator, 450, 550);
+
+
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        newPostStage.initModality(Modality.WINDOW_MODAL);
+        newPostStage.initOwner(ContextHandler.getContext().getStage("primary"));
+        newPostStage.setScene(scene);
+        // Show
+        newPostStage.show();
     }
 
     private void handleLike(Event event) {

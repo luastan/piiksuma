@@ -53,6 +53,7 @@ public class CreatePostController implements Initializable {
 
     private Post post;
 
+    private Post postFather;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,6 +72,14 @@ public class CreatePostController implements Initializable {
                 .glyph(FontAwesomeIcon.WARNING)
                 .build());
         postText.getValidators().add(validator);
+    }
+
+    public Post getPostFather() {
+        return postFather;
+    }
+
+    public void setPostFather(Post postFather) {
+        this.postFather = postFather;
     }
 
     private void handleMultimediaButton(Event event) {
@@ -111,6 +120,10 @@ public class CreatePostController implements Initializable {
             hashtags.add(new Hashtag(matcher.group()));
         }
         post.setHashtags(hashtags);
+
+        if(postFather != null){
+            post.setFatherPost(postFather);
+        }
         // Post gets inserted in the database
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createPost(post, ContextHandler.getContext().getCurrentUser());
