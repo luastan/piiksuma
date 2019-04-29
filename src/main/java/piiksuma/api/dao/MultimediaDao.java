@@ -128,19 +128,25 @@ public class MultimediaDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
-//======================================================================================================================
-
-
-    /**
-     * Function to return the multimedia from the database to check if it exists
+    /*******************************************************************************************************************
+     * Check if multimedia exists on the db
      *
-     * @param multimedia Given multimedia to check if it is saved in the database
-     * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
-     * @throws PiikDatabaseException
+     * @param multimedia Multimedia to be checked
+     * @return Returns the multimedia if it exists, othwerwise it will return null
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public boolean existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
+
+        // Return multimedia
         return (getMultimedia(multimedia) != null);
     }
+    //******************************************************************************************************************
+
+//======================================================================================================================
 
     /**
      * Function to count the number of post which contains the given multimedia
