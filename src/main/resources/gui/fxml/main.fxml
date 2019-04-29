@@ -40,7 +40,7 @@
             </Tab>
         </JFXTabPane>
     </StackPane>
-    <StackPane fx:id="deckContainer" StackPane.alignment="BOTTOM_CENTER" styleClass="deck-hitbox">
+    <StackPane fx:id="deckContainer" StackPane.alignment="BOTTOM_CENTER" styleClass="deck-hitbox" pickOnBounds="false">
         <Label text="BottomBar"/>
     </StackPane>
 
