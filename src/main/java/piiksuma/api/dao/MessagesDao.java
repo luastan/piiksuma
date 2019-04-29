@@ -7,6 +7,7 @@ import piiksuma.User;
 import piiksuma.api.ErrorMessage;
 import piiksuma.api.MultimediaType;
 import piiksuma.database.DeleteMapper;
+import piiksuma.database.InsertionMapper;
 import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -170,6 +171,28 @@ public class MessagesDao extends AbstractDao {
         return completeMessage;
     }
     //******************************************************************************************************************
+
+    /**
+     * Function to sent a private message to other user
+     *
+     * @param message private message
+     * @param user receiver to the private message
+     */
+    public void sendPrivateMessage(Message message, User user) throws PiikDatabaseException {
+        // Check if message or its primary key are null
+        System.out.println(message);
+        if (message == null || !message.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("Message"));
+        }
+
+        if(user == null || !user.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        new InsertionMapper<>(getConnection()).createUpdate("INSERT INTO receivemessage(message, author, receiver) " +
+                "VALUES(?,?,?)").defineParameters(message.getId(), message.getSender().getPK(), user.getPK())
+                .executeUpdate();
+    }
 
     /*******************************************************************************************************************
      * Delete a message you sent or a not allowed message checked by the admin

@@ -6,6 +6,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import piiksuma.Message;
+import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -32,6 +33,8 @@ public class StartChatController implements Initializable {
 
     private void handleNewMessage(Event event){
         Message message = new Message();
+        User userReceiver = new User();
+        User current = ContextHandler.getContext().getCurrentUser();
 
         if(!checkFields()){
             Alert alert = new Alert(ContextHandler.getContext().getStage("startChat"));
@@ -41,13 +44,18 @@ public class StartChatController implements Initializable {
             alert.show();
             return;
         }
+
+        // TODO comprobar si existe el usuario
+
+        userReceiver.setId(userField.getText());
         message.setText(messageField.getText());
-        message.setSender(ContextHandler.getContext().getCurrentUser());
+        message.setSender(current);
         Date date = new Date();
         long time = date.getTime();
         message.setDate(new Timestamp(time));
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,ContextHandler.getContext().getCurrentUser());
+            message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,current);
+            ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, userReceiver, current);
         } catch (PiikDatabaseException e) {
             e.printStackTrace();
         } catch (PiikInvalidParameters piikInvalidParameters) {

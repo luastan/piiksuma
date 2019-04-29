@@ -315,6 +315,25 @@ public class InsertionFacade {
 
     /* MESSAGE related methods */
 
+    /**
+     * Function to sent a private message to other user
+     *
+     * @param message private message
+     * @param user receiver to the private message
+     * @param current current user
+     */
+    public void sendPrivateMessage(Message message, User user, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
+        }
+
+        if (message == null || !message.checkNotNull(true)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
+        }
+
+        parentFacade.getMessagesDao().sendPrivateMessage(message, user);
+    }
 
     /**
      * A new ticket, created by a user, is inserted into the database
