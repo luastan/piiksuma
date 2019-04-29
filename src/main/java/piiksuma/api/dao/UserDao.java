@@ -41,7 +41,7 @@ public class UserDao extends AbstractDao {
      * Allow you to unsilence a user you have previously silence
      *
      * @param user        User to unsilence
-     * @param currentUser
+     * @param currentUser User that silenced him
      * @throws PiikDatabaseException Thrown if user or its primary key are null
      */
     public void unsilenceUser(User user, User currentUser) throws PiikDatabaseException {
@@ -672,6 +672,7 @@ public class UserDao extends AbstractDao {
 
     /**
      * Unblock an user
+     *
      * @param blockedUser user that was blocked
      * @param user
      * @throws PiikDatabaseException

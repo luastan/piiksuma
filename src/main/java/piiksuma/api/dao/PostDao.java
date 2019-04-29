@@ -687,6 +687,7 @@ public class PostDao extends AbstractDao {
 
     /**
      * Creates a new hashtag
+     *
      * @param hashtag Hashtag you want to create
      * @throws PiikDatabaseException Thrown if hashtag or its primary key are null
      */
@@ -949,6 +950,15 @@ public class PostDao extends AbstractDao {
         return (result);
     }
 
+    /**
+     * Gets a List of the most used hashtags
+     *
+     * @param limit   Number of hashtags to put on the list
+     * @param current Current user logged into the app
+     * @return Return the list of hastags
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters, PiikDatabaseException {
 
         if (limit <= 0) {
