@@ -342,7 +342,7 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
         // Returns the list of messages
-        return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM recievemessage WHERE " +
+        return new QueryMapper<Message>(super.getConnection()).createQuery("SELECT * FROM receivemessage WHERE " +
                 "receiver = ? LIMIT 10").defineClass(Message.class).defineParameters(user.getPK()).list();
     }
     //******************************************************************************************************************
