@@ -557,6 +557,26 @@ public class PostDao extends AbstractDao {
     }
     //******************************************************************************************************************
 
+    /*******************************************************************************************************************
+     * Retrieves the posts that a user has archived
+     *
+     * @param user User whose archived posts will be retrieved
+     * @return List of posts founded
+     * @throws PiikDatabaseException Thrown if user or its primary keys are null
+     */
+    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
+
+        // Check if hashtag or its primary key are null
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        // List of post
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
+                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
+    }
+    //******************************************************************************************************************
+
 //======================================================================================================================
 
     private String getQueryPost() {
@@ -616,21 +636,6 @@ public class PostDao extends AbstractDao {
         return posts;
     }
 
-    /**
-     * Retrieves the posts that a user has archived
-     *
-     * @param user user whose archived posts will be retrieved
-     * @return found posts
-     */
-    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
-        }
-
-        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
-                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
-    }
 
     /**
      * Function to do a repost on a post

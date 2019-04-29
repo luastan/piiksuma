@@ -2,8 +2,14 @@ package piiksuma.Utilities;
 
 import javafx.scene.control.TextField;
 
-public class PiikTextLimiter { // https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength
+public class PiikTextLimiter {
 
+    /**
+     * Generates a limit of characters for textFields
+     *
+     * @param tf        TextField to be limited
+     * @param maxLength Max of characters permitted on the textField
+     */
     public static void addTextLimiter(final TextField tf, final int maxLength) {
         tf.textProperty().addListener((ov, oldValue, newValue) -> {
             if (tf.getText().length() > maxLength) {
