@@ -254,18 +254,16 @@ public class PostDao extends AbstractDao {
         new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
     //******************************************************************************************************************
-    
-//======================================================================================================================
 
-    /**
-     * Function to update the text content of the post
+    /*******************************************************************************************************************
+     * Update content (text) of a post
      *
-     * @param post post to be updated
-     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     * @param post Post to be updated
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
      */
 
     public void updatePost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -437,6 +435,9 @@ public class PostDao extends AbstractDao {
             }
         }
     }
+    //******************************************************************************************************************
+//======================================================================================================================
+
 
     /**
      * Function to archive a post privately by an user
