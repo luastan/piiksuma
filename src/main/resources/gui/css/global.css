@@ -283,3 +283,14 @@
 .alert-text {
     -fx-font-size: 15;
 }
+
+/* User profile */
+
+.profile-post-feed {
+    /*-fx-pref-height: 600;*/
+    -fx-pref-width: 450;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    /*-fx-min-height: -fx-pref-height;*/
+    /*-fx-max-height: -fx-pref-height;*/
+}

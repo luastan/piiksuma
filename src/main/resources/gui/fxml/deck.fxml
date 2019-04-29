@@ -10,7 +10,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           styleClass="deck-hitbox">
+           styleClass="deck-hitbox" pickOnBounds="false">
     <BorderPane styleClass="deck-container" StackPane.alignment="BOTTOM_CENTER">
         <center>
             <BorderPane>

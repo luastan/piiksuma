@@ -840,7 +840,7 @@ public class PostDao extends AbstractDao {
                             "FROM (\n" +
                             "\n" +
                             "         -- We obtain the posts made by the followed users who are not filtered out\n" +
-                            "         (SELECT p.*, 'following' as type\n" +
+                            "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
                             "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
                             "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
@@ -848,14 +848,14 @@ public class PostDao extends AbstractDao {
                             "         UNION\n" +
                             "\n" +
                             "         -- We obtain the posts that the user made\n" +
-                            "         (SELECT *, 'own' as type\n" +
+                            "         (SELECT *\n" +
                             "          FROM post\n" +
                             "          WHERE author = ?)\n" +
                             "\n" +
                             "         UNION\n" +
                             "\n" +
                             "         -- We obtain the reposts that the user made\n" +
-                            "         (SELECT p.*, 'repost' as type\n" +
+                            "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
                             "          WHERE EXISTS(\n" +
                             "                        SELECT *\n" +
@@ -871,7 +871,7 @@ public class PostDao extends AbstractDao {
                             "         -- followed hashtags; the parentheses are needed to apply the\n" +
                             "         -- 'ORDER BY' only to this query, instead on applying it to the whole\n" +
                             "         -- 'UNION'\n" +
-                            "         (SELECT p.*, 'hashtag' as type\n" +
+                            "         (SELECT p.*\n" +
                             "          FROM (SELECT candidates.author,\n" +
                             "                       candidates.id\n" +
                             "                -- First we obtain the posts that are in the user's followed\n" +
