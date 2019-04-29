@@ -436,29 +436,32 @@ public class PostDao extends AbstractDao {
         }
     }
     //******************************************************************************************************************
-//======================================================================================================================
 
-
-    /**
-     * Function to archive a post privately by an user
+    /*******************************************************************************************************************
+     * Archive a post requested by an user
      *
-     * @param post post to be archived
-     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     * @param post Post to be archived
+     * @throws PiikDatabaseException Thrown if post/user or its primary keys are null
      */
     public void archivePost(Post post, User user) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
-
+        // Check if user or its primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
+        // Archive post
         new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivepost values (?,?,?)")
                 .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
                 .executeUpdate();
     }
+    //******************************************************************************************************************
+
+
+//======================================================================================================================
 
     private String getQueryPost() {
         return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
