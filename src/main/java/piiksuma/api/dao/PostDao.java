@@ -562,7 +562,7 @@ public class PostDao extends AbstractDao {
      *
      * @param user User whose archived posts will be retrieved
      * @return List of posts founded
-     * @throws PiikDatabaseException Thrown if user or its primary keys are null
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
      */
     public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
 
@@ -574,6 +574,37 @@ public class PostDao extends AbstractDao {
         // List of post
         return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
                 "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Repost an already published post
+     *
+     * @param userRepost User who reposts
+     * @param post       Post to be reposted
+     * @param userPost   Owner of the post
+     * @throws PiikDatabaseException Thrown if userRepost/post/userPost or its primary keys are null
+     */
+    public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
+        // Check if userRepost or its primary key are null
+        if (userRepost == null || !userRepost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userRepost"));
+        }
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+        // Check if userPost or its primary key are null
+        if (userPost == null || !userPost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userPost"));
+        }
+
+
+        // Repost
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
+                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getPK(),
+                userPost.getPK()).executeUpdate();
+
     }
     //******************************************************************************************************************
 
@@ -636,33 +667,6 @@ public class PostDao extends AbstractDao {
         return posts;
     }
 
-
-    /**
-     * Function to do a repost on a post
-     *
-     * @param userRepost user who does the repost
-     * @param post       post to be reposted
-     * @param userPost   user who owns the post
-     */
-    public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
-
-        if (userRepost == null || !userRepost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userRepost"));
-        }
-
-        if (post == null || !post.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
-        }
-
-        if (userPost == null || !userPost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userPost"));
-        }
-
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
-                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getPK(),
-                userPost.getPK()).executeUpdate();
-
-    }
 
     /**
      * Function to remove a repost
