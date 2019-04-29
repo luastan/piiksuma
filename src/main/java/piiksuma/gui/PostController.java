@@ -6,8 +6,11 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.*;
@@ -39,6 +42,12 @@ public class PostController implements Initializable {
 
     @FXML
     private JFXButton deleteButton;
+
+    @FXML
+    private ImageView boxImage;
+
+    @FXML
+    private ImageView profilePicture;
 
     private Post post;
 
@@ -72,6 +81,22 @@ public class PostController implements Initializable {
         postContent.setText(post.getText());
         authorName.setText(post.getAuthor().getName());
         authorId.setText(post.getAuthor().getId());
+
+        // Multimedia insertion
+        if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
+            boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
+            boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getWidth() - 170) / 2, 450, 170));
+        } else if (post.getAuthor().getId().equals("usr1")) {  // TODO: Remove else if once multimedia is propperly parsed to the controller
+            boxImage.setImage(new Image("/imagenes/post_image_test.jpg", 450, 800, true, true));
+            boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
+        }
+
+        // Profile Picture
+        Multimedia profileM = author.getMultimedia();
+        if (profileM != null && !profileM.getUri().equals("")) {
+            boxImage.setImage(new Image(post.getMultimedia().getUri(), 50, 50, true, true));
+        }
+
 
         buttonLike.setOnAction(this::handleLike);
         buttonAnswer.setOnAction(this::handleAnswer);

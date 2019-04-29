@@ -24,12 +24,14 @@
         </HBox>
         <HBox spacing="10">
             <Label alignment="BOTTOM_LEFT" text="Date:"/>
-            <JFXTextField fx:id="date" translateX="131" styleClass="fx-text-field" maxWidth="250"  maxHeight="80" promptText="DD-MM-YYYY"/>
+            <JFXDatePicker fx:id="date" translateX="131" styleClass="fx-text-field" style="-fx-cursor: hand;"
+                           defaultColor="#391072" accessibleHelp="Pick event's date"/>
         </HBox>
         <HBox spacing="50">
             <Label text="Event's Description:" />
             <JFXTextArea translateX="-5" fx:id="description" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
         </HBox>
     </VBox>
-    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="jfx-button-border"/>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="jfx-button-border"
+               disable="true"/>
 </StackPane>

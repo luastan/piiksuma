@@ -13,8 +13,8 @@
            styleClass="deck-hitbox">
     <BorderPane styleClass="deck-container" StackPane.alignment="BOTTOM_CENTER">
         <center>
-            <JFXToolbar>
-                <leftItems>
+            <BorderPane>
+                <left>
                     <StackPane styleClass="deck-small-button-container">
                         <JFXRippler styleClass="rippler-hamburguer" maskType="RECT" fx:id="hamburguerRippler">
                             <StackPane styleClass="hamburguer-space">
@@ -23,19 +23,19 @@
                             </StackPane>
                         </JFXRippler>
                     </StackPane>
-                </leftItems>
-                <rightItems>
+                </left>
+                <right>
                     <StackPane styleClass="deck-small-button-container">
-                        <HBox alignment="CENTER">
+                        <HBox alignment="CENTER" spacing="5">
                             <JFXButton text="der2" fx:id="userDataButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
-                                    <FontAwesomeIconView glyphName="PLUS" size="24"
+                                    <FontAwesomeIconView glyphName="PENCIL" size="24"
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </JFXButton>
                             <JFXButton text="der3" fx:id="viewNotificationsButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                                 <graphic>
-                                    <FontAwesomeIconView glyphName="PLUS" size="24"
+                                    <FontAwesomeIconView glyphName="ENVELOPE_OPEN" size="24"
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </JFXButton>
@@ -47,8 +47,8 @@
                             </JFXButton>
                         </HBox>
                     </StackPane>
-                </rightItems>
-            </JFXToolbar>
+                </right>
+            </BorderPane>
         </center>
     </BorderPane>
     <JFXButton StackPane.alignment="TOP_CENTER" styleClass="deck-button" fx:id="mainButton"
