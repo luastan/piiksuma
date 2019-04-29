@@ -237,6 +237,24 @@ public class PostDao extends AbstractDao {
         return completePost;
     }
     //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Remove a post from db
+     *
+     * @param post post to be removed
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
+     */
+    public void removePost(Post post) throws PiikDatabaseException {
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        // Delete post
+        new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
+    }
+    //******************************************************************************************************************
+    
 //======================================================================================================================
 
     /**
@@ -439,20 +457,6 @@ public class PostDao extends AbstractDao {
         new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivepost values (?,?,?)")
                 .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
                 .executeUpdate();
-    }
-
-    /**
-     * Function that removes a post from the database
-     *
-     * @param post post to remove from the database
-     */
-    public void removePost(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
-        }
-
-        new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
     }
 
     private String getQueryPost() {
