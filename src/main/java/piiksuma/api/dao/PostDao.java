@@ -28,16 +28,17 @@ public class PostDao extends AbstractDao {
     }
 
 
-    /* Methods */
+// ======================================================= POSTS =======================================================
 
-    /**
-     * Function that adds a post into the database
+    /*******************************************************************************************************************
+     * Inserts a post on the db
      *
-     * @param post post to add, with its creator, into the database
-     * @return post containing the given data and its generated ID
+     * @param post Post to be inserted
+     * @return returns the post
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
      */
     public Post createPost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -51,7 +52,7 @@ public class PostDao extends AbstractDao {
         boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey(false);
         boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
                 post.getFatherPost().getAuthor().checkPrimaryKey(false);
-        if(authorDaddyExists) {
+        if (authorDaddyExists) {
             System.out.println("Dafuq");
         }
         boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
@@ -180,7 +181,7 @@ public class PostDao extends AbstractDao {
 
             statementHashtags = con.prepareStatement(clause.toString());
 
-            for(Hashtag hashtag : post.getHashtags()) {
+            for (Hashtag hashtag : post.getHashtags()) {
                 statementHashtags.setString(1, hashtag.getName());
                 statementHashtags.setString(2, hashtag.getName());
                 statementHashtags.executeUpdate();
@@ -232,10 +233,11 @@ public class PostDao extends AbstractDao {
                 throw new PiikDatabaseException(e.getMessage());
             }
         }
-
+        // Return Post
         return completePost;
     }
-
+    //******************************************************************************************************************
+//======================================================================================================================
 
     /**
      * Function to update the text content of the post
@@ -518,7 +520,7 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
-        List<Map<String, Object>> result =  new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
                 " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
                 .defineParameters(hashtag.getName()).mapList();
 
@@ -555,19 +557,19 @@ public class PostDao extends AbstractDao {
      * @return
      */
     private List<Post> getPosts(List<Map<String, Object>> result) {
-        if(result == null || result.isEmpty()){
+        if (result == null || result.isEmpty()) {
             return null;
         }
 
         ArrayList<Post> posts = new ArrayList<>();
 
-        for(Map<String, Object> columnsPost : result){
+        for (Map<String, Object> columnsPost : result) {
             Post resultPost = new Post();
             User user = new User();
 
             Object idUser = columnsPost.get("author");
 
-            if(idUser instanceof String){
+            if (idUser instanceof String) {
                 user.setId((String) idUser);
                 columnsPost.put("author", user);
             }
@@ -577,7 +579,7 @@ public class PostDao extends AbstractDao {
             // The post may already be in the list, because a row is generated for each combination idPost - Hashtag
             // combination
             boolean postContains = false;
-            if(posts.contains(resultPost)){
+            if (posts.contains(resultPost)) {
                 resultPost = posts.get(posts.indexOf(resultPost));
                 postContains = true;
             }
@@ -591,7 +593,7 @@ public class PostDao extends AbstractDao {
                 }
             }
 
-            if(!postContains){
+            if (!postContains) {
                 posts.add(resultPost);
             }
         }
@@ -780,105 +782,105 @@ public class PostDao extends AbstractDao {
             // We'll use a prepared statement to avoid malicious intentions :(
             PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
-                    "WITH followedUsers (followed) AS (\n" +
-                    "    SELECT followed\n" +
-                    "    FROM followuser\n" +
-                    "    WHERE follower = ?\n" +
-                    "),\n" +
-                    "-- We obtain the hashtags followed by the user just for convenience\n" +
-                    "followedHashtags (followed) AS (\n" +
-                    "    SELECT hashtag\n" +
-                    "    FROM followhashtag\n" +
-                    "    WHERE piiuser = ?\n" +
-                    "),\n" +
-                    "-- We obtain the blocked and silenced users to filter out their posts\n" +
-                    " filteredUsers (filtered) AS (\n" +
-                    "    SELECT blocked\n" +
-                    "    FROM blockuser\n" +
-                    "    WHERE usr = ?\n" +
-                    "\n" +
-                    "    UNION\n" +
-                    "\n" +
-                    "    SELECT silenced\n" +
-                    "    FROM silenceuser\n" +
-                    "    WHERE usr = ?\n" +
-                    ")\n" +
-                    "\n" +
-                    "-- 'UNION' already gets rid of duplicated results\n" +
-                    "SELECT *\n" +
-                    "\n" +
-                    "FROM (\n" +
-                    "\n" +
-                    "         -- We obtain the posts made by the followed users who are not filtered out\n" +
-                    "         (SELECT p.*, 'following' as type\n" +
-                    "          FROM post as p\n" +
-                    "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
-                    "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the posts that the user made\n" +
-                    "         (SELECT *, 'own' as type\n" +
-                    "          FROM post\n" +
-                    "          WHERE author = ?)\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the reposts that the user made\n" +
-                    "         (SELECT p.*, 'repost' as type\n" +
-                    "          FROM post as p\n" +
-                    "          WHERE EXISTS(\n" +
-                    "                        SELECT *\n" +
-                    "                        FROM repost as r\n" +
-                    "                        WHERE r.author = ?\n" +
-                    "                          AND r.author = p.author\n" +
-                    "                          AND r.post = p.id\n" +
-                    "                    ))\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the 20 most reacted to posts which are in the user's\n" +
-                    "         -- followed hashtags; the parentheses are needed to apply the\n" +
-                    "         -- 'ORDER BY' only to this query, instead on applying it to the whole\n" +
-                    "         -- 'UNION'\n" +
-                    "         (SELECT p.*, 'hashtag' as type\n" +
-                    "          FROM (SELECT candidates.author,\n" +
-                    "                       candidates.id\n" +
-                    "                -- First we obtain the posts that are in the user's followed\n" +
-                    "                -- hashtags and that are not made by filtered out users\n" +
-                    "                FROM (\n" +
-                    "                         SELECT *\n" +
-                    "                         FROM post as p\n" +
-                    "                         -- We need to make sure that, for each post, at least\n" +
-                    "                         -- one of its related hashtags is followed by the user\n" +
-                    "                         WHERE EXISTS(\n" +
-                    "                                 SELECT *\n" +
-                    "                                 FROM ownhashtag as h\n" +
-                    "                                 WHERE h.post = p.id\n" +
-                    "                                   AND h.author = p.author\n" +
-                    "                                   AND h.hashtag IN (SELECT * FROM\n" +
-                    "                                       followedHashtags)\n" +
-                    "                             )\n" +
-                    "                           AND p.author NOT IN (SELECT * FROM filteredUsers)\n" +
-                    "                     ) as candidates,\n" +
-                    "                     react as r\n" +
-                    "                -- We associate each post with its reactions\n" +
-                    "                WHERE candidates.author = r.author\n" +
-                    "                  AND candidates.id = r.post\n" +
-                    "                -- And we filter the posts with the number of reactions\n" +
-                    "                -- obtained for each one\n" +
-                    "                GROUP BY candidates.author, candidates.id\n" +
-                    "                ORDER BY COUNT(r.reactiontype) DESC\n" +
-                    "                LIMIT 20) as subquery,\n" +
-                    "               post as p\n" +
-                    "          WHERE subquery.id = p.id\n" +
-                    "            AND subquery.author = p.author\n" +
-                    "         )\n" +
-                    "\n" +
-                    " ) as results\n" +
-                    "\n" +
-                    "ORDER BY results.publicationdate DESC\n" +
-                    "LIMIT ?\n");
+                            "WITH followedUsers (followed) AS (\n" +
+                            "    SELECT followed\n" +
+                            "    FROM followuser\n" +
+                            "    WHERE follower = ?\n" +
+                            "),\n" +
+                            "-- We obtain the hashtags followed by the user just for convenience\n" +
+                            "followedHashtags (followed) AS (\n" +
+                            "    SELECT hashtag\n" +
+                            "    FROM followhashtag\n" +
+                            "    WHERE piiuser = ?\n" +
+                            "),\n" +
+                            "-- We obtain the blocked and silenced users to filter out their posts\n" +
+                            " filteredUsers (filtered) AS (\n" +
+                            "    SELECT blocked\n" +
+                            "    FROM blockuser\n" +
+                            "    WHERE usr = ?\n" +
+                            "\n" +
+                            "    UNION\n" +
+                            "\n" +
+                            "    SELECT silenced\n" +
+                            "    FROM silenceuser\n" +
+                            "    WHERE usr = ?\n" +
+                            ")\n" +
+                            "\n" +
+                            "-- 'UNION' already gets rid of duplicated results\n" +
+                            "SELECT *\n" +
+                            "\n" +
+                            "FROM (\n" +
+                            "\n" +
+                            "         -- We obtain the posts made by the followed users who are not filtered out\n" +
+                            "         (SELECT p.*, 'following' as type\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
+                            "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the posts that the user made\n" +
+                            "         (SELECT *, 'own' as type\n" +
+                            "          FROM post\n" +
+                            "          WHERE author = ?)\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the reposts that the user made\n" +
+                            "         (SELECT p.*, 'repost' as type\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE EXISTS(\n" +
+                            "                        SELECT *\n" +
+                            "                        FROM repost as r\n" +
+                            "                        WHERE r.author = ?\n" +
+                            "                          AND r.author = p.author\n" +
+                            "                          AND r.post = p.id\n" +
+                            "                    ))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the 20 most reacted to posts which are in the user's\n" +
+                            "         -- followed hashtags; the parentheses are needed to apply the\n" +
+                            "         -- 'ORDER BY' only to this query, instead on applying it to the whole\n" +
+                            "         -- 'UNION'\n" +
+                            "         (SELECT p.*, 'hashtag' as type\n" +
+                            "          FROM (SELECT candidates.author,\n" +
+                            "                       candidates.id\n" +
+                            "                -- First we obtain the posts that are in the user's followed\n" +
+                            "                -- hashtags and that are not made by filtered out users\n" +
+                            "                FROM (\n" +
+                            "                         SELECT *\n" +
+                            "                         FROM post as p\n" +
+                            "                         -- We need to make sure that, for each post, at least\n" +
+                            "                         -- one of its related hashtags is followed by the user\n" +
+                            "                         WHERE EXISTS(\n" +
+                            "                                 SELECT *\n" +
+                            "                                 FROM ownhashtag as h\n" +
+                            "                                 WHERE h.post = p.id\n" +
+                            "                                   AND h.author = p.author\n" +
+                            "                                   AND h.hashtag IN (SELECT * FROM\n" +
+                            "                                       followedHashtags)\n" +
+                            "                             )\n" +
+                            "                           AND p.author NOT IN (SELECT * FROM filteredUsers)\n" +
+                            "                     ) as candidates,\n" +
+                            "                     react as r\n" +
+                            "                -- We associate each post with its reactions\n" +
+                            "                WHERE candidates.author = r.author\n" +
+                            "                  AND candidates.id = r.post\n" +
+                            "                -- And we filter the posts with the number of reactions\n" +
+                            "                -- obtained for each one\n" +
+                            "                GROUP BY candidates.author, candidates.id\n" +
+                            "                ORDER BY COUNT(r.reactiontype) DESC\n" +
+                            "                LIMIT 20) as subquery,\n" +
+                            "               post as p\n" +
+                            "          WHERE subquery.id = p.id\n" +
+                            "            AND subquery.author = p.author\n" +
+                            "         )\n" +
+                            "\n" +
+                            " ) as results\n" +
+                            "\n" +
+                            "ORDER BY results.publicationdate DESC\n" +
+                            "LIMIT ?\n");
 
             // We set the identifier of the user whose feed will be retrieved
             stm.setString(1, user.getPK());
