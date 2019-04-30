@@ -14,7 +14,10 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MessagesDao extends AbstractDao {
 
@@ -208,6 +211,75 @@ public class MessagesDao extends AbstractDao {
 
         // We delete the message from the system
         new DeleteMapper<Message>(super.getConnection()).add(message).defineClass(Message.class).delete();
+    }
+
+    /**
+     * Function to get the messages with other user
+     *
+     * @param user send of the messages
+     * @return
+     */
+    public Map<String, List<Message>> messageWithUser(User user, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(user == null || !user.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
+                "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? ORDER BY date DESC " +
+                "LIMIT ?").defineParameters(user.getPK(), limit).mapList();
+
+        HashMap<String, List<Message>> returnMessages = new HashMap<>();
+
+        // Se recorren todas las tuplas obtenidas en la consulta
+        for(Map<String, Object> tuple : query){
+
+            // Se crea el mensaje correspondiente y su multimedia
+            Message message = new Message();
+            Multimedia multMessage = new Multimedia();
+
+            // Se establecen los valores del mensaje
+            message.setId((String) tuple.get("id"));
+
+            // El sender es el usuario indicado
+            message.setSender(user);
+            message.setText((String) tuple.get("text"));
+            message.setDate((Timestamp) tuple.get("date"));
+
+            // Se obtiene la multimedia
+            Object multimedia = tuple.get("multimedia");
+
+            // En caso de que exista se añade el hash y se establece en el mensaje
+            if(multimedia != null){
+                multMessage.setHash((String)multimedia);
+                message.setMultimedia(multMessage);
+            }
+
+            // Se obtiene el receptor del mensaje
+            String receiver = (String) tuple.get("receiver");
+
+            // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
+            // del HashMap
+            if(returnMessages.containsKey(receiver)){
+               returnMessages.get(receiver).add(message);
+            } else {
+                // Si no existe el receptor se crea su lista de mensajes, se añade el mensaje correspondiente y se
+                // añade al HashMap
+                ArrayList<Message> list = new ArrayList<>();
+                list.add(message);
+
+                returnMessages.put(receiver, list);
+            }
+
+        }
+
+        return returnMessages;
+
     }
     //******************************************************************************************************************
 

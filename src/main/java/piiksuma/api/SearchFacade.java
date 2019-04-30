@@ -601,6 +601,26 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().readMessages(user);
     }
 
+    /**
+     * Function to get the messages with other user
+     *
+     * @param user send of the messages
+     * @return
+     */
+    public Map<String, List<Message>> messageWithUser(User user, Integer limit, User current) throws
+            PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(current == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
+        }
+        
+        return parentFacade.getMessagesDao().messageWithUser(user, limit);
+    }
+
 
     /* INTERACTION related methods */
 
