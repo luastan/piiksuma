@@ -225,6 +225,26 @@ public class InteractionDao extends AbstractDao {
     }
 
     /**
+     * Delete a user from an event
+     * @param event
+     * @param user
+     * @throws PiikDatabaseException
+     */
+    public void deleteUserInEvent(Event event, User user) throws PiikDatabaseException {
+        // Check if event or primary key are null
+        if (event == null || !event.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+        // Check if user or primary key are null
+        if (user == null || !user.checkPrimaryKey(true)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        new DeleteMapper<>(getConnection()).createUpdate("DELETE FROM participateevent WHERE event = ? AND usr = ?")
+                .defineParameters(event.getId(), user.getPK());
+    }
+
+    /**
      * Function that returns the users that participate in the indicated event
      *
      * @param event

@@ -265,6 +265,29 @@ public class DeletionFacade {
     }
 
     /**
+     * Delete a user from an event
+     * @param event
+     * @param user
+     * @throws PiikDatabaseException
+     */
+    public void deleteUserInEvent(Event event, User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(event == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
+        }
+
+        if (!current.checkAdministrator() && !current.equals(user)) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        parentFacade.getInteractionDao().deleteUserInEvent(event, user);
+    }
+
+    /**
      * Function to remove a reaction from the database
      *
      * @param reaction    Reaction to be deleted

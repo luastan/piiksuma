@@ -621,6 +621,37 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().messageWithUser(user, limit);
     }
 
+    /**
+     * Function to get the private conversation of two users
+     *
+     * @param user1
+     * @param user2
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversation(User user1, User user2, User current, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if (user1 == null) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user1"));
+        }
+
+        if (user2 == null) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user2"));
+        }
+
+        if (current == null) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user2"));
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return parentFacade.getMessagesDao().getConversation(user1, user2, limit);
+
+    }
+
 
     /* INTERACTION related methods */
 
