@@ -60,7 +60,6 @@ public class PostController implements Initializable {
         User author = post.getAuthor();
         User current = ContextHandler.getContext().getCurrentUser();
 
-
         if ((current.getType() == null || current.getType() == UserType.user) &&
                 !current.getPK().equals(post.getAuthor().getPK())) {
             deleteButton.setVisible(false);
@@ -96,6 +95,15 @@ public class PostController implements Initializable {
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 50, 50, true, true));
         }
 
+        Reaction react = new Reaction(current, post, ReactionType.LikeIt);
+
+        try {
+            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)){
+                buttonLike.setStyle("-fx-background-color: #FF0000;");
+            }
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.printStackTrace();
+        }
 
         buttonLike.setOnAction(this::handleLike);
         buttonAnswer.setOnAction(this::handleAnswer);
@@ -151,12 +159,12 @@ public class PostController implements Initializable {
 
             if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
-                System.out.println("Like!");
-                buttonLike.setStyle("-fx-background-color: #FF0000;");
+                System.out.println("Disike!");
+                buttonLike.setStyle("-fx-background-color: rgba(255,255,255,0);");
             } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
-                System.out.println("Dislike!");
-                buttonLike.setStyle("-fx-background-color: rgba(255,255,255,0);");
+                System.out.println("Like!");
+                buttonLike.setStyle("-fx-background-color: #FF0000;");
             }
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
             piikInvalidParameters.printStackTrace();
