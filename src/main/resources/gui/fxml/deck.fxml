@@ -10,7 +10,8 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           styleClass="deck-hitbox" pickOnBounds="false">
+           styleClass="deck-hitbox" pickOnBounds="false" prefHeight="550.0" prefWidth="450.0" minHeight="550.0"
+           minWidth="450.0" maxHeight="550.0" maxWidth="450.0">
     <BorderPane styleClass="deck-container" StackPane.alignment="BOTTOM_CENTER">
         <center>
             <BorderPane>

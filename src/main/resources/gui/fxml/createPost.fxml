@@ -15,13 +15,10 @@
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.CreatePostController"
-           prefHeight="400.0" prefWidth="600.0">
-    <VBox spacing="40">
-        <StackPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
-        </StackPane.margin>
+           prefHeight="500.0" prefWidth="600.0">
+    <VBox spacing="40" alignment="CENTER">
         <HBox spacing="100">
-            <VBox alignment="TOP_LEFT" spacing="25">
+            <VBox spacing="25">
                 <JFXTextArea fx:id="postText" maxWidth="200" maxHeight="50" promptText="¿What's happening?"
                              styleClass="fx-text-field"/>
                 <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" ripplerFill="rgba(0, 50, 255, 0.24)" >
@@ -32,7 +29,7 @@
                 </JFXButton>
             </VBox>
             <VBox alignment="TOP_RIGHT">
-                <JFXButton fx:id="postButton" disable="true" styleClass="jfx-button-border" text="Post" translateY="20"
+                <JFXButton fx:id="postButton" disable="true" styleClass="jfx-button-border" text="Post"
                            scaleY="1.25" scaleX="1.25"/>
             </VBox>
         </HBox>

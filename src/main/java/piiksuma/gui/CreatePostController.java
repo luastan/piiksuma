@@ -129,10 +129,11 @@ public class CreatePostController implements Initializable {
         // Post gets inserted in the database
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createPost(post, ContextHandler.getContext().getCurrentUser());
-
+            ContextHandler.getContext().getFeedController().updateFeed();
             // And the window closes
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
+
     }
 }
