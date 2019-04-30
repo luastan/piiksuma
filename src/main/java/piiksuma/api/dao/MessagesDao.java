@@ -14,6 +14,7 @@ import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import javax.management.Query;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -325,6 +326,35 @@ public class MessagesDao extends AbstractDao {
         System.out.println(returnMessages);
         return returnMessages;
 
+    }
+
+    /**
+     * Function to get the private conversation of two users
+     *
+     * @param user1
+     * @param user2
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversation(User user1, User user2, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(user1 == null || !user1.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user1"));
+        }
+
+        if(user2 == null || !user2.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user2"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
+                "JOIN message ON(id=message) WHERE (message.author LIKE ? AND receiver LIKE ?) OR " +
+                "(message.author LIKE ? AND receiver LIKE ?) ORDER BY date DESC LIMIT ?")
+                .defineParameters(user1.getPK(), user2.getPK(), user1.getPK(), user2.getPK(), limit).list();
     }
     //******************************************************************************************************************
 
