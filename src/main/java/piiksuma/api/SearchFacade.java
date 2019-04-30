@@ -607,7 +607,7 @@ public class SearchFacade {
      * @param user send of the messages
      * @return
      */
-    public Map<String, List<Message>> messageWithUser(User user, Integer limit, User current) throws
+    public Map<User, List<Message>> messageWithUser(User user, Integer limit, User current) throws
             PiikDatabaseException, PiikInvalidParameters {
 
         if(user == null){
@@ -617,7 +617,7 @@ public class SearchFacade {
         if(current == null){
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
-        
+
         return parentFacade.getMessagesDao().messageWithUser(user, limit);
     }
 

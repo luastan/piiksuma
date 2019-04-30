@@ -219,7 +219,7 @@ public class MessagesDao extends AbstractDao {
      * @param user send of the messages
      * @return
      */
-    public Map<String, List<Message>> messageWithUser(User user, Integer limit) throws PiikDatabaseException,
+    public Map<User, List<Message>> messageWithUser(User user, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
 
         if(user == null || !user.checkPrimaryKey(false)){
@@ -230,11 +230,30 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        UserDao userDao = new UserDao(getConnection());
+
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
                 "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? ORDER BY date DESC " +
                 "LIMIT ?").defineParameters(user.getPK(), limit).mapList();
 
-        HashMap<String, List<Message>> returnMessages = new HashMap<>();
+        HashMap<User, List<Message>> returnMessages = new HashMap<>();
+
+        // List with the primary keys of the users to consult in the database
+        ArrayList<User> userPKs = new ArrayList<>();
+
+        // The primary keys of the receivers are added
+        for(Map<String, Object> tuple : query){
+            User userInfo = new User();
+            userInfo.setId((String) tuple.get("receiver"));
+            userPKs.add(userInfo);
+        }
+
+        userPKs.add(user);
+
+        Map<String, User> users = userDao.getUsers(userPKs);
+
+        // Update the user
+        user = users.get(user.getPK());
 
         // Se recorren todas las tuplas obtenidas en la consulta
         for(Map<String, Object> tuple : query){
@@ -261,7 +280,7 @@ public class MessagesDao extends AbstractDao {
             }
 
             // Se obtiene el receptor del mensaje
-            String receiver = (String) tuple.get("receiver");
+            User receiver = users.get((String) tuple.get("receiver"));
 
             // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
             // del HashMap
@@ -277,6 +296,8 @@ public class MessagesDao extends AbstractDao {
             }
 
         }
+
+
 
         return returnMessages;
 
