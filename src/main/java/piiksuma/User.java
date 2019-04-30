@@ -329,6 +329,7 @@ public class User extends PiikObject{
         return "User{" +
                 "id='" + id + '\'' +
                 ", pass='" + pass + '\'' +
+                ", name='" + name + '\'' +
                 ", type='" + this.getType() + '\'' +
                 '}';
     }

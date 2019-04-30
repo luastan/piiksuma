@@ -247,8 +247,10 @@ public class MessagesDao extends AbstractDao {
         for(Map<String, Object> tuple : query){
             User userInfo = new User();
             User senderInfo = new User();
+
             userInfo.setId((String) tuple.get("receiver"));
             senderInfo.setId((String) tuple.get("author"));
+
             if(!userPKs.contains(userInfo)) {
                 userPKs.add(userInfo);
             }
@@ -275,7 +277,7 @@ public class MessagesDao extends AbstractDao {
 
             // El sender es el usuario indicado
             User sender = new User();
-            sender.setId((String) tuple.get("author"));
+            sender = users.get(((String) tuple.get("author")));
             message.setSender(sender);
             message.setText((String) tuple.get("text"));
             message.setDate((Timestamp) tuple.get("date"));
@@ -323,7 +325,6 @@ public class MessagesDao extends AbstractDao {
 
         }
 
-        System.out.println(returnMessages);
         return returnMessages;
 
     }

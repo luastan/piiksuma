@@ -508,7 +508,7 @@ public class UserDao extends AbstractDao {
         }
 
         String query = "SELECT t.*, ad.id as type  FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN " +
-                "administrator as ad  ON (t.id = ad.id) WHERE t.id LIKE ?";
+                "administrator as ad ON (t.id = ad.id) WHERE t.id LIKE ?";
 
         // HashMap with the info of the users to return
         HashMap<String, User> infoUser = new HashMap<>();
