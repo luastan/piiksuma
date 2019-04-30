@@ -586,7 +586,7 @@ public class UserDao extends AbstractDao {
                         String numPhone = (String) tuple.get("phone");
 
                         if (numPhone != null && !numPhone.isEmpty()) {
-//                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
+                            returnUser.addPhone(prefix + numPhone);
                         }
                     }
                 }
