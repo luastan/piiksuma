@@ -343,6 +343,6 @@ public class User extends PiikObject{
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(getPK());
     }
 }

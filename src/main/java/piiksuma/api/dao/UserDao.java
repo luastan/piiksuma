@@ -496,6 +496,119 @@ public class UserDao extends AbstractDao {
     }
 
     /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param users           list with users to search with their primary keys
+     * @param typeTransaction nivel of isolation
+     * @return users that meets the given information
+     */
+    public Map<String, User> getUsers(List<User> users, Integer typeTransaction) throws PiikDatabaseException {
+        if (users == null || users.isEmpty()) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("users"));
+        }
+
+        String query = "SELECT t.*, ad.id as type  FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN " +
+                "administrator as ad  ON (t.id = ad.id) WHERE t.id LIKE ?";
+
+        // HashMap with the info of the users to return
+        HashMap<String, User> infoUser = new HashMap<>();
+
+        // ArrayList with the pk's of the users
+        ArrayList<String> usersPK = new ArrayList<>();
+
+        // Add the first user
+        usersPK.add(users.get(0).getPK());
+
+        // Add the OR conditions, one for user
+        for(int i = 1; i < users.size(); i++){
+
+            User user = users.get(i);
+
+            if(user == null || !user.checkPrimaryKey(false)){
+                throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+            }
+
+            query += " OR t.id LIKE ?";
+            usersPK.add(user.getPK());
+        }
+
+        // Get the list with the user, the phones and the type of user
+        List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(query)
+                .defineParameters(usersPK).setIsolationLevel(typeTransaction).mapList();
+
+        for(Map<String, Object> tuple : listObject){
+            User returnUser = new User();
+
+            returnUser.setId((String) tuple.get("id"));
+
+            // If the user is already on the list, only the phone is added to it
+            if(infoUser.containsKey(returnUser.getPK())){
+                // Get the phone
+                if (tuple.containsKey("phone")) {
+                    String prefix = (String) tuple.get("prefix");
+
+                    if (prefix != null && !prefix.isEmpty()) {
+                        String numPhone = (String) tuple.get("phone");
+
+                        if (numPhone != null && !numPhone.isEmpty()) {
+                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
+                        }
+                    }
+                }
+            } else {
+
+                // Get the type of user
+                Object typeUser = tuple.get("type");
+
+                // If the typeUser is null or the string is empty, the type of user is "user"
+                if (typeUser == null) {
+                    returnUser.setType(UserType.user);
+                }
+
+                if (typeUser instanceof String) {
+                    String type = (String) typeUser;
+
+                    if (type.isEmpty()) {
+                        returnUser.setType(UserType.user);
+                    } else {
+                        returnUser.setType(UserType.administrator);
+                    }
+                }
+
+                // User information is saved
+                returnUser.addInfo(tuple);
+
+                // Get the phone
+                if (tuple.containsKey("phone")) {
+                    String prefix = (String) tuple.get("prefix");
+
+                    if (prefix != null && !prefix.isEmpty()) {
+                        String numPhone = (String) tuple.get("phone");
+
+                        if (numPhone != null && !numPhone.isEmpty()) {
+                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
+                        }
+                    }
+                }
+
+                infoUser.put(returnUser.getPK(), returnUser);
+            }
+        }
+
+        return infoUser;
+    }
+
+    /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param users           list with users to search with their primary keys
+     * @return users that meets the given information
+     */
+    public Map<String, User> getUsers(List<User> users) throws PiikDatabaseException {
+        return getUsers(users, Connection.TRANSACTION_READ_COMMITTED);
+    }
+
+    /**
      * Function to get the users that match with the specifications
      *
      * @param user  user that contains the requirements that will be applied in the search
