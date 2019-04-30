@@ -386,6 +386,10 @@
 
 /* ScrollBar */
 
+.scroll-bar:hover {
+    -fx-cursor: hand;
+}
+
 .scroll-bar:vertical > .track-background, .scroll-bar:horizontal > .track-background {
     -fx-background-color: -black-selection;
     -fx-background-insets: 0.0;
