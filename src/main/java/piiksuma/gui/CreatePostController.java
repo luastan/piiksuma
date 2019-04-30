@@ -100,14 +100,29 @@ public class CreatePostController implements Initializable {
 
 // --------------------------------------------------- Testing zone ----------------------------------------------------
         try {
+            // Copy img from source to resource folder
             BufferedImage img = ImageIO.read(multimedia);
-            File outputFile = new File("test.png");
+            File outputFile = new File("src/main/resources/imagenes/" + multimedia.getName());
             ImageIO.write(img, multimedia.getName().split("\\.")[1], outputFile);
+            // Put the new img on multimedia
+            RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+            byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+            file.readFully(imgBytes);
+            post.setMultimedia(new Multimedia());
+            post.getMultimedia().setHash(
+                    Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes))
+            );
+            this.imageURI = outputFile.toURI();
+            post.getMultimedia().setUri(outputFile.toURI().toString());
+            post.getMultimedia().setType(MultimediaType.image);
+            boxImage.setImage(new Image(post.getMultimedia().getUri()));
+            post.getMultimedia().setResolution(String.valueOf((int) boxImage.getImage().getWidth()) + 'x'
+                    + (int) boxImage.getImage().getHeight());
         } catch (Exception e) {
             PiikLogger.getInstance().log(Level.SEVERE, "Can't copy the file to resources", e);
         }
 //----------------------------------------------------------------------------------------------------------------------
-
+/*
         try {
             RandomAccessFile file = new RandomAccessFile(multimedia, "r");
             byte[] imgBytes = new byte[Math.toIntExact(file.length())];
@@ -125,7 +140,7 @@ public class CreatePostController implements Initializable {
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
+*/
     }
 
     private void publishPost(Event event) {
