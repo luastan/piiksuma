@@ -932,6 +932,49 @@ public class PostDao extends AbstractDao {
                             rs.getString("multimedia")));
                 }
 
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+
+            } finally {
+                try {
+                    // We must close the prepared statement as it won't be used anymore
+                    stm.close();
+                } catch (SQLException e) {
+                    throw new PiikDatabaseException(e.getMessage());
+                }
+            }
+
+
+            /* Multimedia info retrieval */
+
+            stm = con.prepareStatement("SELECT * FROM multimedia WHERE hash = ?");
+
+            try {
+                // We retrieve the corresponding multimedia info for each post that references the multimedia table
+                for(Post post : result) {
+
+                    if(post.getMultimedia() != null) {
+
+                        // Setting iterated multimedia's PK
+                        stm.setString(1, post.getMultimedia().getHash());
+
+                        // Executing the composed query
+                        rs = stm.executeQuery();
+
+                        // Info retrieval successful
+                        if(rs.next()) {
+                            post.getMultimedia().setResolution(rs.getString("resolution"));
+                            post.getMultimedia().setUri(rs.getString("uri"));
+                        }
+
+                        else {
+                            throw new PiikDatabaseException("Data retrieval from multimedia row \"" +
+                                    post.getMultimedia().getHash() + "\" failed");
+                        }
+                    }
+                }
+
             } catch (SQLException e) {
                 throw new PiikDatabaseException(e.getMessage());
 
@@ -954,7 +997,6 @@ public class PostDao extends AbstractDao {
      * Gets a List of the most used hashtags
      *
      * @param limit   Number of hashtags to put on the list
-     * @param current Current user logged into the app
      * @return Return the list of hastags
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
