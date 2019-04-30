@@ -14,6 +14,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.sql.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -234,8 +235,8 @@ public class MessagesDao extends AbstractDao {
         UserDao userDao = new UserDao(getConnection());
 
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
-                "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? ORDER BY date DESC " +
-                "LIMIT ?").defineParameters(user.getPK(), limit).mapList();
+                "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? OR receiver LIKE ?" +
+                "ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
 
         HashMap<User, List<Message>> returnMessages = new HashMap<>();
 
@@ -267,7 +268,9 @@ public class MessagesDao extends AbstractDao {
             message.setId((String) tuple.get("id"));
 
             // El sender es el usuario indicado
-            message.setSender(user);
+            User sender = new User();
+            sender.setId((String) tuple.get("author"));
+            message.setSender(sender);
             message.setText((String) tuple.get("text"));
             message.setDate((Timestamp) tuple.get("date"));
 
@@ -281,25 +284,42 @@ public class MessagesDao extends AbstractDao {
             }
 
             // Se obtiene el receptor del mensaje
-            User receiver = users.get((String) tuple.get("receiver"));
+            String receiverPK = (String) tuple.get("receiver");
+            User receiver = users.get(receiverPK);
 
-            // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
-            // del HashMap
-            if(returnMessages.containsKey(receiver)){
-               returnMessages.get(receiver).add(message);
+            if(receiver.equals(user)) {
+                // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
+                // del HashMap
+                System.out.println(message.getSender());
+                System.out.println(receiver);
+                if (returnMessages.containsKey(message.getSender())) {
+                    returnMessages.get(message.getSender()).add(message);
+                } else {
+                    // Si no existe el receptor se crea su lista de mensajes, se añade el mensaje correspondiente y se
+                    // añade al HashMap
+                    ArrayList<Message> list = new ArrayList<>();
+                    list.add(message);
+
+                    returnMessages.put(message.getSender(), list);
+                }
             } else {
-                // Si no existe el receptor se crea su lista de mensajes, se añade el mensaje correspondiente y se
-                // añade al HashMap
-                ArrayList<Message> list = new ArrayList<>();
-                list.add(message);
+                // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
+                // del HashMap
+                if (returnMessages.containsKey(receiver)) {
+                    returnMessages.get(receiver).add(message);
+                } else {
+                    // Si no existe el receptor se crea su lista de mensajes, se añade el mensaje correspondiente y se
+                    // añade al HashMap
+                    ArrayList<Message> list = new ArrayList<>();
+                    list.add(message);
 
-                returnMessages.put(receiver, list);
+                    returnMessages.put(receiver, list);
+                }
             }
 
         }
 
-
-
+        System.out.println(returnMessages);
         return returnMessages;
 
     }
