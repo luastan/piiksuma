@@ -164,6 +164,7 @@ public class MainController implements Initializable {
             deckLoader.setController(new FeedDeckController());
             deckContainer.getChildren().add(deckLoader.load());
         } catch (IOException | PiikInvalidParameters ioEx) {
+            ioEx.printStackTrace();
             System.out.println("Unable to load FXML");
         }
 

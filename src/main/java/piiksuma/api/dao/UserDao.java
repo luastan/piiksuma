@@ -514,7 +514,7 @@ public class UserDao extends AbstractDao {
         HashMap<String, User> infoUser = new HashMap<>();
 
         // ArrayList with the pk's of the users
-        ArrayList<String> usersPK = new ArrayList<>();
+        List<Object> usersPK = new ArrayList<>();
 
         // Add the first user
         usersPK.add(users.get(0).getPK());
@@ -534,7 +534,7 @@ public class UserDao extends AbstractDao {
 
         // Get the list with the user, the phones and the type of user
         List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(query)
-                .defineParameters(usersPK).setIsolationLevel(typeTransaction).mapList();
+                .defineParametersList(usersPK).setIsolationLevel(typeTransaction).mapList();
 
         for(Map<String, Object> tuple : listObject){
             User returnUser = new User();
@@ -586,7 +586,7 @@ public class UserDao extends AbstractDao {
                         String numPhone = (String) tuple.get("phone");
 
                         if (numPhone != null && !numPhone.isEmpty()) {
-                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
+//                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
                         }
                     }
                 }

@@ -439,7 +439,17 @@ public abstract class Mapper<T> {
      * @return The mapper instance
      */
     public Mapper<T> defineParameters(Object... parametros) throws PiikDatabaseException {
-        Object param;
+        return defineParametersList(Arrays.asList(parametros));
+    }
+
+    /**
+     * Defines the parameters to be inserted in the {@link PreparedStatement PreparedStatement}
+     *
+     * @param parametros Parameter list to be inserted in the {@link Mapper#statement statement}
+     *                   in the same order as the parametes where passed
+     * @return The mapper instance
+     */
+    public Mapper<T> defineParametersList(List<Object> parametros) throws PiikDatabaseException {
         int index = 1;
         try {
             for (Object parametro : parametros) {

@@ -173,6 +173,19 @@ public class QueryMapper<T> extends Mapper<T> {
     }
 
     /**
+     * Defines the parameters used when executing the query. This parameters
+     * are defined with ? in the {@link QueryMapper#createQuery(String)} String
+     *
+     * @param parametros Parameter list to be inserted into the {@link java.sql.PreparedStatement}
+     *                   used to query the database
+     * @return The QueryMapper instance
+     */
+    public QueryMapper<T> defineParametersList(List<Object> parametros) throws PiikDatabaseException {
+        super.defineParametersList(parametros);
+        return this;
+    }
+
+    /**
      * Stores the given isolation level to apply it when executing the constructed transaction
      *
      * @param isolationLevel desired transaction isolation level

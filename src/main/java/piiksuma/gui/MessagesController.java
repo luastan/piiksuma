@@ -29,9 +29,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MessagesController implements Initializable {
 
@@ -41,6 +39,8 @@ public class MessagesController implements Initializable {
     private JFXMasonryPane messageMasonryPane;
 
     private ObservableList<User> peers;
+
+    private Map<User, List<Message>> lastMessages;
 
 
     @Override
@@ -52,16 +52,16 @@ public class MessagesController implements Initializable {
 
         try {
             updateMessageFeed();
-        } catch (PiikDatabaseException e) {
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
     }
 
-    public void updateMessageFeed() throws PiikDatabaseException {
+    public void updateMessageFeed() throws PiikDatabaseException, PiikInvalidParameters {
+        User current = ContextHandler.getContext().getCurrentUser();
+        lastMessages = ApiFacade.getEntrypoint().getSearchFacade().messageWithUser(current, 1, current);
         peers.clear();
-        // Gets all the users who interacted with the current one via messages
-        // TODO: Get users who interacted with current one
-        peers.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("Select * from piiuser").list());
+        peers.addAll(lastMessages.keySet());
     }
 
     private void setUpFeedListener() {
@@ -74,11 +74,7 @@ public class MessagesController implements Initializable {
     private void insertConversation(User peer) {
         User current = ContextHandler.getContext().getCurrentUser();
         FXMLLoader messageLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/messagePreview.fxml"));
-        /* Gets last message exchanged with the peer */
-        // TODO: Get last message sent by user
-        Message lastMessage = new Message();
-        lastMessage.setText("Sample Text Message");
-        messageLoader.setController(new MessagePreviewController(lastMessage, peer));
+        messageLoader.setController(new MessagePreviewController(lastMessages.get(peer).get(0), peer));
         try {
             Node messagePreview = messageLoader.load();
             messageMasonryPane.getChildren().add(messagePreview);

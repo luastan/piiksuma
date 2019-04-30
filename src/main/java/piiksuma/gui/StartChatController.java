@@ -73,7 +73,7 @@ public class StartChatController implements Initializable {
 
         try {
             ContextHandler.getContext().getMessagesController().updateMessageFeed();
-        } catch (PiikDatabaseException e) {
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             // TODO: Handle exceptions
             e.printStackTrace();
         }
