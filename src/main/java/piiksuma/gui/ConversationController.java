@@ -26,6 +26,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class ConversationController implements Initializable {
@@ -79,37 +80,22 @@ public class ConversationController implements Initializable {
         });
 
         sendButton.setOnAction(this::sendMessage);
-
-        Message testMessage = new Message();
-        testMessage.setText("Hello youtube friends I'm Rupesh");
-        User current = ContextHandler.getContext().getCurrentUser();
-        testMessage.setSender(current);
-        testMessage.setId("fsd");
-
-        messages.add(testMessage);
         messages.addListener((ListChangeListener<? super Message>) c -> {
             messageMasonryPane.getChildren().clear();
-            messages.forEach(this::insertMessage);
+            messages.stream().sorted(Comparator.comparing(Message::getDate)).forEach(this::insertMessage);
+            messageScrollPane.requestLayout();
+            messageScrollPane.requestFocus();
         });
 
-        // TODO Propper initialization with the user messages.
-        try {
-            User foo = new User();
-            foo.setId("usr2");
-            foo.setName("User2");
-            ApiFacade.getEntrypoint().getSearchFacade().readMessages(current, current).forEach(message -> {
-                message.setSender(foo);
-                messages.add(message);
-            });
-        } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
-        }
+        updateMessages();
 
     }
 
     private void sendMessage(ActionEvent event) {
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(newMessage, peer, ContextHandler.getContext().getCurrentUser());
+            User current = ContextHandler.getContext().getCurrentUser();
+            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
+            ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(newMessage, peer, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             // TODO: Handle the exception
             e.printStackTrace();
@@ -117,7 +103,7 @@ public class ConversationController implements Initializable {
         initializeNewMessage();
         messageField.setText(" ");
         sendButton.setDisable(true);
-
+        updateMessages();
     }
 
 
@@ -132,10 +118,20 @@ public class ConversationController implements Initializable {
         loader.setController(new MessageController(message));
         try {
             messageMasonryPane.getChildren().add(loader.load());
-            messageScrollPane.requestLayout();
-            messageScrollPane.requestFocus();
         } catch (IOException e) {
             // TODO: Handle Exceptions
+            e.printStackTrace();
+        }
+    }
+
+    private void updateMessages() {
+        try {
+            User current = ContextHandler.getContext().getCurrentUser();
+            messages.clear();
+            messages.addAll(ApiFacade.getEntrypoint().getSearchFacade()
+                    .messageWithUser(current, 250, current)
+                    .get(peer));
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
         }
     }

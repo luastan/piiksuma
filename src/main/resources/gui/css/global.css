@@ -320,7 +320,7 @@
 
 
 .message-body-container {
-    -fx-background-radius: 150;
+    -fx-background-radius: 3;
     -fx-background-color: -white-medium-emphasis;
     -fx-max-width: 300;
     -fx-min-width: 300;

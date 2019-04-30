@@ -59,7 +59,7 @@ public class MessagesController implements Initializable {
 
     public void updateMessageFeed() throws PiikDatabaseException, PiikInvalidParameters {
         User current = ContextHandler.getContext().getCurrentUser();
-        lastMessages = ApiFacade.getEntrypoint().getSearchFacade().messageWithUser(current, 1, current);
+        lastMessages = ApiFacade.getEntrypoint().getSearchFacade().messageWithUser(current, 100, current);
         peers.clear();
         peers.addAll(lastMessages.keySet());
     }
@@ -93,47 +93,20 @@ public class MessagesController implements Initializable {
             return;
         }
 
-        User target = new User();
-        ((StackPane) mouseEvent.getSource()).getChildren().stream().filter(node -> node instanceof Label)
-                .map(node -> (Label) node).map(Labeled::getText).forEach(target::setId);
-
-        try {
-            target = ApiFacade.getEntrypoint().getSearchFacade().getUser(target, ContextHandler.getContext().getCurrentUser());
-        } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+        // Identifies clicked User
+        User target = lastMessages.keySet().stream()
+                .filter(user -> user.getId().equals(((StackPane) mouseEvent.getSource()).getChildren().stream()
+                        .filter(node -> node instanceof Label).map(node -> (Label) node).map(Labeled::getText)
+                        .findFirst().orElse(""))).findFirst().orElse(null);
+        if (target == null) {
+            return;
         }
         ConversationController controller = new ConversationController(target);
-
-        Stage conversationStage = new Stage();
-        conversationStage.setResizable(false);
-        conversationStage.setTitle("Piiksuma - Conversation");
-        conversationStage.initModality(Modality.WINDOW_MODAL);
         try {
-            ContextHandler.getContext().register("conversation", conversationStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", controller, "Messages" + (target.getName() != null ? " - " + target.getName() : ""));
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.printStackTrace();
         }
-        // Stage configuration
-
-        JFXDecorator decorator;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/conversation.fxml"));
-        loader.setController(controller);
-        try {
-            decorator = new JFXDecorator(conversationStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        Scene scene = new Scene(decorator, 450, 900);
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/main.css").toExternalForm(),
-                getClass().getResource("/gui/css/global.css").toExternalForm()
-        );
-
-        conversationStage.setScene(scene);
-        conversationStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        conversationStage.show();
     }
 
 }

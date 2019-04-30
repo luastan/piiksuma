@@ -356,7 +356,7 @@ VALUES ('usr1', 'easyGameEasyLife', 'dont know what to say', CURRENT_DATE);
 -- ================================================= DATA MESSAGES =====================================================
 -- Message
 INSERT INTO message (author, text, date, multimedia)
-VALUES ('usr3', 'Is this the real life?', '2019-04-10', 'aaaa');
+VALUES ('usr4', 'Is this the real life?', '2019-04-10', 'aaaa');
 INSERT INTO message (author, text, date, multimedia)
 VALUES ('usr3', 'Is this the real life?', '2019-04-11', 'aaaa');
 INSERT INTO message (author, text, date, multimedia, ticket)
@@ -378,7 +378,7 @@ ORDER BY message
 LIMIT 1 OFFSET 1;
 
 INSERT INTO receivemessage (message, author, receiver)
-SELECT id, author, 'usr2'
+SELECT id, author, 'usr3'
 FROM message
 ORDER BY message
 LIMIT 1 OFFSET 2;

@@ -41,5 +41,6 @@ public class MessageController implements Initializable {
         if (message.getSender().equals(current)) {
             messageHolder.setAlignment(Pos.CENTER_RIGHT);
         }
+        content.setText(message.getText());
     }
 }
