@@ -354,7 +354,7 @@ public class MessagesDao extends AbstractDao {
         return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
                 "JOIN message ON(id=message) WHERE (message.author LIKE ? AND receiver LIKE ?) OR " +
                 "(message.author LIKE ? AND receiver LIKE ?) ORDER BY date DESC LIMIT ?")
-                .defineParameters(user1.getPK(), user2.getPK(), user1.getPK(), user2.getPK(), limit).list();
+                .defineParameters(user1.getPK(), user2.getPK(), user2.getPK(), user1.getPK(), limit).list();
     }
     //******************************************************************************************************************
 
