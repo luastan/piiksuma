@@ -954,7 +954,7 @@ public class PostDao extends AbstractDao {
                 // We retrieve the corresponding multimedia info for each post that references the multimedia table
                 for(Post post : result) {
 
-                    if(post.getMultimedia() != null) {
+                    if(post.getMultimedia() != null && !post.getMultimedia().getHash().isEmpty()) {
 
                         // Setting iterated multimedia's PK
                         stm.setString(1, post.getMultimedia().getHash());
