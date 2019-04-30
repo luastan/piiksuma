@@ -37,6 +37,7 @@
     -black-medium-emphasis: rgba(0, 0, 0, 0.60);
     -black-disabled: rgba(0, 0, 0, 0.38);
     -black-inactive: rgba(0, 0, 0, 0.54);
+    -black-selection: rgba(235, 235, 235, 0.5);
 
     -color-surface-post: #FAFAFA;
     -color-surface-app-ui: #ebebeb;
@@ -282,4 +283,46 @@
 
 .alert-text {
     -fx-font-size: 15;
+}
+
+/* User profile */
+
+.profile-post-feed {
+    /*-fx-pref-height: 600;*/
+    -fx-pref-width: 450;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    /*-fx-min-height: -fx-pref-height;*/
+    /*-fx-max-height: -fx-pref-height;*/
+}
+
+
+/* Messages */
+
+.message-preview-container {
+    -fx-pref-width: 430;
+    -fx-pref-height: 60;
+    -fx-min-height: 60;
+    -fx-max-height: 60;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-background-color: -white-high-emphasis;
+    -fx-border-radius: 0 0 1 0;
+    -fx-border-color: -black-inactive;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+.message-preview-container:hover {
+    -fx-background-color: -black-selection;
+}
+
+
+.message-body-container {
+    -fx-background-radius: 150;
+    -fx-background-color: -white-medium-emphasis;
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+    -fx-padding: 10 10 10 10;
 }

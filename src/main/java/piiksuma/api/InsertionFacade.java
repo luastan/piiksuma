@@ -59,6 +59,14 @@ public class InsertionFacade {
         newUser.setPass(" ");
     }
 
+    /**
+     * Creates an achievement for all users
+     *
+     * @param achievement achievement you want to create (name)
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public void createAchievement(Achievement achievement, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
@@ -76,6 +84,15 @@ public class InsertionFacade {
         parentFacade.getUserDao().createAchievement(achievement);
     }
 
+    /**
+     * Unlock achievement
+     *
+     * @param achievement Achievement the user has unlocked
+     * @param user        User that unlocked the achievement
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public void unlockAchievement(Achievement achievement, User user, User currentUser) throws PiikDatabaseException,
             PiikInvalidParameters {
 
@@ -83,7 +100,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("achievement"));
         }
 
-        if(user == null || !user.checkNotNull(false)) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -91,7 +108,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(!currentUser.checkAdministrator()) {
+        if (!currentUser.checkAdministrator()) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
@@ -147,12 +164,20 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-       parentFacade.getUserDao().blockUser(blockedUser, user);
+        parentFacade.getUserDao().blockUser(blockedUser, user);
     }
 
 
     /* MULTIMEDIA related methods */
 
+    /**
+     * Adds multimedia into the app
+     *
+     * @param multimedia  Multimedia to add
+     * @param currentUser Current user logged into the app
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public void addMultimedia(Multimedia multimedia, User currentUser) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull(true)) {
@@ -282,9 +307,9 @@ public class InsertionFacade {
     /**
      * Function to do a repost on a post
      *
-     * @param userRepost user who does the repost
-     * @param post post to be reposted
-     * @param userPost user who owns the post
+     * @param userRepost  user who does the repost
+     * @param post        post to be reposted
+     * @param userPost    user who owns the post
      * @param currentUser user performing the action
      */
     public void repost(User userRepost, Post post, User userPost, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
@@ -319,7 +344,7 @@ public class InsertionFacade {
      * Function to sent a private message to other user
      *
      * @param message private message
-     * @param user receiver to the private message
+     * @param user    receiver to the private message
      * @param current current user
      */
     public void sendPrivateMessage(Message message, User user, User current) throws PiikDatabaseException,
@@ -377,7 +402,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("message"));
         }
 
-        if(!ticket.equals(message.getTicket())) {
+        if (!ticket.equals(message.getTicket())) {
             throw new PiikInvalidParameters("The given message is not associated to the given ticket");
         }
 
@@ -387,7 +412,7 @@ public class InsertionFacade {
     /**
      * The admin closes a ticket, marking it as "resolved"
      *
-     * @param ticket the ticket which is going to be closed
+     * @param ticket      the ticket which is going to be closed
      * @param currentUser user performing the action
      */
 
@@ -401,7 +426,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(!currentUser.checkAdministrator()) {
+        if (!currentUser.checkAdministrator()) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
@@ -426,7 +451,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("privateMessage"));
         }
 
-        if(!privateMessage.getSender().equals(currentUser)) {
+        if (!privateMessage.getSender().equals(currentUser)) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
@@ -437,7 +462,7 @@ public class InsertionFacade {
      * This function replaces the content of a message stored in the database because the user wants to modify it or
      * because an admin wants to censor its content
      *
-     * @param newMessage message to be updated
+     * @param newMessage  message to be updated
      * @param currentUser logged User
      * @throws PiikDatabaseException Thrown if null is encountered in currentUser, oldMessage, newMessage
      */
@@ -458,6 +483,13 @@ public class InsertionFacade {
         parentFacade.getMessagesDao().modifyMessage(newMessage);
     }
 
+    /**
+     * Allows an user to change its personal information
+     *
+     * @param user        User whom's personal information we want to change
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException
+     */
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
 
         if (user == null || !user.checkNotNull(false)) {
@@ -468,7 +500,7 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(!user.equals(currentUser) && !currentUser.checkAdministrator()) {
+        if (!user.equals(currentUser) && !currentUser.checkAdministrator()) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
@@ -478,12 +510,12 @@ public class InsertionFacade {
     /**
      * Function to reply a post with other post
      *
-     * @param reply response to the post father
+     * @param reply       response to the post father
      * @param currentUser current user logged into the app
      * @throws PiikDatabaseException
      */
     public void reply(Post reply, User currentUser) throws PiikDatabaseException {
-        if(reply == null || !reply.checkNotNull(false)){
+        if (reply == null || !reply.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("reply"));
         }
 
@@ -491,11 +523,11 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(reply.getFatherPost() == null || !reply.checkNotNull(true)){
+        if (reply.getFatherPost() == null || !reply.checkNotNull(true)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("fatherPost"));
         }
 
-        if(!reply.getPostAuthor().equals(currentUser) && !currentUser.getType().equals(UserType.administrator)){
+        if (!reply.getPostAuthor().equals(currentUser) && !currentUser.getType().equals(UserType.administrator)) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
@@ -531,6 +563,14 @@ public class InsertionFacade {
         return parentFacade.getInteractionDao().createNotification(notification);
     }
 
+    /**
+     * Silence an user
+     *
+     * @param user        User to be silenced
+     * @param currentUser current user logged into the app
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public void silenceUser(User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -540,7 +580,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        parentFacade.getUserDao().silenceUser(user,currentUser);
+        parentFacade.getUserDao().silenceUser(user, currentUser);
     }
 
     /**
@@ -568,6 +608,15 @@ public class InsertionFacade {
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
 
+    /**
+     * Creates a new event, users can assist to
+     *
+     * @param event       Event we create
+     * @param currentUser Current user logged into the app
+     * @return Returns the event newly created
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public Event createEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -580,6 +629,14 @@ public class InsertionFacade {
         return parentFacade.getInteractionDao().createEvent(event);
     }
 
+    /**
+     * Allows a user to participate in an event
+     *
+     * @param event       Event the user wants to participate in
+     * @param currentUser Current user logged into the app
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public void participateEvent(Event event, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
         if (currentUser == null || !currentUser.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -596,7 +653,7 @@ public class InsertionFacade {
      * Inserts into the database a given reaction
      *
      * @param reaction reaction to be inserted
-     * @param current user executing the action
+     * @param current  user executing the action
      */
     public void react(Reaction reaction, User current) throws PiikInvalidParameters, PiikDatabaseException {
 
@@ -608,13 +665,21 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
-        if(!current.equals(reaction.getUser())) {
+        if (!current.equals(reaction.getUser())) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getInteractionDao().react(reaction);
     }
 
+    /**
+     * Allows the user to update the information from an event he has created
+     *
+     * @param event       Event to update
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public void updateEvent(Event event, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (event == null || !event.checkNotNull(false)) {
@@ -625,7 +690,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if(!currentUser.equals(event.getCreator())) {
+        if (!currentUser.equals(event.getCreator())) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 

@@ -62,8 +62,7 @@ public class SearchedUserController implements Initializable {
         FXMLLoader loader;
 
         loader = new FXMLLoader(getClass().getResource("/gui/fxml/otherUserProfile.fxml"));
-        OtherUserProfileController controller = new OtherUserProfileController();
-        controller.setUser(user);
+        UserProfileController controller = new UserProfileController(user);
         loader.setController(controller);
 
         JFXDecorator decorator;

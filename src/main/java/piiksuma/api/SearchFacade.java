@@ -68,9 +68,9 @@ public class SearchFacade {
     /**
      * Function to get the user that matches the given specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
+     * @param user            user that contains the requirements that will be applied in the search
      * @param typeTransaction nivel of isolation
-     * @param current current user
+     * @param current         current user
      * @return user that meets the given information
      */
     public User getUser(User user, Integer typeTransaction, User current) throws PiikDatabaseException,
@@ -85,7 +85,7 @@ public class SearchFacade {
         }
 
         try {
-            if(!getConnection().getMetaData().supportsTransactionIsolationLevel(typeTransaction)){
+            if (!getConnection().getMetaData().supportsTransactionIsolationLevel(typeTransaction)) {
                 throw new PiikDatabaseException("Transaction does not support isolation level");
             }
         } catch (SQLException e) {
@@ -177,6 +177,15 @@ public class SearchFacade {
         return parentFacade.getUserDao().getUserStatistics(user);
     }
 
+    /**
+     * Gets the achievements from an user
+     *
+     * @param user    User we want to get the achievements from
+     * @param current Curren user logged into the app
+     * @return
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public List<Achievement> getAchievements(User user, User current) throws PiikInvalidParameters,
             PiikDatabaseException {
         if (user == null || !user.checkNotNull(false)) {
@@ -194,6 +203,14 @@ public class SearchFacade {
         return parentFacade.getUserDao().getAchievements(user);
     }
 
+    /**
+     * Gets the dates when the achievements were unlocked by the user
+     *
+     * @param user User whom we get the dates from
+     * @return Returns a map with the name of the achievement and the date
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public Map<String, Timestamp> getUnlockDates(User user, User current) throws PiikInvalidParameters, PiikDatabaseException {
 
         if (user == null || !user.checkNotNull(false)) {
@@ -213,6 +230,15 @@ public class SearchFacade {
 
     /* MULTIMEDIA related methods */
 
+    /**
+     * Gets one multimedia
+     *
+     * @param multimedia Multimedia we are searching for
+     * @param current    Current user logged into the app
+     * @return Returns the multimedia we were looking for
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public Multimedia getMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
@@ -225,6 +251,15 @@ public class SearchFacade {
         return parentFacade.getMultimediaDao().getMultimedia(multimedia);
     }
 
+    /**
+     * Checks if the multimedia already exists in the db
+     *
+     * @param multimedia Multimedia we search for
+     * @param current    Current user logged into the app
+     * @return
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public boolean existsMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
@@ -237,6 +272,15 @@ public class SearchFacade {
         return parentFacade.getMultimediaDao().existsMultimedia(multimedia);
     }
 
+    /**
+     * Count the number of post which contains the given multimedia
+     *
+     * @param multimedia Multimedia we want to count
+     * @return Number of post containing multimedia
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public Long numPostMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
@@ -249,6 +293,14 @@ public class SearchFacade {
         return parentFacade.getMultimediaDao().numPostMultimedia(multimedia);
     }
 
+    /**
+     * Gets all post containing multimedia
+     *
+     * @param multimedia Multimedia we are looking for on posts
+     * @return List of post containing multimedia
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
     public List<Post> postWithMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
         if (multimedia == null || !multimedia.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
@@ -263,6 +315,13 @@ public class SearchFacade {
 
     /* POST related methods */
 
+    /**
+     * Returns a post form db
+     *
+     * @param post Post wanted
+     * @return Post
+     * @throws PiikDatabaseException Thrown if post or its primary keys are null
+     */
     public Post getPost(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null || !post.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
@@ -280,6 +339,14 @@ public class SearchFacade {
     }
 
     // TODO we need to set a limit
+
+    /**
+     * Gets a list of post containing a given hashtag
+     *
+     * @param hashtag Hashtag to be searched for
+     * @return List with all the posts that have the hashtag
+     * @throws PiikDatabaseException Thrown if hashtag or its primary keys are null
+     */
     public List<Post> getPost(Hashtag hashtag, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (hashtag == null || !hashtag.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
@@ -293,6 +360,14 @@ public class SearchFacade {
     }
 
     // TODO we need to set a limit
+
+    /**
+     * Gets a list of post containing a given user
+     *
+     * @param user User to be searched for
+     * @return List post created by the user
+     * @throws PiikDatabaseException Thrown if user or its primary keys are null
+     */
     public List<Post> getPost(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
@@ -381,21 +456,21 @@ public class SearchFacade {
      * Function that determines if a user has reacted to a concrete post with a concrete reaction
      *
      * @param reaction reaction to check
-     * @param user user who wants to check if he reacted
-     * @param current current user
+     * @param user     user who wants to check if he reacted
+     * @param current  current user
      * @return
      */
     public boolean isReact(Reaction reaction, User user, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
-        if(reaction == null){
+        if (reaction == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("reaction"));
         }
 
-        if(user == null){
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if(current == null){
+        if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
 
@@ -460,6 +535,15 @@ public class SearchFacade {
         return parentFacade.getPostDao().getArchivedPosts(user);
     }
 
+    /**
+     * Gets a List of the most used hashtags
+     *
+     * @param limit   Number of hashtags to put on the list
+     * @param current Current user logged into the app
+     * @return Return the list of hastags
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public List<Hashtag> getTrendingTopics(Integer limit, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
@@ -484,7 +568,7 @@ public class SearchFacade {
         if (current == null || !current.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
-        
+
         if (limit == null || limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
@@ -492,7 +576,7 @@ public class SearchFacade {
         if (!current.checkAdministrator()) {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
-        
+
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
@@ -517,13 +601,33 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().readMessages(user);
     }
 
+    /**
+     * Function to get the messages with other user
+     *
+     * @param user send of the messages
+     * @return
+     */
+    public Map<User, List<Message>> messageWithUser(User user, Integer limit, User current) throws
+            PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(current == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
+        }
+
+        return parentFacade.getMessagesDao().messageWithUser(user, limit);
+    }
+
 
     /* INTERACTION related methods */
 
     /**
      * Gets the number of reactions that a post has, classified by type
      *
-     * @param post post whose reactions will be counted
+     * @param post    post whose reactions will be counted
      * @param current current user logged into the app
      * @return number of reactions classified by type
      */
@@ -572,7 +676,7 @@ public class SearchFacade {
      * @throws PiikDatabaseException
      */
     public Image getImage(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if(multimedia == null){
+        if (multimedia == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
@@ -582,11 +686,11 @@ public class SearchFacade {
     /**
      * Function to get the events
      *
-     * @param user user
-     * @param current   current user logged
-     * @return  list of the events that the followed users created
+     * @param user    user
+     * @param current current user logged
+     * @return list of the events that the followed users created
      */
-    public List<Event> getEvents(User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
+    public List<Event> getEvents(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
