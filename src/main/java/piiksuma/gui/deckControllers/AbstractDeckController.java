@@ -1,19 +1,14 @@
 package piiksuma.gui.deckControllers;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXPopup;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.ProfileController;
-import piiksuma.gui.UserProfileController;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 
@@ -82,7 +77,7 @@ public class AbstractDeckController {
     private void handleUserButton(ActionEvent event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/userProfile.fxml",
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
                     new UserProfileController(ContextHandler.getContext().getCurrentUser()));
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
@@ -98,7 +93,7 @@ public class AbstractDeckController {
     private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/userData.fxml", null);
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userData.fxml", null);
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.tickets;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

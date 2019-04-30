@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.profiles;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
@@ -21,6 +21,8 @@ import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
+import piiksuma.gui.PostController;
 
 import java.io.IOException;
 import java.net.URL;

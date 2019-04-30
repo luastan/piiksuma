@@ -14,7 +14,7 @@
     <Label fx:id="hiddenUserId" visible="false"/>
     <BorderPane>
         <left>
-            <!-- Other person's profile -->
+            <!-- Other person's profiles -->
             <StackPane style="-fx-padding: 10 10 10 10">
                 <ImageView preserveRatio="true" fitHeight="40" fitWidth="40" fx:id="profilePicture">
                     <Image url="/imagenes/huevo.png"/>

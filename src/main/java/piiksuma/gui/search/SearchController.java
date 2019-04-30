@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.search;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXMasonryPane;
@@ -17,6 +17,9 @@ import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.gui.ContextHandler;
+import piiksuma.gui.PostController;
+import piiksuma.gui.events.EventController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -219,7 +222,7 @@ public class SearchController implements Initializable {
     }
 
     private void insertUser(User user) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/user.fxml"));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/profile/user.fxml"));
         postLoader.setController(new SearchedUserController(user));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());
@@ -232,7 +235,7 @@ public class SearchController implements Initializable {
     }
 
     private void insertEvent(piiksuma.Event event) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/event.fxml"));
         postLoader.setController(new EventController(event));
         try {
             searchMasonryPane.getChildren().add(postLoader.load());

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.UserDataController"
+           fx:controller="piiksuma.gui.profiles.UserDataController"
            prefHeight="900.0" prefWidth="450.0" minHeight="900.0" minWidth="450.0" maxHeight="900.0" maxWidth="450.0">
 
     <StackPane.margin>

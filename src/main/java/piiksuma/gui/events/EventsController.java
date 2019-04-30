@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.events;
 
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.collections.FXCollections;
@@ -13,6 +13,7 @@ import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
+import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -66,7 +67,7 @@ public class EventsController implements Initializable {
     }
 
     private void insertEvent(Event event) {
-        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/event.fxml"));
+        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/event.fxml"));
         eventLoader.setController(new EventController(event));
         try {
             eventMasonryPane.getChildren().add(eventLoader.load());

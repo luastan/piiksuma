@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.search;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

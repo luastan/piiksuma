@@ -9,6 +9,10 @@ import javafx.stage.Window;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.deckControllers.AchievementsController;
+import piiksuma.gui.events.EventsController;
+import piiksuma.gui.profiles.UserProfileController;
+import piiksuma.gui.search.SearchController;
+import piiksuma.gui.tickets.TicketsController;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,8 +1,6 @@
 package piiksuma.gui;
 
 import com.jfoenix.controls.JFXTabPane;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -93,7 +91,7 @@ public class MainController implements Initializable {
                 nodesMainContainer.addAll(mainContainer.getChildren());
                 mainContainer.getChildren().clear();
                 try {
-                    FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search.fxml"));
+                    FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search/search.fxml"));
                     mainContainer.getChildren().add(searchViewLoader.load());
                 } catch (IOException ignore) {
                     // TODO: Handle exception
@@ -147,7 +145,7 @@ public class MainController implements Initializable {
                 eventTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
             }
         });
-        FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
+        FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events/events.fxml"));
         eventTab.setContent(eventViewLoader.load());
 
     }

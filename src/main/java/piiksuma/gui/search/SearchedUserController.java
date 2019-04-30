@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.search;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
@@ -12,6 +12,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 import java.net.URL;

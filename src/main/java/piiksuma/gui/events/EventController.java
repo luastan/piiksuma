@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.events;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
@@ -13,6 +13,7 @@ import piiksuma.Event;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -101,7 +102,7 @@ public class EventController implements Initializable {
         // Stage configuration
         registerStage.setTitle("Event");
         registerStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/event.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/events/event.fxml"));
         loader.setController(new EventController(eventP, true));
 
         JFXDecorator decorator;

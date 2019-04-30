@@ -43,7 +43,7 @@ public class MessagePreviewController implements Initializable {
             username.setText(peer.getName());
             hiddenUserId.setText(peer.getId());
         }
-        // TODO: Bind profile picture from the peer
+        // TODO: Bind profiles picture from the peer
     }
 
     public User getPeer() {

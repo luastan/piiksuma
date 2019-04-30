@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.profiles;
 
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
+import piiksuma.gui.ContextHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -120,7 +121,7 @@ public class UserDataController implements Initializable {
      */
     private void handleMultimediaButton(Event event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose a profile picture");
+        fileChooser.setTitle("Choose a profiles picture");
         File imagen = fileChooser.showOpenDialog(null);
 
         if (imagen != null) {
