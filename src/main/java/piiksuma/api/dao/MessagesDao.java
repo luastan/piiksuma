@@ -246,11 +246,17 @@ public class MessagesDao extends AbstractDao {
         // The primary keys of the receivers are added
         for(Map<String, Object> tuple : query){
             User userInfo = new User();
+            User senderInfo = new User();
             userInfo.setId((String) tuple.get("receiver"));
-            userPKs.add(userInfo);
-        }
+            senderInfo.setId((String) tuple.get("author"));
+            if(!userPKs.contains(userInfo)) {
+                userPKs.add(userInfo);
+            }
 
-        userPKs.add(user);
+            if(!userPKs.contains(senderInfo)){
+                userPKs.add(senderInfo);
+            }
+        }
 
         Map<String, User> users = userDao.getUsers(userPKs);
 
@@ -290,8 +296,6 @@ public class MessagesDao extends AbstractDao {
             if(receiver.equals(user)) {
                 // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
                 // del HashMap
-                System.out.println(message.getSender());
-                System.out.println(receiver);
                 if (returnMessages.containsKey(message.getSender())) {
                     returnMessages.get(message.getSender()).add(message);
                 } else {
