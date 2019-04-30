@@ -4,6 +4,7 @@ import piiksuma.Message;
 import piiksuma.Multimedia;
 import piiksuma.Ticket;
 import piiksuma.User;
+import piiksuma.api.ApiFacade;
 import piiksuma.api.ErrorMessage;
 import piiksuma.api.MultimediaType;
 import piiksuma.database.DeleteMapper;
@@ -232,8 +233,6 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        UserDao userDao = new UserDao(getConnection());
-
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
                 "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? OR receiver LIKE ?" +
                 "ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
@@ -258,7 +257,7 @@ public class MessagesDao extends AbstractDao {
             }
         }
 
-        Map<String, User> users = userDao.getUsers(userPKs);
+        Map<String, User> users = ApiFacade.getEntrypoint().getUserDao().getUsers(userPKs);
 
         // Update the user
         user = users.get(user.getPK());

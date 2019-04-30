@@ -700,4 +700,24 @@ public class SearchFacade {
         }
         return parentFacade.getInteractionDao().getEvents(user);
     }
+
+    /**
+     * Function that returns the users that participate in the indicated event
+     *
+     * @param event
+     * @return a map with the user indexed by her primary key
+     * @throws PiikDatabaseException
+     */
+    public Map<String, User> usersInEvent(Event event, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
+        if (event == null || !event.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
+        }
+
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getInteractionDao().usersInEvent(event);
+    }
 }
