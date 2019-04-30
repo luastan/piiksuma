@@ -10,36 +10,96 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
+<?import de.jensd.fx.glyphs.GlyphStackIcon?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.search.SearchController">
     <BorderPane>
         <top>
-            <JFXToolbar styleClass="top-toolbar">
-
-            </JFXToolbar>
+            <BorderPane style="-fx-background-color: -white-high-emphasis;">
+                <left>
+                    <StackPane styleClass="deck-small-button-container">
+                        <JFXButton fx:id="back" text="Go back" alignment="CENTER" styleClass="deck-small-button"
+                                   ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="ARROW_LEFT" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
+                            </graphic>
+                        </JFXButton>
+                    </StackPane>
+                </left>
+                <center>
+                    <StackPane styleClass="deck-small-button-container">
+                        <JFXTextField styleClass="fx-text-field" fx:id="searchText"/>
+                    </StackPane>
+                </center>
+                <right>
+                    <StackPane styleClass="deck-small-button-container">
+                        <JFXButton fx:id="buttonSearch" alignment="CENTER" styleClass="deck-small-button"
+                                   ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="SEARCH_MINUS" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
+                            </graphic>
+                        </JFXButton>
+                    </StackPane>
+                </right>
+            </BorderPane>
         </top>
-
+        <center>
+            <StackPane>
+                <BorderPane>
+                    <top>
+                        <!-- Users -->
+                        <StackPane pickOnBounds="false" style="-fx-border-radius: 1; -fx-border-color: -black-disabled">
+                            <Label text="No users found">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="BOOKMARK" size="50"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </Label>
+                            <ScrollPane fx:id="userScrollPane" vbarPolicy="NEVER"
+                                        styleClass="search-users-scroll" pickOnBounds="false" visible="false">
+                                <HBox fx:id="userMasonryPane" styleClass="search-users-masonry"
+                                      alignment="CENTER_LEFT"/>
+                            </ScrollPane>
+                        </StackPane>
+                    </top>
+                    <center>
+                        <!-- Posts -->
+                        <StackPane minHeight="400">
+                            <Label text="No Posts found">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="COMMENT" size="50"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </Label>
+                            <ScrollPane fx:id="postScrollPane" visible="false" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                        style="-fx-pref-width: 450px;-fx-min-width: -fx-pref-width;-fx-max-width: -fx-pref-width;">
+                                <JFXMasonryPane fx:id="postMasonryPane" VSpacing="9" styleClass="main-masonry">
+                                </JFXMasonryPane>
+                            </ScrollPane>
+                        </StackPane>
+                    </center>
+                    <bottom>
+                        <!-- Events -->
+                        <StackPane minHeight="200" style="-fx-border-radius: 1; -fx-border-color: -black-disabled">
+                            <Label text="No events found">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="BOOKMARK" size="50"
+                                                         styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </Label>
+                            <ScrollPane fx:id="eventScrollPane" visible="false" hbarPolicy="NEVER"
+                                        style="-fx-pref-width: 450px;-fx-min-width: -fx-pref-width;-fx-max-width: -fx-pref-width;">
+                                <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="-1" styleClass="main-masonry"/>
+                            </ScrollPane>
+                        </StackPane>
+                    </bottom>
+                </BorderPane>
+            </StackPane>
+        </center>
     </BorderPane>
 
-    <VBox spacing="40">
-        <StackPane.margin>
-            <Insets bottom="25.0" left="10.0" right="25.0" top="10.0"/>
-        </StackPane.margin>
-        <HBox spacing="40" alignment="TOP_LEFT">
-            <JFXButton text="Back" fx:id="back" styleClass="classic-button" translateX="10"/>
-            <JFXButton text="Users" fx:id="userButton" styleClass="classic-button" translateX="50"/>
-            <JFXButton text="Posts" fx:id="postButton" styleClass="classic-button" translateX="50"/>
-            <JFXButton text="Events" fx:id="eventButton" styleClass="classic-button" translateX="50"/>
-
-        </HBox>
-        <HBox alignment="TOP_LEFT" spacing="100">
-            <JFXTextField fx:id="searchText" maxWidth="300" promptText="Introduce your search" translateX="20"/>
-            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
-        </HBox>
-        <ScrollPane fx:id="searchScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
-            <JFXMasonryPane fx:id="searchMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">
-            </JFXMasonryPane>
-        </ScrollPane>
-    </VBox>
 </StackPane>

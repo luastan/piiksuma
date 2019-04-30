@@ -217,7 +217,7 @@
 /* Post cards */
 
 .post-container {
-    -fx-pref-width: 430;
+    -fx-pref-width: 450;
     /*-fx-pref-height: 100;*/
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
@@ -228,7 +228,7 @@
 }
 
 .post-inner-container {
-    -fx-padding: 0 14 0 14;
+    -fx-padding: 0 17 0 17;
 }
 
 .post-text {
@@ -371,7 +371,7 @@
     -fx-pref-width: 350;
     /*-fx-min-width: -fx-pref-width;*/
     /*-fx-max-width: -fx-pref-width;*/
-    -fx-background-color: -primary-color-5;
+    -fx-background-color: -black-disabled;
     /*-fx-min-height: -fx-pref-height;*/
     /*-fx-max-height: -fx-pref-height;*/
     /*-fx-background-color: #cacacaca;*/

@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
@@ -20,6 +22,8 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.PostController;
 import piiksuma.gui.events.EventController;
+import piiksuma.gui.events.EventPreviewController;
+import piiksuma.gui.profiles.profilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,29 +31,19 @@ import java.util.ResourceBundle;
 
 public class SearchController implements Initializable {
 
+
+    public JFXButton buttonSearch;
+    public ScrollPane userScrollPane;
+    public HBox userMasonryPane;
+    public ScrollPane eventScrollPane;
+    public JFXMasonryPane eventMasonryPane;
+    public ScrollPane postScrollPane;
+    public JFXMasonryPane postMasonryPane;
     @FXML
     private JFXButton back;
 
     @FXML
-    private JFXButton Search;
-
-    @FXML
     private JFXTextField searchText;
-
-    @FXML
-    private JFXMasonryPane searchMasonryPane;
-
-    @FXML
-    private ScrollPane searchScrollPane;
-
-    @FXML
-    private JFXButton userButton;
-
-    @FXML
-    private JFXButton postButton;
-
-    @FXML
-    private JFXButton eventButton;
 
     private ObservableList<Post> postFeed;
 
@@ -66,52 +60,26 @@ public class SearchController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         back.setOnAction(this::backButton);
-        Search.setOnAction(this::handleSearch);
+        buttonSearch.setOnAction(this::handleSearch);
 
         postFeed = FXCollections.observableArrayList();
         userFeed = FXCollections.observableArrayList();
         eventFeed = FXCollections.observableArrayList();
-
         ContextHandler.getContext().setSearchController(this);
         setUpFeedPostListener();
         setUpFeedEventListener();
         setUpFeedUserListener();
 
-        userButton.setOnAction(this::handleUserButton);
-        eventButton.setOnAction(this::handleEventButton);
-        postButton.setOnAction(this::handlePostButton);
 
         //updatePostFeed();
-        try {
-            updateEventFeed();
-        } catch (PiikDatabaseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            updateEventFeed();
+//        } catch (PiikDatabaseException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
-
-
-
-    private void handleUserButton(Event eventW) {
-        user = true;
-        event = false;
-        post = false;
-    }
-
-    private void handleEventButton(Event eventW) {
-        user = false;
-        event = true;
-        post = false;
-
-        System.out.println(event);
-    }
-
-    private void handlePostButton(Event eventW) {
-        user = false;
-        event = false;
-        post = true;
-    }
 
     /**
      * Restores the original layout
@@ -128,24 +96,12 @@ public class SearchController implements Initializable {
     }
 
     private void handleSearch(Event event){
-        if (post) {
-            try {
-                updatePostFeed();
-            } catch (PiikDatabaseException e) {
-                e.printStackTrace();
-            }
-        }else if (user){
-            try {
-                updateUserFeed();
-            } catch (PiikDatabaseException e) {
-                e.printStackTrace();
-            }
-        }else{
-            try {
-                updateEventFeed();
-            } catch (PiikDatabaseException e) {
-                e.printStackTrace();
-            }
+        try {
+            updatePostFeed();
+            updateUserFeed();
+            updateEventFeed();
+        } catch (PiikDatabaseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -188,21 +144,24 @@ public class SearchController implements Initializable {
      */
     private void setUpFeedPostListener() {
         postFeed.addListener((ListChangeListener<? super Post>) change -> {
-            searchMasonryPane.getChildren().clear();
+            postMasonryPane.getChildren().clear();
+            postScrollPane.setVisible(postFeed.size() != 0);
             postFeed.forEach(this::insertPost);
         });
     }
 
     private void setUpFeedUserListener() {
         userFeed.addListener((ListChangeListener<? super User>) change -> {
-            searchMasonryPane.getChildren().clear();
+            userMasonryPane.getChildren().clear();
+            userScrollPane.setVisible(userFeed.size() != 0);
             userFeed.forEach(this::insertUser);
         });
     }
 
     private void setUpFeedEventListener() {
         eventFeed.addListener((ListChangeListener<? super piiksuma.Event>) change -> {
-            searchMasonryPane.getChildren().clear();
+            eventMasonryPane.getChildren().clear();
+            userScrollPane.setVisible(userFeed.size() != 0);
             eventFeed.forEach(this::insertEvent);
         });
     }
@@ -212,39 +171,39 @@ public class SearchController implements Initializable {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         postLoader.setController(new PostController(post));
         try {
-            searchMasonryPane.getChildren().add(postLoader.load());
+            postMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        searchScrollPane.requestLayout();
-        searchScrollPane.requestFocus();
+        postScrollPane.requestFocus();
+        postScrollPane.requestLayout();
     }
 
     private void insertUser(User user) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/profile/user.fxml"));
-        postLoader.setController(new SearchedUserController(user));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        postLoader.setController(new profilePreviewController(user));
         try {
-            searchMasonryPane.getChildren().add(postLoader.load());
+            userMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        searchScrollPane.requestLayout();
-        searchScrollPane.requestFocus();
+        userScrollPane.requestLayout();
+        userScrollPane.requestFocus();
     }
 
     private void insertEvent(piiksuma.Event event) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/event.fxml"));
-        postLoader.setController(new EventController(event));
+        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
+        postLoader.setController(new EventPreviewController(event));
         try {
-            searchMasonryPane.getChildren().add(postLoader.load());
+            eventMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        searchScrollPane.requestLayout();
-        searchScrollPane.requestFocus();
+        eventScrollPane.requestLayout();
+        eventScrollPane.requestFocus();
     }
 
 

@@ -94,6 +94,8 @@ public class EventController implements Initializable {
     private void participate(javafx.event.Event event) {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(this.event, ContextHandler.getContext().getCurrentUser());
+            refreshParticipants();
+            buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
             invalidParameters.printStackTrace();
         }
@@ -101,11 +103,15 @@ public class EventController implements Initializable {
 
 
     private void unParticipate(javafx.event.Event event) {
-/*        try {
-            ApiFacade.getEntrypoint().get;
+        User current = ContextHandler.getContext().getCurrentUser();
+
+        try {
+            ApiFacade.getEntrypoint().getDeletionFacade().deleteUserInEvent(this.event, current, current);
+            refreshParticipants();
+            buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
             invalidParameters.printStackTrace();
-        }*/
+        }
     }
 
 
@@ -123,9 +129,7 @@ public class EventController implements Initializable {
     }
 
     private void setEventInfo() {
-        for (int i = 0; i < 9; i++) {
-            participants.add(ContextHandler.getContext().getCurrentUser());
-        }
+        refreshParticipants();
         eventName.setText(event.getName());
         eventDescription.setText(event.getDescription());
         eventDate.setText(event.getDate().toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -134,11 +138,13 @@ public class EventController implements Initializable {
         nParticipants.setText("" + participants.size());
     }
 
-    private void handleParticipate(Event event) {
+    private void refreshParticipants() {
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(event, ContextHandler.getContext().getCurrentUser());
-        } catch (PiikException e) {
-            System.out.println(e.getMessage());
+            participants.clear();
+            participants.addAll(ApiFacade.getEntrypoint()
+                    .getSearchFacade().usersInEvent(event, ContextHandler.getContext().getCurrentUser()).values());
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.printStackTrace();
         }
     }
 

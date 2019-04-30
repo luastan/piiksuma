@@ -93,7 +93,8 @@ public class MainController implements Initializable {
                 try {
                     FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search/search.fxml"));
                     mainContainer.getChildren().add(searchViewLoader.load());
-                } catch (IOException ignore) {
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                     // TODO: Handle exception
                 }
                 deckContainer.getChildren().clear();

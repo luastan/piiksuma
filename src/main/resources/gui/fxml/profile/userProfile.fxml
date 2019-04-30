@@ -16,7 +16,7 @@
 <?import com.jfoenix.controls.JFXTabPane?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           prefHeight="900.0" prefWidth="450.0" minHeight="900.0" minWidth="450.0" maxHeight="900.0" maxWidth="450.0">
+           prefHeight="900.0" prefWidth="445.0" minHeight="900.0" minWidth="445.0" maxHeight="900.0" maxWidth="445.0">
 
     <BorderPane>
         <top>

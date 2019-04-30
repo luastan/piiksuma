@@ -83,7 +83,7 @@ public class PostController implements Initializable {
         // Multimedia insertion
         if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
-            boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getWidth() - 170) / 2, 450, 170));
+            boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
         } else if (post.getAuthor().getId().equals("usr1")) {  // TODO: Remove else if once multimedia is propperly parsed to the controller
             boxImage.setImage(new Image("/imagenes/post_image_test.jpg", 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
