@@ -8,6 +8,9 @@ import piiksuma.Message;
 import piiksuma.User;
 
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 
@@ -23,6 +26,8 @@ public class MessagePreviewController implements Initializable {
     @FXML
     private Label lastMessage;
     @FXML
+    private Label elapsedTime;
+    @FXML
     private Label hiddenUserId;
 
     @FXML
@@ -37,6 +42,7 @@ public class MessagePreviewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         if (message != null) {
             lastMessage.setText(message.getText());
+            elapsedTime.setText(message.getDate().toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
         }
         if (peer != null) {
             userId.setText(peer.getId());

@@ -35,7 +35,7 @@
         </center>
         <right>
             <StackPane style="-fx-padding: 0 10 0 0">
-                <Label text="3 days ago"/>
+                <Label text="3 days ago" fx:id="elapsedTime"/>
             </StackPane>
         </right>
     </BorderPane>
