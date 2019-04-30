@@ -13,6 +13,8 @@ import piiksuma.gui.deckControllers.AchievementsController;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Generifies handling multiple Stages, Nodes and other objects between
@@ -302,7 +304,37 @@ public class ContextHandler {
 
         // Show
         newStage.show();
+    }
 
+    public void invokeStage(String fxml, Object controller) throws PiikInvalidParameters {
+        Matcher matcher = Pattern.compile("(\\w+)\\.\\w+$").matcher(fxml);
+        if (!matcher.find()) {
+            throw new PiikInvalidParameters("Invalid FXML name");
+        }
+        invokeStage(fxml, controller, matcher.group(1));
+    }
+
+
+    public void invokeStage(String fxml, Object controller, String title) throws PiikInvalidParameters {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        if (controller != null) {
+            loader.setController(controller);
+        }
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        JFXDecorator decorator;
+        try {
+            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            throw new PiikInvalidParameters("Couldn't load the provided FXML file: " + fxml);
+        }
+        Scene scene = new Scene(decorator);
+        stage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        stage.show();
     }
 
     public ConversationController getConversationController() {
