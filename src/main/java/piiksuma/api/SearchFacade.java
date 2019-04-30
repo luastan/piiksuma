@@ -691,13 +691,33 @@ public class SearchFacade {
      * @return list of the events that the followed users created
      */
     public List<Event> getEvents(User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (current == null || !current.checkNotNull(false)) {
+        if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
         return parentFacade.getInteractionDao().getEvents(user);
+    }
+
+    /**
+     * Function that returns the users that participate in the indicated event
+     *
+     * @param event
+     * @return a map with the user indexed by her primary key
+     * @throws PiikDatabaseException
+     */
+    public Map<String, User> usersInEvent(Event event, User current) throws PiikDatabaseException,
+            PiikInvalidParameters {
+        if (event == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getInteractionDao().usersInEvent(event);
     }
 }

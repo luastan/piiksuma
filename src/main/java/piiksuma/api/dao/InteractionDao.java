@@ -1,6 +1,7 @@
 package piiksuma.api.dao;
 
 import piiksuma.*;
+import piiksuma.api.ApiFacade;
 import piiksuma.api.ErrorMessage;
 import piiksuma.database.DeleteMapper;
 import piiksuma.database.InsertionMapper;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -220,6 +222,33 @@ public class InteractionDao extends AbstractDao {
                         event.getCreator().getId(),
                         user.getId()
                 ).executeUpdate();
+    }
+
+    /**
+     * Function that returns the users that participate in the indicated event
+     *
+     * @param event
+     * @return a map with the user indexed by her primary key
+     * @throws PiikDatabaseException
+     */
+    public Map<String, User> usersInEvent(Event event) throws PiikDatabaseException {
+        if(event == null || !event.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("event"));
+        }
+
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT usr FROM event " +
+                "JOIN participateevent ON id = event  WHERE id = ? and author = ?")
+                .defineParameters(event.getId(), event.getCreator().getPK()).mapList();
+
+        ArrayList<User> usersPK = new ArrayList<>();
+
+        for(Map<String, Object> tuple : query){
+            User user = new User();
+            user.setId((String) tuple.get("usr"));
+            usersPK.add(user);
+        }
+
+        return ApiFacade.getEntrypoint().getUserDao().getUsers(usersPK);
     }
     //******************************************************************************************************************
 
