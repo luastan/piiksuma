@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml" styleClass="event-preview-container">
+    <Label fx:id="hiddenEventId" visible="false"/>
+    <BorderPane style="-fx-padding: 10 10 10 10">
+        <left>
+            <StackPane alignment="CENTER_LEFT">
+                <Label fx:id="name" text="Event's name" style="-fx-font-weight: BOLD"/>
+            </StackPane>
+        </left>
+        <center>
+            <StackPane style="-fx-padding: 0 20 0 20" alignment="CENTER_LEFT">
+                <Label fx:id="description" text="Event's description"/>
+            </StackPane>
+        </center>
+        <right>
+            <StackPane alignment="CENTER_RIGHT">
+                <Label fx:id="date" text="Event's date"/>
+            </StackPane>
+        </right>
+    </BorderPane>
+</StackPane>

@@ -2,33 +2,43 @@ package piiksuma.gui.events;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.controls.JFXMasonryPane;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Event;
+import piiksuma.User;
+import piiksuma.UserType;
 import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.profiles.profilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class EventController implements Initializable {
 
     @FXML
-    private Label authorName;
-
-    @FXML
-    private Label authorId;
-
-    @FXML
     private Label eventDate;
+
+    @FXML
+    private Label eventName;
 
     @FXML
     private Label eventLocation;
@@ -37,92 +47,115 @@ public class EventController implements Initializable {
     private Label eventDescription;
 
     @FXML
-    private JFXButton participate;
+    private ScrollPane participantScrollPane;
 
     @FXML
-    private JFXButton moreInfo;
+    private Label nParticipants;
 
     @FXML
-    private JFXButton share;
+    private HBox participantMasonryPane;
 
-    private Event eventP;
+    @FXML
+    private JFXButton participateButton;
+    @FXML
+    private JFXButton deleteButton;
 
-    private boolean moreInfoClicked;
+    private ObservableList<User> participants;
+
+    private Event event;
 
     public EventController(Event event) {
-        this.eventP = event;
-        moreInfoClicked = false;
+        participants = FXCollections.observableArrayList();
+        this.event = event;
     }
 
-    public EventController(Event event, boolean moreInfoClicked) {
-        this.eventP = event;
-        this.moreInfoClicked = moreInfoClicked;
+    private void buttonInitialization() {
+        User current = ContextHandler.getContext().getCurrentUser();
+        deleteButton.setDisable(current.getType() != UserType.administrator && !current.equals(event.getCreator()));
+        deleteButton.setOnAction(ev -> {
+            try {
+                ApiFacade.getEntrypoint().getDeletionFacade().removeEvent(event, current);
+                ContextHandler.getContext().getStage("Event - " + event.getName()).close();
+                ContextHandler.getContext().getEventsController().updateEventFeed();
+            } catch (PiikDatabaseException | PiikInvalidParameters e) {
+                e.printStackTrace();
+            }
+        });
+        if (participants.contains(current)) {
+            participateButton.setText("Do not participate");
+            participateButton.setOnAction(this::unParticipate);
+        } else {
+            participateButton.setText("participate");
+            participateButton.setOnAction(this::participate);
+        }
     }
+
+
+    private void participate(javafx.event.Event event) {
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(this.event, ContextHandler.getContext().getCurrentUser());
+        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
+            invalidParameters.printStackTrace();
+        }
+    }
+
+
+    private void unParticipate(javafx.event.Event event) {
+/*        try {
+            ApiFacade.getEntrypoint().get;
+        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
+            invalidParameters.printStackTrace();
+        }*/
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        HBox.setHgrow(participantMasonryPane, Priority.ALWAYS);
         setEventInfo();
-
-        if (moreInfoClicked == true) {
-            moreInfo.setVisible(false);
-        }
-
-        participate.setOnAction(this::handleParticipate);
-        moreInfo.setOnAction(this::handleMoreInfo);
+        participants.addListener((ListChangeListener<? super User>) c -> {
+            participantMasonryPane.getChildren().clear();
+            participants.forEach(this::insertParticipantMasonry);
+            nParticipants.setText("" + participants.size());
+            buttonInitialization();
+        });
+        buttonInitialization();
     }
 
     private void setEventInfo() {
-        eventDescription.setText(eventP.getDescription());
-        authorName.setText(eventP.getCreator().getName());
-        authorId.setText(eventP.getCreator().getId());
-        eventDate.setText(eventP.getDate().toString());
-        eventLocation.setText(eventP.getLocation());
+        for (int i = 0; i < 9; i++) {
+            participants.add(ContextHandler.getContext().getCurrentUser());
+        }
+        eventName.setText(event.getName());
+        eventDescription.setText(event.getDescription());
+        eventDate.setText(event.getDate().toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        eventLocation.setText(event.getLocation());
+        participants.forEach(this::insertParticipantMasonry);
+        nParticipants.setText("" + participants.size());
     }
 
-    private void handleParticipate(javafx.event.Event event) {
-
+    private void handleParticipate(Event event) {
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(eventP, ContextHandler.getContext().getCurrentUser());
+            ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(event, ContextHandler.getContext().getCurrentUser());
         } catch (PiikException e) {
             System.out.println(e.getMessage());
-            return;
         }
     }
 
-    private void handleMoreInfo(javafx.event.Event event) {
-        Stage registerStage = new Stage();
-
+    private void insertParticipantMasonry(User user) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        loader.setController(new profilePreviewController(user));
+        Node profile;
         try {
-            ContextHandler.getContext().register("moreInfoEvent", registerStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        registerStage.setTitle("Event");
-        registerStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/events/event.fxml"));
-        loader.setController(new EventController(eventP, true));
-
-        JFXDecorator decorator;
-
-        try {
-            decorator = new JFXDecorator(registerStage, loader.load(), false, false, true);
+            profile = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-
-        Scene scene = new Scene(decorator, 450, 450);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm()
-        );
-        registerStage.initModality(Modality.WINDOW_MODAL);
-        registerStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        registerStage.setScene(scene);
-        registerStage.show();
+        participantMasonryPane.getChildren().add(profile);
+        participantScrollPane.requestLayout();
+//        participantScrollPane.requestFocus();
     }
+
+
 }

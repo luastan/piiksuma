@@ -7,13 +7,20 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import piiksuma.Event;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.ConversationController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,19 +42,10 @@ public class EventsController implements Initializable {
         ContextHandler.getContext().setEventsController(this);
         setUpFeedListener();
 
-        try {
-            updateEventFeed();
-        } catch (PiikDatabaseException e) {
-            e.printStackTrace();
-        }
+        updateEventFeed();
     }
 
-    /**
-     * Function to updates the feed on event's tab
-     *
-     * @throws PiikDatabaseException
-     */
-    private void updateEventFeed() throws PiikDatabaseException {
+    public void updateEventFeed() {
         User user = ContextHandler.getContext().getCurrentUser();
         eventFeed.clear();
         try {
@@ -67,10 +65,13 @@ public class EventsController implements Initializable {
     }
 
     private void insertEvent(Event event) {
-        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/event.fxml"));
-        eventLoader.setController(new EventController(event));
+        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
+        eventLoader.setController(new EventPreviewController(event));
+
         try {
-            eventMasonryPane.getChildren().add(eventLoader.load());
+            Node node = eventLoader.load();
+            node.setOnMouseClicked(this::clickEvent);
+            eventMasonryPane.getChildren().add(node);
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
@@ -78,4 +79,26 @@ public class EventsController implements Initializable {
         eventScrollPane.requestLayout();
         eventScrollPane.requestFocus();
     }
+
+
+    private void clickEvent(MouseEvent mouseEvent) {
+        if (!(mouseEvent.getSource() instanceof StackPane)) {
+            return;
+        }
+        // Identifies clicked Event
+        Event target = eventFeed.stream()
+                .filter(event -> event.getId().equals(((StackPane) mouseEvent.getSource()).getChildren().stream()
+                        .filter(node -> node instanceof Label).map(node -> (Label) node).map(Labeled::getText)
+                        .findFirst().orElse(""))).findFirst().orElse(null);
+        if (target == null) {
+            return;
+        }
+        EventController controller = new EventController(target);
+        try {
+            ContextHandler.getContext().invokeStage("/gui/fxml/events/event.fxml", controller, "Event" + (target.getName() != null ? " - " + target.getName() : ""));
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.printStackTrace();
+        }
+    }
+
 }

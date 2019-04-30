@@ -47,7 +47,7 @@ VALUES ('usr1', 'usr4');
 
 -- Follow Users
 INSERT INTO followuser (followed, follower)
-VALUES ('usr1', 'usr2');
+VALUES ('usr2', 'usr1');
 
 INSERT INTO followuser (followed, follower)
 VALUES ('usr3', 'usr2');
