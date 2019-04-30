@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXDecorator;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import piiksuma.User;
@@ -325,6 +326,7 @@ public class ContextHandler {
             loader.setController(controller);
         }
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(title);
         JFXDecorator decorator;
         try {
