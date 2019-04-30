@@ -1,5 +1,4 @@
 package piiksuma.gui;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
 import javafx.event.Event;

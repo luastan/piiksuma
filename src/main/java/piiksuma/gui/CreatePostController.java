@@ -13,12 +13,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import piiksuma.*;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import javax.activation.MimeTypeParseException;
+import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
@@ -33,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,9 +93,20 @@ public class CreatePostController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Add multimedia");
         File multimedia = fileChooser.showOpenDialog(null);
+
         if (multimedia == null) {
             return;
         }
+
+// --------------------------------------------------- Testing zone ----------------------------------------------------
+        try {
+            BufferedImage img = ImageIO.read(multimedia);
+            File outputFile = new File("test.png");
+            ImageIO.write(img, multimedia.getName().split("\\.")[1], outputFile);
+        } catch (Exception e) {
+            PiikLogger.getInstance().log(Level.SEVERE, "Can't copy the file to resources", e);
+        }
+//----------------------------------------------------------------------------------------------------------------------
 
         try {
             RandomAccessFile file = new RandomAccessFile(multimedia, "r");
@@ -118,12 +133,12 @@ public class CreatePostController implements Initializable {
         Pattern pattern = Pattern.compile("#{1}\\w+");
         Matcher matcher = pattern.matcher(post.getText());
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             hashtags.add(new Hashtag(matcher.group()));
         }
         post.setHashtags(hashtags);
 
-        if(postFather != null){
+        if (postFather != null) {
             post.setFatherPost(postFather);
         }
         // Post gets inserted in the database

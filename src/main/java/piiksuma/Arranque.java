@@ -16,7 +16,6 @@ public class Arranque extends Application {
         //      SampleFachada.getDb().pruebasCheck();
         // SampleFachada.getDb().idGenerationTest();
         SampleFachada.getDb().aTest();
-        PiikLogger.getInstance().log(Level.SEVERE, "prueba");
         launch(args);
     }
 
