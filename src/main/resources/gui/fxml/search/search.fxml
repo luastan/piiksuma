@@ -55,7 +55,7 @@
                         <StackPane pickOnBounds="false" style="-fx-border-radius: 1; -fx-border-color: -black-disabled">
                             <Label text="No users found">
                                 <graphic>
-                                    <FontAwesomeIconView glyphName="BOOKMARK" size="50"
+                                    <FontAwesomeIconView glyphName="USER" size="50"
                                                          styleClass="deck-small-button-graphic"/>
                                 </graphic>
                             </Label>

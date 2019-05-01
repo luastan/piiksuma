@@ -77,7 +77,7 @@ public class TicketsController implements Initializable {
     }
 
     private void insertTicket(Ticket ticket) {
-        FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/ticket.fxml"));
+        FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
         ticketLoader.setController(new TicketController(ticket));
         try {
             ticketMasonryPane.getChildren().add(ticketLoader.load());

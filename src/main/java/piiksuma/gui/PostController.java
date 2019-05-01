@@ -92,14 +92,14 @@ public class PostController implements Initializable {
         // Profile Picture
         Multimedia profileM = author.getMultimedia();
         if (profileM != null && !profileM.getUri().equals("")) {
-            boxImage.setImage(new Image(post.getMultimedia().getUri(), 50, 50, true, true));
+            boxImage.setImage(new Image(profileM.getUri(), 50, 50, true, true));
         }
 
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
 
         try {
             if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)){
-                buttonLike.setStyle("-fx-background-color: #FF0000;");
+                buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.printStackTrace();
@@ -156,15 +156,12 @@ public class PostController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
         try {
-
             if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
-                System.out.println("Disike!");
-                buttonLike.setStyle("-fx-background-color: rgba(255,255,255,0);");
+                buttonLike.getGraphic().setStyle("");
             } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
-                System.out.println("Like!");
-                buttonLike.setStyle("-fx-background-color: #FF0000;");
+                buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
             piikInvalidParameters.printStackTrace();
@@ -182,13 +179,9 @@ public class PostController implements Initializable {
             if(ContextHandler.getContext().getSearchController() != null){
                 ContextHandler.getContext().getSearchController().updatePostFeed();
             }
-
-
         }catch (PiikException e){
             System.out.println("PROBLEM");
-            return;
         }
 
-        System.out.println("Eliminado con exito");
     }
 }

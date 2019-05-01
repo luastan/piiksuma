@@ -14,11 +14,17 @@
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            prefHeight="900.0" prefWidth="445.0" minHeight="900.0" minWidth="445.0" maxHeight="900.0" maxWidth="445.0">
-
-    <BorderPane>
+    <Label text="User doesn't exist" fx:id="userNotFound" wrapText="true">
+        <graphic>
+            <FontAwesomeIconView glyphName="USER" size="60"
+                                 styleClass="deck-small-button-graphic"/>
+        </graphic>
+    </Label>
+    <BorderPane fx:id="profileContent">
         <top>
             <VBox styleClass="profile-header-container" spacing="20">
                 <!-- Profile picture + username + functionality butons -->

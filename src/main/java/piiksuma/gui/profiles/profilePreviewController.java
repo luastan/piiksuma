@@ -30,7 +30,7 @@ public class profilePreviewController implements Initializable {
 
     private void handle(MouseEvent event) {
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml", new UserProfileController(profile), "Piiksuma - " + profile.getName());
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml", new UserProfileController(profile), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
         }

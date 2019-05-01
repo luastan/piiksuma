@@ -1,7 +1,6 @@
 package piiksuma.gui.profiles;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXMasonryPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -10,13 +9,12 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.layout.BorderPane;
 import piiksuma.Post;
 import piiksuma.User;
+import piiksuma.UserType;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
@@ -40,10 +38,16 @@ public class UserProfileController implements Initializable {
     public JFXButton buttonRight;
 
     @FXML
+    private BorderPane profileContent;
+
+    @FXML
     private Label Name;
 
     @FXML
     private Label description;
+
+    @FXML
+    private Label userNotFound;
 
     private User user;
 
@@ -53,122 +57,186 @@ public class UserProfileController implements Initializable {
 
     public UserProfileController(User user) {
         this.user = user;
+        publishedPostsList = FXCollections.observableArrayList();
+        archivedPostsList = FXCollections.observableArrayList();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ContextHandler.getContext().setUserProfileController(this);
 
-        Name.setText(user.getName());
-        description.setText(user.getDescription());
+        try {
+            User user = ApiFacade.getEntrypoint().getSearchFacade().getUser(this.user, ContextHandler.getContext().getCurrentUser());
+
+            if (user == null) {
+                // User doesn't exist
+                profileContent.setVisible(false);
+                userNotFound.setText("User with id " + '"' + this.user.getId() + '"' + " does not exist");
+                return;
+            }
+            this.user = user;
+
+            ContextHandler.getContext().setUserProfileController(this);
+
+            Name.setText(user.getName());
+            description.setText(user.getDescription());
+
+            updateFeed();
+            updateArchivedPosts();
 
 
-        publishedPostsList = FXCollections.observableArrayList();
-        archivedPostsList = FXCollections.observableArrayList();
+            publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
+                publishedPostsMasonry.getChildren().clear();
+                publishedPostsList.forEach(this::insertPost);
+            });
+            publishedPostsList.forEach(this::insertPost);
 
-        // TODO: Initialize the buttons
-        setUpPostsListener();
-        updateFeed();
-        updateArchivedPosts();
+            archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
+                archivedPostsMasonry.getChildren().clear();
+                archivedPostsList.forEach(this::archivePost);
+            });
+            archivedPostsList.forEach(this::archivePost);
+
+            // TODO: Initialize the buttons
+            buttonInit();
+            setUpPostsListener();
+
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.printStackTrace();
+        }
+
+
     }
 
-    private void handleDelete(Event event){
-        try{
-            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
-        }catch (PiikException e){
-            //TODO handle exception
-            return;
+    private void buttonInit() {
+        User current = ContextHandler.getContext().getCurrentUser();
+        if (user.equals(current)) { /* If user is the current user */
+            buttonRight.setText("Delete");
+            buttonRight.setOnAction(this::handleDelete); /* If user is admin */
+            buttonCenter.setText("View Tickets");
+            buttonCenter.setOnAction(this::handleTicketsButton);
+            buttonLeft.setText("New Ticket");
+            buttonLeft.setOnAction(this::handleNewTicektButton);
+        } else if (current.getType().equals(UserType.administrator)) { /* If user is different from the other cases */
+            buttonRight.setText("Delete");
+            buttonRight.setOnAction(this::handleDelete);
+            buttonCenter.setOnAction(this::handleFollow);
+            buttonLeft.setOnAction(this::handleBlock);
+            updateFollowButton();
+            updateBlockButton();
+        } else {
+            buttonRight.setVisible(false);
+            buttonCenter.setOnAction(this::handleFollow);
+            buttonLeft.setOnAction(this::handleBlock);
+            updateFollowButton();
+            updateBlockButton();
         }
-        ContextHandler.getContext().setCurrentUser(null);
-        ContextHandler.getContext().stageJuggler();
+
+    }
+
+
+    private void updateFollowButton() {
+        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
+        if (currentUserFollows) {
+            buttonCenter.setText("Follow");
+            buttonCenter.setStyle("-fx-background-color: -primary-color-5");
+        } else {
+            buttonCenter.setText("UnFollow");
+            buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        }
+    }
+
+    private void handleFollow(Event event) {
+        User current = ContextHandler.getContext().getCurrentUser();
+
+        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
+        try {
+            if (currentUserFollows) {
+                ApiFacade.getEntrypoint().getDeletionFacade().unfollowUser(user, current, current);
+            } else {
+                ApiFacade.getEntrypoint().getInsertionFacade().followUser(user, current, current);
+            }
+        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
+            invalidParameters.printStackTrace();
+        }
+        updateFollowButton();
+    }
+
+
+    private void updateBlockButton() {
+        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
+        if (currentUserBlocks) {
+            buttonLeft.setText("Block");
+            buttonLeft.setStyle("-fx-background-color: -primary-color-5");
+        } else {
+            buttonLeft.setText("UnBlock");
+            buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        }
+    }
+
+    private void handleBlock(Event event) {
+        User current = ContextHandler.getContext().getCurrentUser();
+
+        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
+        try {
+            if (currentUserBlocks) {
+                ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user, current, current);
+            } else {
+                ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, current, current);
+            }
+        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
+            invalidParameters.printStackTrace();
+        }
+        updateBlockButton();
+    }
+
+
+    private void handleDelete(Event event){
+        try {
+            ApiFacade.getEntrypoint().getDeletionFacade().removeUser(user, ContextHandler.getContext().getCurrentUser());
+            if (user.equals(ContextHandler.getContext().getCurrentUser())) {
+                ContextHandler.getContext().setCurrentUser(null);
+                ContextHandler.getContext().stageJuggler();
+            } else {
+                ContextHandler.getContext().getStage("User profile").close();
+            }
+
+        } catch (PiikException e) {
+            //TODO handle exception
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
      * Function to open a create ticket window if newTicketButton is clicked
      *
-     * @param event
+     * @param event Button event
      */
     private void handleNewTicektButton(Event event) {
-        Stage searchStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("New Ticket", searchStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.printStackTrace();
         }
-        // Stage configuration
-        searchStage.setTitle("New Ticket");
-        searchStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/newTicket.fxml"));
-        JFXDecorator decorator;
-
-        try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Scene scene = new Scene(decorator, 400, 300);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.showAndWait();
     }
 
     /**
      * Function to open a window with the tickets
      *
-     * @param event
+     * @param event Event generated by the button
      */
     private void handleTicketsButton(Event event) {
-        Stage searchStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("Tickets", searchStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.printStackTrace();
         }
-        // Stage configuration
-        searchStage.setTitle("Tickets");
-        searchStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/tickets.fxml"));
-        JFXDecorator decorator;
-
-        try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Scene scene = new Scene(decorator, 450, 600);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.showAndWait();
     }
 
     /**
      * Function to update the feed
      *
-     * @throws PiikDatabaseException
      */
     public void updateFeed()  {
         // TODO: update the feed propperly
@@ -193,13 +261,16 @@ public class UserProfileController implements Initializable {
 
     public void updateArchivedPosts() {
         archivedPostsList.clear();
-
-        /*try {
-            posts.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
-        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+/*      TODO: Fix NullPointer thrown by the Dao
+        try {
+            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade()
+                    .getArchivedPosts(user, ContextHandler.getContext().getCurrentUser()));
+        } catch (PiikDatabaseException e) {
             e.printStackTrace();
-        }*/
+        } catch (PiikInvalidParameters ignore) {
+            // Current user is not allowed to see archived posts from other user
+        }
+*/
 
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();
@@ -221,30 +292,26 @@ public class UserProfileController implements Initializable {
     }
 
     private void insertPost(Post post) {
+        placePost(post, publishedPostsMasonry, publishedPosts);
+    }
+
+    private void archivePost(Post post) {
+        placePost(post, archivedPostsMasonry, archivedPosts);
+    }
+
+    private void placePost(Post post, JFXMasonryPane masonry, ScrollPane scrollPane) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
-        postLoader.setController(new PostController(post));
         try {
+            postLoader.setController(new PostController(post));
             publishedPostsMasonry.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        publishedPosts.requestLayout();
         publishedPosts.requestFocus();
+        publishedPosts.requestLayout();
     }
 
-    private void archivePost(Post post) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
-        postLoader.setController(new PostController(post));
-        try {
-            archivedPostsMasonry.getChildren().add(postLoader.load());
-        } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
-        }
-        archivedPosts.requestLayout();
-        archivedPosts.requestFocus();
-    }
 
     public void handleFeedButton(Event event) {
         updateFeed();

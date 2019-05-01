@@ -83,9 +83,11 @@ public class EventController implements Initializable {
         });
         if (participants.contains(current)) {
             participateButton.setText("Do not participate");
+            participateButton.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
             participateButton.setOnAction(this::unParticipate);
         } else {
             participateButton.setText("participate");
+            participateButton.setStyle("-fx-background-color: -primary-color-5");
             participateButton.setOnAction(this::participate);
         }
     }

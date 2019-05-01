@@ -82,7 +82,7 @@
                                 <center>
                                     <StackPane style="-fx-padding: 0 0 0 20;" pickOnBounds="false">
                                         <!-- Users participating -->
-                                        <ScrollPane fx:id="participantScrollPane" vbarPolicy="NEVER"
+                                        <ScrollPane fx:id="participantScrollPane" vbarPolicy="NEVER" hbarPolicy="ALWAYS"
                                                     styleClass="search-users-scroll" pickOnBounds="false">
                                             <HBox fx:id="participantMasonryPane" styleClass="search-users-masonry"
                                                   alignment="CENTER_LEFT"/>

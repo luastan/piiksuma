@@ -329,10 +329,12 @@ public class ContextHandler {
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(title);
+        this.register(title, stage);
         JFXDecorator decorator;
         try {
             decorator = new JFXDecorator(stage, loader.load(), false, false, true);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new PiikInvalidParameters("Couldn't load the provided FXML file: " + fxml);
         }
         Scene scene = new Scene(decorator);

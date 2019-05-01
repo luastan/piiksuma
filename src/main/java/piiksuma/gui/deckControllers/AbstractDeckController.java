@@ -78,7 +78,7 @@ public class AbstractDeckController {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
-                    new UserProfileController(ContextHandler.getContext().getCurrentUser()));
+                    new UserProfileController(ContextHandler.getContext().getCurrentUser()), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class AbstractDeckController {
     private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userData.fxml", null);
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userData.fxml", null, "User data");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class AbstractDeckController {
 
     private void handleNotification(Event event){
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/notifications.fxml", null);
+            ContextHandler.getContext().invokeStage("/gui/fxml/notifications.fxml", null, "User notifications");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.printStackTrace();
         }
