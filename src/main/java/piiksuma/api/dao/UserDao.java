@@ -421,7 +421,7 @@ public class UserDao extends AbstractDao {
      * Function to get the user that matches the given specifications
      *
      * @param user            user that contains the requirements that will be applied in the search
-     * @param typeTransaction nivel of isolation
+     * @param typeTransaction level of isolation // TODO isolation level
      * @return user that meets the given information
      */
     public User getUser(User user, Integer typeTransaction) throws PiikDatabaseException {

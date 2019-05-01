@@ -525,6 +525,41 @@ public class PostDao extends AbstractDao {
         // The post information is found in the first item, except the hashtags
         Map<String, Object> columnsPost = result.get(0);
 
+        User user = new User();
+
+        Object sugarDaddy = columnsPost.get("sugarDaddy");
+        Object authorDaddy = columnsPost.get("authorDaddy");
+
+        if(sugarDaddy != null) {
+            Post fatherPost = new Post();
+            User authorFatherPost = new User();
+
+            fatherPost.setId((String) sugarDaddy);
+
+            authorFatherPost.setId((String) authorDaddy);
+            fatherPost.setAuthor(authorFatherPost);
+
+            resultPost.setFatherPost(fatherPost);
+            columnsPost.put("fatherPost", resultPost);
+        }
+
+        Object multimedia = columnsPost.get("multimedia");
+
+        if(multimedia != null){
+            Multimedia multimediaPost = new Multimedia();
+            multimediaPost.setHash((String) multimedia);
+
+            resultPost.setMultimedia(multimediaPost);
+            columnsPost.put("multimedia", resultPost);
+        }
+
+        Object idUser = columnsPost.get("author");
+
+        if (idUser instanceof String) {
+            user.setId((String) idUser);
+            columnsPost.put("author", user);
+        }
+
         // Post information is saved
         resultPost.addInfo(columnsPost);
 
@@ -686,6 +721,32 @@ public class PostDao extends AbstractDao {
         for (Map<String, Object> columnsPost : result) {
             Post resultPost = new Post();
             User user = new User();
+
+            Object sugarDaddy = columnsPost.get("sugarDaddy");
+            Object authorDaddy = columnsPost.get("authorDaddy");
+
+            if(sugarDaddy != null) {
+                Post fatherPost = new Post();
+                User authorFatherPost = new User();
+
+                fatherPost.setId((String) sugarDaddy);
+
+                authorFatherPost.setId((String) authorDaddy);
+                fatherPost.setAuthor(authorFatherPost);
+
+                resultPost.setFatherPost(fatherPost);
+                columnsPost.put("fatherPost", resultPost);
+            }
+
+            Object multimedia = columnsPost.get("multimedia");
+
+            if(multimedia != null){
+                Multimedia multimediaPost = new Multimedia();
+                multimediaPost.setHash((String) multimedia);
+
+                resultPost.setMultimedia(multimediaPost);
+                columnsPost.put("multimedia", resultPost);
+            }
 
             Object idUser = columnsPost.get("author");
 
