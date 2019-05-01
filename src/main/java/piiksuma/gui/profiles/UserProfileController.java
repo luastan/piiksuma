@@ -198,6 +198,9 @@ public class UserProfileController implements Initializable {
                 ContextHandler.getContext().stageJuggler();
             } else {
                 ContextHandler.getContext().getStage("User profile").close();
+                ContextHandler.getContext().getMessagesController().updateMessageFeed();
+                ContextHandler.getContext().getFeedController().updateFeed();
+                ContextHandler.getContext().getEventsController().updateEventFeed();
             }
 
         } catch (PiikException e) {
