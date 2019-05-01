@@ -71,6 +71,7 @@ public class CreateEventController implements Initializable {
 
         try {
             newEvent = ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
+            ContextHandler.getContext().getEventsController().updateEventFeed();
         }catch (PiikException e){
             e.showAlert();
             return;
