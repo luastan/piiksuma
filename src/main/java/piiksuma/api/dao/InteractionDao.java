@@ -9,7 +9,6 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
-import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -292,10 +291,10 @@ public class InteractionDao extends AbstractDao {
         return new QueryMapper<Event>(super.getConnection()).createQuery(
                 "SELECT e.* " +
                         "FROM event as e " +
-                        "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
+                        "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) OR e.author = ? " +
                         "ORDER BY e.date DESC " +
                         "LIMIT 10;"
-        ).defineClass(Event.class).defineParameters(user.getId()).list();
+        ).defineClass(Event.class).defineParameters(user.getId(),user.getId()).list();
     }
     //******************************************************************************************************************
     //==================================================================================================================
