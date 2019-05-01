@@ -6,11 +6,12 @@ import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ErrorMessage;
 import piiksuma.api.MultimediaType;
-import piiksuma.database.*;
+import piiksuma.database.DeleteMapper;
+import piiksuma.database.InsertionMapper;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1083,5 +1084,20 @@ public class PostDao extends AbstractDao {
                         "ORDER BY count DESC " +
                         "LIMIT ?").defineParameters(limit).list();
 
+    }
+
+    /**
+     * Function to check if an user has already reposted a post
+     *
+     * @param user User we want to check if he has already reposted
+     * @param post Post we want to check
+     * @return  "True" if the user reposted the post, otherwise "false"
+     */
+    public boolean checkUserResposted(User user, Post post) throws PiikDatabaseException{
+
+        List<Map<String, Object>> repost = new QueryMapper<Object>(super.getConnection()).createQuery(
+                "SELECT post FROM repost WHERE usr = ? AND post = ? ").defineParameters(user.getId(), post.getId()).mapList();
+
+        return (!repost.isEmpty()) ;
     }
 }
