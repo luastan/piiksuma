@@ -377,11 +377,25 @@ public class PostDao extends AbstractDao {
             statement.executeUpdate();
 
 
-            /* Statement for hashtags */
+            /* Hashtag association */
+
+            clause = new StringBuilder();
+            // Hashtags which do not already exist are inserted in the database
+            clause.append("INSERT INTO hashtag(name) SELECT ? WHERE NOT EXISTS (SELECT * FROM hashtag WHERE name = ? " +
+                    "FOR UPDATE); ");
+
+            statementHashtags = con.prepareStatement(clause.toString());
+
+            for (Hashtag hashtag : post.getHashtags()) {
+                statementHashtags.setString(1, hashtag.getName());
+                statementHashtags.setString(2, hashtag.getName());
+                statementHashtags.executeUpdate();
+            }
+            System.out.println("pasada inserción de hashtags");
 
             clause = new StringBuilder();
             // TODO it would by nice to erase only those who were removed
-            // First we need to the rid of the old hashtags bacause one may have been removed
+            // First we need to the rid of the old hashtags because anyone may have been removed
             clause.append("DELETE FROM ownhashtag WHERE post = ? AND author = ?");
 
             statementHashtags = con.prepareStatement(clause.toString());
