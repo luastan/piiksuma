@@ -1,24 +1,18 @@
 package piiksuma.gui;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.*;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -41,6 +35,9 @@ public class PostController implements Initializable {
 
     @FXML
     private JFXButton deleteButton;
+
+    @FXML
+    private JFXButton buttonRepost;
 
     @FXML
     private ImageView boxImage;
@@ -67,6 +64,15 @@ public class PostController implements Initializable {
             deleteButton.setVisible(true);
         }
 
+        try {
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
+                    post, ContextHandler.getContext().getCurrentUser())) {
+                buttonRepost.setDisable(true);
+            }
+
+        }catch (PiikDatabaseException | PiikInvalidParameters e){
+            e.showAlert();
+        }
         try {
             author = ApiFacade.getEntrypoint().getSearchFacade().getUser(
                     author, ContextHandler.getContext().getCurrentUser());
@@ -108,8 +114,22 @@ public class PostController implements Initializable {
         buttonLike.setOnAction(this::handleLike);
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
+        buttonRepost.setOnAction(this::handleRepost);
 
+    }
 
+    private void handleRepost(Event event){
+        try{
+            ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
+                    post.getAuthor(), ContextHandler.getContext().getCurrentUser());
+
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
+                    post, ContextHandler.getContext().getCurrentUser())) {
+                buttonRepost.setDisable(true);
+            }
+        }catch (PiikInvalidParameters | PiikDatabaseException e){
+            e.showAlert();
+        }
     }
 
     private void handleAnswer(Event event){

@@ -791,7 +791,7 @@ public class SearchFacade {
 
         return parentFacade.getUserDao().isBlock(user1, user2);
     }
-    
+
     /**
      * Function to check if an user has already reposted a post
      *
@@ -803,7 +803,7 @@ public class SearchFacade {
      * @throws PiikInvalidParameters
      */
     public boolean checkUserResposted(User user, Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters{
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -811,7 +811,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (currentUser == null || currentUser.checkNotNull(false)) {
+        if (currentUser == null ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
