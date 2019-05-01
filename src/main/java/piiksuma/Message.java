@@ -121,4 +121,11 @@ public class Message extends PiikObject {
     public int hashCode() {
         return Objects.hash(id, sender, date);
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "text='" + text + '\'' +
+                '}';
+    }
 }

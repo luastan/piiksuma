@@ -1,4 +1,4 @@
-package piiksuma.gui;
+package piiksuma.gui.tickets;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXMasonryPane;
@@ -11,11 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
-import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +45,7 @@ public class TicketsController implements Initializable {
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         }
         Search.setOnAction(this::handleSearch);
     }
@@ -54,7 +54,7 @@ public class TicketsController implements Initializable {
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 
@@ -77,7 +77,7 @@ public class TicketsController implements Initializable {
     }
 
     private void insertTicket(Ticket ticket) {
-        FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/ticket.fxml"));
+        FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
         ticketLoader.setController(new TicketController(ticket));
         try {
             ticketMasonryPane.getChildren().add(ticketLoader.load());

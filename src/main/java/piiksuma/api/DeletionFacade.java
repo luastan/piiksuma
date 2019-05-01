@@ -1,7 +1,6 @@
 package piiksuma.api;
 
 import piiksuma.*;
-import piiksuma.database.InsertionMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikForbiddenException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -54,13 +53,34 @@ public class DeletionFacade {
     }
 
     /**
+     * Un-silence the user
+     *
+     * @param user        User to be un-silenced
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException Thrown if the currentUser does not have permissions to un-silenced the user
+     * @throws PiikInvalidParameters Thrown if currentUser/user or its primary keys are null
+     */
+
+    public void unsileceUser(User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        parentFacade.getUserDao().unsilenceUser(user, currentUser);
+    }
+
+    /**
      * Function to unfollow the user followed by the user follower, we have to delete it from the database
      *
      * @param followed    User to be unfollowed
      * @param follower    User that unfollows
      * @param currentUser Current user logged into the app
      * @throws PiikDatabaseException The followed user or the follower user have null values or non unique values on
-     * primary keys
+     *                               primary keys
      * @throws PiikInvalidParameters The currentUser is null
      */
     public void unfollowUser(User followed, User follower, User currentUser) throws PiikDatabaseException,
@@ -165,7 +185,14 @@ public class DeletionFacade {
         parentFacade.getPostDao().removeRepost(repost);
     }
 
-
+    /**
+     * Unblock User previously blocked
+     * @param blockedUser User that is blocked
+     * @param user User that blocked him
+     * @param currentUser Current user logged into the app
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public void unblockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
 
         if (currentUser == null || !currentUser.checkNotNull(false)) {
@@ -235,6 +262,29 @@ public class DeletionFacade {
         }
 
         parentFacade.getInteractionDao().removeEvent(e);
+    }
+
+    /**
+     * Delete a user from an event
+     * @param event
+     * @param user
+     * @throws PiikDatabaseException
+     */
+    public void deleteUserInEvent(Event event, User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(event == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
+        }
+
+        if (!current.checkAdministrator() && !current.equals(user)) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        parentFacade.getInteractionDao().deleteUserInEvent(event, user);
     }
 
     /**

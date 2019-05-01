@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
@@ -33,12 +34,16 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     @FXML
     private JFXButton userDataButton;
 
+    @FXML
+    private JFXButton viewNotificationsButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
         super.setHamburguerButton(hamburguerButton);
         super.setUserProfileButton(userButton);
         super.setUserDataButton(userDataButton);
+        super.setViewNotificationsButton(viewNotificationsButton);
         // TODO feed deck
         FontAwesomeIconView buttonIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS);
         buttonIcon.getStyleClass().add("deck-button-graphic");
@@ -53,42 +58,13 @@ public class FeedDeckController extends AbstractDeckController implements Initia
      * @param event Event raised by the user interaction
      */
     private void handleNewPostEvent(ActionEvent event) {
-        // TODO: Create a new Post. Which should be another method that might be better placed in another class.
-
-        // Requests the feed controller to update the feed for the new Post to show up
-        Stage newPostStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("Create Post", newPostStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        newPostStage.setTitle("Create Post");
-        newPostStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/createPost.fxml"));
-        JFXDecorator decorator;
+            ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", null, "Create Post");
 
-        try {
-            decorator = new JFXDecorator(newPostStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.showAlert();
         }
 
-        Scene scene = new Scene(decorator, 450, 550);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        newPostStage.initModality(Modality.WINDOW_MODAL);
-        newPostStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        newPostStage.setScene(scene);
-        // Show
-        newPostStage.show();
     }
 
 }

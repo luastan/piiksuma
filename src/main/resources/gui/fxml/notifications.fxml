@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.NotificationsController"
+           prefHeight="900.0" prefWidth="450.0" minHeight="900.0" minWidth="450.0" maxHeight="900.0" maxWidth="450.0">
+    <ScrollPane fx:id="notScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
+                StackPane.alignment="TOP_CENTER">
+        <JFXMasonryPane fx:id="notificationMasonryPane" VSpacing="10" styleClass="main-masonry">
+        </JFXMasonryPane>
+    </ScrollPane>
+</StackPane>

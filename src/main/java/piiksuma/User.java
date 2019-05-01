@@ -329,6 +329,7 @@ public class User extends PiikObject{
         return "User{" +
                 "id='" + id + '\'' +
                 ", pass='" + pass + '\'' +
+                ", name='" + name + '\'' +
                 ", type='" + this.getType() + '\'' +
                 '}';
     }
@@ -343,6 +344,6 @@ public class User extends PiikObject{
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(getPK());
     }
 }

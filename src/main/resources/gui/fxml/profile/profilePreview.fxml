@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           prefHeight="60" prefWidth="60" minHeight="60" minWidth="60" maxHeight="60" maxWidth="60"
+           style="-fx-padding: 10 10 10 10" pickOnBounds="false">
+
+    <ImageView fx:id="profilePicture" preserveRatio="true" fitWidth="50" fitHeight="50" styleClass="profile-preview">
+        <Image url="/imagenes/profile.png"/>
+    </ImageView>
+</StackPane>

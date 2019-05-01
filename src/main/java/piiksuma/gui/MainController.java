@@ -1,8 +1,6 @@
 package piiksuma.gui;
 
 import com.jfoenix.controls.JFXTabPane;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +21,9 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    public Tab searchTab;
+    public Tab messagesTab;
+    public Tab eventTab;
     @FXML
     private StackPane deckContainer;
 
@@ -31,6 +32,9 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXTabPane mainPane;
+
+    @FXML
+    private Tab feedTab;
 
 
     private List<Node> nodesMainContainer;
@@ -46,10 +50,8 @@ public class MainController implements Initializable {
         ContextHandler.getContext().register("mainTabPane", mainPane);
 
         // Feed
-        Tab feedTab = new Tab(); // Creates the tab
-        FontAwesomeIconView feedTabIcon = new FontAwesomeIconView(FontAwesomeIcon.COMMENT);  // Sets icon
+        Node feedTabIcon = feedTab.getGraphic();  // Sets icon
         feedTabIcon.setStyle("-fx-fill: -white-high-emphasis;");
-        feedTab.setGraphic(feedTabIcon);
         feedTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
             // Adds listener to change the color when selected and the deck controller
             if (newValue) {
@@ -76,10 +78,8 @@ public class MainController implements Initializable {
         // Missing tabs follow the same pattern as the feed tab
 
         // Search
-        Tab searchTab = new Tab();
-        FontAwesomeIconView searchTabIcon = new FontAwesomeIconView(FontAwesomeIcon.SEARCH_MINUS);
+        Node searchTabIcon = searchTab.getGraphic();
         searchTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
-        searchTab.setGraphic(searchTabIcon);
 
         // In the case of the search tab the mainPanel gets replaced
         searchTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -91,9 +91,10 @@ public class MainController implements Initializable {
                 nodesMainContainer.addAll(mainContainer.getChildren());
                 mainContainer.getChildren().clear();
                 try {
-                    FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search.fxml"));
+                    FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search/search.fxml"));
                     mainContainer.getChildren().add(searchViewLoader.load());
-                } catch (IOException ignore) {
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                     // TODO: Handle exception
                 }
                 deckContainer.getChildren().clear();
@@ -107,10 +108,8 @@ public class MainController implements Initializable {
 
 
         // Messages
-        Tab messagesTab = new Tab();
-        FontAwesomeIconView messagesTabIcon = new FontAwesomeIconView(FontAwesomeIcon.ENVELOPE);
+        Node messagesTabIcon = messagesTab.getGraphic();
         messagesTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
-        messagesTab.setGraphic(messagesTabIcon);
         messagesTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 messagesTabIcon.setStyle("-fx-fill: -white-high-emphasis;");
@@ -130,10 +129,8 @@ public class MainController implements Initializable {
         messagesTab.setContent(messagesViewLoader.load());
 
         // Events
-        Tab eventTab = new Tab();
-        FontAwesomeIconView eventTabIcon = new FontAwesomeIconView(FontAwesomeIcon.CALENDAR);
+        Node eventTabIcon = eventTab.getGraphic();
         eventTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
-        eventTab.setGraphic(eventTabIcon);
         eventTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 eventTabIcon.setStyle("-fx-fill: -white-high-emphasis;");
@@ -149,18 +146,9 @@ public class MainController implements Initializable {
                 eventTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
             }
         });
-        FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events.fxml"));
+        FXMLLoader eventViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/events/events.fxml"));
         eventTab.setContent(eventViewLoader.load());
 
-        // Finally loads tabs into the pane
-        mainPane.getTabs().addAll(
-                feedTab,
-                //profileTab,
-                messagesTab,
-                eventTab,
-                searchTab
-
-        );
     }
 
     @Override
@@ -170,13 +158,16 @@ public class MainController implements Initializable {
         nodesDeckContainer = new ArrayList<>();
         try {
             tabInitialization();
+            deckContainer.getChildren().clear();
+            deckLoader = new FXMLLoader(getClass().getResource("/gui/fxml/deck.fxml"));
+            deckLoader.setController(new FeedDeckController());
+            deckContainer.getChildren().add(deckLoader.load());
         } catch (IOException | PiikInvalidParameters ioEx) {
+            ioEx.printStackTrace();
             System.out.println("Unable to load FXML");
         }
 
 
-        // Sets code to be executed on exit event
-        ContextHandler.getContext().getStage("primary").setOnCloseRequest(this::handleExit);
     }
 
 

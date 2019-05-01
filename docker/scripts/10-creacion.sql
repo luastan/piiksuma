@@ -146,7 +146,7 @@ CREATE TABLE piiUser
     job                varchar(35),
 
     -- Aqui hay que pensar como va a funcionar por defecto
-    profilePicture     varchar(32) references multimediaImage (hash)
+    profilePicture     varchar(256) references multimediaImage (hash)
         on delete set null on update cascade
 );
 
@@ -197,7 +197,7 @@ CREATE TABLE ticket
     adminClosing varchar(32),
     primary key (id),
     foreign key (usr) references piiUser (id)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (adminClosing) references administrator (id)
         on delete set null on update cascade
 );
@@ -249,12 +249,12 @@ CREATE TABLE message
     author     varchar(32),
     text       varchar(200) not null,
     date       timestamp    not null default now(),
-    multimedia varchar(32),
+    multimedia varchar(256),
     ticket     integer,
 
     primary key (author, id),
     foreign key (author) references piiUser (id)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (multimedia) references multimedia (hash)
         on delete set null on update cascade,
     foreign key (ticket) references ticket (id)
@@ -278,7 +278,7 @@ CREATE TABLE receiveMessage
 
     primary key (message, author, receiver),
     foreign key (message, author) references message (id, author)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (receiver) references piiUser (id)
         on delete cascade on update cascade
 );
@@ -292,7 +292,7 @@ CREATE TABLE post
     publicationDate timestamp default now() not null,
     sugarDaddy      varchar(32),
     authorDaddy     varchar(32),
-    multimedia      varchar(32),
+    multimedia      varchar(256),
 
     primary key (id, author),
     foreign key (author) references piiUser (id)
@@ -359,7 +359,7 @@ CREATE TABLE archivePost
 
     primary key (author, post, usr),
     foreign key (post, author) references post (id, author)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );
@@ -385,7 +385,7 @@ CREATE TABLE repost
     author varchar(32),
     primary key (post, usr, author),
     foreign key (post, author) references post (id, author)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );
@@ -406,7 +406,7 @@ CREATE TABLE event
 
     primary key (id, author),
     foreign key (author) references piiUser (id)
-        on delete set null on update cascade
+        on delete cascade on update cascade
 );
 
 CREATE TRIGGER trigger_event_id_gen
@@ -424,7 +424,7 @@ CREATE TABLE participateEvent
 
     primary key (event, eventauthor, usr),
     foreign key (event, eventauthor) references event (id, author)
-        on delete set null on update cascade,
+        on delete cascade on update cascade,
     foreign key (usr) references piiUser (id)
         on delete cascade on update cascade
 );

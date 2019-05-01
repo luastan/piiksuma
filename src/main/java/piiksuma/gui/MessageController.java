@@ -6,11 +6,14 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Message;
+import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.io.IOException;
@@ -21,13 +24,11 @@ public class MessageController implements Initializable {
 
     private Message message;
 
+    @FXML
+    private Label content;
 
     @FXML
-    private Label userName;
-
-    @FXML
-    private Label messageText;
-
+    private StackPane messageHolder;
 
 
     public MessageController(Message message) {
@@ -36,9 +37,10 @@ public class MessageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        //userName.setText(message.getSender().getId());
-        messageText.setText(message.getText());
-
+        User current = ContextHandler.getContext().getCurrentUser();
+        if (message.getSender().equals(current)) {
+            messageHolder.setAlignment(Pos.CENTER_RIGHT);
+        }
+        content.setText(message.getText());
     }
 }

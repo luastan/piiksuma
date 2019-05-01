@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Line?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           prefHeight="900.0" prefWidth="445.0" minHeight="900.0" minWidth="445.0" maxHeight="900.0" maxWidth="445.0">
+    <Label text="User doesn't exist" fx:id="userNotFound" wrapText="true">
+        <graphic>
+            <FontAwesomeIconView glyphName="USER" size="60"
+                                 styleClass="deck-small-button-graphic"/>
+        </graphic>
+    </Label>
+    <BorderPane fx:id="profileContent">
+        <top>
+            <VBox styleClass="profile-header-container" spacing="20">
+                <!-- Profile picture + username + functionality butons -->
+                <StackPane>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView>
+                            <Image preserveRatio="true" requestedHeight="75" url="/imagenes/huevo.png"/>
+                        </ImageView>
+                        <VBox alignment="CENTER" spacing="10">
+                            <VBox alignment="CENTER_LEFT">
+                                <!-- Username and User's name -->
+                                <Label text="User's name" style="-fx-font-weight: BOLD" fx:id="Name"/>
+                                <Label text="id"/>
+                            </VBox>
+                            <HBox alignment="CENTER" spacing="10">
+                                <!--
+                                Some usefull buttons.
+                                Their name and code should be replaced depending on who is
+                                the current user and who is the profiles owner
+                                -->
+                                <JFXButton text="buttonLeft" styleClass="jfx-button-border" fx:id="buttonLeft"/>
+                                <JFXButton text="buttonCenter" styleClass="jfx-button-border" fx:id="buttonCenter"/>
+                                <JFXButton text="buttonRight" styleClass="jfx-button-border" fx:id="buttonRight"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+                <!-- User description -->
+                <StackPane alignment="CENTER_LEFT">
+                    <Label text="Description" fx:id="description" wrapText="true"/>
+                </StackPane>
+            </VBox>
+        </top>
+        <center>
+            <!-- Feed -->
+            <JFXTabPane>
+                <Tab text="Published">
+                    <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                styleClass="profile-post-feed">
+                        <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                    </ScrollPane>
+                </Tab>
+                <Tab text="Archived">
+                    <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                styleClass="profile-post-feed">
+                        <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                    </ScrollPane>
+                </Tab>
+            </JFXTabPane>
+
+        </center>
+    </BorderPane>
+
+</StackPane>

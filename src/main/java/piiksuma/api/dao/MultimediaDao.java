@@ -18,12 +18,20 @@ import java.util.List;
 import java.util.Map;
 
 public class MultimediaDao extends AbstractDao {
-
     public MultimediaDao(Connection connection) {
         super(connection);
     }
 
+//===================================================== MULTIMEDIA =====================================================
+
+    /*******************************************************************************************************************
+     * Add a new multimedia content to the db
+     *
+     * @param multimedia content to add
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
     public void addMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
@@ -83,94 +91,121 @@ public class MultimediaDao extends AbstractDao {
             }
         }
     }
-    
-    /**
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Function to remove the given multimedia from the database
+     *
+     * @param multimedia Multimedia to remove
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
+    public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
+        // Delete multimedia
+        new DeleteMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).delete();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
      * Function to return the multimedia from the database
      *
      * @param multimedia Given multimedia to search into database
      * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
-     * @throws PiikDatabaseException
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public Multimedia getMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
+        // Return multimedia
         return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
                 "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getPK()).findFirst();
     }
+    //******************************************************************************************************************
 
-    /**
-     * Function to return the multimedia from the database to check if it exists
+    /*******************************************************************************************************************
+     * Check if multimedia exists on the db
      *
-     * @param multimedia Given multimedia to check if it is saved in the database
-     * @return Returns the multimedia with all it's values if it exists, othwerwise it will return null
-     * @throws PiikDatabaseException
+     * @param multimedia Multimedia to be checked
+     * @return Returns the multimedia if it exists, othwerwise it will return null
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public boolean existsMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-        return(getMultimedia(multimedia) != null);
-    }
+        // Check if multimedia or its primary key is null
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
+        }
 
-    /**
-     * Function to count the number of post which contains the given multimedia
+        // Return multimedia
+        return (getMultimedia(multimedia) != null);
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Count the number of post which contains the given multimedia
      *
-     * @param multimedia Multimedia about which we want to know on how many posts is included
-     * @return Number of post which contains the multimedia
+     * @param multimedia Multimedia we want to count
+     * @return Number of post containing multimedia
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      */
     public Long numPostMultimedia(Multimedia multimedia) throws PiikDatabaseException {
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
-        List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) "+
+        List<Map<String, Object>> count = new QueryMapper<>(super.getConnection()).createQuery("SELECT COUNT(*) " +
                 "as numPostMultimedia FROM post WHERE multimedia = ?").defineClass(Object.class)
                 .defineParameters(multimedia.getPK()).mapList();
-
+        // Return count
         return (Long) count.get(0).get("numPostMultimedia");
     }
+    //******************************************************************************************************************
 
+    /*******************************************************************************************************************
+     * Gets all post containing multimedia
+     *
+     * @param multimedia Multimedia we are looking for on posts
+     * @return List of post containing multimedia
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     */
     public List<Post> postWithMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-
+        // Check if multimedia or its primary key is null
         if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
 
+        // Return list of posts
         return new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
                 "SELECT * FROM post WHERE multimedia = ?").defineParameters(multimedia.getPK()).list();
     }
+    //******************************************************************************************************************
 
-    /**
-     * Function to remove the given multimedia from the database
-     *
-     * @param multimedia Multimedia to remove
-     * @throws PiikDatabaseException
-     */
-    public void removeMultimedia(Multimedia multimedia) throws PiikDatabaseException {
-
-        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
-        }
-
-        new DeleteMapper<Multimedia>(super.getConnection()).add(multimedia).defineClass(Multimedia.class).delete();
-    }
-
-    /**
-     * Function to get the image of the multimedia
+    /*******************************************************************************************************************
+     * Get the image from multimedia
      *
      * @param multimedia Multimedia that contains the information of the image
      * @return the image of the multimedia
-     * @throws PiikDatabaseException
+     * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
+     * @throws PiikInvalidParameters Thrown if the type of multimedia isn't an image
      */
     public Image getImage(Multimedia multimedia) throws PiikDatabaseException, PiikInvalidParameters {
-        if(multimedia == null || !multimedia.checkPrimaryKey(false)){
+        // Check if multimedia or its primary key is null
+        if (multimedia == null || !multimedia.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("multimedia"));
         }
-
-        if(multimedia.getType() != MultimediaType.image){
+        // Check if the type of multimedia is image
+        if (multimedia.getType() != MultimediaType.image) {
             throw new PiikInvalidParameters("The multimedia type is not 'photo'");
         }
-
+        // Return the image
         return new Image(getClass().getResource("/imagenes/" + multimedia.getUri()).toString());
     }
-
+    //******************************************************************************************************************
+//======================================================================================================================
 }

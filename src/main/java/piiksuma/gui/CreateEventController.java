@@ -1,8 +1,13 @@
 package piiksuma.gui;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,12 +29,22 @@ public class CreateEventController implements Initializable {
     @FXML
     private JFXTextField location;
     @FXML
-    private JFXTextField date;
+    private JFXDatePicker date;
     @FXML
     private JFXTextArea description;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newEvent.setOnAction(this::handleNew);
+        date.setValidators(new RequiredFieldValidator());
+        RequiredFieldValidator eventNameValidator = new RequiredFieldValidator();
+        eventNameValidator.setMessage("Field required");
+        eventNameValidator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
+                .glyph(FontAwesomeIcon.WARNING)
+                .build());
+        eventName.setValidators(eventNameValidator);
+        eventName.textProperty().addListener((observable, oldValue, newValue) -> {
+            newEvent.setDisable(!eventName.validate());
+        });
     }
 
     private void handleNew(Event event) {
@@ -49,20 +64,15 @@ public class CreateEventController implements Initializable {
         newEvent.setLocation(location.getText());
         newEvent.setName(eventName.getText());
 
-        if(!date.getText().isEmpty()) {
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                Date d = dateFormat.parse(date.getText());
-                newEvent.setDate(new java.sql.Timestamp(d.getTime()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if (date.validate()) {
+            newEvent.setDate(Timestamp.valueOf(date.getValue().atStartOfDay()));
         }
 
+
         try {
-            newEvent=ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
+            newEvent = ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
         }catch (PiikException e){
-            System.out.println(e.getMessage());
+            e.showAlert();
             return;
         }
 

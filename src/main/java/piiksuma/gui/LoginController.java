@@ -136,7 +136,7 @@ public class LoginController implements Initializable {
         try {
             ContextHandler.getContext().register("register", registerStage);
         } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
             return;
         }
         // Stage configuration

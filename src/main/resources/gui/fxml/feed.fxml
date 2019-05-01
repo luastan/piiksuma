@@ -8,10 +8,13 @@
 
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.FeedController">
-    <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
+    <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
+                StackPane.alignment="TOP_CENTER">
         <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>

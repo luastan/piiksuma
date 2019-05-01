@@ -4,15 +4,22 @@ import com.jfoenix.controls.JFXDecorator;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import piiksuma.User;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.deckControllers.AchievementsController;
+import piiksuma.gui.events.EventsController;
+import piiksuma.gui.profiles.UserProfileController;
+import piiksuma.gui.search.SearchController;
+import piiksuma.gui.tickets.TicketsController;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Generifies handling multiple Stages, Nodes and other objects between
@@ -39,11 +46,19 @@ public class ContextHandler {
     private MessagesController messagesController;
     private SearchController searchController;
     private AchievementsController achievementsController;
-
+    private NotificationsController notificationsController;
+    private ConversationController conversationController;
     private TicketsController ticketsController;
     private UserProfileController userProfileController;
-    private OtherUserProfileController otherUserProfileController;
 
+
+    public NotificationsController getNotificationsController() {
+        return notificationsController;
+    }
+
+    public void setNotificationsController(NotificationsController notificationsController) {
+        this.notificationsController = notificationsController;
+    }
 
     /**
      * Private Contrstructor since this is a Singleton Class
@@ -243,14 +258,6 @@ public class ContextHandler {
         this.userProfileController = userProfileController;
     }
 
-    public OtherUserProfileController getOtherUserProfileController() {
-        return otherUserProfileController;
-    }
-
-    public void setOtherUserProfileController(OtherUserProfileController otherUserProfileController) {
-        this.otherUserProfileController = otherUserProfileController;
-    }
-
     /**
      * Closes and deletes all the registered stages. Then loads the
      * corresponding Window depending on whether or not the User is logged in
@@ -279,9 +286,11 @@ public class ContextHandler {
             if (currentUser != null) {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/main.fxml"));
                 this.register("primary", newStage);
+                newStage.setTitle("Piiksuma");
             } else {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
                 this.register("login", newStage);
+                newStage.setTitle("Piiksuma - Login");
             }
             decorator = new JFXDecorator(newStage, loader.load(), false, false, true);
         } catch (IOException | PiikInvalidParameters e) {
@@ -300,6 +309,48 @@ public class ContextHandler {
 
         // Show
         newStage.show();
+    }
 
+    public void invokeStage(String fxml, Object controller) throws PiikInvalidParameters {
+        Matcher matcher = Pattern.compile("(\\w+)\\.\\w+$").matcher(fxml);
+        if (!matcher.find()) {
+            throw new PiikInvalidParameters("Invalid FXML name");
+        }
+        invokeStage(fxml, controller, matcher.group(1));
+    }
+
+
+    public void invokeStage(String fxml, Object controller, String title) throws PiikInvalidParameters {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        if (controller != null) {
+            loader.setController(controller);
+        }
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle(title);
+        this.register(title, stage);
+        JFXDecorator decorator;
+        try {
+            decorator = new JFXDecorator(stage, loader.load(), false, false, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new PiikInvalidParameters("Couldn't load the provided FXML file: " + fxml);
+        }
+        Scene scene = new Scene(decorator);
+        stage.setScene(scene);
+        scene.getStylesheets().addAll(
+                getClass().getResource("/gui/css/global.css").toExternalForm(),
+                getClass().getResource("/gui/css/main.css").toExternalForm()
+        );
+        stage.show();
+    }
+
+    public ConversationController getConversationController() {
+        return conversationController;
+    }
+
+    public void setConversationController(ConversationController conversationController) {
+        this.conversationController = conversationController;
     }
 }

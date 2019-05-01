@@ -2,6 +2,10 @@ package piiksuma.gui;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.validation.RequiredFieldValidator;
+import de.jensd.fx.glyphs.GlyphsBuilder;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,17 +13,30 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import piiksuma.*;
+import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
+import javax.activation.MimeTypeParseException;
+import javax.activation.MimetypesFileTypeMap;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URL;
-import java.sql.Timestamp;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,112 +56,114 @@ public class CreatePostController implements Initializable {
 
     private URI imageURI;
 
+    private Post post;
+
+    private Post postFather;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         postButton.setOnAction(this::publishPost);
         multimediaButton.setOnAction(this::handleMultimediaButton);
+        post = new Post();
+        post.setAuthor(ContextHandler.getContext().getCurrentUser());
+        postText.textProperty().addListener((observable, oldValue, newValue) -> {
+            post.setText(newValue);
+            postButton.setDisable(!postText.validate());
+        });
+        PiikTextLimiter.addTextLimiter(postText, 20);
+        // Checks if the input is empty
+        RequiredFieldValidator validator = new RequiredFieldValidator();
+        validator.setMessage("Field required");
+        validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
+                .glyph(FontAwesomeIcon.WARNING)
+                .build());
+        postText.getValidators().add(validator);
+    }
+
+    public Post getPostFather() {
+        return postFather;
+    }
+
+    public void setPostFather(Post postFather) {
+        this.postFather = postFather;
     }
 
     private void handleMultimediaButton(Event event) {
-
         // Creating window to choose image/video
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Add multimedia");
         File multimedia = fileChooser.showOpenDialog(null);
 
-        // If a file has been chosen
-        if (multimedia != null) {
-            this.imageURI = multimedia.toURI();
-            boxImage.setImage(new Image(multimedia.toURI().toString()));
-        }
-    }
-
-    private boolean checkEmptyFields() {
-        return postText.getText().isEmpty();
-    }
-
-    private void publishPost(Event event) {
-        Alert alert = new Alert (ContextHandler.getContext().getStage("Publish Post"));
-        // Check if the required data is filled
-        if(checkEmptyFields()) {
-            alert.setHeading("Fields empty!");
-            alert.addText("Fields cannot be empty");
-            alert.addCloseButton();
-            alert.show();
+        if (multimedia == null) {
             return;
         }
 
-        Post result = new Post();
+// --------------------------------------------------- Testing zone ----------------------------------------------------
+        try {
+            // Copy img from source to resource folder
+            BufferedImage img = ImageIO.read(multimedia);
+            File outputFile = new File("src/main/resources/imagenes/" + multimedia.getName());
+            ImageIO.write(img, multimedia.getName().split("\\.")[1], outputFile);
+            // Put the new img on multimedia
+            RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+            byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+            file.readFully(imgBytes);
+            post.setMultimedia(new Multimedia());
+            post.getMultimedia().setHash(
+                    Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes))
+            );
+            this.imageURI = outputFile.toURI();
+            post.getMultimedia().setUri(outputFile.toURI().toString());
+            post.getMultimedia().setType(MultimediaType.image);
+            boxImage.setImage(new Image(post.getMultimedia().getUri()));
+            post.getMultimedia().setResolution(String.valueOf((int) boxImage.getImage().getWidth()) + 'x'
+                    + (int) boxImage.getImage().getHeight());
+        } catch (Exception e) {
+            PiikLogger.getInstance().log(Level.SEVERE, "Can't copy the file to resources", e);
+        }
+//----------------------------------------------------------------------------------------------------------------------
+/*
+        try {
+            RandomAccessFile file = new RandomAccessFile(multimedia, "r");
+            byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+            file.readFully(imgBytes);
+            post.setMultimedia(new Multimedia());
+            post.getMultimedia().setHash(
+                    Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes))
+            );
+            this.imageURI = multimedia.toURI();
+            post.getMultimedia().setUri(multimedia.toURI().toString());
+            post.getMultimedia().setType(MultimediaType.image);
+            boxImage.setImage(new Image(post.getMultimedia().getUri()));
+            post.getMultimedia().setResolution(String.valueOf((int) boxImage.getImage().getWidth()) + 'x'
+                    + (int) boxImage.getImage().getHeight());
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+*/
+    }
 
-        // Actual user
-        // TODO retrieve logged-in user
-        User user = new User();
-        user.setId("usr1");
-        user.setEmail("usr1@gmail.com");
-        user.setName("myname");
-        user.setPass("pass");
-        user.setRegistrationDate(new Timestamp(1));
-        user.setBirthday(new Timestamp(1));
-        user.setType(UserType.user);
-        result.setAuthor(user);
-
-        // ID gets autogenerated
-
-        // Content
-        result.setText(postText.getText());
-
-        // Publication date is now by default
-
-        // No father post
-
-        // Hashtags contained
+    private void publishPost(Event event) {
         ArrayList<Hashtag> hashtags = new ArrayList<>();
         Pattern pattern = Pattern.compile("#{1}\\w+");
-        Matcher matcher = pattern.matcher(result.getText());
+        Matcher matcher = pattern.matcher(post.getText());
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             hashtags.add(new Hashtag(matcher.group()));
         }
+        post.setHashtags(hashtags);
 
-        result.setHashtags(hashtags);
-
-        // Multimedia
-        if(boxImage.getImage() != null) {
-            Multimedia multimedia = new Multimedia();
-            System.out.println("entrado");
-
-            multimedia.setUri(imageURI.toASCIIString());
-            System.out.println("entrado");
-
-            multimedia.setType(MultimediaType.image);
-            System.out.println("entrado");
-
-            StringBuilder resolution = new StringBuilder();
-            resolution.append((int)boxImage.getImage().getWidth()).append('x').append((int)boxImage.getImage().getHeight());
-            System.out.println(resolution);
-            multimedia.setResolution(resolution.toString());
-            System.out.println(resolution);
-            System.out.println("entrado");
-
-            multimedia.setHash("un_hash");
-
-            result.setMultimedia(multimedia);
-        } else {
-            System.out.println("no entrado");
+        if (postFather != null) {
+            post.setFatherPost(postFather);
         }
-
-        System.out.println("salido");
-
         // Post gets inserted in the database
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createPost(result, user);
-
+            ApiFacade.getEntrypoint().getInsertionFacade().createPost(post, ContextHandler.getContext().getCurrentUser());
+            ContextHandler.getContext().getFeedController().updateFeed();
             // And the window closes
-        } catch (PiikDatabaseException e) {
-            e.printStackTrace();
-        } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
         }
+
     }
 }

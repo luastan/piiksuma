@@ -1,17 +1,14 @@
 package piiksuma.gui.deckControllers;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXPopup;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 
@@ -22,7 +19,13 @@ public class AbstractDeckController {
 
     private JFXButton userDataButton;
 
+    private JFXButton viewNotificationsButton;
+
     public AbstractDeckController() {
+    }
+
+    public JFXButton getViewNotificationsButton() {
+        return viewNotificationsButton;
     }
 
     public JFXHamburger getHamburguerButton() {
@@ -68,48 +71,18 @@ public class AbstractDeckController {
 
     public void setUserProfileButton(JFXButton userProfileButton) {
         this.userProfileButton = userProfileButton;
-
         userProfileButton.setOnAction(this::handleUserButton);
-
     }
 
     private void handleUserButton(ActionEvent event) {
         // Requests the feed controller to update the feed for the new Post to show up
-        Stage searchStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("User Profile", searchStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        searchStage.setTitle("UserProfile");
-        searchStage.setResizable(false);
-        FXMLLoader loader;
-
-        loader = new FXMLLoader(getClass().getResource("/gui/fxml/userProfile.fxml"));
-
-        JFXDecorator decorator;
-        try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
+                    new UserProfileController(ContextHandler.getContext().getCurrentUser()), "User profile");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.showAlert();
         }
 
-        Scene scene = new Scene(decorator, 450, 800);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.show();
     }
 
     public void setUserDataButton(JFXButton userDataButton) {
@@ -119,38 +92,24 @@ public class AbstractDeckController {
 
     private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
-        Stage searchStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("userData", searchStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/profile/userData.fxml", null, "User data");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.showAlert();
         }
-        // Stage configuration
-        searchStage.setTitle("UserProfile");
-        searchStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/userData.fxml"));
+    }
 
-        JFXDecorator decorator;
+    public void setViewNotificationsButton(JFXButton viewNotificationsButton) {
+        this.viewNotificationsButton = viewNotificationsButton;
+
+        viewNotificationsButton.setOnAction(this::handleNotification);
+    }
+
+    private void handleNotification(Event event){
         try {
-            decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/notifications.fxml", null, "User notifications");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.showAlert();
         }
-
-        Scene scene = new Scene(decorator, 450, 800);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        searchStage.initModality(Modality.WINDOW_MODAL);
-        searchStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        searchStage.setScene(scene);
-        // Show and wait till it closes
-        searchStage.show();
     }
 }

@@ -15,6 +15,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StatsController implements Initializable {
+
+    @FXML
+    private Label userName;
+
     @FXML
     private Label maxLikeIt;
 
@@ -52,6 +56,7 @@ public class StatsController implements Initializable {
 
         try {
             Statistics statistics = ApiFacade.getEntrypoint().getSearchFacade().getUserStatistics(user, user);
+            userName.setText(user.getId());
             maxHateIt.setText(""+statistics.getMaxHateIt());
             maxLikeIt.setText(""+statistics.getMaxLikeIt());
             maxLoveIt.setText(""+statistics.getMaxLoveIt());
@@ -60,9 +65,7 @@ public class StatsController implements Initializable {
             following.setText(""+statistics.getFollowing());
             followBack.setText(""+statistics.getFollowBack());
         } catch (PiikException e) {
-            //TODO logger and alert
-            System.out.println(e.getMessage());
-            return;
+            e.showAlert();
         }
     }
 

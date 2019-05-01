@@ -1,4 +1,4 @@
-package piiksuma.piikLog;
+package piiksuma.Utilities;
 
 
 import java.io.IOException;

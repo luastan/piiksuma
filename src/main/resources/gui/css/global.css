@@ -37,6 +37,7 @@
     -black-medium-emphasis: rgba(0, 0, 0, 0.60);
     -black-disabled: rgba(0, 0, 0, 0.38);
     -black-inactive: rgba(0, 0, 0, 0.54);
+    -black-selection: rgba(235, 235, 235, 0.5);
 
     -color-surface-post: #FAFAFA;
     -color-surface-app-ui: #ebebeb;
@@ -207,25 +208,31 @@
 /* TextFields and TextAreas*/
 
 .fx-text-field{
-    -fx-background-color: #d7d7d7;
+    -fx-background-color: #e2e2e2;
+    -jfx-focus-color: -primary-color-5;
+    -jfx-unfocus-color: -jfx-focus-color;
 }
 
 
 /* Post cards */
 
 .post-container {
-    -fx-pref-width: 430;
+    -fx-pref-width: 450;
     /*-fx-pref-height: 100;*/
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
     -fx-background-color: -white-high-emphasis;
-    -fx-effect: dropshadow(gaussian, #515151, 20, 0.01, 0, 3);
-    -fx-padding: 20 20 20 20;
+    -fx-effect: dropshadow(gaussian, #515151, 20, 0.001, 0, 3);
+    -fx-padding: 17 0 17 0;
     -fx-alignment: CENTER;
 }
 
+.post-inner-container {
+    -fx-padding: 0 17 0 17;
+}
+
 .post-text {
-    -fx-padding: 10 10 10 10;
+    -fx-padding: 10 17 10 17;
     /*-fx-background-color: #cacacaca;*/
 }
 
@@ -277,3 +284,142 @@
 .alert-text {
     -fx-font-size: 15;
 }
+
+/* User profiles */
+
+.profile-post-feed {
+    /*-fx-pref-height: 600;*/
+    -fx-pref-width: 450;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    /*-fx-min-height: -fx-pref-height;*/
+    /*-fx-max-height: -fx-pref-height;*/
+}
+
+.profile-preview {
+    -fx-effect: innershadow(gaussian, #515151, 5, 0.001, 0, 0);
+}
+
+
+.profile-preview:hover {
+    -fx-effect: innershadow(gaussian, #515151, 50, 0.1, 0, 0);
+    -fx-cursor: hand;
+}
+
+
+/* Messages */
+
+.message-preview-container {
+    -fx-pref-width: 430;
+    -fx-pref-height: 60;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-background-color: -white-high-emphasis;
+    -fx-border-radius: 0 0 1 0;
+    -fx-border-color: -black-inactive;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+.message-preview-container:hover {
+    -fx-background-color: -black-selection;
+}
+
+
+.message-body-container {
+    -fx-background-radius: 3;
+    -fx-background-color: -white-medium-emphasis;
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+    -fx-padding: 10 10 10 10;
+}
+
+/* Events */
+.event-preview-container {
+    -fx-pref-width: 430;
+    -fx-pref-height: 40;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    -fx-background-color: -white-high-emphasis;
+    -fx-border-radius: 0 0 1 0;
+    -fx-border-color: -black-inactive;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: CENTER;
+    -fx-cursor: hand;
+}
+
+.event-preview-container:hover {
+    -fx-background-color: -black-selection;
+}
+
+
+/* Search */
+
+.scroll-pane:focused {
+    -fx-faint-focus-color: transparent;
+    /*-fx-background-insets: 0, 0 0 1 0;*/
+    -fx-focus-color: -primary-color-5;
+}
+
+.search-users-scroll {
+    /*-fx-pref-height: 60;*/
+    -fx-pref-width: 350;
+    /*-fx-min-width: -fx-pref-width;*/
+    /*-fx-max-width: -fx-pref-width;*/
+    -fx-background-color: -black-disabled;
+    /*-fx-min-height: -fx-pref-height;*/
+    /*-fx-max-height: -fx-pref-height;*/
+    /*-fx-background-color: #cacacaca;*/
+}
+
+.search-users-masonry {
+    -fx-min-height: 60;
+    -fx-pref-height: 60;
+    -fx-max-height: 60;
+    -fx-min-width: 350;
+}
+
+/* ScrollBar */
+
+.scroll-bar:hover {
+    -fx-cursor: hand;
+}
+
+.scroll-bar:vertical > .track-background, .scroll-bar:horizontal > .track-background {
+    -fx-background-color: -black-selection;
+    -fx-background-insets: 0.0;
+}
+
+.scroll-bar:vertical > .thumb, .scroll-bar:horizontal > .thumb {
+    -fx-background-color: -primary-color-5;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 1.0;
+}
+
+.scroll-bar > .increment-button, .scroll-bar > .decrement-button {
+    -fx-padding: 2 5 2 5;
+}
+
+.scroll-bar > .increment-button, .scroll-bar > .decrement-button, .scroll-bar:hover > .increment-button, .scroll-bar:hover > .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .increment-button > .increment-arrow, .scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: -primary-color-5;
+}
+
+.scroll-bar > .increment-button > .increment-arrow {
+    -fx-shape: "M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z";
+}
+
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-shape: "M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z";
+}
+
+
+/* Tooltip */

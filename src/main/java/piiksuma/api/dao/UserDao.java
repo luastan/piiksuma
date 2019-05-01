@@ -37,6 +37,36 @@ public class UserDao extends AbstractDao {
                 Connection.TRANSACTION_SERIALIZABLE).delete();
     }
 
+    /**
+     * Allow you to unsilence a user you have previously silence
+     *
+     * @param user        User to unsilence
+     * @param currentUser User that silenced him
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
+     */
+    public void unsilenceUser(User user, User currentUser) throws PiikDatabaseException {
+
+        // Check if repost or its primary key are null
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
+        }
+
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM silenceuser WHERE silenced=? AND " +
+                "usr=?").defineClass(Object.class).defineParameters(user.getPK(), currentUser.getPK())
+                .executeUpdate();
+    }
+
+    /**
+     * Secondary function used to build multimedia and phones for the user
+     *
+     * @param statement        Sql sentence
+     * @param multimediaExists To check if multimedia is already in use
+     * @param phonesExists     To check if phone is already in use
+     * @param user             User we build the query for
+     * @param multimedia       Multimedia
+     * @return Returns the offset of the query
+     * @throws SQLException Thrown if the build fails
+     */
     private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
                              User user, Multimedia multimedia) throws SQLException {
 
@@ -229,6 +259,12 @@ public class UserDao extends AbstractDao {
         }
     }
 
+    /**
+     * Updates an user data on the db
+     *
+     * @param user User to update
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
+     */
     public void updateUser(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -328,7 +364,7 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "administrator WHERE id = ? FOR UPDATE); ");
 
-            // Or he may have been downgraded
+                // Or he may have been downgraded
             else {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
@@ -384,7 +420,7 @@ public class UserDao extends AbstractDao {
     /**
      * Function to get the user that matches the given specifications
      *
-     * @param user user that contains the requirements that will be applied in the search
+     * @param user            user that contains the requirements that will be applied in the search
      * @param typeTransaction nivel of isolation
      * @return user that meets the given information
      */
@@ -398,7 +434,7 @@ public class UserDao extends AbstractDao {
                 "SELECT t.*, ad.id as type " +
                         "FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN administrator as ad " +
                         "ON (t.id = ad.id) WHERE t.id LIKE ?").defineParameters(user.getPK())
-                        .setIsolationLevel(typeTransaction).mapList();
+                .setIsolationLevel(typeTransaction).mapList();
 
         User returnUser = new User();
 
@@ -435,10 +471,10 @@ public class UserDao extends AbstractDao {
                 if (usrInfo.containsKey("phone")) {
                     String prefix = (String) usrInfo.get("prefix");
 
-                    if(prefix != null && !prefix.isEmpty()) {
+                    if (prefix != null && !prefix.isEmpty()) {
                         String numPhone = (String) usrInfo.get("phone");
 
-                        if(numPhone != null && !numPhone.isEmpty()){
+                        if (numPhone != null && !numPhone.isEmpty()) {
                             returnUser.addPhone(prefix + numPhone);
                         }
                     }
@@ -457,6 +493,119 @@ public class UserDao extends AbstractDao {
      */
     public User getUser(User user) throws PiikDatabaseException {
         return getUser(user, Connection.TRANSACTION_READ_COMMITTED);
+    }
+
+    /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param users           list with users to search with their primary keys
+     * @param typeTransaction nivel of isolation
+     * @return users that meets the given information
+     */
+    public Map<String, User> getUsers(List<User> users, Integer typeTransaction) throws PiikDatabaseException {
+        if (users == null || users.isEmpty()) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("users"));
+        }
+
+        String query = "SELECT t.*, ad.id as type  FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN " +
+                "administrator as ad ON (t.id = ad.id) WHERE t.id LIKE ?";
+
+        // HashMap with the info of the users to return
+        HashMap<String, User> infoUser = new HashMap<>();
+
+        // ArrayList with the pk's of the users
+        List<Object> usersPK = new ArrayList<>();
+
+        // Add the first user
+        usersPK.add(users.get(0).getPK());
+
+        // Add the OR conditions, one for user
+        for(int i = 1; i < users.size(); i++){
+
+            User user = users.get(i);
+
+            if(user == null || !user.checkPrimaryKey(false)){
+                throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+            }
+
+            query += " OR t.id LIKE ?";
+            usersPK.add(user.getPK());
+        }
+
+        // Get the list with the user, the phones and the type of user
+        List<Map<String, Object>> listObject = new QueryMapper<>(super.getConnection()).createQuery(query)
+                .defineParametersList(usersPK).setIsolationLevel(typeTransaction).mapList();
+
+        for(Map<String, Object> tuple : listObject){
+            User returnUser = new User();
+
+            returnUser.setId((String) tuple.get("id"));
+
+            // If the user is already on the list, only the phone is added to it
+            if(infoUser.containsKey(returnUser.getPK())){
+                // Get the phone
+                if (tuple.containsKey("phone")) {
+                    String prefix = (String) tuple.get("prefix");
+
+                    if (prefix != null && !prefix.isEmpty()) {
+                        String numPhone = (String) tuple.get("phone");
+
+                        if (numPhone != null && !numPhone.isEmpty()) {
+                            infoUser.get(returnUser.getPK()).addPhone(prefix + numPhone);
+                        }
+                    }
+                }
+            } else {
+
+                // Get the type of user
+                Object typeUser = tuple.get("type");
+
+                // If the typeUser is null or the string is empty, the type of user is "user"
+                if (typeUser == null) {
+                    returnUser.setType(UserType.user);
+                }
+
+                if (typeUser instanceof String) {
+                    String type = (String) typeUser;
+
+                    if (type.isEmpty()) {
+                        returnUser.setType(UserType.user);
+                    } else {
+                        returnUser.setType(UserType.administrator);
+                    }
+                }
+
+                // User information is saved
+                returnUser.addInfo(tuple);
+
+                // Get the phone
+                if (tuple.containsKey("phone")) {
+                    String prefix = (String) tuple.get("prefix");
+
+                    if (prefix != null && !prefix.isEmpty()) {
+                        String numPhone = (String) tuple.get("phone");
+
+                        if (numPhone != null && !numPhone.isEmpty()) {
+                            returnUser.addPhone(prefix + numPhone);
+                        }
+                    }
+                }
+
+                infoUser.put(returnUser.getPK(), returnUser);
+            }
+        }
+
+        return infoUser;
+    }
+
+    /**
+     * Function to get the user that matches the given specifications
+     *
+     * @param users           list with users to search with their primary keys
+     * @return users that meets the given information
+     */
+    public Map<String, User> getUsers(List<User> users) throws PiikDatabaseException {
+        return getUsers(users, Connection.TRANSACTION_READ_COMMITTED);
     }
 
     /**
@@ -481,7 +630,13 @@ public class UserDao extends AbstractDao {
                 user.getPK(), user.getName(), limit).list();
     }
 
-
+    /**
+     * Get the achievements that the user has obtained
+     *
+     * @param user User whom's achievements are search for
+     * @return Returns a list of achievements
+     * @throws PiikDatabaseException
+     */
     public List<Achievement> getAchievements(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -493,6 +648,13 @@ public class UserDao extends AbstractDao {
                 user.getPK()).list();
     }
 
+    /**
+     * Gets the dates when the achievements were unlocked by the user
+     *
+     * @param user User whom we get the dates from
+     * @return Returns a map with the name of the achievement and the date
+     * @throws PiikDatabaseException
+     */
     public Map<String, Timestamp> getUnlockDates(User user) throws PiikDatabaseException {
 
         if (user == null || !user.checkPrimaryKey(false)) {
@@ -504,8 +666,8 @@ public class UserDao extends AbstractDao {
 
         HashMap<String, Timestamp> result = new HashMap<>();
 
-        for(Map<String, Object> row : queryResults) {
-            result.put((String)row.get("achiev"), (Timestamp)row.get("acquisitiondate"));
+        for (Map<String, Object> row : queryResults) {
+            result.put((String) row.get("achiev"), (Timestamp) row.get("acquisitiondate"));
         }
 
         return result;
@@ -524,15 +686,15 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        User returnUser = getUser(user, Connection.TRANSACTION_SERIALIZABLE);
-
-        if(returnUser != null && returnUser.getPass().equals(user.getPass())){
-            return returnUser;
-        } else {
-            return null;
-        }
+        return getUser(user, Connection.TRANSACTION_SERIALIZABLE);
     }
 
+    /**
+     * Creates a new achievement for the users
+     *
+     * @param achievement Achievement we want to create
+     * @throws PiikDatabaseException Thrown if achievement or its primary key are null
+     */
     public void createAchievement(Achievement achievement) throws PiikDatabaseException {
 
         if (achievement == null || !achievement.checkPrimaryKey(true)) {
@@ -621,6 +783,13 @@ public class UserDao extends AbstractDao {
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
     }
 
+    /**
+     * Unblock an user
+     *
+     * @param blockedUser user that was blocked
+     * @param user
+     * @throws PiikDatabaseException
+     */
     public void unblockUser(User blockedUser, User user) throws PiikDatabaseException {
 
         if (blockedUser == null || !blockedUser.checkPrimaryKey(false)) {
@@ -699,7 +868,7 @@ public class UserDao extends AbstractDao {
                         "SELECT COUNT(*) AS followback " +
                         "FROM followedtable, followerstable " +
                         "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK(),user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
+        ).defineParameters(user.getPK(), user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
         statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
 

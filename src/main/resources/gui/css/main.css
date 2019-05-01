@@ -7,15 +7,28 @@
 
 
 .main-content {
-    /*-fx-pref-height: 650;*/
+    -fx-pref-height: 750;
     -fx-pref-width: 450;
     -fx-min-width: -fx-pref-width;
     -fx-max-width: -fx-pref-width;
-    /*-fx-min-height: -fx-pref-height;*/
-    /*-fx-max-height: -fx-pref-height;*/
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
 }
 
 
 .main-masonry {
     -fx-min-width: 470;
+}
+
+.profile-header-container {
+    -fx-padding: 10, 10, 10, 10;
+}
+
+.conv-message-container {
+    /*-fx-pref-height: 750;*/
+    -fx-pref-width: 450;
+    -fx-min-width: -fx-pref-width;
+    -fx-max-width: -fx-pref-width;
+    /*-fx-min-height: -fx-pref-height;*/
+    /*-fx-max-height: -fx-pref-height;*/
 }

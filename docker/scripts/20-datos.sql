@@ -2,12 +2,16 @@
 -- Piiuser
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
-VALUES ('usr1', 'usr1@gmail.com', 'user1', 'user1', 'M', 'dasdasd',
+VALUES ('usr1', 'usr1@gmail.com', 'user1',
+        'LhRjG6dPpDNSOqBvE/+KTA==$4Ne3Q+T6DrXeIZCSAAo1GBeuot7+krcQjoC5cf2B4OfqAcwl5ne6tFJtKSMZiR4IqpnckHxw0vutdAokJVbGew==',
+        'M', 'My bio is super  cool',
         'somewhere', '231', 'someProvince', 'someCountry', 'someCity', '2019-04-12', '2019-04-12');
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
-VALUES ('usr2', 'usr2@gmail.com', 'user2', 'user2', 'M', 'dasdasd',
+VALUES ('usr2', 'usr2@gmail.com', 'user2',
+        'LhRjG6dPpDNSOqBvE/+KTA==$4Ne3Q+T6DrXeIZCSAAo1GBeuot7+krcQjoC5cf2B4OfqAcwl5ne6tFJtKSMZiR4IqpnckHxw0vutdAokJVbGew==',
+        'M', 'dasdasd',
         'somewhere', '231', 'someProvince', 'someCountry', 'someCity', '2019-04-12', '2019-04-12');
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
@@ -43,7 +47,7 @@ VALUES ('usr1', 'usr4');
 
 -- Follow Users
 INSERT INTO followuser (followed, follower)
-VALUES ('usr1', 'usr2');
+VALUES ('usr2', 'usr1');
 
 INSERT INTO followuser (followed, follower)
 VALUES ('usr3', 'usr2');
@@ -352,7 +356,7 @@ VALUES ('usr1', 'easyGameEasyLife', 'dont know what to say', CURRENT_DATE);
 -- ================================================= DATA MESSAGES =====================================================
 -- Message
 INSERT INTO message (author, text, date, multimedia)
-VALUES ('usr3', 'Is this the real life?', '2019-04-10', 'aaaa');
+VALUES ('usr4', 'Is this the real life?', '2019-04-10', 'aaaa');
 INSERT INTO message (author, text, date, multimedia)
 VALUES ('usr3', 'Is this the real life?', '2019-04-11', 'aaaa');
 INSERT INTO message (author, text, date, multimedia, ticket)
@@ -374,7 +378,7 @@ ORDER BY message
 LIMIT 1 OFFSET 1;
 
 INSERT INTO receivemessage (message, author, receiver)
-SELECT id, author, 'usr2'
+SELECT id, author, 'usr3'
 FROM message
 ORDER BY message
 LIMIT 1 OFFSET 2;

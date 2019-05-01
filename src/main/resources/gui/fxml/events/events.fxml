@@ -10,9 +10,9 @@
 <?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.EventsController">
+           fx:controller="piiksuma.gui.events.EventsController" alignment="TOP_CENTER">
     <ScrollPane fx:id="eventScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content">
-        <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="10" styleClass="main-masonry">
+        <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="-1" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
 </StackPane>

@@ -28,16 +28,17 @@ public class PostDao extends AbstractDao {
     }
 
 
-    /* Methods */
+// ======================================================= POSTS =======================================================
 
-    /**
-     * Function that adds a post into the database
+    /*******************************************************************************************************************
+     * Inserts a post on the db
      *
-     * @param post post to add, with its creator, into the database
-     * @return post containing the given data and its generated ID
+     * @param post Post to be inserted
+     * @return returns the post
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
      */
     public Post createPost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(true)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -51,7 +52,7 @@ public class PostDao extends AbstractDao {
         boolean sugarDaddyExists = post.getFatherPost() != null && post.getFatherPost().checkPrimaryKey(false);
         boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
                 post.getFatherPost().getAuthor().checkPrimaryKey(false);
-        if(authorDaddyExists) {
+        if (authorDaddyExists) {
             System.out.println("Dafuq");
         }
         boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
@@ -180,7 +181,7 @@ public class PostDao extends AbstractDao {
 
             statementHashtags = con.prepareStatement(clause.toString());
 
-            for(Hashtag hashtag : post.getHashtags()) {
+            for (Hashtag hashtag : post.getHashtags()) {
                 statementHashtags.setString(1, hashtag.getName());
                 statementHashtags.setString(2, hashtag.getName());
                 statementHashtags.executeUpdate();
@@ -232,20 +233,37 @@ public class PostDao extends AbstractDao {
                 throw new PiikDatabaseException(e.getMessage());
             }
         }
-
+        // Return Post
         return completePost;
     }
+    //******************************************************************************************************************
 
-
-    /**
-     * Function to update the text content of the post
+    /*******************************************************************************************************************
+     * Remove a post from db
      *
-     * @param post post to be updated
-     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     * @param post post to be removed
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
+     */
+    public void removePost(Post post) throws PiikDatabaseException {
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        // Delete post
+        new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Update content (text) of a post
+     *
+     * @param post Post to be updated
+     * @throws PiikDatabaseException Thrown if post or its primary key are null
      */
 
     public void updatePost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -417,56 +435,40 @@ public class PostDao extends AbstractDao {
             }
         }
     }
+    //******************************************************************************************************************
 
-    /**
-     * Function to archive a post privately by an user
+    /*******************************************************************************************************************
+     * Archive a post requested by an user
      *
-     * @param post post to be archived
-     * @throws PiikDatabaseException Duplicated keys and null values that shouldn't be
+     * @param post Post to be archived
+     * @throws PiikDatabaseException Thrown if post/user or its primary keys are null
      */
     public void archivePost(Post post, User user) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
-
+        // Check if user or its primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
+        // Archive post
         new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivepost values (?,?,?)")
                 .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
                 .executeUpdate();
     }
+    //******************************************************************************************************************
 
-    /**
-     * Function that removes a post from the database
+    /*******************************************************************************************************************
+     * Returns a post form db
      *
-     * @param post post to remove from the database
-     */
-    public void removePost(Post post) throws PiikDatabaseException {
-
-        if (post == null || !post.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
-        }
-
-        new DeleteMapper<Post>(super.getConnection()).add(post).defineClass(Post.class).delete();
-    }
-
-    private String getQueryPost() {
-        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
-                "o.author ";
-    }
-
-    /**
-     * Function to get the indicated post from the database
-     *
-     * @param post post to search from the database
-     * @return the post
-     * @throws PiikDatabaseException
+     * @param post Post wanted
+     * @return Post
+     * @throws PiikDatabaseException Thrown if post or its primary keys are null
      */
     public Post getPost(Post post) throws PiikDatabaseException {
-
+        // Check if post or its primary key are null
         if (post == null || !post.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
         }
@@ -504,36 +506,41 @@ public class PostDao extends AbstractDao {
 
         return resultPost;
     }
+    //******************************************************************************************************************
 
-    /**
-     * Funcion that return a list with all the posts that have the indicated hashtag
+    /*******************************************************************************************************************
+     * Gets a list of post containing a given hashtag
      *
-     * @param hashtag hashtag to search in the posts
-     * @return a list with all the posts that have the hashtag
-     * @throws PiikDatabaseException
+     * @param hashtag Hashtag to be searched for
+     * @return List with all the posts that have the hashtag
+     * @throws PiikDatabaseException Thrown if hashtag or its primary keys are null
      */
     public List<Post> getPost(Hashtag hashtag) throws PiikDatabaseException {
 
+        // Check if hashtag or its primary key are null
         if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
-        List<Map<String, Object>> result =  new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
+        // Get the List
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
                 " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
                 .defineParameters(hashtag.getName()).mapList();
-
+        // Return List
         return getPosts(result);
     }
+    //******************************************************************************************************************
 
-    /**
-     * Function that return a list with all the user's post
+    /*******************************************************************************************************************
+     * Gets a list of post containing a given user
      *
-     * @param user user who created the post
-     * @return a list with all the user's posts
-     * @throws PiikDatabaseException
+     * @param user User to be searched for
+     * @return List post created by the user
+     * @throws PiikDatabaseException Thrown if user or its primary keys are null
      */
     public List<Post> getPost(User user) throws PiikDatabaseException {
 
+        // Check if hashtag or its primary key are null
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
@@ -542,11 +549,89 @@ public class PostDao extends AbstractDao {
         String query = getQueryPost();
 
         query += "WHERE post.author = ?";
-
         List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(query)
-                .defineParameters(user.getPK()).mapList();
+                .defineClass(Post.class).defineParameters(user.getPK()).mapList();
 
+        // Return posts
         return getPosts(result);
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Retrieves the posts that a user has archived
+     *
+     * @param user User whose archived posts will be retrieved
+     * @return List of posts founded
+     * @throws PiikDatabaseException Thrown if user or its primary key are null
+     */
+    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
+
+        // Check if hashtag or its primary key are null
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        // List of post
+        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
+                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Repost an already published post
+     *
+     * @param userRepost User who reposts
+     * @param post       Post to be reposted
+     * @param userPost   Owner of the post
+     * @throws PiikDatabaseException Thrown if userRepost/post/userPost or its primary keys are null
+     */
+    public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
+        // Check if userRepost or its primary key are null
+        if (userRepost == null || !userRepost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userRepost"));
+        }
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+        // Check if userPost or its primary key are null
+        if (userPost == null || !userPost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userPost"));
+        }
+
+
+        // Repost
+        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
+                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getPK(),
+                userPost.getPK()).executeUpdate();
+
+    }
+    //******************************************************************************************************************
+
+    /*******************************************************************************************************************
+     * Function to remove a repost
+     *
+     * @param repost Repost to be removed
+     * @throws PiikDatabaseException Thrown if repost or its primary key are null
+     */
+    public void removeRepost(Post repost) throws PiikDatabaseException {
+        // Check if repost or its primary key are null
+        if (repost == null || !repost.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
+        }
+        // Delete repost
+        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
+                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
+
+    }
+    //******************************************************************************************************************
+
+//======================================================================================================================
+
+    private String getQueryPost() {
+        return "SELECT post.*, o.hashtag FROM post LEFT JOIN ownhashtag o ON post.id = o.post AND post.author = " +
+                "o.author ";
     }
 
     /**
@@ -556,19 +641,19 @@ public class PostDao extends AbstractDao {
      * @return
      */
     private List<Post> getPosts(List<Map<String, Object>> result) {
-        if(result == null || result.isEmpty()){
+        if (result == null || result.isEmpty()) {
             return null;
         }
 
         ArrayList<Post> posts = new ArrayList<>();
 
-        for(Map<String, Object> columnsPost : result){
+        for (Map<String, Object> columnsPost : result) {
             Post resultPost = new Post();
             User user = new User();
 
             Object idUser = columnsPost.get("author");
 
-            if(idUser instanceof String){
+            if (idUser instanceof String) {
                 user.setId((String) idUser);
                 columnsPost.put("author", user);
             }
@@ -578,7 +663,7 @@ public class PostDao extends AbstractDao {
             // The post may already be in the list, because a row is generated for each combination idPost - Hashtag
             // combination
             boolean postContains = false;
-            if(posts.contains(resultPost)){
+            if (posts.contains(resultPost)) {
                 resultPost = posts.get(posts.indexOf(resultPost));
                 postContains = true;
             }
@@ -592,7 +677,7 @@ public class PostDao extends AbstractDao {
                 }
             }
 
-            if(!postContains){
+            if (!postContains) {
                 posts.add(resultPost);
             }
         }
@@ -601,66 +686,11 @@ public class PostDao extends AbstractDao {
     }
 
     /**
-     * Retrieves the posts that a user has archived
+     * Creates a new hashtag
      *
-     * @param user user whose archived posts will be retrieved
-     * @return found posts
+     * @param hashtag Hashtag you want to create
+     * @throws PiikDatabaseException Thrown if hashtag or its primary key are null
      */
-    public List<Post> getArchivedPosts(User user) throws PiikDatabaseException {
-
-        if (user == null || !user.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
-        }
-
-        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
-                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
-    }
-
-    /**
-     * Function to do a repost on a post
-     *
-     * @param userRepost user who does the repost
-     * @param post       post to be reposted
-     * @param userPost   user who owns the post
-     */
-    public void repost(User userRepost, Post post, User userPost) throws PiikDatabaseException {
-
-        if (userRepost == null || !userRepost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userRepost"));
-        }
-
-        if (post == null || !post.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
-        }
-
-        if (userPost == null || !userPost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("userPost"));
-        }
-
-        new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO repost(post,usr,author) " +
-                "VALUES (?,?,?)").defineClass(Object.class).defineParameters(post.getId(), userRepost.getPK(),
-                userPost.getPK()).executeUpdate();
-
-    }
-
-    /**
-     * Function to remove a repost
-     *
-     * @param repost repost to remove from the database
-     * @throws PiikDatabaseException
-     */
-    public void removeRepost(Post repost) throws PiikDatabaseException {
-
-        if (repost == null || !repost.checkPrimaryKey(false)) {
-            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
-        }
-
-        new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
-                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
-                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
-
-    }
-
     public void createHashtag(Hashtag hashtag) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkPrimaryKey(true)) {
@@ -781,105 +811,105 @@ public class PostDao extends AbstractDao {
             // We'll use a prepared statement to avoid malicious intentions :(
             PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
-                    "WITH followedUsers (followed) AS (\n" +
-                    "    SELECT followed\n" +
-                    "    FROM followuser\n" +
-                    "    WHERE follower = ?\n" +
-                    "),\n" +
-                    "-- We obtain the hashtags followed by the user just for convenience\n" +
-                    "followedHashtags (followed) AS (\n" +
-                    "    SELECT hashtag\n" +
-                    "    FROM followhashtag\n" +
-                    "    WHERE piiuser = ?\n" +
-                    "),\n" +
-                    "-- We obtain the blocked and silenced users to filter out their posts\n" +
-                    " filteredUsers (filtered) AS (\n" +
-                    "    SELECT blocked\n" +
-                    "    FROM blockuser\n" +
-                    "    WHERE usr = ?\n" +
-                    "\n" +
-                    "    UNION\n" +
-                    "\n" +
-                    "    SELECT silenced\n" +
-                    "    FROM silenceuser\n" +
-                    "    WHERE usr = ?\n" +
-                    ")\n" +
-                    "\n" +
-                    "-- 'UNION' already gets rid of duplicated results\n" +
-                    "SELECT *\n" +
-                    "\n" +
-                    "FROM (\n" +
-                    "\n" +
-                    "         -- We obtain the posts made by the followed users who are not filtered out\n" +
-                    "         (SELECT p.*, 'following' as type\n" +
-                    "          FROM post as p\n" +
-                    "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
-                    "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the posts that the user made\n" +
-                    "         (SELECT *, 'own' as type\n" +
-                    "          FROM post\n" +
-                    "          WHERE author = ?)\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the reposts that the user made\n" +
-                    "         (SELECT p.*, 'repost' as type\n" +
-                    "          FROM post as p\n" +
-                    "          WHERE EXISTS(\n" +
-                    "                        SELECT *\n" +
-                    "                        FROM repost as r\n" +
-                    "                        WHERE r.author = ?\n" +
-                    "                          AND r.author = p.author\n" +
-                    "                          AND r.post = p.id\n" +
-                    "                    ))\n" +
-                    "\n" +
-                    "         UNION\n" +
-                    "\n" +
-                    "         -- We obtain the 20 most reacted to posts which are in the user's\n" +
-                    "         -- followed hashtags; the parentheses are needed to apply the\n" +
-                    "         -- 'ORDER BY' only to this query, instead on applying it to the whole\n" +
-                    "         -- 'UNION'\n" +
-                    "         (SELECT p.*, 'hashtag' as type\n" +
-                    "          FROM (SELECT candidates.author,\n" +
-                    "                       candidates.id\n" +
-                    "                -- First we obtain the posts that are in the user's followed\n" +
-                    "                -- hashtags and that are not made by filtered out users\n" +
-                    "                FROM (\n" +
-                    "                         SELECT *\n" +
-                    "                         FROM post as p\n" +
-                    "                         -- We need to make sure that, for each post, at least\n" +
-                    "                         -- one of its related hashtags is followed by the user\n" +
-                    "                         WHERE EXISTS(\n" +
-                    "                                 SELECT *\n" +
-                    "                                 FROM ownhashtag as h\n" +
-                    "                                 WHERE h.post = p.id\n" +
-                    "                                   AND h.author = p.author\n" +
-                    "                                   AND h.hashtag IN (SELECT * FROM\n" +
-                    "                                       followedHashtags)\n" +
-                    "                             )\n" +
-                    "                           AND p.author NOT IN (SELECT * FROM filteredUsers)\n" +
-                    "                     ) as candidates,\n" +
-                    "                     react as r\n" +
-                    "                -- We associate each post with its reactions\n" +
-                    "                WHERE candidates.author = r.author\n" +
-                    "                  AND candidates.id = r.post\n" +
-                    "                -- And we filter the posts with the number of reactions\n" +
-                    "                -- obtained for each one\n" +
-                    "                GROUP BY candidates.author, candidates.id\n" +
-                    "                ORDER BY COUNT(r.reactiontype) DESC\n" +
-                    "                LIMIT 20) as subquery,\n" +
-                    "               post as p\n" +
-                    "          WHERE subquery.id = p.id\n" +
-                    "            AND subquery.author = p.author\n" +
-                    "         )\n" +
-                    "\n" +
-                    " ) as results\n" +
-                    "\n" +
-                    "ORDER BY results.publicationdate DESC\n" +
-                    "LIMIT ?\n");
+                            "WITH followedUsers (followed) AS (\n" +
+                            "    SELECT followed\n" +
+                            "    FROM followuser\n" +
+                            "    WHERE follower = ?\n" +
+                            "),\n" +
+                            "-- We obtain the hashtags followed by the user just for convenience\n" +
+                            "followedHashtags (followed) AS (\n" +
+                            "    SELECT hashtag\n" +
+                            "    FROM followhashtag\n" +
+                            "    WHERE piiuser = ?\n" +
+                            "),\n" +
+                            "-- We obtain the blocked and silenced users to filter out their posts\n" +
+                            " filteredUsers (filtered) AS (\n" +
+                            "    SELECT blocked\n" +
+                            "    FROM blockuser\n" +
+                            "    WHERE usr = ?\n" +
+                            "\n" +
+                            "    UNION\n" +
+                            "\n" +
+                            "    SELECT silenced\n" +
+                            "    FROM silenceuser\n" +
+                            "    WHERE usr = ?\n" +
+                            ")\n" +
+                            "\n" +
+                            "-- 'UNION' already gets rid of duplicated results\n" +
+                            "SELECT *\n" +
+                            "\n" +
+                            "FROM (\n" +
+                            "\n" +
+                            "         -- We obtain the posts made by the followed users who are not filtered out\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
+                            "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the posts that the user made\n" +
+                            "         (SELECT *\n" +
+                            "          FROM post\n" +
+                            "          WHERE author = ?)\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the reposts that the user made\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE EXISTS(\n" +
+                            "                        SELECT *\n" +
+                            "                        FROM repost as r\n" +
+                            "                        WHERE r.author = ?\n" +
+                            "                          AND r.author = p.author\n" +
+                            "                          AND r.post = p.id\n" +
+                            "                    ))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the 20 most reacted to posts which are in the user's\n" +
+                            "         -- followed hashtags; the parentheses are needed to apply the\n" +
+                            "         -- 'ORDER BY' only to this query, instead on applying it to the whole\n" +
+                            "         -- 'UNION'\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM (SELECT candidates.author,\n" +
+                            "                       candidates.id\n" +
+                            "                -- First we obtain the posts that are in the user's followed\n" +
+                            "                -- hashtags and that are not made by filtered out users\n" +
+                            "                FROM (\n" +
+                            "                         SELECT *\n" +
+                            "                         FROM post as p\n" +
+                            "                         -- We need to make sure that, for each post, at least\n" +
+                            "                         -- one of its related hashtags is followed by the user\n" +
+                            "                         WHERE EXISTS(\n" +
+                            "                                 SELECT *\n" +
+                            "                                 FROM ownhashtag as h\n" +
+                            "                                 WHERE h.post = p.id\n" +
+                            "                                   AND h.author = p.author\n" +
+                            "                                   AND h.hashtag IN (SELECT * FROM\n" +
+                            "                                       followedHashtags)\n" +
+                            "                             )\n" +
+                            "                           AND p.author NOT IN (SELECT * FROM filteredUsers)\n" +
+                            "                     ) as candidates,\n" +
+                            "                     react as r\n" +
+                            "                -- We associate each post with its reactions\n" +
+                            "                WHERE candidates.author = r.author\n" +
+                            "                  AND candidates.id = r.post\n" +
+                            "                -- And we filter the posts with the number of reactions\n" +
+                            "                -- obtained for each one\n" +
+                            "                GROUP BY candidates.author, candidates.id\n" +
+                            "                ORDER BY COUNT(r.reactiontype) DESC\n" +
+                            "                LIMIT 20) as subquery,\n" +
+                            "               post as p\n" +
+                            "          WHERE subquery.id = p.id\n" +
+                            "            AND subquery.author = p.author\n" +
+                            "         )\n" +
+                            "\n" +
+                            " ) as results\n" +
+                            "\n" +
+                            "ORDER BY results.publicationdate DESC\n" +
+                            "LIMIT ?\n");
 
             // We set the identifier of the user whose feed will be retrieved
             stm.setString(1, user.getPK());
@@ -902,6 +932,49 @@ public class PostDao extends AbstractDao {
                             rs.getString("multimedia")));
                 }
 
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+
+            } finally {
+                try {
+                    // We must close the prepared statement as it won't be used anymore
+                    stm.close();
+                } catch (SQLException e) {
+                    throw new PiikDatabaseException(e.getMessage());
+                }
+            }
+
+
+            /* Multimedia info retrieval */
+
+            stm = con.prepareStatement("SELECT * FROM multimedia WHERE hash = ?");
+
+            try {
+                // We retrieve the corresponding multimedia info for each post that references the multimedia table
+                for(Post post : result) {
+
+                    if(post.getMultimedia() != null && !post.getMultimedia().getHash().isEmpty()) {
+
+                        // Setting iterated multimedia's PK
+                        stm.setString(1, post.getMultimedia().getHash());
+
+                        // Executing the composed query
+                        rs = stm.executeQuery();
+
+                        // Info retrieval successful
+                        if(rs.next()) {
+                            post.getMultimedia().setResolution(rs.getString("resolution"));
+                            post.getMultimedia().setUri(rs.getString("uri"));
+                        }
+
+                        else {
+                            throw new PiikDatabaseException("Data retrieval from multimedia row \"" +
+                                    post.getMultimedia().getHash() + "\" failed");
+                        }
+                    }
+                }
+
             } catch (SQLException e) {
                 throw new PiikDatabaseException(e.getMessage());
 
@@ -920,6 +993,14 @@ public class PostDao extends AbstractDao {
         return (result);
     }
 
+    /**
+     * Gets a List of the most used hashtags
+     *
+     * @param limit   Number of hashtags to put on the list
+     * @return Return the list of hastags
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters, PiikDatabaseException {
 
         if (limit <= 0) {

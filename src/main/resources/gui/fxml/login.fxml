@@ -9,19 +9,21 @@
 <?import javafx.scene.layout.StackPane?>
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.layout.VBox?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx/8.0.172-ea"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="piiksuma.gui.LoginController">
 
-   <VBox alignment="CENTER" spacing="20">
-      <StackPane alignment="TOP_CENTER" styleClass="img-container">
-         <ImageView>
-            <Image preserveRatio="true" requestedHeight="190" url="/imagenes/database.jpg"/>
-         </ImageView>
+   <VBox alignment="CENTER">
+      <StackPane prefHeight="200">
+         <FontAwesomeIconView glyphName="LOCK" scaleX="10" scaleY="10"/>
       </StackPane>
-      <JFXTextField fx:id="userId"  maxWidth="200" promptText="UserId"/>
-      <JFXPasswordField fx:id="password"  maxWidth="200" promptText="Password"/>
-      <JFXButton fx:id="logIn" styleClass="jfx-button-border" text="Log In" />
-      <JFXButton fx:id="register" styleClass="jfx-button-border" text="Register" />
+      <VBox alignment="CENTER" spacing="20">
+         <JFXTextField fx:id="userId" maxWidth="200" promptText="UserId"/>
+         <JFXPasswordField fx:id="password" maxWidth="200" promptText="Password"/>
+         <JFXButton fx:id="logIn" styleClass="jfx-button-border" text="Log In"/>
+         <JFXButton fx:id="register" styleClass="jfx-button-border" text="Register"/>
+      </VBox>
+
    </VBox>
 </StackPane>
