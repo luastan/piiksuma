@@ -247,7 +247,7 @@ public class UserProfileController implements Initializable {
 
         try {
             List<Post> searchPosts = ApiFacade.getEntrypoint().getSearchFacade().getPost(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
+                    user , ContextHandler.getContext().getCurrentUser());
 
             if(searchPosts != null && !searchPosts.isEmpty()) {
                 publishedPostsList.addAll(searchPosts);
