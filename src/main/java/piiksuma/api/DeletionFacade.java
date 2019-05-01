@@ -253,7 +253,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (e == null || e.checkNotNull(false)) {
+        if (e == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 

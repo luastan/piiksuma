@@ -241,7 +241,7 @@ public class InteractionDao extends AbstractDao {
         }
 
         new DeleteMapper<>(getConnection()).createUpdate("DELETE FROM participateevent WHERE event = ? AND usr = ?")
-                .defineParameters(event.getId(), user.getPK());
+                .defineParameters(event.getId(), user.getPK()).executeUpdate();
     }
 
     /**
@@ -268,7 +268,11 @@ public class InteractionDao extends AbstractDao {
             usersPK.add(user);
         }
 
-        return ApiFacade.getEntrypoint().getUserDao().getUsers(usersPK);
+        if(usersPK.isEmpty()){
+            return new HashMap<>();
+        } else{
+            return ApiFacade.getEntrypoint().getUserDao().getUsers(usersPK);
+        }
     }
     //******************************************************************************************************************
 
