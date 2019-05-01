@@ -98,7 +98,7 @@ public class PostController implements Initializable {
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
 
         try {
-            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)){
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
@@ -108,6 +108,8 @@ public class PostController implements Initializable {
         buttonLike.setOnAction(this::handleLike);
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
+
+
     }
 
     private void handleAnswer(Event event){
@@ -130,10 +132,6 @@ public class PostController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
-            if (ContextHandler.getContext().getSearchController() != null) {
-                ContextHandler.getContext().getSearchController().clear();
-            }
-
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
             piikInvalidParameters.showAlert();
         }
@@ -155,7 +153,7 @@ public class PostController implements Initializable {
                 ContextHandler.getContext().getFeedController().updateFeed();
             }
             if (ContextHandler.getContext().getSearchController() != null) {
-                ContextHandler.getContext().getSearchController().clear();
+                ContextHandler.getContext().getSearchController().updatePostFeed();
             }
         }catch (PiikException e){
             e.showAlert();
