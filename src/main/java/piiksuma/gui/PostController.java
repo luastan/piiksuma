@@ -71,7 +71,7 @@ public class PostController implements Initializable {
             author = ApiFacade.getEntrypoint().getSearchFacade().getUser(
                     author, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
         post.setAuthor(author);
@@ -102,7 +102,7 @@ public class PostController implements Initializable {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
         buttonLike.setOnAction(this::handleLike);
@@ -111,45 +111,12 @@ public class PostController implements Initializable {
     }
 
     private void handleAnswer(Event event){
-        Stage newPostStage = new Stage();
-
         try {
-            ContextHandler.getContext().register("Answer Post", newPostStage);
-        } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
-            return;
-        }
-        // Stage configuration
-        newPostStage.setTitle("Answer Post");
-        newPostStage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/createAnswer.fxml"));
-
-        CreatePostController controller = new CreatePostController();
-
-        controller.setPostFather(post);
-
-        loader.setController(controller);
-        JFXDecorator decorator;
-
-        try {
-            decorator = new JFXDecorator(newPostStage, loader.load(), false, false, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+            ContextHandler.getContext().invokeStage("/gui/fxml/createAnswer.fxml", null, "Answer Post");
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.showAlert();
         }
 
-        Scene scene = new Scene(decorator, 450, 550);
-
-
-        scene.getStylesheets().addAll(
-                getClass().getResource("/gui/css/global.css").toExternalForm(),
-                getClass().getResource("/gui/css/main.css").toExternalForm()
-        );
-        newPostStage.initModality(Modality.WINDOW_MODAL);
-        newPostStage.initOwner(ContextHandler.getContext().getStage("primary"));
-        newPostStage.setScene(scene);
-        // Show
-        newPostStage.show();
     }
 
     private void handleLike(Event event) {
@@ -163,24 +130,35 @@ public class PostController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
+            if (ContextHandler.getContext().getSearchController() != null) {
+                ContextHandler.getContext().getSearchController().clear();
+            }
+
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
+            piikInvalidParameters.showAlert();
         }
+
     }
 
     private void handleDelete(Event event){
         try{
             ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
-            ContextHandler.getContext().getFeedController().updateFeed();
             if(ContextHandler.getContext().getUserProfileController() != null){
                 ContextHandler.getContext().getUserProfileController().updateFeed();
                 ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
             }
+            ContextHandler.getContext().getFeedController().updateFeed();
             if(ContextHandler.getContext().getSearchController() != null){
                 ContextHandler.getContext().getSearchController().updatePostFeed();
             }
+            if (ContextHandler.getContext().getFeedController() != null) {
+                ContextHandler.getContext().getFeedController().updateFeed();
+            }
+            if (ContextHandler.getContext().getSearchController() != null) {
+                ContextHandler.getContext().getSearchController().clear();
+            }
         }catch (PiikException e){
-            System.out.println("PROBLEM");
+            e.showAlert();
         }
 
     }

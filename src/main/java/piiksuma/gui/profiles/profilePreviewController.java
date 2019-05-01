@@ -32,7 +32,7 @@ public class profilePreviewController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml", new UserProfileController(profile), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 

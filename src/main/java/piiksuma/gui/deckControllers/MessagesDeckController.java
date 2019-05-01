@@ -36,13 +36,18 @@ public class MessagesDeckController extends AbstractDeckController implements In
     @FXML
     private JFXButton userButton;
 
+    @FXML
+    private JFXButton viewNotificationsButton;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
         super.setHamburguerButton(hamburguerButton);
         super.setUserProfileButton(userButton);
         super.setUserDataButton(userDataButton);
-            // TODO: MessagesDeck implementation
+        super.setViewNotificationsButton(viewNotificationsButton);
+
 
         FontAwesomeIconView buttonIcon = new FontAwesomeIconView(FontAwesomeIcon.ENVELOPE_OPEN);
         buttonIcon.getStyleClass().add("deck-button-graphic");
@@ -56,7 +61,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
         try {
             ContextHandler.getContext().register("startChat", searchStage);
         } catch (PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
             return;
         }
         // Stage configuration

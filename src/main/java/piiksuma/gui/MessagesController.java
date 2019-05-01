@@ -53,7 +53,7 @@ public class MessagesController implements Initializable {
         try {
             updateMessageFeed();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 
@@ -105,7 +105,7 @@ public class MessagesController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", controller, "Messages" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 

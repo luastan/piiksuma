@@ -78,7 +78,7 @@ public class EventController implements Initializable {
                 ContextHandler.getContext().getStage("Event - " + event.getName()).close();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
             } catch (PiikDatabaseException | PiikInvalidParameters e) {
-                e.printStackTrace();
+                e.showAlert();
             }
         });
         if (participants.contains(current)) {
@@ -99,7 +99,7 @@ public class EventController implements Initializable {
             refreshParticipants();
             buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 
@@ -112,7 +112,7 @@ public class EventController implements Initializable {
             refreshParticipants();
             buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 
@@ -146,7 +146,7 @@ public class EventController implements Initializable {
             participants.addAll(ApiFacade.getEntrypoint()
                     .getSearchFacade().usersInEvent(event, ContextHandler.getContext().getCurrentUser()).values());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 
@@ -162,7 +162,6 @@ public class EventController implements Initializable {
         }
         participantMasonryPane.getChildren().add(profile);
         participantScrollPane.requestLayout();
-//        participantScrollPane.requestFocus();
     }
 
 

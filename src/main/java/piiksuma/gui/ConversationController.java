@@ -97,8 +97,7 @@ public class ConversationController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(newMessage, peer, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            // TODO: Handle the exception
-            e.printStackTrace();
+            e.showAlert();
         }
         initializeNewMessage();
         messageField.setText(" ");
@@ -132,7 +131,7 @@ public class ConversationController implements Initializable {
                     .messageWithUser(current, 250, current)
                     .get(peer));
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 }

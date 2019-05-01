@@ -43,7 +43,7 @@ public class NotificationsController implements Initializable {
             // Update its contents
             updateNotifications();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 
@@ -59,7 +59,7 @@ public class NotificationsController implements Initializable {
             notifications.addAll(notifications1);
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
+            piikInvalidParameters.showAlert();
         }
     }
 

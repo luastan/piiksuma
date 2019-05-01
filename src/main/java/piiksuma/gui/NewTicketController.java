@@ -41,7 +41,6 @@ public class NewTicketController implements Initializable {
             alert.addText("Section and description cannot be empty");
             alert.addCloseButton();
             alert.show();
-
             return;
         }
         ticket.setSection(section.getText());
@@ -49,13 +48,9 @@ public class NewTicketController implements Initializable {
         ticket.setTextProblem(description.getText());
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().newTicket(ticket, ContextHandler.getContext().getCurrentUser());
-        } catch (PiikDatabaseException e) {
-            e.printStackTrace();
-        } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
         }
-
-        ticket.toString();
 
     }
 }

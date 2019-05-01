@@ -168,8 +168,7 @@ public class UserDataController implements Initializable {
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(currentUser, currentUser));
             ContextHandler.getContext().getStage("userData").close();
         } catch (PiikException e) {
-            System.out.println("EXCEPTION");
-            return;
+            e.showAlert();
         }
 
 

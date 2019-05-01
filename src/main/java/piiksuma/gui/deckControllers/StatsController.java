@@ -65,9 +65,7 @@ public class StatsController implements Initializable {
             following.setText(""+statistics.getFollowing());
             followBack.setText(""+statistics.getFollowBack());
         } catch (PiikException e) {
-            //TODO logger and alert
-            System.out.println(e.getMessage());
-            return;
+            e.showAlert();
         }
     }
 

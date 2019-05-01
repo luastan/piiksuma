@@ -101,7 +101,7 @@ public class UserProfileController implements Initializable {
             setUpPostsListener();
 
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
 
@@ -156,7 +156,7 @@ public class UserProfileController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().followUser(user, current, current);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
         updateFollowButton();
     }
@@ -184,7 +184,7 @@ public class UserProfileController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, current, current);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
         updateBlockButton();
     }
@@ -202,7 +202,7 @@ public class UserProfileController implements Initializable {
 
         } catch (PiikException e) {
             //TODO handle exception
-            e.printStackTrace();
+            e.showAlert();
         }
 
 
@@ -217,7 +217,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 
@@ -230,7 +230,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert();
         }
     }
 
@@ -250,7 +250,7 @@ public class UserProfileController implements Initializable {
                 publishedPostsList.addAll(searchPosts);
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
         publishedPosts.requestLayout();
@@ -266,7 +266,7 @@ public class UserProfileController implements Initializable {
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade()
                     .getArchivedPosts(user, ContextHandler.getContext().getCurrentUser()));
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         } catch (PiikInvalidParameters ignore) {
             // Current user is not allowed to see archived posts from other user
         }

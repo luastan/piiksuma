@@ -70,13 +70,12 @@ public class SearchController implements Initializable {
         setUpFeedEventListener();
         setUpFeedUserListener();
 
+    }
 
-        //updatePostFeed();
-//        try {
-//            updateEventFeed();
-//        } catch (PiikDatabaseException e) {
-//            e.printStackTrace();
-//        }
+    public void clear() {
+        postFeed.clear();
+        userFeed.clear();
+        eventFeed.clear();
     }
 
 

@@ -162,7 +162,7 @@ public class CreatePostController implements Initializable {
             ContextHandler.getContext().getFeedController().updateFeed();
             // And the window closes
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
     }

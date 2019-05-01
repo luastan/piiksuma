@@ -45,7 +45,7 @@ public class TicketsController implements Initializable {
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         }
         Search.setOnAction(this::handleSearch);
     }
@@ -54,7 +54,7 @@ public class TicketsController implements Initializable {
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert();
         }
     }
 

@@ -68,20 +68,11 @@ public class CreateEventController implements Initializable {
             newEvent.setDate(Timestamp.valueOf(date.getValue().atStartOfDay()));
         }
 
-//        if(!date.getText().isEmpty()) {
-//            try {
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//                Date d = dateFormat.parse(date.getText());
-//                newEvent.setDate(new java.sql.Timestamp(d.getTime()));
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         try {
-            newEvent=ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
+            newEvent = ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
         }catch (PiikException e){
-            System.out.println(e.getMessage());
+            e.showAlert();
             return;
         }
 
