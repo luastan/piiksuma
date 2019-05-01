@@ -1021,6 +1021,40 @@ public class PostDao extends AbstractDao {
                     throw new PiikDatabaseException(e.getMessage());
                 }
             }
+
+
+            /* Hashtag retrieval */
+
+            stm = con.prepareStatement("SELECT * FROM ownhashtag WHERE post = ? AND author = ?");
+
+            try {
+                // We retrieve the associated hashtags for each obtained post
+                for(Post post : result) {
+
+                    // Setting iterated post's PKs
+                    stm.setString(1, post.getId());
+                    stm.setString(2, post.getAuthor().getPK());
+
+                    // Executing the composed query
+                    rs = stm.executeQuery();
+
+                    // Hashtags retrieval
+                    while(rs.next()) {
+                        post.getHashtags().add(new Hashtag(rs.getString("hashtag")));
+                    }
+                }
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+
+            } finally {
+                try {
+                    // We must close the prepared statement as it won't be used anymore
+                    stm.close();
+                } catch (SQLException e) {
+                    throw new PiikDatabaseException(e.getMessage());
+                }
+            }
         } catch (SQLException e) {
             throw new PiikDatabaseException(e.getMessage());
         }
