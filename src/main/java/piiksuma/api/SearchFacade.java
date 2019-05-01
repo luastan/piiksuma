@@ -791,4 +791,30 @@ public class SearchFacade {
 
         return parentFacade.getUserDao().isBlock(user1, user2);
     }
+
+    /**
+     * Function to check if an user has already reposted a post
+     *
+     * @param user User we want to check if he has already reposted
+     * @param post Post we want to check
+     * @param currentUser Current user logged in the app
+     * @return "True" if the user reposted the post, otherwise "false"
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
+    public boolean checkUserResposted(User user, Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters{
+        if (user == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (currentUser == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getPostDao().checkUserResposted(user, post);
+    }
 }
