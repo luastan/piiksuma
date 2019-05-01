@@ -30,6 +30,26 @@ public class PostDao extends AbstractDao {
 
 // ======================================================= POSTS =======================================================
 
+    /**
+     * Checks if the specified post contains the a given hashtag
+     * @param hashtag hashtag that will be checked
+     * @param post post which may contain the given hashtag
+     * @return if the given hashtag is contained in the specified post
+     */
+    public boolean hashtagInPost(Hashtag hashtag, Post post) throws PiikDatabaseException {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        return((new QueryMapper<>(super.getConnection()).createQuery("SELECT * FROM ownHashtag WHERE hashtag = ? AND " +
+                "post = ? AND author = ?").defineParameters(hashtag.getName(), post.getId(),
+                post.getPostAuthor().getPK()).mapList().size()) > 0);
+    }
+
     /*******************************************************************************************************************
      * Inserts a post on the db
      *

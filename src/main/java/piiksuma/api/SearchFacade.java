@@ -316,6 +316,24 @@ public class SearchFacade {
     /* POST related methods */
 
     /**
+     * Checks if the specified post contains the a given hashtag
+     * @param hashtag hashtag that will be checked
+     * @param post post which may contain the given hashtag
+     * @return if the given hashtag is contained in the specified post
+     */
+    public boolean hashtagInPost(Hashtag hashtag, Post post) throws PiikInvalidParameters, PiikDatabaseException {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        return parentFacade.getPostDao().hashtagInPost(hashtag, post);
+    }
+
+    /**
      * Returns a post form db
      *
      * @param post Post wanted
