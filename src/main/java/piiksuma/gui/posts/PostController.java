@@ -120,6 +120,10 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
+                    post, ContextHandler.getContext().getCurrentUser())) {
+                repost.getGraphic().setStyle("-fx-fill: -piik-blue-green;");
+            }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
@@ -127,6 +131,7 @@ public class PostController implements Initializable {
         buttonLike.setOnAction(this::handleLike);
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
+        repost.setOnAction(this::handleRepost);
 
 //        FontAwesomeIcon.HASHTAG
 
@@ -205,13 +210,18 @@ public class PostController implements Initializable {
 
     private void handleRepost(Event event) {
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
-                    post.getAuthor(), ContextHandler.getContext().getCurrentUser());
-
-//            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
-//                    post, ContextHandler.getContext().getCurrentUser())) {
-//                repost.setDisable(true);
-//            }
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
+                    post, ContextHandler.getContext().getCurrentUser())) {
+                // If the repost exists it gets deleted and the graphic gets grey color
+                ApiFacade.getEntrypoint().getDeletionFacade().removeRePost(post, ContextHandler.getContext().getCurrentUser());
+                repost.getGraphic().setStyle("");
+            } else {
+                // If the repost doesn't exist it gets reposted and the graphic gets green color
+                ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
+                        post.getAuthor(), ContextHandler.getContext().getCurrentUser());
+                repost.getGraphic().setStyle("-fx-fill: -piik-blue-green;");
+            }
+//            ContextHandler.getContext().getFeedController().updateFeed();
         } catch (PiikInvalidParameters | PiikDatabaseException e) {
             e.showAlert();
         }

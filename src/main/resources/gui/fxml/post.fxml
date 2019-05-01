@@ -39,12 +39,12 @@
                 </StackPane>
             </left>
             <right>
-                <!-- Share button -->
+                <!-- Answer button -->
                 <StackPane styleClass="post-inner-container">
-                    <JFXButton fx:id="repost" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)"
+                    <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)"
                                alignment="CENTER">
                         <graphic>
-                            <FontAwesomeIconView glyphName="RETWEET" size="30"
+                            <FontAwesomeIconView glyphName="PLUS" size="30"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
@@ -85,18 +85,13 @@
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
-                    <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
-                        <graphic>
-                            <FontAwesomeIconView glyphName="PLUS" size="24"
-                                                 styleClass="deck-small-button-graphic"/>
-                        </graphic>
-                    </JFXButton>
-                    <JFXButton fx:id="buttonRepost" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="repost" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <FontAwesomeIconView glyphName="RETWEET" size="24"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
+
                     <!--This button is for admins and for the creator, to delete a post-->
                     <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
