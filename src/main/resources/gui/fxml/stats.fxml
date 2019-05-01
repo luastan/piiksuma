@@ -52,5 +52,5 @@
         </HBox>
     </VBox>
 
-    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Close" styleClass="jfx-button-border" fx:id="closeButton"/>
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Close" styleClass="button-colored" fx:id="closeButton"/>
 </StackPane>

@@ -30,7 +30,7 @@
                 </JFXButton>
             </VBox>
             <VBox alignment="TOP_RIGHT">
-                <JFXButton fx:id="postButton" disable="true" styleClass="jfx-button-border" text="Post" translateY="20"
+                <JFXButton fx:id="postButton" disable="true" styleClass="button-colored" text="Post" translateY="20"
                            scaleY="1.25" scaleX="1.25"/>
             </VBox>
         </HBox>

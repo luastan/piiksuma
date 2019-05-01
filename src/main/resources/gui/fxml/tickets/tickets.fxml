@@ -31,7 +31,7 @@
         </HBox>
         <HBox alignment="TOP_LEFT" spacing="100">
             <JFXTextField fx:id="searchText" maxWidth="300" promptText="Introduce your search" translateX="20"/>
-            <JFXButton fx:id="Search" styleClass="jfx-button-border" text="Search"/>
+            <JFXButton fx:id="Search" styleClass="button-colored" text="Search"/>
         </HBox>
         <ScrollPane fx:id="ticketScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content" translateY="10">
             <JFXMasonryPane fx:id="ticketMasonryPane" VSpacing="10" styleClass="main-masonry" translateY="10">

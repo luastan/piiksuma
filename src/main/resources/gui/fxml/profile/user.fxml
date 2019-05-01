@@ -23,7 +23,7 @@
         </VBox>
     </center>
     <bottom>
-        <JFXButton fx:id="profileButton" text="Profile" styleClass="jfx-button-border" translateX="170"/>
+        <JFXButton fx:id="profileButton" text="Profile" styleClass="button-colored" translateX="170"/>
     </bottom>
     <ImageView translateY="70" translateX="10">
         <Image preserveRatio="true"  requestedHeight="80" url="/imagenes/huevo.png"/>

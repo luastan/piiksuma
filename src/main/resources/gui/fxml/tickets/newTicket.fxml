@@ -27,7 +27,8 @@
             <Text text="Issue:" translateX="20" translateY="5"/>
             <JFXTextArea fx:id="description"/>
         </HBox>
-        <JFXButton fx:id="sendButton" text="Send" styleClass="jfx-button-border" alignment="BOTTOM_CENTER" translateX="150"/>
+        <JFXButton fx:id="sendButton" text="Send" styleClass="button-colored" alignment="BOTTOM_CENTER"
+                   translateX="150"/>
     </VBox>
 
 </StackPane>

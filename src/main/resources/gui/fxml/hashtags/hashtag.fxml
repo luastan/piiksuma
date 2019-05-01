@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           prefHeight="900.0" prefWidth="443.0" minHeight="900.0" minWidth="443.0" maxWidth="443.0"
+           alignment="BOTTOM_CENTER">
+
+    <BorderPane>
+        <top>
+            <StackPane style="-fx-padding: 20 20 20 20">
+                <BorderPane>
+                    <left>
+                        <StackPane>
+                            <Label text="Hashtag name" fx:id="name" style="-fx-font-weight: BOLD; -fx-font-size: 15">
+                                <graphic>
+                                    <FontAwesomeIconView glyphName="HASHTAG" styleClass="deck-small-button-graphic"/>
+                                </graphic>
+                            </Label>
+                        </StackPane>
+                    </left>
+                    <center>
+                        <StackPane>
+                            <JFXButton text="follow/unfollow" fx:id="follow" styleClass="button-colored"/>
+                        </StackPane>
+                    </center>
+                </BorderPane>
+            </StackPane>
+        </top>
+        <center>
+            <StackPane>
+                <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER" fx:id="postScroll" maxHeight="Infinity">
+                    <JFXMasonryPane fx:id="postMasonry" styleClass="main-masonry"/>
+                </ScrollPane>
+            </StackPane>
+        </center>
+    </BorderPane>
+
+</StackPane>

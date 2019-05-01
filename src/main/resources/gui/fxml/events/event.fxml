@@ -38,8 +38,8 @@
                 <right>
                     <StackPane>
                         <HBox alignment="CENTER" spacing="20">
-                            <JFXButton fx:id="participateButton" text="Participate" styleClass="jfx-button-border"/>
-                            <JFXButton fx:id="deleteButton" text="Delete" styleClass="jfx-button-border"/>
+                            <JFXButton fx:id="participateButton" text="Participate" styleClass="button-colored"/>
+                            <JFXButton fx:id="deleteButton" text="Delete" styleClass="button-colored"/>
                         </HBox>
                     </StackPane>
                 </right>

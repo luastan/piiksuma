@@ -31,7 +31,7 @@
                 </left>
                 <center>
                     <StackPane styleClass="deck-small-button-container">
-                        <JFXTextField styleClass="fx-text-field" fx:id="searchText"/>
+                        <JFXTextField styleClass="piik-text-field" fx:id="searchText"/>
                     </StackPane>
                 </center>
                 <right>

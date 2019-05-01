@@ -129,7 +129,7 @@
     -fx-text-fill: -white-high-emphasis;
 }
 
-.jfx-button-border {
+.button-colored {
     -fx-text-fill: -white-high-emphasis;
     -fx-background-color: -primary-color-5;
     -fx-cursor: hand;
@@ -207,8 +207,8 @@
 
 /* TextFields and TextAreas*/
 
-.fx-text-field{
-    -fx-background-color: #e2e2e2;
+.piik-text-field {
+    -fx-background-color: -black-selection;
     -jfx-focus-color: -primary-color-5;
     -jfx-unfocus-color: -jfx-focus-color;
 }
@@ -422,4 +422,36 @@
 }
 
 
-/* Tooltip */
+/* Hashtags */
+
+.hashtags-view {
+    -fx-pref-height: 45;
+    -fx-min-width: 445;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+}
+
+.hashtag-preview-container {
+    -fx-padding: 2 2 2 2;
+    -fx-pref-height: 25;
+    -fx-min-height: -fx-pref-height;
+    -fx-max-height: -fx-pref-height;
+    /*-fx-pref-width: 35;*/
+    -fx-min-width: 45;
+    -fx-max-width: 100;
+    -fx-background-color: -black-disabled;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.hashtag-preview-label {
+    -fx-text-fill: -white-high-emphasis;
+    -fx-padding: 2 2 2 2;
+}
+
+.hashtag-editor {
+    -fx-padding: 10 10 10 10;
+    -fx-border-radius: 1;
+    -fx-border-color: -black-disabled;
+    /*-fx-background-color: -white-medium-emphasis;*/
+}

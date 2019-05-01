@@ -1,6 +1,9 @@
-package piiksuma.gui;
+package piiksuma.gui.posts;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXChipView;
 import com.jfoenix.controls.JFXDecorator;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,8 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.*;
@@ -17,6 +23,8 @@ import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
+import piiksuma.gui.hashtag.HashtagPreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,10 +56,24 @@ public class PostController implements Initializable {
     @FXML
     private ImageView profilePicture;
 
+    @FXML
+    private HBox hashtags;
+
+    @FXML
+    private ScrollPane hashtagsContainer;
+
+    @FXML
+    private JFXButton repost;
+
     private Post post;
 
     public PostController(Post post) {
         this.post = post;
+//        try {
+//            this.post = ApiFacade.getEntrypoint().getSearchFacade().getPost(post, ContextHandler.getContext().getCurrentUser());
+//        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+//            e.showAlert();
+//        }
     }
 
     @Override
@@ -84,9 +106,6 @@ public class PostController implements Initializable {
         if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
-        } else if (post.getAuthor().getId().equals("usr1")) {  // TODO: Remove else if once multimedia is propperly parsed to the controller
-            boxImage.setImage(new Image("/imagenes/post_image_test.jpg", 450, 800, true, true));
-            boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
         }
 
         // Profile Picture
@@ -109,6 +128,30 @@ public class PostController implements Initializable {
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
 
+//        FontAwesomeIcon.HASHTAG
+
+        // Hashtags
+        if (post.getHashtags().size() > 0) {
+            post.getHashtags().forEach(this::addHashtag);
+        } else {
+            hashtagsContainer.setStyle("-fx-pref-height: 0;");
+        }
+    }
+
+    /**
+     * Adds a hashtag to post's hashtag list
+     *
+     * @param hashtag Hashtag to be inserted in the HBox
+     */
+    private void addHashtag(Hashtag hashtag) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/hashtags/hashtagPreview.fxml"));
+        loader.setController(new HashtagPreviewController(hashtag));
+        try {
+            hashtags.getChildren().add(loader.load());
+        } catch (IOException e) {
+            // TODO: Propperly handle the exception
+            e.printStackTrace();
+        }
 
     }
 
@@ -158,6 +201,19 @@ public class PostController implements Initializable {
         }catch (PiikException e){
             e.showAlert();
         }
+    }
 
+    private void handleRepost(Event event) {
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
+                    post.getAuthor(), ContextHandler.getContext().getCurrentUser());
+
+//            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
+//                    post, ContextHandler.getContext().getCurrentUser())) {
+//                repost.setDisable(true);
+//            }
+        } catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert();
+        }
     }
 }

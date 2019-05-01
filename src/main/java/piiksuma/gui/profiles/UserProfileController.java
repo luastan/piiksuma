@@ -20,7 +20,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.PostController;
+import piiksuma.gui.posts.PostController;
 
 import java.io.IOException;
 import java.net.URL;

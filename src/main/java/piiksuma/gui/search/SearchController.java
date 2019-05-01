@@ -13,15 +13,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.PostController;
-import piiksuma.gui.events.EventController;
+import piiksuma.gui.posts.PostController;
 import piiksuma.gui.events.EventPreviewController;
 import piiksuma.gui.profiles.profilePreviewController;
 

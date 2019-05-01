@@ -1,6 +1,7 @@
-package piiksuma.gui;
+package piiksuma.gui.posts;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXChipView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.validation.RequiredFieldValidator;
 import de.jensd.fx.glyphs.GlyphsBuilder;
@@ -19,6 +20,7 @@ import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
 
 import javax.activation.MimeTypeParseException;
 import javax.activation.MimetypesFileTypeMap;
@@ -42,6 +44,7 @@ import java.util.regex.Pattern;
 
 public class CreatePostController implements Initializable {
 
+    public JFXChipView<String> hashtagEditor;
     @FXML
     private JFXButton postButton;
 
@@ -70,7 +73,7 @@ public class CreatePostController implements Initializable {
             post.setText(newValue);
             postButton.setDisable(!postText.validate());
         });
-        PiikTextLimiter.addTextLimiter(postText, 20);
+        PiikTextLimiter.addTextLimiter(postText, 140);
         // Checks if the input is empty
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("Field required");
@@ -78,6 +81,7 @@ public class CreatePostController implements Initializable {
                 .glyph(FontAwesomeIcon.WARNING)
                 .build());
         postText.getValidators().add(validator);
+        hashtagEditor.requestFocus();
     }
 
     public Post getPostFather() {
@@ -97,6 +101,8 @@ public class CreatePostController implements Initializable {
         if (multimedia == null) {
             return;
         }
+        boxImage.setVisible(true);
+        multimediaButton.setVisible(false);
 
 // --------------------------------------------------- Testing zone ----------------------------------------------------
         try {
@@ -144,14 +150,10 @@ public class CreatePostController implements Initializable {
     }
 
     private void publishPost(Event event) {
-        ArrayList<Hashtag> hashtags = new ArrayList<>();
-        Pattern pattern = Pattern.compile("#{1}\\w+");
-        Matcher matcher = pattern.matcher(post.getText());
 
-        while (matcher.find()) {
-            hashtags.add(new Hashtag(matcher.group()));
-        }
-        post.setHashtags(hashtags);
+        post.getHashtags().clear();
+        hashtagEditor.getChips().stream().distinct().map(Hashtag::new).forEach(post::addHashtag);
+
 
         if (postFather != null) {
             post.setFatherPost(postFather);
@@ -160,7 +162,7 @@ public class CreatePostController implements Initializable {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createPost(post, ContextHandler.getContext().getCurrentUser());
             ContextHandler.getContext().getFeedController().updateFeed();
-            // And the window closes
+            ContextHandler.getContext().getStage("Create Post").close();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }

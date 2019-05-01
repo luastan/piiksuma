@@ -12,9 +12,9 @@ import javafx.scene.control.ScrollPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
-import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.posts.PostController;
 
 import java.io.IOException;
 import java.net.URL;

@@ -16,22 +16,23 @@
     <VBox spacing="40">
         <HBox spacing="50">
             <Label text="Name of the event:" />
-            <JFXTextField fx:id="eventName" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+            <JFXTextField fx:id="eventName" styleClass="piik-text-field" maxWidth="250" maxHeight="80"/>
         </HBox>
         <HBox spacing="50">
             <Label text="Location:" />
-            <JFXTextField translateX="67" fx:id="location" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+            <JFXTextField translateX="67" fx:id="location" styleClass="piik-text-field" maxWidth="250" maxHeight="80"/>
         </HBox>
         <HBox spacing="10">
             <Label alignment="BOTTOM_LEFT" text="Date:"/>
-            <JFXDatePicker fx:id="date" translateX="131" styleClass="fx-text-field" style="-fx-cursor: hand;"
+            <JFXDatePicker fx:id="date" translateX="131" styleClass="piik-text-field" style="-fx-cursor: hand;"
                            defaultColor="#391072" accessibleHelp="Pick event's date"/>
         </HBox>
         <HBox spacing="50">
             <Label text="Event's Description:" />
-            <JFXTextArea translateX="-5" fx:id="description" styleClass="fx-text-field" maxWidth="250" maxHeight="80"/>
+            <JFXTextArea translateX="-5" fx:id="description" styleClass="piik-text-field" maxWidth="250"
+                         maxHeight="80"/>
         </HBox>
     </VBox>
-    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="jfx-button-border"
+    <JFXButton StackPane.alignment="BOTTOM_CENTER" text="Add event" fx:id="newEvent" styleClass="button-colored"
                disable="true"/>
 </StackPane>

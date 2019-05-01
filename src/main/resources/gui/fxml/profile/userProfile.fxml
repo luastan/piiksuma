@@ -45,9 +45,9 @@
                                 Their name and code should be replaced depending on who is
                                 the current user and who is the profiles owner
                                 -->
-                                <JFXButton text="buttonLeft" styleClass="jfx-button-border" fx:id="buttonLeft"/>
-                                <JFXButton text="buttonCenter" styleClass="jfx-button-border" fx:id="buttonCenter"/>
-                                <JFXButton text="buttonRight" styleClass="jfx-button-border" fx:id="buttonRight"/>
+                                <JFXButton text="buttonLeft" styleClass="button-colored" fx:id="buttonLeft"/>
+                                <JFXButton text="buttonCenter" styleClass="button-colored" fx:id="buttonCenter"/>
+                                <JFXButton text="buttonRight" styleClass="button-colored" fx:id="buttonRight"/>
                             </HBox>
                         </VBox>
                     </HBox>

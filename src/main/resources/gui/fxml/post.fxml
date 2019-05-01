@@ -13,6 +13,7 @@
 <?import javafx.scene.image.Image?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <?import javafx.geometry.Rectangle2D?>
+<?import com.jfoenix.controls.JFXChipView?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container">
@@ -40,10 +41,11 @@
             <right>
                 <!-- Share button -->
                 <StackPane styleClass="post-inner-container">
-                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="repost" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)"
+                               alignment="CENTER">
                         <graphic>
-                            <MaterialIconView glyphName="SHARE" size="30"
-                                              styleClass="deck-small-button-graphic"/>
+                            <FontAwesomeIconView glyphName="RETWEET" size="30"
+                                                 styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
                 </StackPane>
@@ -52,7 +54,7 @@
     </top>
     <center>
         <StackPane>
-            <VBox alignment="CENTER_LEFT" spacing="10">
+            <VBox alignment="CENTER_LEFT" spacing="5">
 
                 <!-- Multimedia goes here -->
                 <ImageView fx:id="boxImage" preserveRatio="true">
@@ -60,6 +62,14 @@
 
                 <!-- Atual Post Content -->
                 <Label text="Actual Post content goes here" fx:id="postContent" wrapText="true" styleClass="post-text"/>
+                <StackPane alignment="CENTER_LEFT" style="-fx-background-color: -white-high-emphasis">
+                    <ScrollPane vbarPolicy="NEVER" fx:id="hashtagsContainer"
+                                style="-fx-background-color: -white-high-emphasis;" styleClass="hashtags-view">
+                        <HBox fx:id="hashtags" spacing="2"
+                              style="-fx-padding: 0 0 0 10; -fx-background-color: -white-high-emphasis;"
+                              styleClass="hashtags-view"/>
+                    </ScrollPane>
+                </StackPane>
             </VBox>
         </StackPane>
 
