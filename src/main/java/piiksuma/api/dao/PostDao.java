@@ -510,7 +510,7 @@ public class PostDao extends AbstractDao {
         // Get the base query
         String query = getQueryPost();
 
-        query += "WHERE id = ? and author = ?";
+        query += "WHERE post.id = ? and post.author = ?";
 
         List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery(query)
                 .defineParameters(post.getId(), post.getPostAuthor().getPK()).mapList();
