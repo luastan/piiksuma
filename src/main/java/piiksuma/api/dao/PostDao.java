@@ -572,8 +572,9 @@ public class PostDao extends AbstractDao {
         }
 
         // List of post
-        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
-                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
+        return new QueryMapper<Post>(super.getConnection()).defineClass(Post.class)
+                .createQuery("SELECT p.* FROM post as p JOIN archivepost as a ON(p.id = a.post AND p.author = " +
+                        "a.author) WHERE a.usr = ?").defineParameters(user.getPK()).list();
     }
     //******************************************************************************************************************
 

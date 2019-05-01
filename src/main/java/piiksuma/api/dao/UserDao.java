@@ -784,6 +784,31 @@ public class UserDao extends AbstractDao {
     }
 
     /**
+     * Function to check if the user1 has blocked the user2
+     * @param user1
+     * @param user2
+     * @return
+     */
+    public boolean isBlock(User user1, User user2) throws PiikDatabaseException {
+        if (user1 == null || !user1.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user1"));
+        }
+        if (user2 == null || !user2.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user2"));
+        }
+
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT * FROM blockuser WHERE " +
+                "usr = ? and blocked = ?").defineParameters(user1.getPK(), user2.getPK()).mapList();
+
+        if(query == null || query.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    /**
      * Unblock an user
      *
      * @param blockedUser user that was blocked

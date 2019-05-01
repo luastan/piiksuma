@@ -751,4 +751,26 @@ public class SearchFacade {
 
         return parentFacade.getInteractionDao().usersInEvent(event);
     }
+
+    /**
+     * Function to check if the user1 has blocked the user2
+     * @param user1
+     * @param user2
+     * @return
+     */
+    public boolean isBlock(User user1, User user2, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (user1 == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user1"));
+        }
+
+        if (user2 == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user2"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getUserDao().isBlock(user1, user2);
+    }
 }
