@@ -11,7 +11,10 @@ import javafx.stage.FileChooser;
 import piiksuma.Multimedia;
 import piiksuma.Post;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
+import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.gui.ContextHandler;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -51,7 +54,8 @@ public class CreateAnswerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.post = new Post();
+        post = new Post();
+        post.setAuthor(ContextHandler.getContext().getCurrentUser());
         multimediaButton.setOnAction(this::handleMultimediaButton);
         postButton.setDisable(false);
 
@@ -92,5 +96,18 @@ public class CreateAnswerController implements Initializable {
         } catch (Exception e) {
             PiikLogger.getInstance().log(Level.SEVERE, "Can't copy the file to resources", e);
         }
+    }
+
+    private void handlePostButton(Event event){
+        if (postText.getText().isEmpty()){
+            return;
+        }
+        post.setText(postText.getText());
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().reply(post,ContextHandler.getContext().getCurrentUser());
+        } catch (PiikDatabaseException e) {
+            e.showAlert();
+        }
+
     }
 }
