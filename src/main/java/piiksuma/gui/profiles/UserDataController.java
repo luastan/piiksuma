@@ -170,7 +170,7 @@ public class UserDataController implements Initializable {
         modifyUser.setProvince(province.getText());
         modifyUser.setCountry(country.getText());
         modifyUser.setHome(home.getText());
-        g// modifyUser.setPass(password.getText());
+        // modifyUser.setPass(password.getText());
 
         for (String telephone : telephoneList.getItems()) {
             modifyUser.getPhones().add(telephone);
