@@ -79,23 +79,23 @@ VALUES ('usr1', 'usr4');
 -- ==================================================== DATA POSTS =====================================================
 -- Post
 INSERT INTO post (author, text, publicationdate)
-VALUES ('usr1', 'Hi! My name is... what?', '2019-05-12');
+VALUES ('usr1', 'Hi! My name is... what?', DEFAULT);
 
 INSERT INTO post (author, text, publicationdate)
-VALUES ('usr2', 'My name is... who?', '2019-05-12');
+VALUES ('usr2', 'My name is... who?', DEFAULT);
 
 INSERT INTO post (author, text, publicationdate)
-VALUES ('usr3', 'My name is... Slim Shady ?', '2019-05-12');
+VALUES ('usr3', 'My name is... Slim Shady ?', DEFAULT);
 
 INSERT INTO post (author, text, publicationdate)
 VALUES ('usr4',
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et ' ||
         'dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ' ||
         'ex ea commodo consequat.',
-        '2019-05-12');
+        DEFAULT);
 
 INSERT INTO post (author, text, publicationdate)
-VALUES ('usr4', 'Hi kids! Do you like violence?', '2019-05-12');
+VALUES ('usr4', 'Hi kids! Do you like violence?', DEFAULT);
 
 -- React to post
 INSERT INTO react (reactiontype, post, usr, author)
