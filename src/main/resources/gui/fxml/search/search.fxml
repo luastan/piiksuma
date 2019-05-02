@@ -102,4 +102,13 @@
         </center>
     </BorderPane>
 
+    <StackPane pickOnBounds="false" style="-fx-padding: 30 30 30 30;" StackPane.alignment="BOTTOM_RIGHT"
+               alignment="BOTTOM_RIGHT">
+        <JFXButton styleClass="trending-button" ripplerFill="rgba(255, 255, 255, 0.70)">
+            <graphic>
+                <FontAwesomeIconView glyphName="FIRE" size="30"
+                                     styleClass="deck-small-button-graphic"/>
+            </graphic>
+        </JFXButton>
+    </StackPane>
 </StackPane>

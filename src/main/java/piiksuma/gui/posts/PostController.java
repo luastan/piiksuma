@@ -132,6 +132,7 @@ public class PostController implements Initializable {
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
         repost.setOnAction(this::handleRepost);
+        deleteButton.setVisible(post.getAuthor().equals(current) || current.getType().equals(UserType.administrator));
 
 //        FontAwesomeIcon.HASHTAG
 
