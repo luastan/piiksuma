@@ -592,10 +592,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
+        String query = getQueryPost();
+
         // Get the List
-        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
-                " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
-                .defineParameters(hashtag.getName()).mapList();
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery(query +
+                "  WHERE post.id IN (SELECT p.id FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post " +
+                "AND p.author=o.author)").defineParameters(hashtag.getName()).mapList();
         // Return List
         return getPosts(result);
     }
