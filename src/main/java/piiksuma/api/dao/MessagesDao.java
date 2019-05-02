@@ -629,7 +629,7 @@ public class MessagesDao extends AbstractDao {
         }
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
-                "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+                "NULL LIMIT ? ORDER BY creationDate ASC").defineClass(Ticket.class).defineParameters(limit).list();
     }
     //******************************************************************************************************************
 // =====================================================================================================================
