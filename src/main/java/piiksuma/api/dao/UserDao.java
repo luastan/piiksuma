@@ -974,7 +974,7 @@ public class UserDao extends AbstractDao {
                         "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(
                 user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setMaxLikeIt((Long) estatistics.get(0).get("reaction"));
+        statistics.setCountLikeIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
@@ -982,7 +982,7 @@ public class UserDao extends AbstractDao {
                         "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(
                 user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setMaxLoveIt((Long) estatistics.get(0).get("reaction"));
+        statistics.setCountLoveIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
@@ -990,7 +990,7 @@ public class UserDao extends AbstractDao {
                         "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(
                 user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setMaxHateIt((Long) estatistics.get(0).get("reaction"));
+        statistics.setCountHateIt((Long) estatistics.get(0).get("reaction"));
 
         estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
                 "SELECT count(reactiontype) AS reaction " +
@@ -998,7 +998,7 @@ public class UserDao extends AbstractDao {
                         "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(
                 user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
+        statistics.setCountMakesMeAngry((Long) estatistics.get(0).get("reaction"));
 
         return statistics;
     }
