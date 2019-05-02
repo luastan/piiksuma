@@ -321,6 +321,10 @@ public class ContextHandler {
 
 
     public void invokeStage(String fxml, Object controller, String title) throws PiikInvalidParameters {
+        Stage currentStageWithTitle = this.contextStages.get(title);
+        if (currentStageWithTitle != null && currentStageWithTitle.isShowing()) {
+            currentStageWithTitle.close();
+        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
         if (controller != null) {
             loader.setController(controller);
