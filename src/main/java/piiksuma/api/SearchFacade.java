@@ -817,4 +817,30 @@ public class SearchFacade {
 
         return parentFacade.getPostDao().checkUserResposted(user, post, currentUser);
     }
+
+    /**
+     * Function to check if a user has already archived a post
+     *
+     * @param post
+     * @param user
+     * @param currentUser
+     * @return
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
+    public boolean isPostArchived(Post post, User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException{
+        if (user == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (post == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (currentUser == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getPostDao().isPostArchived(post, user);
+    }
 }
