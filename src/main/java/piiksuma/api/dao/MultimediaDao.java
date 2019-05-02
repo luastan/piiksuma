@@ -123,7 +123,7 @@ public class MultimediaDao extends AbstractDao {
         }
 
         // Return multimedia
-        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
+        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia " +
                 "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getPK()).findFirst();
     }
     //******************************************************************************************************************

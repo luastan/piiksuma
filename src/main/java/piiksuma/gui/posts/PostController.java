@@ -1,23 +1,15 @@
 package piiksuma.gui.posts;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXChipView;
-import com.jfoenix.controls.JFXDecorator;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.*;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -65,6 +57,9 @@ public class PostController implements Initializable {
     @FXML
     private JFXButton repost;
 
+    @FXML
+    private JFXButton archiveButton;
+
     private Post post;
 
     public PostController(Post post) {
@@ -103,7 +98,17 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         // Multimedia insertion
-        if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
+        if(post.getMultimedia() != null && post.getMultimedia().getHash() != null
+                && !post.getMultimedia().getHash().isEmpty()) {
+            if (post.getMultimedia().getUri() == null || post.getMultimedia().getUri().isEmpty()) {
+                try {
+                    post.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade().getMultimedia(post.getMultimedia(),
+                            current));
+                } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+                    piikInvalidParameters.printStackTrace();
+                }
+            }
+
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
         }
@@ -124,6 +129,9 @@ public class PostController implements Initializable {
                     post, ContextHandler.getContext().getCurrentUser())) {
                 repost.getGraphic().setStyle("-fx-fill: -piik-blue-green;");
             }
+            if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
+                archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+            }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
@@ -132,6 +140,7 @@ public class PostController implements Initializable {
         buttonAnswer.setOnAction(this::handleAnswer);
         deleteButton.setOnAction(this::handleDelete);
         repost.setOnAction(this::handleRepost);
+        archiveButton.setOnAction(this::handleArchive);
         deleteButton.setVisible(post.getAuthor().equals(current) || current.getType().equals(UserType.administrator));
 
 //        FontAwesomeIcon.HASHTAG
@@ -144,6 +153,21 @@ public class PostController implements Initializable {
         }
     }
 
+    private void handleArchive(Event event){
+        try{
+            if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
+                ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+                archiveButton.getGraphic().setStyle("");
+                System.out.println("Desarchived");
+            }else {
+                ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
+                archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+                System.out.println("Archived");
+            }
+        }catch (PiikDatabaseException | PiikInvalidParameters e){
+            e.showAlert();
+        }
+    }
     /**
      * Adds a hashtag to post's hashtag list
      *

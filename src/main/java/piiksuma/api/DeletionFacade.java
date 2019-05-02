@@ -312,4 +312,15 @@ public class DeletionFacade {
         parentFacade.getInteractionDao().removeReaction(reaction);
     }
 
+    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
+        if (current == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (post == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        parentFacade.getPostDao().removeArchivePost(post, user);
+    }
 }
