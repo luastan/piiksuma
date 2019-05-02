@@ -76,6 +76,7 @@ public class UserDataController implements Initializable {
         telephoneList.setCellFactory(TextFieldListCell.forListView());
         multimediaButton.setOnAction(this::handleMultimediaButton);
         update.setOnAction(this::handleUpdate);
+        password.setEditable(false);
 
     }
 
@@ -89,7 +90,7 @@ public class UserDataController implements Initializable {
         userId.setDisable(true);
         userName.setText(user.getName());
         email.setText(user.getEmail());
-        password.setText(user.getPass());
+      //  password.setText(user.getPass());
         home.setText(user.getHome());
         city.setText(user.getCity());
         birthplace.setText(user.getBirthplace());
@@ -169,7 +170,7 @@ public class UserDataController implements Initializable {
         modifyUser.setProvince(province.getText());
         modifyUser.setCountry(country.getText());
         modifyUser.setHome(home.getText());
-        modifyUser.setPass(password.getText());
+        // modifyUser.setPass(password.getText());
 
         for (String telephone : telephoneList.getItems()) {
             modifyUser.getPhones().add(telephone);
@@ -183,7 +184,7 @@ public class UserDataController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(modifyUser, modifyUser);
             //Update the user in the app
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
-            ContextHandler.getContext().getStage("userData").close();
+            ContextHandler.getContext().getStage("User data").close();
         } catch (PiikException e) {
             e.showAlert();
         }

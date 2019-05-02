@@ -87,7 +87,12 @@
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
-
+                    <JFXButton fx:id="archiveButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="ARCHIVE" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
                     <!--This button is for admins and for the creator, to delete a post-->
                     <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>

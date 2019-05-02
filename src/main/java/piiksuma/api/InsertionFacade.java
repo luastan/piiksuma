@@ -330,10 +330,6 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.equals(post.getPostAuthor())) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
         parentFacade.getPostDao().repost(userRepost, post, userPost);
     }
 
