@@ -62,6 +62,12 @@ public class InteractionDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // Event's IDs are generated automatically when inserted
@@ -425,6 +431,12 @@ public class InteractionDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // Notification's IDs are generated automatically when inserted
@@ -526,9 +538,8 @@ public class InteractionDao extends AbstractDao {
         }
         // Returns the list of notifications
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
-                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class)
-                .defineParameters(
-                        user.getPK()).list();
+                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "? ORDER BY creationDate DESC")
+                .defineClass(Notification.class).defineParameters(user.getPK()).list();
     }
 
     //******************************************************************************************************************

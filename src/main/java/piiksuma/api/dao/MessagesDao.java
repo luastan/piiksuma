@@ -68,6 +68,12 @@ public class MessagesDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -388,6 +394,12 @@ public class MessagesDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -531,6 +543,12 @@ public class MessagesDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // "closeDate" and "adminClosing" are inserted as NULL because they are intended to be stored when closing
@@ -629,7 +647,7 @@ public class MessagesDao extends AbstractDao {
         }
 
         return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
-                "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+                "NULL LIMIT ? ORDER BY creationDate ASC").defineClass(Ticket.class).defineParameters(limit).list();
     }
     //******************************************************************************************************************
 // =====================================================================================================================
