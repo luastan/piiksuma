@@ -46,6 +46,12 @@ public class MultimediaDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +

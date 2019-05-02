@@ -136,6 +136,12 @@ public class UserDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -295,6 +301,12 @@ public class UserDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -438,6 +450,7 @@ public class UserDao extends AbstractDao {
      * @return user that meets the given information
      */
     public User getUser(User user, Integer typeTransaction) throws PiikDatabaseException {
+
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
@@ -453,6 +466,7 @@ public class UserDao extends AbstractDao {
 
         if (listObject == null || listObject.isEmpty()) {
             return null;
+
         } else {
 
             // The user information is found in the first item, except the phones

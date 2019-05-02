@@ -95,6 +95,12 @@ public class PostDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the post will display some kind of media, it gets inserted if it does not exist in the database
@@ -312,6 +318,12 @@ public class PostDao extends AbstractDao {
 
             // The post won't be modified unless there's no error modifying all related tables
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
@@ -915,6 +927,13 @@ public class PostDao extends AbstractDao {
         Connection con = getConnection();
 
         try {
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             // We'll use a prepared statement to avoid malicious intentions :(
             PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
