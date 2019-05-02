@@ -182,7 +182,7 @@ public class DeletionFacade {
             throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
-        parentFacade.getPostDao().removeRepost(repost);
+        parentFacade.getPostDao().removeRepost(repost, currentUser);
     }
 
     /**

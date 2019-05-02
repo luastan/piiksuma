@@ -98,7 +98,17 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         // Multimedia insertion
-        if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
+        if(post.getMultimedia() != null && post.getMultimedia().getHash() != null
+                && !post.getMultimedia().getHash().isEmpty()) {
+            if (post.getMultimedia().getUri() == null || post.getMultimedia().getUri().isEmpty()) {
+                try {
+                    post.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade().getMultimedia(post.getMultimedia(),
+                            current));
+                } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+                    piikInvalidParameters.printStackTrace();
+                }
+            }
+
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
         }
@@ -228,9 +238,11 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,
                     ContextHandler.getContext().getCurrentUser())) {
                 // If the repost exists it gets deleted and the graphic gets grey color
+                System.out.println("Vou borrar");
                 ApiFacade.getEntrypoint().getDeletionFacade().removeRePost(post, ContextHandler.getContext().getCurrentUser());
                 repost.getGraphic().setStyle("");
             } else {
+                System.out.println("Vou repostear");
                 // If the repost doesn't exist it gets reposted and the graphic gets green color
                 ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
                         post.getAuthor(), ContextHandler.getContext().getCurrentUser());

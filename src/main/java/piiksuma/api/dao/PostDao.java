@@ -683,18 +683,18 @@ public class PostDao extends AbstractDao {
      * Function to remove a repost
      *
      * @param repost Repost to be removed
+     * @param currentUser Current user logged into the app
      * @throws PiikDatabaseException Thrown if repost or its primary key are null
      */
-    public void removeRepost(Post repost) throws PiikDatabaseException {
+    public void removeRepost(Post repost, User currentUser) throws PiikDatabaseException {
         // Check if repost or its primary key are null
         if (repost == null || !repost.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
         }
         // Delete repost
         new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
-                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
-                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
-
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getId(), currentUser.getPK(),
+                repost.getAuthor().getPK()).executeUpdate();
     }
     //******************************************************************************************************************
 
