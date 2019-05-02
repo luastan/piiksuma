@@ -177,7 +177,7 @@ public class DeletionFacade {
         if (repost == null || !repost.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("repost"));
         }
-        
+
         parentFacade.getPostDao().removeRepost(repost, currentUser);
     }
 
