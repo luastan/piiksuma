@@ -68,6 +68,12 @@ public class MessagesDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -388,6 +394,12 @@ public class MessagesDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -529,6 +541,12 @@ public class MessagesDao extends AbstractDao {
 
             // The ticket won't be created unless there's no error generating its ID
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */

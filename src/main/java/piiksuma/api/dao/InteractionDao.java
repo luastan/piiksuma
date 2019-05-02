@@ -62,6 +62,12 @@ public class InteractionDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // Event's IDs are generated automatically when inserted
@@ -423,6 +429,12 @@ public class InteractionDao extends AbstractDao {
 
             // The notification won't be created unless there's no error generating its ID
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
