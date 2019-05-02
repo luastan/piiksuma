@@ -144,6 +144,7 @@ public class RegisterController implements Initializable {
         }
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
+            ContextHandler.getContext().getStage("Register").close();
         } catch (PiikException e) {
             //TODO handle exceptions properly
             System.out.println(e.getMessage());
@@ -157,7 +158,7 @@ public class RegisterController implements Initializable {
      */
     private boolean checkFields() {
         if (userId.getText().isEmpty() || userName.getText().isEmpty() || email.getText().isEmpty()
-                || password.getText().isEmpty() || birthday.validate()) {
+                || password.getText().isEmpty() || !birthday.validate()) {
             return false;
         }
         return true;
