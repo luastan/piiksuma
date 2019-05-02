@@ -550,7 +550,7 @@ public class PostDao extends AbstractDao {
             multimediaPost.setHash((String) multimedia);
 
             resultPost.setMultimedia(multimediaPost);
-            columnsPost.put("multimedia", resultPost);
+            columnsPost.put("multimedia", multimediaPost);
         }
 
         Object idUser = columnsPost.get("author");
@@ -745,7 +745,7 @@ public class PostDao extends AbstractDao {
                 multimediaPost.setHash((String) multimedia);
 
                 resultPost.setMultimedia(multimediaPost);
-                columnsPost.put("multimedia", resultPost);
+                columnsPost.put("multimedia", multimediaPost);
             }
 
             Object idUser = columnsPost.get("author");
@@ -754,6 +754,8 @@ public class PostDao extends AbstractDao {
                 user.setId((String) idUser);
                 columnsPost.put("author", user);
             }
+
+            System.out.println(columnsPost);
 
             resultPost.addInfo(columnsPost);
 
