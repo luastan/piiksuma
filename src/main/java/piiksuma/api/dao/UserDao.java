@@ -7,10 +7,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,6 +132,23 @@ public class UserDao extends AbstractDao {
         StringBuilder clauseAux = new StringBuilder();
 
         try {
+
+            /* Isolation level */
+
+            // We need to check that the given database supports the serializable isolation level
+            try {
+                DatabaseMetaData metaData = super.getConnection().getMetaData();
+
+                if (metaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
+                    super.getConnection().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Serializable isolation level not supported");
+                super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                throw new PiikDatabaseException(e.getMessage());
+            }
+
 
             /* Statement */
 
@@ -294,6 +308,12 @@ public class UserDao extends AbstractDao {
         StringBuilder clause = new StringBuilder();
 
         try {
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            
 
             /* Statement */
 
