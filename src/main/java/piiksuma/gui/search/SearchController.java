@@ -11,14 +11,21 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.events.EventController;
 import piiksuma.gui.posts.PostController;
 import piiksuma.gui.events.EventPreviewController;
 import piiksuma.gui.profiles.profilePreviewController;
@@ -158,7 +165,7 @@ public class SearchController implements Initializable {
     private void setUpFeedEventListener() {
         eventFeed.addListener((ListChangeListener<? super piiksuma.Event>) change -> {
             eventMasonryPane.getChildren().clear();
-            userScrollPane.setVisible(userFeed.size() != 0);
+            eventScrollPane.setVisible(userFeed.size() != 0);
             eventFeed.forEach(this::insertEvent);
         });
     }
@@ -191,16 +198,38 @@ public class SearchController implements Initializable {
     }
 
     private void insertEvent(piiksuma.Event event) {
-        FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
-        postLoader.setController(new EventPreviewController(event));
+        FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
+        eventLoader.setController(new EventPreviewController(event));
         try {
-            eventMasonryPane.getChildren().add(postLoader.load());
+            Node node = eventLoader.load();
+            node.setOnMouseClicked(this::clickEvent);
+            eventMasonryPane.getChildren().add(node);
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
         eventScrollPane.requestLayout();
         eventScrollPane.requestFocus();
+    }
+
+    private void clickEvent(MouseEvent mouseEvent) {
+        if (!(mouseEvent.getSource() instanceof StackPane)) {
+            return;
+        }
+        // Identifies clicked Event
+        piiksuma.Event target = eventFeed.stream()
+                .filter(event -> event.getId().equals(((StackPane) mouseEvent.getSource()).getChildren().stream()
+                        .filter(node -> node instanceof Label).map(node -> (Label) node).map(Labeled::getText)
+                        .findFirst().orElse(""))).findFirst().orElse(null);
+        if (target == null) {
+            return;
+        }
+        EventController controller = new EventController(target);
+        try {
+            ContextHandler.getContext().invokeStage("/gui/fxml/events/event.fxml", controller, "Event" + (target.getName() != null ? " - " + target.getName() : ""));
+        } catch (PiikInvalidParameters invalidParameters) {
+            invalidParameters.printStackTrace();
+        }
     }
 
 
