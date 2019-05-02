@@ -6,17 +6,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.shape.Line?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml" styleClass="event-preview-container">
     <Label fx:id="hiddenEventId" visible="false"/>
-    <BorderPane style="-fx-padding: 10 10 10 10">
+    <BorderPane style="-fx-padding: 0 10 0 10">
+        <top>
+            <StackPane>
+                <StackPane style="-fx-background-color: -black-disabled; -fx-padding: 0 0 0 0"
+                           maxHeight="1" maxWidth="150">
+                    <Line strokeWidth="0" startX="150" endX="350"/>
+                </StackPane>
+            </StackPane>
+        </top>
         <left>
             <StackPane alignment="CENTER_LEFT">
                 <Label fx:id="name" text="Event's name" style="-fx-font-weight: BOLD"/>
             </StackPane>
         </left>
         <center>
-            <StackPane style="-fx-padding: 0 20 0 20" alignment="CENTER_LEFT">
+            <StackPane style="-fx-padding: 0 10 0 10" alignment="CENTER_LEFT">
                 <Label fx:id="description" text="Event's description"/>
             </StackPane>
         </center>
