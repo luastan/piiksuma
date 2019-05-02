@@ -125,8 +125,8 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
             }
-            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
-                    post, ContextHandler.getContext().getCurrentUser())) {
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,
+                    ContextHandler.getContext().getCurrentUser())) {
                 repost.getGraphic().setStyle("-fx-fill: -piik-blue-green;");
             }
             if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
