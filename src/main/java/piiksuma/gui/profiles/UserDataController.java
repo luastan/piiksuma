@@ -4,7 +4,9 @@ import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -120,6 +122,13 @@ public class UserDataController implements Initializable {
         for (String telephone : user.getPhones()) {
             telephoneList.getItems().add(telephone);
         }
+
+        if (user.getMultimedia() != null) {
+            imageView.setImage(new Image(user.getMultimedia().getUri(), 450, 800,
+                    true, true));
+            imageView.setViewport(new Rectangle2D((imageView.getImage().getWidth() - 450) / 2,
+                    (imageView.getImage().getHeight() - 170) / 2, 450, 170));
+        }
     }
 
     /**
@@ -206,7 +215,7 @@ public class UserDataController implements Initializable {
         modifyUser.setProvince(province.getText());
         modifyUser.setCountry(country.getText());
         modifyUser.setHome(home.getText());
-        if(multimedia != null){
+        if (multimedia != null) {
             modifyUser.setMultimedia(multimedia);
         }
         // Create multimedia
