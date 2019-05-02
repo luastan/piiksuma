@@ -72,17 +72,19 @@ public class UserDao extends AbstractDao {
 
         int offset = 1;
 
+        if(update){
+            statement.setString(offset++, multimedia.getHash());
+        }
+
         // Multimedia insertion
         if (multimediaExists) {
-            statement.setString(1, multimedia.getHash());
-            statement.setString(2, multimedia.getResolution());
-            statement.setString(3, multimedia.getUri());
-            statement.setString(4, multimedia.getHash());
+            statement.setString(offset++, multimedia.getHash());
+            statement.setString(offset++, multimedia.getResolution());
+            statement.setString(offset++, multimedia.getUri());
+            statement.setString(offset++, multimedia.getHash());
 
-            statement.setString(5, multimedia.getHash());
-            statement.setString(6, multimedia.getHash());
-
-            offset += 6;
+            statement.setString(offset++, multimedia.getHash());
+            statement.setString(offset++, multimedia.getHash());
         }
 
         if(update){
@@ -299,6 +301,9 @@ public class UserDao extends AbstractDao {
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
+
+            clause.append("DELETE FROM multimedia WHERE hash=?;");
+
             if (multimediaExists) {
                 clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
@@ -762,6 +767,27 @@ public class UserDao extends AbstractDao {
                 "VALUES (?,?)").defineClass(Object.class).defineParameters(followed.getPK(), follower.getPK())
                 .executeUpdate();
 
+    }
+
+    /**
+     * Function to check if the user followed follow the user follower
+     *
+     * @param followed
+     * @param follower
+     * @return
+     */
+    public boolean isFollowed(User followed, User follower) throws PiikDatabaseException {
+        if (followed == null || !followed.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
+        }
+
+        if (follower == null || !follower.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
+        }
+
+        new QueryMapper<>(getConnection()).createQuery("SELECT * FROM ");
+
+        return true;
     }
 
     /**
