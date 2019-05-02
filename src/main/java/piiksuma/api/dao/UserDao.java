@@ -7,10 +7,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,19 +69,17 @@ public class UserDao extends AbstractDao {
 
         int offset = 1;
 
-        if(update){
-            statement.setString(offset++, multimedia.getHash());
-        }
-
         // Multimedia insertion
         if (multimediaExists) {
-            statement.setString(offset++, multimedia.getHash());
-            statement.setString(offset++, multimedia.getResolution());
-            statement.setString(offset++, multimedia.getUri());
-            statement.setString(offset++, multimedia.getHash());
+            statement.setString(1, multimedia.getHash());
+            statement.setString(2, multimedia.getResolution());
+            statement.setString(3, multimedia.getUri());
+            statement.setString(4, multimedia.getHash());
 
-            statement.setString(offset++, multimedia.getHash());
-            statement.setString(offset++, multimedia.getHash());
+            statement.setString(5, multimedia.getHash());
+            statement.setString(6, multimedia.getHash());
+
+            offset += 6;
         }
 
         if(update){
@@ -140,8 +135,19 @@ public class UserDao extends AbstractDao {
 
             /* Isolation level */
 
-            // Default in PostgreSQL
-            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            // We need to check that the given database supports the serializable isolation level
+            try {
+                DatabaseMetaData metaData = super.getConnection().getMetaData();
+
+                if (metaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
+                    super.getConnection().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Serializable isolation level not supported");
+                super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                throw new PiikDatabaseException(e.getMessage());
+            }
 
 
             /* Statement */
@@ -313,9 +319,6 @@ public class UserDao extends AbstractDao {
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
             // (we can't be sure that the app hasn't given us the same old multimedia or a new one)
-
-            clause.append("DELETE FROM multimedia WHERE hash=?;");
-
             if (multimediaExists) {
                 clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
                         " (SELECT * FROM multimedia WHERE hash = ? FOR UPDATE); ");
@@ -353,7 +356,7 @@ public class UserDao extends AbstractDao {
                     //  False -> they don't match; the proper name is put in the class
                     String column = Mapper.extractColumnName(field);
 
-                    if (!column.equals("pass") && !column.equals("registrationdate")) {
+                    if (!column.equals("pass") && !column.equals("registrationdate") && !column.equals("profilepicture")) {
                         clause.append(column).append(" = ");
 
                         Object value = null;
@@ -455,7 +458,6 @@ public class UserDao extends AbstractDao {
      * @return user that meets the given information
      */
     public User getUser(User user, Integer typeTransaction) throws PiikDatabaseException {
-
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
@@ -471,7 +473,6 @@ public class UserDao extends AbstractDao {
 
         if (listObject == null || listObject.isEmpty()) {
             return null;
-
         } else {
 
             // The user information is found in the first item, except the phones
