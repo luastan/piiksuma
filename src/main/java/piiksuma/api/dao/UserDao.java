@@ -813,9 +813,14 @@ public class UserDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
         }
 
-        new QueryMapper<>(getConnection()).createQuery("SELECT * FROM ");
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT * FROM followuser " +
+                "WHERE followed = ? AND follower = ?").defineParameters(followed.getPK(), follower.getPK()).mapList();
 
-        return true;
+        if(query.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
