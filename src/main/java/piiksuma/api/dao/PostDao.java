@@ -1134,10 +1134,12 @@ public class PostDao extends AbstractDao {
      */
     public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters, PiikDatabaseException {
 
+        // TODO check null
         if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        // TODO filter by recent publication date
         return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
                 .createQuery("SELECT hashtag, COUNT(*) as count " +
                         "FROM ownhashtag " +

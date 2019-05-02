@@ -16,8 +16,6 @@ import piiksuma.gui.ContextHandler;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ResourceBundle;
 
 public class UserDataController implements Initializable {
@@ -66,17 +64,8 @@ public class UserDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // User user = ContextHandler.getContext().getCurrentUser();
-        User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
 
-        user.setBirthday(Timestamp.from(Instant.now()));
-        user.setPass("pass1");
-        user.setGender("O");
-        user.setDescription("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        user.addPhone("12345");
-        user.addPhone("573643736");
-
-        initFields(user);
+        initFields();
 
         addTelephone.setOnAction(this::handleAddTelephone);
 
@@ -89,7 +78,9 @@ public class UserDataController implements Initializable {
 
     }
 
-    private void initFields(User user) {
+    private void initFields() {
+        User user = ContextHandler.getContext().getCurrentUser();
+
         genderBox.setItems(FXCollections.observableArrayList("M", "V", "O"));
         //We add to the fields all the info about the user
         userId.setText(user.getId());
