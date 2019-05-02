@@ -16,6 +16,7 @@ import piiksuma.gui.ContextHandler;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
 
 public class UserDataController implements Initializable {
@@ -36,7 +37,7 @@ public class UserDataController implements Initializable {
     @FXML
     private JFXTextField country;
     @FXML
-    private JFXTextField birthday;
+    private JFXDatePicker birthday;
     @FXML
     private JFXTextField religion;
     @FXML
@@ -100,6 +101,8 @@ public class UserDataController implements Initializable {
         religion.setText(user.getReligion());
         genderBox.getSelectionModel().select(user.getGender());
 
+        birthday.setValue(user.getBirthday().toLocalDateTime().toLocalDate());
+
         for (String telephone : user.getPhones()) {
             telephoneList.getItems().add(telephone);
         }
@@ -151,12 +154,35 @@ public class UserDataController implements Initializable {
     }
 
     private void handleUpdate(Event event) {
-        User currentUser = ContextHandler.getContext().getCurrentUser();
+        User modifyUser = new User();
+
+        modifyUser.setId(userId.getText());
+        modifyUser.setName(userName.getText());
+        modifyUser.setGender(genderBox.getSelectionModel().getSelectedItem());
+        modifyUser.setEmail(email.getText());
+        modifyUser.setDescription(description.getText());
+        modifyUser.setEmotionalSituation(emotionalSituation.getText());
+        modifyUser.setCity(city.getText());
+        modifyUser.setJob(job.getText());
+        modifyUser.setBirthplace(birthplace.getText());
+        modifyUser.setReligion(religion.getText());
+        modifyUser.setProvince(province.getText());
+        modifyUser.setCountry(country.getText());
+        modifyUser.setHome(home.getText());
+        modifyUser.setPass(password.getText());
+
+        for (String telephone : telephoneList.getItems()) {
+            modifyUser.getPhones().add(telephone);
+        }
+
+        if (birthday.validate()) {
+            modifyUser.setBirthday(Timestamp.valueOf(birthday.getValue().atStartOfDay()));
+        }
 
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(currentUser, currentUser);
+            ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(modifyUser, modifyUser);
             //Update the user in the app
-            ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(currentUser, currentUser));
+            ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
             ContextHandler.getContext().getStage("userData").close();
         } catch (PiikException e) {
             e.showAlert();

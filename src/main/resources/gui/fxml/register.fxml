@@ -34,7 +34,7 @@
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*Birthday:"/>
-                    <JFXTextField fx:id="birthday" styleClass="piik-text-field" maxWidth="90" promptText="DD-MM-YYYY"/>
+                    <JFXDatePicker fx:id="birthday" styleClass="piik-text-field" maxWidth="90" promptText="DD-MM-YYYY"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Birthplace:"/>
