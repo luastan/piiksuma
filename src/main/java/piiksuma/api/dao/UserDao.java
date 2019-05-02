@@ -1017,6 +1017,8 @@ public class UserDao extends AbstractDao {
                 case "countMakesMeAngry":
                     statistics.setCountMakesMeAngry(value);
                     break;
+                default:
+                    System.out.println("Statistic not found");
             }
         }
 
