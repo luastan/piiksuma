@@ -17,7 +17,7 @@
            prefHeight="400.0" prefWidth="600.0">
     <VBox spacing="40">
         <StackPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="65.0"/>
         </StackPane.margin>
         <HBox spacing="100">
             <VBox alignment="TOP_LEFT" spacing="25">
@@ -36,7 +36,7 @@
         </HBox>
 
         <VBox alignment="CENTER">
-            <ImageView fx:id="boxImage" disable="true" fitHeight="300" fitWidth="300"/>
+            <ImageView fx:id="boxImage" disable="true" fitHeight="200" fitWidth="200"/>
         </VBox>
     </VBox>
 

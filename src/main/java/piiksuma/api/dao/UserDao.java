@@ -68,7 +68,7 @@ public class UserDao extends AbstractDao {
      * @throws SQLException Thrown if the build fails
      */
     private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
-                             User user, Multimedia multimedia) throws SQLException {
+                             User user, Multimedia multimedia, boolean update) throws SQLException {
 
         int offset = 1;
 
@@ -85,12 +85,19 @@ public class UserDao extends AbstractDao {
             offset += 6;
         }
 
+        if(update){
+            statement.setString(offset++,user.getPK());
+        }
+
         // Phones insertion
         if (phonesExists) {
             for (String phone : user.getPhones()) {
                 if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
-                    String prefix = phone.substring(0, 2);
+                    String prefix = phone.substring(0, 3);
                     String withoutPrefix = phone.substring(3);
+                    statement.setString(offset++, prefix);
+                    statement.setString(offset++, withoutPrefix);
+                    statement.setString(offset++, user.getPK());
                     statement.setString(offset++, prefix);
                     statement.setString(offset++, withoutPrefix);
                     statement.setString(offset++, user.getPK());
@@ -231,7 +238,7 @@ public class UserDao extends AbstractDao {
 
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia, false);
 
             // User's data insertion
             for (Object value : columnValues) {
@@ -311,6 +318,8 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "multimediaimage WHERE hash = ? FOR UPDATE); ");
             }
+
+            clause.append("DELETE FROM phone WHERE usr=?;");
 
             if (user.getPhones() != null && !user.getPhones().isEmpty()) {
                 for (String phone : user.getPhones()) {
@@ -392,7 +401,7 @@ public class UserDao extends AbstractDao {
 
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia, true);
 
             // User's data insertion
             for (Object value : columnValues) {

@@ -16,10 +16,9 @@
     <BorderPane>
         <left>
             <!-- Other person's profiles -->
-            <StackPane style="-fx-padding: 10 10 10 10">
-                <ImageView preserveRatio="true" fitHeight="40" fitWidth="40" fx:id="profilePicture">
-                    <Image url="/imagenes/huevo.png"/>
-                </ImageView>
+            <StackPane>
+                <StackPane style="-fx-padding: 5 5 5 5" fx:id="profilePicture"/>
+                <StackPane/> <!-- Prevents  user from clicking the profile -->
             </StackPane>
         </left>
         <center>
