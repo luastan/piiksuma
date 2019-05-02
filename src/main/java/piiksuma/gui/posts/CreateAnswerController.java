@@ -53,7 +53,7 @@ public class CreateAnswerController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.post = new Post();
         multimediaButton.setOnAction(this::handleMultimediaButton);
-        postButton.setVisible(true);
+        postButton.setDisable(false);
 
     }
 
