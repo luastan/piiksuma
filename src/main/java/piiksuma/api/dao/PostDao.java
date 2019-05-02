@@ -943,7 +943,21 @@ public class PostDao extends AbstractDao {
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
                             "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
-                            "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
+                            "            AND p.author NOT IN (SELECT * FROM filteredUsers))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the reposts made by the followed users who are not filtered out\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE EXISTS (\n" +
+                            "                         SELECT *\n" +
+                            "                         FROM repost as r\n" +
+                            "                         WHERE r.author IN (SELECT * FROM followedUsers)\n" +
+                            "                           AND r.author NOT IN (SELECT * FROM filteredUsers)" +
+                            "                           AND r.author = p.author\n" +
+                            "                           AND r.post = p.id\n" +
+                            "                     ))\n" +
                             "\n" +
                             "         UNION\n" +
                             "\n" +
@@ -957,7 +971,7 @@ public class PostDao extends AbstractDao {
                             "         -- We obtain the reposts that the user made\n" +
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
-                            "          WHERE EXISTS(\n" +
+                            "          WHERE EXISTS (\n" +
                             "                        SELECT *\n" +
                             "                        FROM repost as r\n" +
                             "                        WHERE r.author = ?\n" +
