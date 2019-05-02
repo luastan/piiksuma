@@ -980,7 +980,7 @@ public class PostDao extends AbstractDao {
                             "          WHERE EXISTS (\n" +
                             "                        SELECT *\n" +
                             "                        FROM repost as r\n" +
-                            "                        WHERE r.author = ?\n" +
+                            "                        WHERE r.usr = ?\n" +
                             "                          AND r.author = p.author\n" +
                             "                          AND r.post = p.id\n" +
                             "                    ))\n" +
