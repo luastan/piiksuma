@@ -17,6 +17,7 @@ import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
+import piiksuma.gui.profiles.profilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,7 +47,7 @@ public class PostController implements Initializable {
     private ImageView boxImage;
 
     @FXML
-    private ImageView profilePicture;
+    private StackPane profilePicture;
 
     @FXML
     private HBox hashtags;
@@ -114,9 +115,13 @@ public class PostController implements Initializable {
         }
 
         // Profile Picture
-        Multimedia profileM = author.getMultimedia();
-        if (profileM != null && !profileM.getUri().equals("")) {
-            boxImage.setImage(new Image(profileM.getUri(), 50, 50, true, true));
+        FXMLLoader profilePicLoader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        profilePicLoader.setController(new profilePreviewController(post.getAuthor()));
+        try {
+            profilePicture.getChildren().add(profilePicLoader.load());
+        } catch (IOException e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
 
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);

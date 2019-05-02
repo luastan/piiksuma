@@ -25,12 +25,8 @@
                 <StackPane styleClass="post-inner-container">
                     <HBox alignment="CENTER" spacing="10">
                         <!-- Avatar goes here-->
-                        <ImageView fx:id="profilePicture">
-                            <!--TODO: Clip Avatar to make it rounded -->
-
-                            <Image preserveRatio="true" requestedWidth="50" requestedHeight="50"
-                                   url="/imagenes/huevo.png"/>
-                        </ImageView>
+                        <StackPane fx:id="profilePicture">
+                        </StackPane>
                         <VBox alignment="CENTER_LEFT">
                             <Label fx:id="authorName" style="-fx-font-weight: BOLD;"/>
                             <Label fx:id="authorId"/>

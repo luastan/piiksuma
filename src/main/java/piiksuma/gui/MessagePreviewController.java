@@ -1,12 +1,16 @@
 package piiksuma.gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.gui.profiles.profilePreviewController;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -31,7 +35,7 @@ public class MessagePreviewController implements Initializable {
     private Label hiddenUserId;
 
     @FXML
-    private ImageView profilePicture;
+    private StackPane profilePicture;
 
     public MessagePreviewController(Message message, User peer) {
         this.message = message;
@@ -50,6 +54,14 @@ public class MessagePreviewController implements Initializable {
             hiddenUserId.setText(peer.getId());
         }
         // TODO: Bind profiles picture from the peer
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        loader.setController(new profilePreviewController(peer));
+        try {
+            profilePicture.getChildren().add(loader.load());
+        } catch (IOException e) {
+            // TODO: Handle exception
+            e.printStackTrace();
+        }
     }
 
     public User getPeer() {
