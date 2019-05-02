@@ -31,6 +31,7 @@
     -piik-light-green: #9CE37D;
     -piik-yellow-mustard: #FFC857;
     -piik-blue-green: #119DA4;
+    -piik-orange-ripple: rgba(255, 145, 0, 0.77);
 
 
     -white-high-emphasis: rgba(255, 255, 255, 1.00);
@@ -234,7 +235,7 @@
 }
 
 .post-inner-container {
-    -fx-padding: 0 17 0 17;
+    -fx-padding: 0 17 0 15;
 }
 
 .post-text {
