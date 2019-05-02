@@ -1234,6 +1234,12 @@ public class PostDao extends AbstractDao {
         return (!archived.isEmpty()) ;
     }
 
+    /**
+     * Function to remove an archive post from an user
+     * @param post
+     * @param user
+     * @throws PiikDatabaseException
+     */
     public void removeArchivePost(Post post, User user) throws PiikDatabaseException {
 
         new DeleteMapper<>(super.getConnection()).createUpdate("DELETE FROM archivepost WHERE usr = ? AND post = ? AND author = ?").defineParameters(
