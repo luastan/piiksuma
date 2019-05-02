@@ -489,8 +489,8 @@ public class PostDao extends AbstractDao {
         }
 
         // Archive post
-        new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivepost values (?,?,?)")
-                .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO archivepost VALUES (?,?,?)")
+                .defineParameters(post.getId(), user.getPK(), post.getPostAuthor().getId())
                 .executeUpdate();
     }
     //******************************************************************************************************************
@@ -945,7 +945,21 @@ public class PostDao extends AbstractDao {
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
                             "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
-                            "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
+                            "            AND p.author NOT IN (SELECT * FROM filteredUsers))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the reposts made by the followed users who are not filtered out\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE EXISTS (\n" +
+                            "                         SELECT *\n" +
+                            "                         FROM repost as r\n" +
+                            "                         WHERE r.author IN (SELECT * FROM followedUsers)\n" +
+                            "                           AND r.author NOT IN (SELECT * FROM filteredUsers)" +
+                            "                           AND r.author = p.author\n" +
+                            "                           AND r.post = p.id\n" +
+                            "                     ))\n" +
                             "\n" +
                             "         UNION\n" +
                             "\n" +
@@ -959,7 +973,7 @@ public class PostDao extends AbstractDao {
                             "         -- We obtain the reposts that the user made\n" +
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
-                            "          WHERE EXISTS(\n" +
+                            "          WHERE EXISTS (\n" +
                             "                        SELECT *\n" +
                             "                        FROM repost as r\n" +
                             "                        WHERE r.author = ?\n" +
@@ -1168,5 +1182,29 @@ public class PostDao extends AbstractDao {
                 post.getId(), user.getPK()).mapList();
 
         return (!repost.isEmpty()) ;
+    }
+
+    /**
+     * Function to check if a user has already archived a post
+     *
+     * @param post
+     * @param user
+     * @return
+     * @throws PiikDatabaseException
+     */
+    public boolean isPostArchived(Post post, User user) throws PiikDatabaseException{
+
+        List<Map<String, Object>> archived = new QueryMapper<Object>(super.getConnection()).createQuery(
+                "SELECT post FROM archivePost WHERE usr = ? AND post = ? AND author = ?").defineParameters(user.getPK(),
+                post.getId(), post.getAuthor().getId()).mapList();
+
+        return (!archived.isEmpty()) ;
+    }
+
+    public void removeArchivePost(Post post, User user) throws PiikDatabaseException {
+
+        new DeleteMapper<>(super.getConnection()).createUpdate("DELETE FROM archivepost WHERE usr = ? AND post = ? AND author = ?").defineParameters(
+                user.getPK(), post.getId(), post.getAuthor().getId()
+        ).executeUpdate();
     }
 }

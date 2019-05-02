@@ -158,7 +158,7 @@ public class SearchController implements Initializable {
     private void setUpFeedEventListener() {
         eventFeed.addListener((ListChangeListener<? super piiksuma.Event>) change -> {
             eventMasonryPane.getChildren().clear();
-            userScrollPane.setVisible(userFeed.size() != 0);
+            eventScrollPane.setVisible(userFeed.size() != 0);
             eventFeed.forEach(this::insertEvent);
         });
     }
