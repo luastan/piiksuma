@@ -20,13 +20,13 @@ public class StatsController implements Initializable {
     private Label userName;
 
     @FXML
-    private Label maxLikeIt;
+    private Label countLikeIt;
 
     @FXML
-    private Label maxLoveIt;
+    private Label countLoveIt;
 
     @FXML
-    private Label maxHateIt;
+    private Label countHateIt;
 
     @FXML
     private Label maxMadeMeAngry;
@@ -57,9 +57,9 @@ public class StatsController implements Initializable {
         try {
             Statistics statistics = ApiFacade.getEntrypoint().getSearchFacade().getUserStatistics(user, user);
             userName.setText(user.getId());
-            maxHateIt.setText(""+statistics.getCountHateIt());
-            maxLikeIt.setText(""+statistics.getCountLikeIt());
-            maxLoveIt.setText(""+statistics.getCountLoveIt());
+            countHateIt.setText(""+statistics.getCountHateIt());
+            countLikeIt.setText(""+statistics.getCountLikeIt());
+            countLoveIt.setText(""+statistics.getCountLoveIt());
             maxMadeMeAngry.setText(""+statistics.getCountMakesMeAngry());
             followers.setText(""+statistics.getFollowers());
             following.setText(""+statistics.getFollowing());
