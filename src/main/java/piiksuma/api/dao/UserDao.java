@@ -944,72 +944,81 @@ public class UserDao extends AbstractDao {
 
         Statistics statistics = new Statistics();
 
-        List<Map<String, Object>> estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                //Query to take the number of followers the given user has
-                "SELECT count(follower) AS followers \n" +
-                        "FROM followuser \n" +
-                        "WHERE followed LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).mapList();
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("" +
+                "WITH followerstable AS (SELECT * FROM followuser WHERE followed LIKE ?),\n" +
+                "     followedtable AS (SELECT * FROM followuser WHERE follower LIKE ?),\n" +
+                "     reactionstable AS (SELECT * FROM react WHERE author LIKE ?)\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followers' as type\n" +
+                "FROM followerstable\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followed' as type\n" +
+                "FROM followedtable\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followback' as type\n" +
+                "FROM followerstable, followedtable\n" +
+                "WHERE followedtable.followed = followerstable.follower\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countLikeIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'LikeIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countLoveIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'LoveIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countHateIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'HateIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countMakesMeAngry' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'MakesMeAngry'").defineParameters(user.getPK(), user.getPK(), user.getPK())
+                .setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setFollowers((Long) estatistics.get(0).get("followers"));
+        for(Map<String, Object> row : result) {
 
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "\n" +//Query to take the number of users that the user follows
-                        "SELECT count(followed) AS followed \n" +
-                        "FROM followuser \n" +
-                        "WHERE follower LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).mapList();
+            // Statistic type
+            String type = (String)row.get("type");
+            // Value
+            Long value = (Long)row.get("value");
 
-        statistics.setFollowing((Long) estatistics.get(0).get("followed"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "\n" +//Query to take the number of users that followback the given user
-                        "WITH followerstable AS( SELECT * \n" +
-                        "FROM followuser \n" +
-                        "WHERE followed LIKE ? ),\n" +
-                        "\n" +
-                        "followedtable AS( SELECT * \n" +
-                        "FROM followuser \n" +
-                        "WHERE follower LIKE ? )\n" +
-                        "\n" +
-                        "SELECT COUNT(*) AS followback " +
-                        "FROM followedtable, followerstable " +
-                        "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK(), user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setCountLikeIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setCountLoveIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setCountHateIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setCountMakesMeAngry((Long) estatistics.get(0).get("reaction"));
+            switch (type) {
+                case "followers":
+                    statistics.setFollowers(value);
+                    break;
+                case "followed":
+                    statistics.setFollowing(value);
+                    break;
+                case "followback":
+                    statistics.setFollowBack(value);
+                    break;
+                case "countLikeIt":
+                    statistics.setCountLikeIt(value);
+                    break;
+                case "countLoveIt":
+                    statistics.setCountLoveIt(value);
+                    break;
+                case "countHateIt":
+                    statistics.setCountHateIt(value);
+                    break;
+                case "countMakesMeAngry":
+                    statistics.setCountMakesMeAngry(value);
+                    break;
+            }
+        }
 
         return statistics;
     }
