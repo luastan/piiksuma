@@ -511,7 +511,7 @@ public class InsertionFacade {
      * @throws PiikDatabaseException
      */
     public void reply(Post reply, User currentUser) throws PiikDatabaseException {
-        if (reply == null || !reply.checkNotNull(false)) {
+        if (reply == null || !reply.checkNotNull(true)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("reply"));
         }
 
@@ -519,7 +519,7 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (reply.getFatherPost() == null || !reply.checkNotNull(true)) {
+        if (reply.getFatherPost() == null || !reply.getFatherPost().checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("fatherPost"));
         }
 
@@ -529,6 +529,7 @@ public class InsertionFacade {
 
         parentFacade.getPostDao().createPost(reply);
     }
+
 
 
 
