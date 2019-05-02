@@ -1165,11 +1165,19 @@ public class PostDao extends AbstractDao {
 
         // TODO filter by recent publication date
         return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
-                .createQuery("SELECT hashtag, COUNT(*) as count " +
-                        "FROM ownhashtag " +
-                        "GROUP BY hashtag " +
-                        "ORDER BY count DESC " +
-                        "LIMIT ?").defineParameters(limit).list();
+                .createQuery("SELECT o.hashtag\n" +
+                        "FROM ownhashtag as o\n" +
+                        "WHERE EXISTS (\n" +
+                        "    SELECT *\n" +
+                        "    FROM post as p\n" +
+                        "    WHERE p.id = o.post\n" +
+                        "        AND p.author = o.author\n" +
+                        "        -- Less than 1 day\n" +
+                        "        AND DATE_PART('day', now() - p.publicationdate) < 1\n" +
+                        ")\n" +
+                        "GROUP BY o.hashtag\n" +
+                        "ORDER BY count(*) DESC\n" +
+                        "LIMIT 10").defineParameters(limit).list();
 
     }
 
