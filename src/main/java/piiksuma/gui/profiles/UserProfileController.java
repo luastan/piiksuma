@@ -274,16 +274,16 @@ public class UserProfileController implements Initializable {
 
     public void updateArchivedPosts() {
         archivedPostsList.clear();
-/*      TODO: Fix NullPointer thrown by the Dao
+
         try {
-            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade()
-                    .getArchivedPosts(user, ContextHandler.getContext().getCurrentUser()));
+            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+            System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
         } catch (PiikInvalidParameters ignore) {
             // Current user is not allowed to see archived posts from other user
         }
-*/
 
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();
