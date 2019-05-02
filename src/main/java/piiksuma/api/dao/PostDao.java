@@ -616,11 +616,17 @@ public class PostDao extends AbstractDao {
         }
 
         // Get the base query
-        String query = getQueryPost();
+        StringBuilder string = new StringBuilder();
+        string.append('(');
+        string.append(getQueryPost());
 
-        query += "WHERE post.author = ?";
-        List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(query)
-                .defineClass(Post.class).defineParameters(user.getPK()).mapList();
+        string.append("WHERE post.author = ?) UNION (");
+        string.append(getQueryPost());
+        string.append("WHERE EXISTS (SELECT * FROM repost as r WHERE r.usr = ? AND r.author = post.author AND r.post " +
+                "= post.id))");
+
+        List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(string.toString())
+                .defineClass(Post.class).defineParameters(user.getPK(), user.getPK()).mapList();
 
         // Return posts
         return getPosts(result);
