@@ -356,7 +356,7 @@ public class UserDao extends AbstractDao {
                     //  False -> they don't match; the proper name is put in the class
                     String column = Mapper.extractColumnName(field);
 
-                    if (!column.equals("pass") && !column.equals("registrationdate") && !column.equals("profilepicture")) {
+                    if (!column.equals("pass") && !column.equals("registrationdate")) {
                         clause.append(column).append(" = ");
 
                         Object value = null;
@@ -413,6 +413,9 @@ public class UserDao extends AbstractDao {
 
             // User's data insertion
             for (Object value : columnValues) {
+                if(value instanceof Multimedia){
+                    value = ((Multimedia)value).getHash();
+                }
                 statement.setObject(offset++, value);
             }
 
@@ -616,6 +619,16 @@ public class UserDao extends AbstractDao {
                     } else {
                         returnUser.setType(UserType.administrator);
                     }
+                }
+
+                String profPicture = (String) tuple.get("profilepicture");
+
+                if(profPicture != null && !profPicture.isEmpty()){
+                    Multimedia multimedia = new Multimedia();
+                    multimedia.setHash(profPicture);
+
+                    returnUser.setMultimedia(multimedia);
+                    tuple.put("profilepicture", multimedia);
                 }
 
                 // User information is saved
