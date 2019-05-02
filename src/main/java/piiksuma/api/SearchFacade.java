@@ -379,6 +379,20 @@ public class SearchFacade {
         return parentFacade.getPostDao().getPost(post);
     }
 
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException, PiikInvalidParameters {
+        if(post == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        return parentFacade.getPostDao().getAnswers(post);
+    }
+
     // TODO we need to set a limit
 
     /**

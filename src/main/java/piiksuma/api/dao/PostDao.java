@@ -613,6 +613,37 @@ public class PostDao extends AbstractDao {
         // Return List
         return getPosts(result);
     }
+
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException {
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        List<Post> posts = new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
+                "WITH RECURSIVE searchChildren(id, author) AS (" +
+                    " SELECT *" +
+                    " FROM post" +
+                    " WHERE id = ? AND author = ?" +
+                    " UNION ALL" +
+                    " SELECT p.*" +
+                    " FROM post as p JOIN searchChildren as s ON (p.sugardaddy = s.id AND p.authordaddy = s.author)" +
+                    ")" +
+                    "" +
+                    "SELECT *" +
+                    "FROM searchChildren;"
+        ).defineParameters(post.getId(), post.getAuthor()).list();
+
+        posts.remove(0);
+
+        return posts;
+    }
     //******************************************************************************************************************
 
     /*******************************************************************************************************************
