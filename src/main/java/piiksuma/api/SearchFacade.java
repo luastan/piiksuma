@@ -395,10 +395,6 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
         return parentFacade.getPostDao().getPost(user);
     }
 
