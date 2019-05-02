@@ -57,10 +57,10 @@ public class StatsController implements Initializable {
         try {
             Statistics statistics = ApiFacade.getEntrypoint().getSearchFacade().getUserStatistics(user, user);
             userName.setText(user.getId());
-            maxHateIt.setText(""+statistics.getMaxHateIt());
-            maxLikeIt.setText(""+statistics.getMaxLikeIt());
-            maxLoveIt.setText(""+statistics.getMaxLoveIt());
-            maxMadeMeAngry.setText(""+statistics.getMaxMakesMeAngry());
+            maxHateIt.setText(""+statistics.getCountHateIt());
+            maxLikeIt.setText(""+statistics.getCountLikeIt());
+            maxLoveIt.setText(""+statistics.getCountLoveIt());
+            maxMadeMeAngry.setText(""+statistics.getCountMakesMeAngry());
             followers.setText(""+statistics.getFollowers());
             following.setText(""+statistics.getFollowing());
             followBack.setText(""+statistics.getFollowBack());
