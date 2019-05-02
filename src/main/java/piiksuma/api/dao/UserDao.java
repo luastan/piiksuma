@@ -463,6 +463,16 @@ public class UserDao extends AbstractDao {
                 }
             }
 
+            String profPicture = (String) columnsUsr.get("profilepicture");
+
+            if(profPicture != null && !profPicture.isEmpty()){
+                Multimedia multimedia = new Multimedia();
+                multimedia.setHash(profPicture);
+
+                returnUser.setMultimedia(multimedia);
+                columnsUsr.put("profilepicture", multimedia);
+            }
+
             // User information is saved
             returnUser.addInfo(columnsUsr);
 
