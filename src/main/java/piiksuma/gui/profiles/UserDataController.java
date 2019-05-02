@@ -123,7 +123,18 @@ public class UserDataController implements Initializable {
             telephoneList.getItems().add(telephone);
         }
 
-        if (user.getMultimedia() != null) {
+        // Multimedia insertion
+        if (user.getMultimedia() != null && user.getMultimedia().getHash() != null
+                && !user.getMultimedia().getHash().isEmpty()) {
+            if (user.getMultimedia().getUri() == null || user.getMultimedia().getUri().isEmpty()) {
+                try {
+                    user.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade()
+                            .getMultimedia(user.getMultimedia(), ContextHandler.getContext().getCurrentUser()));
+                } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+                    piikInvalidParameters.printStackTrace();
+                }
+            }
+
             imageView.setImage(new Image(user.getMultimedia().getUri(), 450, 800,
                     true, true));
             imageView.setViewport(new Rectangle2D((imageView.getImage().getWidth() - 450) / 2,
@@ -234,6 +245,7 @@ public class UserDataController implements Initializable {
             //Update the user in the app
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
             ContextHandler.getContext().getStage("User data").close();
+            ContextHandler.getContext().getFeedController().updateFeed();
         } catch (PiikException e) {
             e.showAlert();
         }
