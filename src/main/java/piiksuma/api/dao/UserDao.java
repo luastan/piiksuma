@@ -214,7 +214,7 @@ public class UserDao extends AbstractDao {
             // Getting rid of the last ", " and putting ") "
             clause.delete(clause.length() - 2, clause.length() - 1);
             clause.append(") ");
-g
+
             clauseAux.delete(clauseAux.length() - 2, clauseAux.length() - 1);
             clauseAux.append(") ");
 
