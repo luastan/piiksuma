@@ -492,11 +492,11 @@ public class InsertionFacade {
      */
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null ) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull(false)) {
+        if (currentUser == null ) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 

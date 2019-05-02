@@ -12,10 +12,6 @@ import piiksuma.exceptions.PiikException;
 
 import java.net.URL;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
@@ -36,7 +32,7 @@ public class RegisterController implements Initializable {
     @FXML
     private JFXTextField country;
     @FXML
-    private JFXTextField birthday;
+    private JFXDatePicker birthday;
     @FXML
     private JFXTextField religion;
     @FXML
@@ -110,18 +106,7 @@ public class RegisterController implements Initializable {
      * @param event
      */
     private void handleRegister(Event event) {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date date;
         Alert alert = new Alert(ContextHandler.getContext().getStage("register"));
-        try {
-            date = dateFormat.parse(birthday.getText());
-        } catch (ParseException e) {
-            alert.setHeading("Fields wrong!");
-            alert.addText("Date field is incorrect");
-            alert.addCloseButton();
-            alert.show();
-            return;
-        }
 
         if (!checkFields()) {
             alert.setHeading("Fields empty!");
@@ -132,7 +117,9 @@ public class RegisterController implements Initializable {
         }
 
         User user = new User(userName.getText(), userId.getText(), email.getText());
-        user.setBirthday(new Timestamp(date.getTime()));
+        if (birthday.validate()) {
+           user.setBirthday(Timestamp.valueOf(birthday.getValue().atStartOfDay()));
+        }
         user.setPass(password.getText());
         user.setGender(genderBox.getSelectionModel().getSelectedItem());
         user.setDescription(description.getText());
@@ -155,7 +142,6 @@ public class RegisterController implements Initializable {
             }
 
         }
-        //TODO add telephones to an arraylist or somethng
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
         } catch (PiikException e) {
@@ -171,7 +157,7 @@ public class RegisterController implements Initializable {
      */
     private boolean checkFields() {
         if (userId.getText().isEmpty() || userName.getText().isEmpty() || email.getText().isEmpty()
-                || password.getText().isEmpty() || birthday.getText().isEmpty()) {
+                || password.getText().isEmpty() || birthday.validate()) {
             return false;
         }
         return true;
