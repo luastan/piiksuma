@@ -1154,12 +1154,14 @@ public class PostDao extends AbstractDao {
      *
      * @param user User we want to check if he has already reposted
      * @param post Post we want to check
+     * @param current Current user logged in the app
      * @return  "True" if the user reposted the post, otherwise "false"
      */
-    public boolean checkUserResposted(User user, Post post) throws PiikDatabaseException{
+    public boolean checkUserResposted(User user, Post post, User current) throws PiikDatabaseException{
 
         List<Map<String, Object>> repost = new QueryMapper<Object>(super.getConnection()).createQuery(
-                "SELECT post FROM repost WHERE usr = ? AND post = ? ").defineParameters(user.getId(), post.getId()).mapList();
+                "SELECT post FROM repost WHERE usr = ? AND post = ? AND author = ?").defineParameters(current.getPK(),
+                post.getId(), user.getPK()).mapList();
 
         return (!repost.isEmpty()) ;
     }

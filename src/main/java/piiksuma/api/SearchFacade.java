@@ -815,6 +815,6 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        return parentFacade.getPostDao().checkUserResposted(user, post);
+        return parentFacade.getPostDao().checkUserResposted(user, post, currentUser);
     }
 }

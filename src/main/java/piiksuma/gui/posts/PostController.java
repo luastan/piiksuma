@@ -210,8 +210,8 @@ public class PostController implements Initializable {
 
     private void handleRepost(Event event) {
         try {
-            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(ContextHandler.getContext().getCurrentUser(),
-                    post, ContextHandler.getContext().getCurrentUser())) {
+            if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,
+                    ContextHandler.getContext().getCurrentUser())) {
                 // If the repost exists it gets deleted and the graphic gets grey color
                 ApiFacade.getEntrypoint().getDeletionFacade().removeRePost(post, ContextHandler.getContext().getCurrentUser());
                 repost.getGraphic().setStyle("");
