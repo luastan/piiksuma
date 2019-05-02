@@ -97,24 +97,24 @@
                     </JFXButton>
                     <!-- TODO iconos para estas cosas-->
                     <JFXNodesList fx:id="reactionsButton" rotate="180.0" spacing="7.5">
-                        <JFXButton fx:id="mainButton" contentDisplay="GRAPHIC_ONLY">
+                        <JFXButton fx:id="mainButton" styleClass="deck-small-button">
                             <graphic>
-                                <FontAwesomeIconView glyphName="PLUS" size="24" />
+                                <FontAwesomeIconView glyphName="PLUS" size="24" styleClass="deck-small-button-graphic" />
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="loveItButton" contentDisplay="GRAPHIC_ONLY">
+                        <JFXButton fx:id="loveItButton"  styleClass="button-reaction">
                             <graphic>
-                                <FontAwesomeIconView glyphName="HAPPY-2" size="24" />
+                                <FontAwesomeIconView glyphName="HAPPY-2" size="24" styleClass="deck-small-button-graphic" />
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="hateItButton" contentDisplay="GRAPHIC_ONLY" >
+                        <JFXButton fx:id="hateItButton" contentDisplay="GRAPHIC_ONLY" styleClass="button-reaction">
                             <graphic>
-                                <FontAwesomeIconView glyphName="ANGRY" size="24"/>
+                                <FontAwesomeIconView glyphName="ANGRY" size="24" styleClass="deck-small-button-graphic" />
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="makesMeAngry" contentDisplay="GRAPHIC_ONLY" >
+                        <JFXButton fx:id="makesMeAngry" contentDisplay="GRAPHIC_ONLY" styleClass="reaction">
                             <graphic>
-                                <FontAwesomeIconView glyphName="ANCHOR" size="24" />
+                                <FontAwesomeIconView glyphName="ANCHOR" size="24" styleClass="deck-small-button-graphic"/>
                             </graphic>
                         </JFXButton>
                     </JFXNodesList>
