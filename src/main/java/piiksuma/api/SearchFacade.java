@@ -117,6 +117,29 @@ public class SearchFacade {
     }
 
     /**
+     * Function to check if the user followed follow the user follower
+     *
+     * @param followed
+     * @param follower
+     * @return
+     */
+    public boolean isFollowed(User followed, User follower, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (followed == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
+        }
+
+        if (follower == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getUserDao().isFollowed(followed, follower);
+    }
+
+    /**
      * Function to login into the app; it will try to find a user that meets the given keys
      *
      * @param user user whose primary fields will be used in the search
