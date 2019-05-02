@@ -880,7 +880,7 @@ public class UserDao extends AbstractDao {
         }
 
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT * FROM blockuser WHERE " +
-                "usr = ? and blocked = ?").defineParameters(user1.getPK(), user2.getPK()).mapList();
+                "usr = ? and blocked = ?").defineParameters(user2.getPK(), user1.getPK()).mapList();
 
         if(query == null || query.isEmpty()){
             return false;

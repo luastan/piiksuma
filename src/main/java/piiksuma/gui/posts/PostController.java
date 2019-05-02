@@ -62,6 +62,18 @@ public class PostController implements Initializable {
     @FXML
     private JFXButton archiveButton;
 
+    @FXML
+    private JFXButton loveItButton;
+
+    @FXML
+    private JFXButton hateItButton;
+
+    @FXML
+    private JFXButton makesMeAngry;
+
+    @FXML
+    private JFXButton mainButton;
+
     private Post post;
 
     public PostController(Post post) {
@@ -130,6 +142,25 @@ public class PostController implements Initializable {
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
+                mainButton.setDisable(true);
+            }
+            react = new Reaction(current, post, ReactionType.LoveIt);
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
+                loveItButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+                hateItButton.setDisable(true);
+                makesMeAngry.setDisable(true);
+            }
+            react = new Reaction(current, post, ReactionType.HateIt);
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
+                hateItButton.getGraphic().setStyle("-fx-fill: -color-error;");
+                loveItButton.setDisable(true);
+                makesMeAngry.setDisable(true);
+            }
+            react = new Reaction(current, post, ReactionType.MakesMeAngry);
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
+                makesMeAngry.getGraphic().setStyle("-fx-fill:-piik-orange-ripple;");
+                loveItButton.setDisable(true);
+                hateItButton.setDisable(true);
             }
             if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,
                     ContextHandler.getContext().getCurrentUser())) {
@@ -149,6 +180,9 @@ public class PostController implements Initializable {
         archiveButton.setOnAction(this::handleArchive);
         deleteButton.setVisible(post.getAuthor().equals(current) || current.getType().equals(UserType.administrator));
 
+        loveItButton.setOnAction(this::handleLoveIt);
+        hateItButton.setOnAction(this::handleHateIt);
+        makesMeAngry.setOnAction(this::handleAngry);
 //        FontAwesomeIcon.HASHTAG
 
         // Hashtags
@@ -159,6 +193,69 @@ public class PostController implements Initializable {
         }
     }
 
+    private void handleLoveIt(Event event){
+        Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.LoveIt);
+        try{
+            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+                ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
+                loveItButton.getGraphic().setStyle("");
+                hateItButton.setDisable(false);
+                makesMeAngry.setDisable(false);
+                buttonLike.setDisable(false);
+            }else{
+                ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
+                loveItButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+                hateItButton.setDisable(true);
+                makesMeAngry.setDisable(true);
+                buttonLike.setDisable(true);
+            }
+
+        }catch (PiikDatabaseException | PiikInvalidParameters e){
+            e.showAlert();
+        }
+    }
+
+    private void handleHateIt(Event event){
+        Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.HateIt);
+        try{
+            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+                ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
+                hateItButton.getGraphic().setStyle("");
+                loveItButton.setDisable(false);
+                makesMeAngry.setDisable(false);
+                buttonLike.setDisable(false);
+            }else{
+                ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
+                hateItButton.getGraphic().setStyle("-fx-fill: -color-error;");
+                loveItButton.setDisable(true);
+                makesMeAngry.setDisable(true);
+                buttonLike.setDisable(true);
+            }
+        }catch (PiikDatabaseException | PiikInvalidParameters e){
+            e.showAlert();
+        }
+    }
+
+    private void handleAngry(Event event){
+        Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.MakesMeAngry);
+        try{
+            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+                ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
+                makesMeAngry.getGraphic().setStyle("");
+                loveItButton.setDisable(false);
+                hateItButton.setDisable(false);
+                buttonLike.setDisable(false);
+            }else{
+                ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
+                makesMeAngry.getGraphic().setStyle("-fx-fill: -piik-orange-ripple;");
+                loveItButton.setDisable(true);
+                hateItButton.setDisable(true);
+                buttonLike.setDisable(true);
+            }
+        }catch (PiikDatabaseException | PiikInvalidParameters e){
+            e.showAlert();
+        }
+    }
     private void handleArchive(Event event){
         try{
             if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
@@ -207,9 +304,11 @@ public class PostController implements Initializable {
             if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
                 buttonLike.getGraphic().setStyle("");
+                mainButton.setDisable(false);
             } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
+                mainButton.setDisable(true);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
             piikInvalidParameters.showAlert();
