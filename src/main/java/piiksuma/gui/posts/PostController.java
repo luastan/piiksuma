@@ -103,7 +103,17 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         // Multimedia insertion
-        if (post.getMultimedia() != null && post.getMultimedia().getUri() != null && !post.getMultimedia().getUri().equals("")) {
+        if(post.getMultimedia() != null && post.getMultimedia().getHash() != null
+                && !post.getMultimedia().getHash().isEmpty()) {
+            if (post.getMultimedia().getUri() == null || post.getMultimedia().getUri().isEmpty()) {
+                try {
+                    post.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade().getMultimedia(post.getMultimedia(),
+                            current));
+                } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+                    piikInvalidParameters.printStackTrace();
+                }
+            }
+
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
         }

@@ -240,7 +240,7 @@ public class SearchFacade {
      * @throws PiikDatabaseException
      */
     public Multimedia getMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull(false)) {
+        if (multimedia == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
