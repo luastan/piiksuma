@@ -9,14 +9,25 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import piiksuma.Multimedia;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
+import piiksuma.api.MultimediaType;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 public class UserDataController implements Initializable {
@@ -63,6 +74,8 @@ public class UserDataController implements Initializable {
     @FXML
     private JFXButton multimediaButton;
 
+    private Multimedia multimedia;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -90,7 +103,7 @@ public class UserDataController implements Initializable {
         userId.setDisable(true);
         userName.setText(user.getName());
         email.setText(user.getEmail());
-      //  password.setText(user.getPass());
+        //  password.setText(user.getPass());
         home.setText(user.getHome());
         city.setText(user.getCity());
         birthplace.setText(user.getBirthplace());
@@ -120,7 +133,30 @@ public class UserDataController implements Initializable {
         File imagen = fileChooser.showOpenDialog(null);
 
         if (imagen != null) {
-            imageView.setImage(new Image(imagen.toURI().toString()));
+            try {
+                // Copy img from source to resource folder
+                BufferedImage img = ImageIO.read(imagen);
+                File outputFile = new File("src/main/resources/imagenes/" + imagen.getName());
+                ImageIO.write(img, imagen.getName().split("\\.")[1], outputFile);
+                imageView.setImage(new Image(outputFile.toURI().toString()));
+                // Create multimedia
+                multimedia = new Multimedia();
+                try {
+                    RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+                    byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+                    file.read(imgBytes);
+                    multimedia.setHash(Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes)));
+                    multimedia.setUri(outputFile.toURI().toString());
+                    multimedia.setType(MultimediaType.image);
+                    multimedia.setResolution(String.valueOf((int) imageView.getImage().getWidth()) + 'x'
+                            + (int) imageView.getImage().getHeight());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -170,6 +206,10 @@ public class UserDataController implements Initializable {
         modifyUser.setProvince(province.getText());
         modifyUser.setCountry(country.getText());
         modifyUser.setHome(home.getText());
+        if(multimedia != null){
+            modifyUser.setMultimedia(multimedia);
+        }
+        // Create multimedia
         // modifyUser.setPass(password.getText());
 
         for (String telephone : telephoneList.getItems()) {
