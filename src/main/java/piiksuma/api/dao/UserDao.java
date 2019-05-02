@@ -326,33 +326,36 @@ public class UserDao extends AbstractDao {
                     //  True -> equals to the attribute's name
                     //  False -> they don't match; the proper name is put in the class
                     String column = Mapper.extractColumnName(field);
-                    clause.append(column).append(" = ");
 
-                    Object value = null;
+                    if (!column.equals("pass") && !column.equals("registrationdate")) {
+                        clause.append(column).append(" = ");
 
-                    try {
-                        value = field.get(user);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                        Object value = null;
 
-                    // The iterated field cannot be null
-                    if (mapperColumn.pkey() || mapperColumn.notNull()) {
-                        clause.append("?");
-                        // To preserve the order when filling values in the prepared statement
-                        columnValues.add(value);
-                    } else {
-                        // Unable to set a value in prepared statement or it is an empty string
-                        if (value == null || (value instanceof String && ((String) value).isEmpty())) {
-                            clause.append("NULL");
-                        } else {
+                        try {
+                            value = field.get(user);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        // The iterated field cannot be null
+                        if (mapperColumn.pkey() || mapperColumn.notNull()) {
                             clause.append("?");
                             // To preserve the order when filling values in the prepared statement
                             columnValues.add(value);
+                        } else {
+                            // Unable to set a value in prepared statement or it is an empty string
+                            if (value == null || (value instanceof String && ((String) value).isEmpty())) {
+                                clause.append("NULL");
+                            } else {
+                                clause.append("?");
+                                // To preserve the order when filling values in the prepared statement
+                                columnValues.add(value);
+                            }
                         }
-                    }
 
-                    clause.append(", ");
+                        clause.append(", ");
+                    }
                 }
             }
 
@@ -369,6 +372,7 @@ public class UserDao extends AbstractDao {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
+            System.out.println(clause.toString());
             statement = getConnection().prepareStatement(clause.toString());
 
 

@@ -170,7 +170,7 @@ public class UserDataController implements Initializable {
         modifyUser.setProvince(province.getText());
         modifyUser.setCountry(country.getText());
         modifyUser.setHome(home.getText());
-       // modifyUser.setPass(password.getText());
+        // modifyUser.setPass(password.getText());
 
         for (String telephone : telephoneList.getItems()) {
             modifyUser.getPhones().add(telephone);
@@ -184,7 +184,7 @@ public class UserDataController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(modifyUser, modifyUser);
             //Update the user in the app
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
-            ContextHandler.getContext().getStage("userData").close();
+            ContextHandler.getContext().getStage("User data").close();
         } catch (PiikException e) {
             e.showAlert();
         }
