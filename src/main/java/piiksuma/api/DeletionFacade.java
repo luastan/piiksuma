@@ -178,10 +178,6 @@ public class DeletionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("repost"));
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.equals(repost.getPostAuthor())) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
         parentFacade.getPostDao().removeRepost(repost, currentUser);
     }
 
