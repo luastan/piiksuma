@@ -1,6 +1,9 @@
 package piiksuma;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import piiksuma.api.ApiFacade;
@@ -18,7 +21,6 @@ public class Arranque extends Application {
         // SampleFachada.getDb().idGenerationTest();
         SampleFachada.getDb().aTest();
         launch(args);
-//        FontAwesomeIcon.COMMENT
     }
 
     @Override

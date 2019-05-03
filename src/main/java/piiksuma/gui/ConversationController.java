@@ -48,6 +48,7 @@ public class ConversationController implements Initializable {
 
     @FXML
     private Label username;
+
     @FXML
     private Label userId;
 
