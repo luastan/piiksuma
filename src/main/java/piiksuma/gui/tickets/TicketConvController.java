@@ -128,7 +128,7 @@ public class TicketConvController implements Initializable {
     private void sendMessage(ActionEvent event) {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
+            ApiFacade.getEntrypoint().getInsertionFacade().replyTicket(ticket, newMessage, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }

@@ -384,8 +384,8 @@ public class MessagesDao extends AbstractDao {
         }
 
         return new QueryMapper<Message>(getConnection()).defineClass(Message.class)
-                .createQuery("SELECT message.* FROM receivemessage  JOIN message ON(id=message) WHERE " +
-                        "message.ticket = ? ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+                .createQuery("SELECT * FROM message WHERE ticket = ? ORDER BY date ASC LIMIT ?")
+                .defineParameters(ticket.getId(), limit).list();
     }
     //******************************************************************************************************************
 
