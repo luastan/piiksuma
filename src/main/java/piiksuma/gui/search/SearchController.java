@@ -44,6 +44,7 @@ public class SearchController implements Initializable {
     public JFXMasonryPane eventMasonryPane;
     public ScrollPane postScrollPane;
     public JFXMasonryPane postMasonryPane;
+    public JFXButton trendingTopics;
     @FXML
     private JFXButton back;
 
@@ -74,6 +75,14 @@ public class SearchController implements Initializable {
         setUpFeedPostListener();
         setUpFeedEventListener();
         setUpFeedUserListener();
+
+        trendingTopics.setOnAction(event1 -> {
+            try {
+                ContextHandler.getContext().invokeStage("/gui/fxml/hashtags/trending.fxml", null);
+            } catch (PiikInvalidParameters invalidParameters) {
+                invalidParameters.showAlert();
+            }
+        });
 
     }
 
