@@ -28,7 +28,7 @@ import piiksuma.gui.ContextHandler;
 import piiksuma.gui.events.EventController;
 import piiksuma.gui.posts.PostController;
 import piiksuma.gui.events.EventPreviewController;
-import piiksuma.gui.profiles.profilePreviewController;
+import piiksuma.gui.profiles.ProfilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -195,7 +195,7 @@ public class SearchController implements Initializable {
 
     private void insertUser(User user) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
-        postLoader.setController(new profilePreviewController(user));
+        postLoader.setController(new ProfilePreviewController(user));
         try {
             userMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {

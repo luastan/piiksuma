@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.UserType;
@@ -49,6 +50,9 @@ public class UserProfileController implements Initializable {
     @FXML
     private Label userNotFound;
 
+    @FXML
+    private StackPane profilePicture;
+
     private User user;
 
     private ObservableList<Post> publishedPostsList;
@@ -59,6 +63,18 @@ public class UserProfileController implements Initializable {
         this.user = user;
         publishedPostsList = FXCollections.observableArrayList();
         archivedPostsList = FXCollections.observableArrayList();
+    }
+
+
+    public void setProfilePicture() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        loader.setController(new ProfilePreviewController(user));
+        profilePicture.getChildren().clear();
+        try {
+            profilePicture.getChildren().add(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,6 +115,7 @@ public class UserProfileController implements Initializable {
             // TODO: Initialize the buttons
             buttonInit();
             setUpPostsListener();
+            setProfilePicture();
 
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
@@ -270,6 +287,7 @@ public class UserProfileController implements Initializable {
         publishedPosts.requestFocus();
 
         publishedPostsMasonry.requestLayout();
+        setProfilePicture();
     }
 
     public void updateArchivedPosts() {

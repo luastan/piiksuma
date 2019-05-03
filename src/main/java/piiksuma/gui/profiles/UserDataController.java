@@ -245,6 +245,7 @@ public class UserDataController implements Initializable {
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
             ContextHandler.getContext().getStage("User data").close();
             ContextHandler.getContext().getFeedController().updateFeed();
+            ContextHandler.getContext().getUserProfileController().updateFeed();
         } catch (PiikException e) {
             e.showAlert();
         }

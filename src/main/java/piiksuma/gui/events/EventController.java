@@ -1,8 +1,6 @@
 package piiksuma.gui.events;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXMasonryPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -10,22 +8,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import piiksuma.Event;
 import piiksuma.User;
 import piiksuma.UserType;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
-import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.profiles.profilePreviewController;
+import piiksuma.gui.profiles.ProfilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -152,7 +146,7 @@ public class EventController implements Initializable {
 
     private void insertParticipantMasonry(User user) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
-        loader.setController(new profilePreviewController(user));
+        loader.setController(new ProfilePreviewController(user));
         Node profile;
         try {
             profile = loader.load();

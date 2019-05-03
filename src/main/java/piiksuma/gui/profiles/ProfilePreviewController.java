@@ -22,7 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class profilePreviewController implements Initializable {
+public class ProfilePreviewController implements Initializable {
 
     private User profile;
 
@@ -30,7 +30,7 @@ public class profilePreviewController implements Initializable {
     private ImageView profilePicture;
 
 
-    public profilePreviewController(User profile) {
+    public ProfilePreviewController(User profile) {
         this.profile = profile;
     }
 
@@ -66,11 +66,7 @@ public class profilePreviewController implements Initializable {
                     piikInvalidParameters.printStackTrace();
                 }
             }
-
-            profilePicture.setImage(new Image(profile.getMultimedia().getUri(), 450, 800,
-                    true, true));
-            profilePicture.setViewport(new Rectangle2D((profilePicture.getImage().getWidth() - 450) / 2,
-                    (profilePicture.getImage().getHeight() - 170) / 2, 450, 170));
+            profilePicture.setImage(new Image(profile.getMultimedia().getUri()));
         } else {
             profilePicture.setImage(new Image(new File("src/main/resources/imagenes/huevo.png").toURI().toString()));
         }
