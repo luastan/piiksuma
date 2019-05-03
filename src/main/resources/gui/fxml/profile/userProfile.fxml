@@ -30,9 +30,10 @@
                 <!-- Profile picture + username + functionality butons -->
                 <StackPane>
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <ImageView>
-                            <Image preserveRatio="true" requestedHeight="75" url="/imagenes/huevo.png"/>
-                        </ImageView>
+                        <StackPane>
+                            <StackPane style="-fx-padding: 5 5 5 5" fx:id="profilePicture"/>
+                            <StackPane/> <!-- Prevents  user from clicking the profile -->
+                        </StackPane>
                         <VBox alignment="CENTER" spacing="10">
                             <VBox alignment="CENTER_LEFT">
                                 <!-- Username and User's name -->

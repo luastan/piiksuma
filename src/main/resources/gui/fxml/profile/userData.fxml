@@ -17,7 +17,7 @@
     </StackPane.margin>
     <VBox spacing="25">
         <HBox spacing="40">
-            <ImageView fx:id="imageView" translateY="20">
+            <ImageView fx:id="imageView" translateY="20" fitWidth="90" fitHeight="90" preserveRatio="true">
                 <Image  preserveRatio="true" requestedWidth="180" requestedHeight="90" url="/imagenes/huevo.png"/>
             </ImageView>
             <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" translateY="50" ripplerFill="rgba(0, 50, 255, 0.24)" >

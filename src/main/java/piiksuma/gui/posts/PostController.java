@@ -18,7 +18,7 @@ import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
-import piiksuma.gui.profiles.profilePreviewController;
+import piiksuma.gui.profiles.ProfilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -140,7 +140,7 @@ public class PostController implements Initializable {
 
         // Profile Picture
         FXMLLoader profilePicLoader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
-        profilePicLoader.setController(new profilePreviewController(post.getAuthor()));
+        profilePicLoader.setController(new ProfilePreviewController(post.getAuthor()));
         try {
             profilePicture.getChildren().add(profilePicLoader.load());
         } catch (IOException e) {
