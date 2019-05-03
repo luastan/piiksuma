@@ -73,6 +73,10 @@ public class DeckPopUpController implements Initializable {
                 stage.setTitle("Statistics");
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/stats.fxml"));
                 break;
+            case 3:
+                stage.setTitle("Tickets");
+                loader = new FXMLLoader(getClass().getResource("/gui/fxml/tickets/adminTickets.fxml"));
+                break;
             default:
                 return;
         }

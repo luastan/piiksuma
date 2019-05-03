@@ -24,6 +24,13 @@ public class Message extends PiikObject {
     public Message() {
     }
 
+    public Message(Ticket ticket) {
+        this.ticket = ticket;
+        this.text = ticket.getTextProblem();
+        this.setDate(new Timestamp(10000));  // Todo fix Timestamp usage
+        this.sender = ticket.getUser();
+    }
+
     public Message(Message message) {
         this.id = message.getId();
         this.text = message.getText();

@@ -25,30 +25,18 @@ public class TicketsController implements Initializable {
 
     @FXML
     private ScrollPane ticketScrollPane;
+
     @FXML
     private JFXMasonryPane ticketMasonryPane;
-    @FXML
-    private JFXTextField searchText;
-    @FXML
-    private JFXButton Search;
 
-    private ObservableList<Ticket> ticketFeed;
-
+    private ObservableList<Ticket> tickets;
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
-        ticketFeed = FXCollections.observableArrayList();
-
-        ContextHandler.getContext().setTicketsController(this);
-        setUpFeedListener();
-
-        try {
-            updateTicketFeed();
-        } catch (PiikDatabaseException e) {
-            e.showAlert();
-        }
-        Search.setOnAction(this::handleSearch);
+        tickets = FXCollections.observableArrayList();
     }
+
 
     private void handleSearch(Event event){
         try {
@@ -59,20 +47,14 @@ public class TicketsController implements Initializable {
     }
 
     private void updateTicketFeed() throws PiikDatabaseException {
-
-        ticketFeed.clear();
-        if (searchText.getText().isEmpty()){
-            searchText.setText("");
-        }
-        ticketFeed.addAll(new QueryMapper<Ticket>(ApiFacade.getEntrypoint().getConnection()).defineClass(Ticket.class).createQuery("SELECT * FROM ticket WHERE section LIKE ?;")
-                .defineParameters("%"+searchText.getText()+"%").list());
-
+//        ApiFacade.getEntrypoint().getSearchFacade().re
+        // Get myt tickets
     }
 
     private void setUpFeedListener() {
-        ticketFeed.addListener((ListChangeListener<? super Ticket>) change -> {
+        tickets.addListener((ListChangeListener<? super Ticket>) change -> {
             ticketMasonryPane.getChildren().clear();
-            ticketFeed.forEach(this::insertTicket);
+            tickets.forEach(this::insertTicket);
         });
     }
 
