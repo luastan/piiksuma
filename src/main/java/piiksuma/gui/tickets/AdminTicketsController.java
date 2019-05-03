@@ -1,23 +1,22 @@
 package piiksuma.gui.tickets;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXMasonryPane;
+import com.jfoenix.controls.JFXTextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import piiksuma.Message;
 import piiksuma.Ticket;
-import piiksuma.User;
 import piiksuma.api.ApiFacade;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.ConversationController;
-import piiksuma.gui.MessagePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,53 +24,59 @@ import java.util.ResourceBundle;
 
 public class AdminTicketsController implements Initializable {
 
-    public JFXMasonryPane ticketsMasonryPane;
-    public ScrollPane ticketsScrollPane;
+    @FXML
+    private ScrollPane ticketScrollPane;
 
-    private Ticket selected;
+    @FXML
+    private JFXMasonryPane ticketMasonryPane;
+
+    private ObservableList<Ticket> tickets;
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
-        addTickets();
+        tickets = FXCollections.observableArrayList();
+
+        setUpFeedListener();
+        handleSearch(null);
     }
 
 
-    public void updateTickets() {
-        ticketsMasonryPane.getChildren().clear();
-        addTickets();
-    }
-
-    private void addTickets() {
+    private void handleSearch(Event event) {
         try {
-            ApiFacade.getEntrypoint()
-                    .getSearchFacade().getAdminTickets(100, ContextHandler.getContext().getCurrentUser())
-                    .stream().map(Message::new).forEach(this::insertTicket);
-        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+            updateTicketFeed();
+        } catch (PiikDatabaseException e) {
+            e.showAlert();
         }
     }
 
-    private void insertTicket(Message ticket) {
-        FXMLLoader messageLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/messagePreview.fxml"));
-        messageLoader.setController(new MessagePreviewController(ticket, ticket.getTicket().getUser()));
+    private void updateTicketFeed() throws PiikDatabaseException {
         try {
-            Node messagePreview = messageLoader.load();
-            messagePreview.setOnMouseClicked(event -> {
-                try {
-                    ContextHandler.getContext()
-                            .invokeStage("/gui/fxml/tickets/TicketActionsController.fxml", new TicketActionsController(ticket.getTicket()));
-                } catch (PiikInvalidParameters invalidParameters) {
-                    invalidParameters.showAlert();
-                }
-            });
-            ticketsMasonryPane.getChildren().add(messagePreview);
+            tickets.addAll(ApiFacade.getEntrypoint().getSearchFacade().getAdminTickets(10, ContextHandler.getContext().getCurrentUser()));
+
+        } catch (PiikInvalidParameters piikInvalidParameters) {
+            // TODO handle
+            piikInvalidParameters.printStackTrace();
+        }
+    }
+
+    private void setUpFeedListener() {
+        tickets.addListener((ListChangeListener<? super Ticket>) change -> {
+            ticketMasonryPane.getChildren().clear();
+            tickets.forEach(this::insertTicket);
+        });
+    }
+
+    private void insertTicket(Ticket ticket) {
+        FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
+        try {
+            ticketLoader.setController(new TicketController(ticket));
+            ticketMasonryPane.getChildren().add(ticketLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        ticketsScrollPane.requestLayout();
-        ticketsScrollPane.requestFocus();
+        ticketScrollPane.requestLayout();
+        ticketScrollPane.requestFocus();
     }
-
-
 }

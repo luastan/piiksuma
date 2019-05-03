@@ -1,6 +1,9 @@
 package piiksuma;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import piiksuma.api.ApiFacade;
@@ -9,6 +12,8 @@ import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
 import piiksuma.Utilities.PiikLogger;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Level;
 
 public class Arranque extends Application {
@@ -18,14 +23,13 @@ public class Arranque extends Application {
         // SampleFachada.getDb().idGenerationTest();
         SampleFachada.getDb().aTest();
         launch(args);
-//        FontAwesomeIcon.COMMENT
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        User user = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiuser where id='usr1';").findFirst();
-        user.setPass("supercontraseña");
+        User user = new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiuser where id='Alvaru';").findFirst();
+        user.setPass("sesamo");
 
         // Comment to use the login
         ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().login(user));

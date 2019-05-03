@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container">
@@ -97,24 +98,29 @@
                     </JFXButton>
                     <!-- TODO iconos para estas cosas-->
                     <JFXNodesList fx:id="reactionsButton" rotate="180.0" spacing="7.5">
-                        <JFXButton fx:id="mainButton" styleClass="deck-small-button">
+                        <JFXButton fx:id="mainButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                             <graphic>
                                 <FontAwesomeIconView glyphName="PLUS" size="24" styleClass="deck-small-button-graphic" />
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="loveItButton"  styleClass="button-reaction">
+                        <JFXButton fx:id="loveItButton" styleClass="button-reaction, deck-small-button"
+                                   ripplerFill="rgba(0, 0, 0, 0.80)">
                             <graphic>
-                                <FontAwesomeIconView glyphName="HAPPY-2" size="24" styleClass="deck-small-button-graphic" />
+                                <FontAwesomeIconView glyphName="ARROW_UP" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="hateItButton" contentDisplay="GRAPHIC_ONLY" styleClass="button-reaction">
+                        <JFXButton fx:id="hateItButton" contentDisplay="GRAPHIC_ONLY"
+                                   styleClass="button-reaction, deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                             <graphic>
-                                <FontAwesomeIconView glyphName="ANGRY" size="24" styleClass="deck-small-button-graphic" />
+                                <FontAwesomeIconView glyphName="ARROW_DOWN" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
                             </graphic>
                         </JFXButton>
-                        <JFXButton fx:id="makesMeAngry" contentDisplay="GRAPHIC_ONLY" styleClass="reaction">
+                        <JFXButton fx:id="makesMeAngry" contentDisplay="GRAPHIC_ONLY"
+                                   styleClass="button-reaction, deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                             <graphic>
-                                <FontAwesomeIconView glyphName="ANCHOR" size="24" styleClass="deck-small-button-graphic"/>
+                                <FontAwesomeIconView glyphName="FIRE" size="24" styleClass="deck-small-button-graphic"/>
                             </graphic>
                         </JFXButton>
                     </JFXNodesList>
