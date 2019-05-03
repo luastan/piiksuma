@@ -24,7 +24,7 @@ INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Marpin', 'marpin@gmail.com', 'Marcos López Lamas',
         'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
-        'M', 'Best programmer Galicia', 'My team friends <3', '39218', 'Pontevedra', 'España', 'Vigo', '2019-04-12',
+        'M', 'Worst programmer Galicia', 'My team friends <3', '39218', 'Pontevedra', 'España', 'Vigo', '2019-04-12',
         CURRENT_DATE);
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
