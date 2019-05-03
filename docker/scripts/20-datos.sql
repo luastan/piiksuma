@@ -61,7 +61,7 @@ VALUES ('aaad', 'tokenaaad', 'Alvaru');
 
 -- Blocked Users
 INSERT INTO blockuser (usr, blocked)
-VALUES ('Alvaru', 'Maprin');
+VALUES ('Alvaru', 'Marpin');
 
 -- Follow Users
 INSERT INTO followuser (followed, follower)
