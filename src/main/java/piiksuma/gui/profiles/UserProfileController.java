@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import piiksuma.Post;
@@ -52,6 +53,9 @@ public class UserProfileController implements Initializable {
 
     @FXML
     private StackPane profilePicture;
+
+    @FXML
+    private Tab archivedTab;
 
     private User user;
 
@@ -97,7 +101,7 @@ public class UserProfileController implements Initializable {
             description.setText(user.getDescription());
 
             updateFeed();
-            updateArchivedPosts();
+
 
 
             publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
@@ -106,11 +110,14 @@ public class UserProfileController implements Initializable {
             });
             publishedPostsList.forEach(this::insertPost);
 
-            archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
-                archivedPostsMasonry.getChildren().clear();
+            if (user.equals(ContextHandler.getContext().getCurrentUser())) {
+                updateArchivedPosts();
+                archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
+                    archivedPostsMasonry.getChildren().clear();
+                    archivedPostsList.forEach(this::archivePost);
+                });
                 archivedPostsList.forEach(this::archivePost);
-            });
-            archivedPostsList.forEach(this::archivePost);
+            }
 
             // TODO: Initialize the buttons
             buttonInit();
@@ -291,16 +298,19 @@ public class UserProfileController implements Initializable {
     }
 
     public void updateArchivedPosts() {
+        if (!user.equals(ContextHandler.getContext().getCurrentUser())) {
+            return;
+        }
         archivedPostsList.clear();
 
         try {
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+                    user, ContextHandler.getContext().getCurrentUser()));
             System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
-        } catch (PiikInvalidParameters ignore) {
-            // Current user is not allowed to see archived posts from other user
+        } catch (PiikInvalidParameters e) {
+            e.showAlert();
         }
 
         archivedPosts.requestLayout();
