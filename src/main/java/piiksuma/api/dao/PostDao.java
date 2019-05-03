@@ -1215,7 +1215,7 @@ public class PostDao extends AbstractDao {
 
         // TODO filter by recent publication date
         return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
-                .createQuery("SELECT o.hashtag\n" +
+                .createQuery("SELECT * FROM hashtag as h WHERE h.name IN (SELECT o.hashtag\n" +
                         "FROM ownhashtag as o\n" +
                         "WHERE EXISTS (\n" +
                         "    SELECT *\n" +

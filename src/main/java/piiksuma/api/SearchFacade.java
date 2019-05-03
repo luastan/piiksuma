@@ -151,7 +151,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        User candidate = parentFacade.getUserDao().login(user);
+         User candidate = parentFacade.getUserDao().login(user);
+       // User candidate = parentFacade.getUserDao().getUser(user);
         if (candidate == null) {
             return null;
         }
@@ -171,7 +172,7 @@ public class SearchFacade {
         messageDigest.update(salt);
         String storedHash = matcher.group(2);
         String calculatedHash = Base64.getEncoder().encodeToString(messageDigest.digest(user.getPass().getBytes()));
-        candidate.setPass(" ");
+        //candidate.setPass(" ");
         return storedHash.equals(calculatedHash) ? candidate : null;
     }
 
@@ -340,8 +341,9 @@ public class SearchFacade {
 
     /**
      * Checks if the specified post contains the a given hashtag
+     *
      * @param hashtag hashtag that will be checked
-     * @param post post which may contain the given hashtag
+     * @param post    post which may contain the given hashtag
      * @return if the given hashtag is contained in the specified post
      */
     public boolean hashtagInPost(Hashtag hashtag, Post post) throws PiikInvalidParameters, PiikDatabaseException {
@@ -386,7 +388,7 @@ public class SearchFacade {
      * @return
      */
     public List<Post> getAnswers(Post post) throws PiikDatabaseException, PiikInvalidParameters {
-        if(post == null){
+        if (post == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
@@ -641,11 +643,11 @@ public class SearchFacade {
      */
     public List<Ticket> getUserTickets(User user, User current, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null || !user.checkNotNull(false)) {
+        if (user == null || !user.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if(current == null || !current.checkNotNull(false)) {
+        if (current == null || !current.checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("current"));
         }
 
@@ -678,6 +680,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
+        // TODO permission check
+
         return parentFacade.getMessagesDao().readMessages(user);
     }
 
@@ -690,13 +694,16 @@ public class SearchFacade {
     public Map<User, List<Message>> messageWithUser(User user, Integer limit, User current) throws
             PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null){
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if(current == null){
+        if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
+
+        // TODO permission check
+
 
         return parentFacade.getMessagesDao().messageWithUser(user, limit);
     }
@@ -728,8 +735,40 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        // TODO permission check
+
+
         return parentFacade.getMessagesDao().getConversation(user1, user2, limit);
 
+    }
+
+    /**
+     * Function to get a chat associated to a ticket
+     *
+     * @param user
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversationTicket(User user, Ticket ticket, User current, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(user == null || !user.checkNotNull(false)){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user1"));
+        }
+
+        if(ticket == null || !ticket.checkNotNull(false)){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        // TODO permission check
+
+
+
+        return parentFacade.getMessagesDao().getConversationTicket(user, ticket, limit);
     }
 
 
@@ -834,6 +873,7 @@ public class SearchFacade {
 
     /**
      * Function to check if the user1 has blocked the user2
+     *
      * @param user1
      * @param user2
      * @return
@@ -857,15 +897,15 @@ public class SearchFacade {
     /**
      * Function to check if an user has already reposted a post
      *
-     * @param user User we want to check if he has already reposted
-     * @param post Post we want to check
+     * @param user        User we want to check if he has already reposted
+     * @param post        Post we want to check
      * @param currentUser Current user logged in the app
      * @return "True" if the user reposted the post, otherwise "false"
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
      */
-    public boolean checkUserResposted(User user, Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters{
-        if (user == null ) {
+    public boolean checkUserResposted(User user, Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -873,7 +913,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (currentUser == null ) {
+        if (currentUser == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -890,8 +930,8 @@ public class SearchFacade {
      * @throws PiikInvalidParameters
      * @throws PiikDatabaseException
      */
-    public boolean isPostArchived(Post post, User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException{
-        if (user == null ) {
+    public boolean isPostArchived(Post post, User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
@@ -899,7 +939,7 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
-        if (currentUser == null ) {
+        if (currentUser == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
