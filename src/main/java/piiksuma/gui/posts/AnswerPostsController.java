@@ -40,6 +40,7 @@ public class AnswerPostsController implements Initializable {
                 }
             });
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.printStackTrace();
             e.showAlert();
         }
     }

@@ -638,7 +638,7 @@ public class PostDao extends AbstractDao {
                     "" +
                     "SELECT *" +
                     "FROM searchChildren;"
-        ).defineParameters(post.getId(), post.getAuthor()).list();
+        ).defineParameters(post.getId(), post.getAuthor().getPK()).list();
 
         posts.remove(0);
 
