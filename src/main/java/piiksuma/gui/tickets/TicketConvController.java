@@ -109,6 +109,7 @@ public class TicketConvController implements Initializable {
     private void insertMessage(Message message) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/message.fxml"));
         loader.setController(new MessageController(message));
+
         try {
             messageMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
@@ -133,7 +134,7 @@ public class TicketConvController implements Initializable {
         }
         initializeNewMessage();
         messageField.setText("");
-        sendButton.setDisable(true);
+        messageField.resetValidation();
         updateMessages();
     }
 
