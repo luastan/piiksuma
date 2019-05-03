@@ -383,9 +383,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
-                "JOIN message ON(id=message) WHERE message.ticket = ? " +
-                "ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+        return new QueryMapper<Message>(getConnection()).defineClass(Message.class)
+                .createQuery("SELECT message.* FROM receivemessage  JOIN message ON(id=message) WHERE " +
+                        "message.ticket = ? ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
     }
     //******************************************************************************************************************
 
