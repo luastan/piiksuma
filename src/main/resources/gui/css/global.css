@@ -140,6 +140,7 @@
 .button-reaction {
     -fx-text-fill: -white-high-emphasis;
     -fx-cursor: hand;
+    -fx-background-color: -white-medium-emphasis;
 }
 
 .deck-button {

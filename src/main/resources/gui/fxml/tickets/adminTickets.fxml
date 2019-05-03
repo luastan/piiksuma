@@ -7,12 +7,13 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXMasonryPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="piiksuma.gui.tickets.AdminTicketsController"
-            prefHeight="400.0" prefWidth="600.0">
-    <ScrollPane fx:id="ticketsScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="piiksuma.gui.tickets.TicketsController" maxWidth="450">
+    <ScrollPane fx:id="ticketScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
                 StackPane.alignment="TOP_CENTER">
-        <JFXMasonryPane fx:id="ticketsMasonryPane" VSpacing="0" styleClass="main-masonry"/>
+        <JFXMasonryPane fx:id="ticketMasonryPane" VSpacing="0" styleClass="main-masonry">
+        </JFXMasonryPane>
     </ScrollPane>
-</AnchorPane>
+</StackPane>
+

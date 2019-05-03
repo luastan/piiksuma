@@ -549,8 +549,12 @@ public class UserDao extends AbstractDao {
      * @return users that meets the given information
      */
     public Map<String, User> getUsers(List<User> users, Integer typeTransaction) throws PiikDatabaseException {
-        if (users == null || users.isEmpty()) {
+        if (users == null) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("users"));
+        }
+
+        if(users.isEmpty()) {
+            return new HashMap<String, User>();
         }
 
         String query = "SELECT t.*, ad.id as type  FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN " +
