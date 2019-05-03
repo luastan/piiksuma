@@ -2,10 +2,10 @@ package piiksuma;
 
 public class Statistics {
     private User owner;
-    private long maxLikeIt;
-    private long maxLoveIt;
-    private long maxHateIt;
-    private long maxMakesMeAngry;
+    private long countLikeIt;
+    private long countLoveIt;
+    private long countHateIt;
+    private long countMakesMeAngry;
     private long following;
     private long followers;
     private long followBack;
@@ -18,36 +18,36 @@ public class Statistics {
         this.owner = owner;
     }
 
-    public long getMaxLikeIt() {
-        return maxLikeIt;
+    public long getCountLikeIt() {
+        return countLikeIt;
     }
 
-    public void setMaxLikeIt(long maxLikeIt) {
-        this.maxLikeIt = maxLikeIt;
+    public void setCountLikeIt(long countLikeIt) {
+        this.countLikeIt = countLikeIt;
     }
 
-    public long getMaxLoveIt() {
-        return maxLoveIt;
+    public long getCountLoveIt() {
+        return countLoveIt;
     }
 
-    public void setMaxLoveIt(long maxLoveIt) {
-        this.maxLoveIt = maxLoveIt;
+    public void setCountLoveIt(long countLoveIt) {
+        this.countLoveIt = countLoveIt;
     }
 
-    public long getMaxHateIt() {
-        return maxHateIt;
+    public long getCountHateIt() {
+        return countHateIt;
     }
 
-    public void setMaxHateIt(long maxHateIt) {
-        this.maxHateIt = maxHateIt;
+    public void setCountHateIt(long countHateIt) {
+        this.countHateIt = countHateIt;
     }
 
-    public long getMaxMakesMeAngry() {
-        return maxMakesMeAngry;
+    public long getCountMakesMeAngry() {
+        return countMakesMeAngry;
     }
 
-    public void setMaxMakesMeAngry(long maxMakesMeAngry) {
-        this.maxMakesMeAngry = maxMakesMeAngry;
+    public void setCountMakesMeAngry(long countMakesMeAngry) {
+        this.countMakesMeAngry = countMakesMeAngry;
     }
 
     public long getFollowing() {

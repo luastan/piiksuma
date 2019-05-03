@@ -95,6 +95,12 @@ public class PostDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the post will display some kind of media, it gets inserted if it does not exist in the database
@@ -312,6 +318,12 @@ public class PostDao extends AbstractDao {
 
             // The post won't be modified unless there's no error modifying all related tables
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
@@ -600,6 +612,37 @@ public class PostDao extends AbstractDao {
                 "AND p.author=o.author)").defineParameters(hashtag.getName()).mapList();
         // Return List
         return getPosts(result);
+    }
+
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException {
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        List<Post> posts = new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
+                "WITH RECURSIVE searchChildren(id, author) AS (" +
+                    " SELECT *" +
+                    " FROM post" +
+                    " WHERE id = ? AND author = ?" +
+                    " UNION ALL" +
+                    " SELECT p.*" +
+                    " FROM post as p JOIN searchChildren as s ON (p.sugardaddy = s.id AND p.authordaddy = s.author)" +
+                    ")" +
+                    "" +
+                    "SELECT *" +
+                    "FROM searchChildren;"
+        ).defineParameters(post.getId(), post.getAuthor()).list();
+
+        posts.remove(0);
+
+        return posts;
     }
     //******************************************************************************************************************
 
@@ -915,6 +958,13 @@ public class PostDao extends AbstractDao {
         Connection con = getConnection();
 
         try {
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             // We'll use a prepared statement to avoid malicious intentions :(
             PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
@@ -1215,6 +1265,12 @@ public class PostDao extends AbstractDao {
         return (!archived.isEmpty()) ;
     }
 
+    /**
+     * Function to remove an archive post from an user
+     * @param post
+     * @param user
+     * @throws PiikDatabaseException
+     */
     public void removeArchivePost(Post post, User user) throws PiikDatabaseException {
 
         new DeleteMapper<>(super.getConnection()).createUpdate("DELETE FROM archivepost WHERE usr = ? AND post = ? AND author = ?").defineParameters(

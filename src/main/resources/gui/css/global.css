@@ -137,6 +137,10 @@
     -fx-cursor: hand;
 }
 
+.button-reaction {
+    -fx-text-fill: -white-high-emphasis;
+    -fx-cursor: hand;
+}
 
 .deck-button {
     -fx-background-color: -primary-color-5;

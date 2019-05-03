@@ -24,15 +24,15 @@
         <Line startX="20" endX="330" translateY="-80" translateX="120"/>
         <HBox spacing="15">
             <Label  text="Most liked post has: "/>
-            <Label  text="maxLikeIt" fx:id="maxLikeIt"/>
+            <Label  text="countLikeIt" fx:id="countLikeIt"/>
         </HBox>
         <HBox spacing="15">
             <Label  text="Most loved post has:"/>
-            <Label  text="maxLoveIt" fx:id="maxLoveIt"/>
+            <Label  text="countLoveIt" fx:id="countLoveIt"/>
         </HBox>
         <HBox spacing="15">
             <Label  text="Most hated post has:"/>
-            <Label  text="maxHateIt" fx:id="maxHateIt"/>
+            <Label  text="countHateIt" fx:id="countHateIt"/>
         </HBox>
         <HBox spacing="15">
             <Label  text="Most 'madeMeAngry' post has:"/>

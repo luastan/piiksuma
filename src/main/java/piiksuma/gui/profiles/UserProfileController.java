@@ -135,49 +135,59 @@ public class UserProfileController implements Initializable {
 
 
     private void updateFollowButton() {
-        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
-        if (currentUserFollows) {
-            buttonCenter.setText("Follow");
-            buttonCenter.setStyle("-fx-background-color: -primary-color-5");
-        } else {
-            buttonCenter.setText("UnFollow");
-            buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        User current = ContextHandler.getContext().getCurrentUser();
+        try {
+            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
+            if (currentUserFollows) {
+                buttonCenter.setText("Follow");
+                buttonCenter.setStyle("-fx-background-color: -primary-color-5");
+            } else {
+                buttonCenter.setText("UnFollow");
+                buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+            }
+        }catch (PiikInvalidParameters | PiikDatabaseException e){
+            e.showAlert();
         }
     }
 
     private void handleFollow(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
-        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
         try {
+            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
             if (currentUserFollows) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unfollowUser(user, current, current);
             } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().followUser(user, current, current);
             }
-        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+        } catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert();
         }
         updateFollowButton();
     }
 
 
     private void updateBlockButton() {
-        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
-        if (currentUserBlocks) {
-            buttonLeft.setText("Block");
-            buttonLeft.setStyle("-fx-background-color: -primary-color-5");
-        } else {
-            buttonLeft.setText("UnBlock");
-            buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        User current = ContextHandler.getContext().getCurrentUser();
+        try {
+            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            if (currentUserBlocks) {
+                buttonLeft.setText("Block");
+                buttonLeft.setStyle("-fx-background-color: -primary-color-5");
+            } else {
+                buttonLeft.setText("UnBlock");
+                buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+            }
+        }catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert();
         }
     }
 
     private void handleBlock(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
-        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
         try {
+            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (currentUserBlocks) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user, current, current);
             } else {
@@ -264,16 +274,16 @@ public class UserProfileController implements Initializable {
 
     public void updateArchivedPosts() {
         archivedPostsList.clear();
-/*      TODO: Fix NullPointer thrown by the Dao
+
         try {
-            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade()
-                    .getArchivedPosts(user, ContextHandler.getContext().getCurrentUser()));
+            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser()));
+            System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
         } catch (PiikInvalidParameters ignore) {
             // Current user is not allowed to see archived posts from other user
         }
-*/
 
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();

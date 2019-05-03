@@ -117,6 +117,29 @@ public class SearchFacade {
     }
 
     /**
+     * Function to check if the user followed follow the user follower
+     *
+     * @param followed
+     * @param follower
+     * @return
+     */
+    public boolean isFollowed(User followed, User follower, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (followed == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
+        }
+
+        if (follower == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getUserDao().isFollowed(followed, follower);
+    }
+
+    /**
      * Function to login into the app; it will try to find a user that meets the given keys
      *
      * @param user user whose primary fields will be used in the search
@@ -356,6 +379,20 @@ public class SearchFacade {
         return parentFacade.getPostDao().getPost(post);
     }
 
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException, PiikInvalidParameters {
+        if(post == null){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        return parentFacade.getPostDao().getAnswers(post);
+    }
+
     // TODO we need to set a limit
 
     /**
@@ -393,10 +430,6 @@ public class SearchFacade {
 
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
-        }
-
-        if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getPostDao().getPost(user);

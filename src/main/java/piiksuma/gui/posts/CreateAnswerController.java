@@ -58,6 +58,7 @@ public class CreateAnswerController implements Initializable {
         post.setAuthor(ContextHandler.getContext().getCurrentUser());
         multimediaButton.setOnAction(this::handleMultimediaButton);
         postButton.setDisable(false);
+        postButton.setOnAction(this::handlePostButton);
 
     }
 
@@ -103,8 +104,10 @@ public class CreateAnswerController implements Initializable {
             return;
         }
         post.setText(postText.getText());
+        post.setFatherPost(fatherPost);
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().reply(post,ContextHandler.getContext().getCurrentUser());
+            System.out.println("Respondido");
         } catch (PiikDatabaseException e) {
             e.showAlert();
         }
