@@ -363,6 +363,33 @@ public class MessagesDao extends AbstractDao {
                 "(message.author LIKE ? AND receiver LIKE ?) ORDER BY date DESC LIMIT ?")
                 .defineParameters(user1.getPK(), user2.getPK(), user2.getPK(), user1.getPK(), limit).list();
     }
+
+    /**
+     * Function to get a chat associated to a ticket
+     *
+     * @param user
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversationTicket(User user, Ticket ticket, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(user == null || !user.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user1"));
+        }
+
+        if(ticket == null || !ticket.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
+                "JOIN message ON(id=message) WHERE message.author LIKE ? OR receiver LIKE ? AND message.ticket = ? " +
+                "ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), ticket.getId(), limit).list();
+    }
     //******************************************************************************************************************
 
     /*******************************************************************************************************************

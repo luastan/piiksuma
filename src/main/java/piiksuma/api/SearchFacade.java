@@ -680,6 +680,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
+        // TODO permission check
+
         return parentFacade.getMessagesDao().readMessages(user);
     }
 
@@ -699,6 +701,9 @@ public class SearchFacade {
         if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
+
+        // TODO permission check
+
 
         return parentFacade.getMessagesDao().messageWithUser(user, limit);
     }
@@ -730,8 +735,40 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        // TODO permission check
+
+
         return parentFacade.getMessagesDao().getConversation(user1, user2, limit);
 
+    }
+
+    /**
+     * Function to get a chat associated to a ticket
+     *
+     * @param user
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversationTicket(User user, Ticket ticket, User current, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(user == null || !user.checkNotNull(false)){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user1"));
+        }
+
+        if(ticket == null || !ticket.checkNotNull(false)){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        // TODO permission check
+
+
+
+        return parentFacade.getMessagesDao().getConversationTicket(user, ticket, limit);
     }
 
 
