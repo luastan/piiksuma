@@ -383,9 +383,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
-                "JOIN message ON(id=message) WHERE message.ticket = ? " +
-                "ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+        return new QueryMapper<Message>(getConnection()).defineClass(Message.class)
+                .createQuery("SELECT message.* FROM receivemessage  JOIN message ON(id=message) WHERE " +
+                        "message.ticket = ? ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
     }
     //******************************************************************************************************************
 
@@ -670,8 +670,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        System.out.println("gggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggu");
         List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
-                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list(true);
 
         for(Ticket ticket : result) {
             ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
@@ -703,8 +704,7 @@ public class MessagesDao extends AbstractDao {
                 user.getPK(), limit).list();
 
         for(Ticket ticket : result) {
-            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
-                    ContextHandler.getContext().getCurrentUser()));
+            ticket.setUser(user);
         }
 
         return result;

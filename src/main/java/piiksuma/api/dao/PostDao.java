@@ -1227,7 +1227,7 @@ public class PostDao extends AbstractDao {
                         ")\n" +
                         "GROUP BY o.hashtag\n" +
                         "ORDER BY count(*) DESC\n" +
-                        "LIMIT 10").defineParameters(limit).list();
+                        "LIMIT ?)").defineParameters(limit).list();
 
     }
 
