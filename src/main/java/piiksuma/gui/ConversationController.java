@@ -101,7 +101,8 @@ public class ConversationController implements Initializable {
             e.showAlert();
         }
         initializeNewMessage();
-        messageField.setText(" ");
+        messageField.setText("");
+        messageField.resetValidation();
         sendButton.setDisable(true);
         updateMessages();
     }
