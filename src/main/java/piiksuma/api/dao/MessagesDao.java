@@ -13,8 +13,10 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
 
 import javax.management.Query;
+import javax.naming.Context;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -668,8 +670,15 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+        List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
                 "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+
+        for(Ticket ticket : result) {
+            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
+                    ContextHandler.getContext().getCurrentUser()));
+        }
+
+        return result;
     }
 
     /* This function allows an user to retrieve his open tickets
@@ -689,9 +698,16 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+        List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
                 "NULL AND usr = ? ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(
                 user.getPK(), limit).list();
+
+        for(Ticket ticket : result) {
+            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
+                    ContextHandler.getContext().getCurrentUser()));
+        }
+
+        return result;
     }
     //******************************************************************************************************************
 // =====================================================================================================================
