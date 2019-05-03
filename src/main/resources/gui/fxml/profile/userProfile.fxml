@@ -68,7 +68,7 @@
                         <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
                     </ScrollPane>
                 </Tab>
-                <Tab text="Archived">
+                <Tab text="Archived" fx:id="archivedTab">
                     <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
                                 styleClass="profile-post-feed">
                         <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
