@@ -9,7 +9,7 @@
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.tickets.TicketsController" maxWidth="450">
+           fx:controller="piiksuma.gui.tickets.AdminTicketsController" maxWidth="450">
     <ScrollPane fx:id="ticketScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
                 StackPane.alignment="TOP_CENTER">
         <JFXMasonryPane fx:id="ticketMasonryPane" VSpacing="0" styleClass="main-masonry">
