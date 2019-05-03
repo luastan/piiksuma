@@ -242,7 +242,7 @@ public class MessagesDao extends AbstractDao {
 
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
                 "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? OR receiver LIKE ?" +
-                "ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
+                "AND ticket IS NULL ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
 
         HashMap<User, List<Message>> returnMessages = new HashMap<>();
 
