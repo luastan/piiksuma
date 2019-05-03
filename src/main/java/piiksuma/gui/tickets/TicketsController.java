@@ -15,6 +15,7 @@ import piiksuma.Ticket;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
@@ -35,6 +36,9 @@ public class TicketsController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         tickets = FXCollections.observableArrayList();
+
+        setUpFeedListener();
+        handleSearch(null);
     }
 
 
@@ -47,8 +51,13 @@ public class TicketsController implements Initializable {
     }
 
     private void updateTicketFeed() throws PiikDatabaseException {
-//        ApiFacade.getEntrypoint().getSearchFacade().re
-        // Get myt tickets
+        try {
+            tickets.addAll(ApiFacade.getEntrypoint().getSearchFacade().getUserTickets(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser(), 20));
+        } catch (PiikInvalidParameters piikInvalidParameters) {
+            // TODO handle
+            piikInvalidParameters.printStackTrace();
+        }
     }
 
     private void setUpFeedListener() {
@@ -62,9 +71,11 @@ public class TicketsController implements Initializable {
         FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
         ticketLoader.setController(new TicketController(ticket));
         try {
+            System.out.println("sssssssssssssssssssssssssssssssssssssssssssssssssssssss");
             ticketMasonryPane.getChildren().add(ticketLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
+            System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             e.printStackTrace();
         }
         ticketScrollPane.requestLayout();

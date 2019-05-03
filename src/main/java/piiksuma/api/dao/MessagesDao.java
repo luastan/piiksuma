@@ -646,8 +646,30 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
-                "NULL LIMIT ? ORDER BY creationDate ASC").defineClass(Ticket.class).defineParameters(limit).list();
+        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+    }
+
+    /* This function allows an user to retrieve his open tickets
+     * @param user whose tickets will be retrieved
+     * @param limit maximum number of tickets to retrieve
+     * @return the list of all the tickets which haven't been closed
+     * @throws PiikDatabaseException Thrown on query gone wrong
+     * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
+     */
+    public List<Ticket> getUserTickets(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+                "NULL AND usr = ? ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(
+                user.getPK(), limit).list();
     }
     //******************************************************************************************************************
 // =====================================================================================================================

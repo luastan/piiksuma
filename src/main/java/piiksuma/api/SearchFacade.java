@@ -631,6 +631,35 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
+    /* This function allows an user to retrieve his open tickets
+     * @param user whose tickets will be retrieved
+     * @param current current user
+     * @param limit maximum number of tickets to retrieve
+     * @return the list of all the tickets which haven't been closed
+     * @throws PiikDatabaseException Thrown on query gone wrong
+     * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
+     */
+    public List<Ticket> getUserTickets(User user, User current, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null || !user.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if(current == null || !current.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("current"));
+        }
+
+        if (!current.checkAdministrator() && !current.equals(user)) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return parentFacade.getMessagesDao().getUserTickets(user, limit);
+    }
+
     /**
      * Allows the user to read his messages
      *
