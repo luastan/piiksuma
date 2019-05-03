@@ -57,7 +57,7 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Add options to the comboBox
-        genderBox.setItems(FXCollections.observableArrayList("M", "V", "O"));
+        genderBox.setItems(FXCollections.observableArrayList("M", "H", "O"));
 
         register.setOnAction(this::handleRegister);
 

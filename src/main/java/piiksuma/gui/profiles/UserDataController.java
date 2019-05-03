@@ -4,7 +4,6 @@ import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -98,7 +97,7 @@ public class UserDataController implements Initializable {
     private void initFields() {
         User user = ContextHandler.getContext().getCurrentUser();
 
-        genderBox.setItems(FXCollections.observableArrayList("M", "V", "O"));
+        genderBox.setItems(FXCollections.observableArrayList("M", "H", "O"));
         //We add to the fields all the info about the user
         userId.setText(user.getId());
         //WE dont let the user to changue his id
