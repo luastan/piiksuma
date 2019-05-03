@@ -71,11 +71,9 @@ public class TicketsController implements Initializable {
         FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
         ticketLoader.setController(new TicketController(ticket));
         try {
-            System.out.println("sssssssssssssssssssssssssssssssssssssssssssssssssssssss");
             ticketMasonryPane.getChildren().add(ticketLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
-            System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
             e.printStackTrace();
         }
         ticketScrollPane.requestLayout();
