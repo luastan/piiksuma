@@ -138,7 +138,7 @@ public class UserProfileController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
             Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
-            if (currentUserFollows) {
+            if (!currentUserFollows) {
                 buttonCenter.setText("Follow");
                 buttonCenter.setStyle("-fx-background-color: -primary-color-5");
             } else {
@@ -171,7 +171,7 @@ public class UserProfileController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
             Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
-            if (currentUserBlocks) {
+            if (!currentUserBlocks) {
                 buttonLeft.setText("Block");
                 buttonLeft.setStyle("-fx-background-color: -primary-color-5");
             } else {
