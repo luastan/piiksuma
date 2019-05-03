@@ -6,11 +6,12 @@ import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ErrorMessage;
 import piiksuma.api.MultimediaType;
-import piiksuma.database.*;
+import piiksuma.database.DeleteMapper;
+import piiksuma.database.InsertionMapper;
+import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +30,26 @@ public class PostDao extends AbstractDao {
 
 
 // ======================================================= POSTS =======================================================
+
+    /**
+     * Checks if the specified post contains the a given hashtag
+     * @param hashtag hashtag that will be checked
+     * @param post post which may contain the given hashtag
+     * @return if the given hashtag is contained in the specified post
+     */
+    public boolean hashtagInPost(Hashtag hashtag, Post post) throws PiikDatabaseException {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        return((new QueryMapper<>(super.getConnection()).createQuery("SELECT * FROM ownHashtag WHERE hashtag = ? AND " +
+                "post = ? AND author = ?").defineParameters(hashtag.getName(), post.getId(),
+                post.getPostAuthor().getPK()).mapList().size()) > 0);
+    }
 
     /*******************************************************************************************************************
      * Inserts a post on the db
@@ -72,6 +93,12 @@ public class PostDao extends AbstractDao {
 
             // The post won't be created unless there's no error modifying all related tables and generating its ID
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
@@ -293,6 +320,12 @@ public class PostDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // If the post will display some kind of media, it gets inserted if it does not exist in the database
@@ -377,11 +410,25 @@ public class PostDao extends AbstractDao {
             statement.executeUpdate();
 
 
-            /* Statement for hashtags */
+            /* Hashtag association */
+
+            clause = new StringBuilder();
+            // Hashtags which do not already exist are inserted in the database
+            clause.append("INSERT INTO hashtag(name) SELECT ? WHERE NOT EXISTS (SELECT * FROM hashtag WHERE name = ? " +
+                    "FOR UPDATE); ");
+
+            statementHashtags = con.prepareStatement(clause.toString());
+
+            for (Hashtag hashtag : post.getHashtags()) {
+                statementHashtags.setString(1, hashtag.getName());
+                statementHashtags.setString(2, hashtag.getName());
+                statementHashtags.executeUpdate();
+            }
+            System.out.println("pasada inserción de hashtags");
 
             clause = new StringBuilder();
             // TODO it would by nice to erase only those who were removed
-            // First we need to the rid of the old hashtags bacause one may have been removed
+            // First we need to the rid of the old hashtags because anyone may have been removed
             clause.append("DELETE FROM ownhashtag WHERE post = ? AND author = ?");
 
             statementHashtags = con.prepareStatement(clause.toString());
@@ -454,8 +501,8 @@ public class PostDao extends AbstractDao {
         }
 
         // Archive post
-        new InsertionMapper<Post>(super.getConnection()).createUpdate("INSERT into archivepost values (?,?,?)")
-                .defineClass(Post.class).defineParameters(post.getId(), user.getPK(), post.getPostAuthor())
+        new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO archivepost VALUES (?,?,?)")
+                .defineParameters(post.getId(), user.getPK(), post.getPostAuthor().getId())
                 .executeUpdate();
     }
     //******************************************************************************************************************
@@ -476,7 +523,7 @@ public class PostDao extends AbstractDao {
         // Get the base query
         String query = getQueryPost();
 
-        query += "WHERE id = ? and author = ?";
+        query += "WHERE post.id = ? and post.author = ?";
 
         List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery(query)
                 .defineParameters(post.getId(), post.getPostAuthor().getPK()).mapList();
@@ -489,6 +536,41 @@ public class PostDao extends AbstractDao {
 
         // The post information is found in the first item, except the hashtags
         Map<String, Object> columnsPost = result.get(0);
+
+        User user = new User();
+
+        Object sugarDaddy = columnsPost.get("sugarDaddy");
+        Object authorDaddy = columnsPost.get("authorDaddy");
+
+        if(sugarDaddy != null) {
+            Post fatherPost = new Post();
+            User authorFatherPost = new User();
+
+            fatherPost.setId((String) sugarDaddy);
+
+            authorFatherPost.setId((String) authorDaddy);
+            fatherPost.setAuthor(authorFatherPost);
+
+            resultPost.setFatherPost(fatherPost);
+            columnsPost.put("fatherPost", resultPost);
+        }
+
+        Object multimedia = columnsPost.get("multimedia");
+
+        if(multimedia != null){
+            Multimedia multimediaPost = new Multimedia();
+            multimediaPost.setHash((String) multimedia);
+
+            resultPost.setMultimedia(multimediaPost);
+            columnsPost.put("multimedia", multimediaPost);
+        }
+
+        Object idUser = columnsPost.get("author");
+
+        if (idUser instanceof String) {
+            user.setId((String) idUser);
+            columnsPost.put("author", user);
+        }
 
         // Post information is saved
         resultPost.addInfo(columnsPost);
@@ -522,12 +604,45 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("hashtag"));
         }
 
+        String query = getQueryPost();
+
         // Get the List
-        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("SELECT p.*," +
-                " o.hashtag FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post AND p.author=o.author")
-                .defineParameters(hashtag.getName()).mapList();
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery(query +
+                "  WHERE post.id IN (SELECT p.id FROM ownhashtag as o, post as p WHERE o.hashtag = ? AND p.id=o.post " +
+                "AND p.author=o.author)").defineParameters(hashtag.getName()).mapList();
         // Return List
         return getPosts(result);
+    }
+
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException {
+        // Check if post or its primary key are null
+        if (post == null || !post.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("post"));
+        }
+
+        List<Post> posts = new QueryMapper<Post>(getConnection()).defineClass(Post.class).createQuery(
+                "WITH RECURSIVE searchChildren(id, author) AS (" +
+                    " SELECT *" +
+                    " FROM post" +
+                    " WHERE id = ? AND author = ?" +
+                    " UNION ALL" +
+                    " SELECT p.*" +
+                    " FROM post as p JOIN searchChildren as s ON (p.sugardaddy = s.id AND p.authordaddy = s.author)" +
+                    ")" +
+                    "" +
+                    "SELECT *" +
+                    "FROM searchChildren;"
+        ).defineParameters(post.getId(), post.getAuthor().getPK()).list();
+
+        posts.remove(0);
+
+        return posts;
     }
     //******************************************************************************************************************
 
@@ -546,11 +661,17 @@ public class PostDao extends AbstractDao {
         }
 
         // Get the base query
-        String query = getQueryPost();
+        StringBuilder string = new StringBuilder();
+        string.append('(');
+        string.append(getQueryPost());
 
-        query += "WHERE post.author = ?";
-        List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(query)
-                .defineClass(Post.class).defineParameters(user.getPK()).mapList();
+        string.append("WHERE post.author = ?) UNION (");
+        string.append(getQueryPost());
+        string.append("WHERE EXISTS (SELECT * FROM repost as r WHERE r.usr = ? AND r.author = post.author AND r.post " +
+                "= post.id))");
+
+        List<Map<String, Object>> result = new QueryMapper<Post>(super.getConnection()).createQuery(string.toString())
+                .defineClass(Post.class).defineParameters(user.getPK(), user.getPK()).mapList();
 
         // Return posts
         return getPosts(result);
@@ -572,8 +693,9 @@ public class PostDao extends AbstractDao {
         }
 
         // List of post
-        return new QueryMapper<Post>(super.getConnection()).createQuery("SELECT p.* FROM post as p, archivepost as a " +
-                "WHERE p.id = a.post AND p.author = a.author AND a.usr = ?").defineParameters(user.getPK()).list();
+        return new QueryMapper<Post>(super.getConnection()).defineClass(Post.class)
+                .createQuery("SELECT p.* FROM post as p JOIN archivepost as a ON(p.id = a.post AND p.author = " +
+                        "a.author) WHERE a.usr = ?").defineParameters(user.getPK()).list();
     }
     //******************************************************************************************************************
 
@@ -612,18 +734,18 @@ public class PostDao extends AbstractDao {
      * Function to remove a repost
      *
      * @param repost Repost to be removed
+     * @param currentUser Current user logged into the app
      * @throws PiikDatabaseException Thrown if repost or its primary key are null
      */
-    public void removeRepost(Post repost) throws PiikDatabaseException {
+    public void removeRepost(Post repost, User currentUser) throws PiikDatabaseException {
         // Check if repost or its primary key are null
         if (repost == null || !repost.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("repost"));
         }
         // Delete repost
         new DeleteMapper<Object>(super.getConnection()).createUpdate("DELETE FROM repost WHERE post=? AND usr=? " +
-                "AND author=?").defineClass(Object.class).defineParameters(repost.getFatherPost().getId(),
-                repost.getPostAuthor().getPK(), repost.getFatherPost().getPostAuthor().getPK()).executeUpdate();
-
+                "AND author=?").defineClass(Object.class).defineParameters(repost.getId(), currentUser.getPK(),
+                repost.getAuthor().getPK()).executeUpdate();
     }
     //******************************************************************************************************************
 
@@ -651,12 +773,40 @@ public class PostDao extends AbstractDao {
             Post resultPost = new Post();
             User user = new User();
 
+            Object sugarDaddy = columnsPost.get("sugarDaddy");
+            Object authorDaddy = columnsPost.get("authorDaddy");
+
+            if(sugarDaddy != null) {
+                Post fatherPost = new Post();
+                User authorFatherPost = new User();
+
+                fatherPost.setId((String) sugarDaddy);
+
+                authorFatherPost.setId((String) authorDaddy);
+                fatherPost.setAuthor(authorFatherPost);
+
+                resultPost.setFatherPost(fatherPost);
+                columnsPost.put("fatherPost", resultPost);
+            }
+
+            Object multimedia = columnsPost.get("multimedia");
+
+            if(multimedia != null){
+                Multimedia multimediaPost = new Multimedia();
+                multimediaPost.setHash((String) multimedia);
+
+                resultPost.setMultimedia(multimediaPost);
+                columnsPost.put("multimedia", multimediaPost);
+            }
+
             Object idUser = columnsPost.get("author");
 
             if (idUser instanceof String) {
                 user.setId((String) idUser);
                 columnsPost.put("author", user);
             }
+
+            System.out.println(columnsPost);
 
             resultPost.addInfo(columnsPost);
 
@@ -808,6 +958,13 @@ public class PostDao extends AbstractDao {
         Connection con = getConnection();
 
         try {
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             // We'll use a prepared statement to avoid malicious intentions :(
             PreparedStatement stm = con.prepareStatement(
                     "-- We obtain the followed users just for convenience\n" +
@@ -844,7 +1001,21 @@ public class PostDao extends AbstractDao {
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
                             "          WHERE p.author IN (SELECT * FROM followedUsers)\n" +
-                            "            AND p.author NOT IN (SELECt * FROM filteredUsers))\n" +
+                            "            AND p.author NOT IN (SELECT * FROM filteredUsers))\n" +
+                            "\n" +
+                            "         UNION\n" +
+                            "\n" +
+                            "         -- We obtain the reposts made by the followed users who are not filtered out\n" +
+                            "         (SELECT p.*\n" +
+                            "          FROM post as p\n" +
+                            "          WHERE EXISTS (\n" +
+                            "                         SELECT *\n" +
+                            "                         FROM repost as r\n" +
+                            "                         WHERE r.author IN (SELECT * FROM followedUsers)\n" +
+                            "                           AND r.author NOT IN (SELECT * FROM filteredUsers)" +
+                            "                           AND r.author = p.author\n" +
+                            "                           AND r.post = p.id\n" +
+                            "                     ))\n" +
                             "\n" +
                             "         UNION\n" +
                             "\n" +
@@ -858,10 +1029,10 @@ public class PostDao extends AbstractDao {
                             "         -- We obtain the reposts that the user made\n" +
                             "         (SELECT p.*\n" +
                             "          FROM post as p\n" +
-                            "          WHERE EXISTS(\n" +
+                            "          WHERE EXISTS (\n" +
                             "                        SELECT *\n" +
                             "                        FROM repost as r\n" +
-                            "                        WHERE r.author = ?\n" +
+                            "                        WHERE r.usr = ?\n" +
                             "                          AND r.author = p.author\n" +
                             "                          AND r.post = p.id\n" +
                             "                    ))\n" +
@@ -986,6 +1157,40 @@ public class PostDao extends AbstractDao {
                     throw new PiikDatabaseException(e.getMessage());
                 }
             }
+
+
+            /* Hashtag retrieval */
+
+            stm = con.prepareStatement("SELECT * FROM ownhashtag WHERE post = ? AND author = ?");
+
+            try {
+                // We retrieve the associated hashtags for each obtained post
+                for(Post post : result) {
+
+                    // Setting iterated post's PKs
+                    stm.setString(1, post.getId());
+                    stm.setString(2, post.getAuthor().getPK());
+
+                    // Executing the composed query
+                    rs = stm.executeQuery();
+
+                    // Hashtags retrieval
+                    while(rs.next()) {
+                        post.getHashtags().add(new Hashtag(rs.getString("hashtag")));
+                    }
+                }
+
+            } catch (SQLException e) {
+                throw new PiikDatabaseException(e.getMessage());
+
+            } finally {
+                try {
+                    // We must close the prepared statement as it won't be used anymore
+                    stm.close();
+                } catch (SQLException e) {
+                    throw new PiikDatabaseException(e.getMessage());
+                }
+            }
         } catch (SQLException e) {
             throw new PiikDatabaseException(e.getMessage());
         }
@@ -1003,16 +1208,73 @@ public class PostDao extends AbstractDao {
      */
     public List<Hashtag> getTrendingTopics(Integer limit) throws PiikInvalidParameters, PiikDatabaseException {
 
+        // TODO check null
         if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        // TODO filter by recent publication date
         return new QueryMapper<Hashtag>(getConnection()).defineClass(Hashtag.class)
-                .createQuery("SELECT hashtag, COUNT(*) as count " +
-                        "FROM ownhashtag " +
-                        "GROUP BY hashtag " +
-                        "ORDER BY count DESC " +
-                        "LIMIT ?").defineParameters(limit).list();
+                .createQuery("SELECT * FROM hashtag as h WHERE h.name IN (SELECT o.hashtag\n" +
+                        "FROM ownhashtag as o\n" +
+                        "WHERE EXISTS (\n" +
+                        "    SELECT *\n" +
+                        "    FROM post as p\n" +
+                        "    WHERE p.id = o.post\n" +
+                        "        AND p.author = o.author\n" +
+                        "        -- Less than 1 day\n" +
+                        "        AND DATE_PART('day', now() - p.publicationdate) < 1\n" +
+                        ")\n" +
+                        "GROUP BY o.hashtag\n" +
+                        "ORDER BY count(*) DESC\n" +
+                        "LIMIT 10").defineParameters(limit).list();
 
+    }
+
+    /**
+     * Function to check if an user has already reposted a post
+     *
+     * @param user User we want to check if he has already reposted
+     * @param post Post we want to check
+     * @param current Current user logged in the app
+     * @return  "True" if the user reposted the post, otherwise "false"
+     */
+    public boolean checkUserResposted(User user, Post post, User current) throws PiikDatabaseException{
+
+        List<Map<String, Object>> repost = new QueryMapper<Object>(super.getConnection()).createQuery(
+                "SELECT post FROM repost WHERE usr = ? AND post = ? AND author = ?").defineParameters(current.getPK(),
+                post.getId(), user.getPK()).mapList();
+
+        return (!repost.isEmpty()) ;
+    }
+
+    /**
+     * Function to check if a user has already archived a post
+     *
+     * @param post
+     * @param user
+     * @return
+     * @throws PiikDatabaseException
+     */
+    public boolean isPostArchived(Post post, User user) throws PiikDatabaseException{
+
+        List<Map<String, Object>> archived = new QueryMapper<Object>(super.getConnection()).createQuery(
+                "SELECT post FROM archivePost WHERE usr = ? AND post = ? AND author = ?").defineParameters(user.getPK(),
+                post.getId(), post.getAuthor().getId()).mapList();
+
+        return (!archived.isEmpty()) ;
+    }
+
+    /**
+     * Function to remove an archive post from an user
+     * @param post
+     * @param user
+     * @throws PiikDatabaseException
+     */
+    public void removeArchivePost(Post post, User user) throws PiikDatabaseException {
+
+        new DeleteMapper<>(super.getConnection()).createUpdate("DELETE FROM archivepost WHERE usr = ? AND post = ? AND author = ?").defineParameters(
+                user.getPK(), post.getId(), post.getAuthor().getId()
+        ).executeUpdate();
     }
 }

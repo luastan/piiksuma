@@ -3,7 +3,10 @@ package piiksuma.gui.tickets;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import piiksuma.Ticket;
+import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,6 +24,9 @@ public class TicketController implements Initializable {
     @FXML
     private Label description;
 
+    @FXML
+    private StackPane ticketContainer;
+
     public TicketController(Ticket ticket) {
         this.ticket = ticket;
     }
@@ -30,5 +36,12 @@ public class TicketController implements Initializable {
         id.setText(Integer.toString(ticket.getId()));
         section.setText(ticket.getSection());
         description.setText(ticket.getTextProblem());
+        ticketContainer.setOnMouseClicked(event -> {
+            try {
+                ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", new TicketConvController(ticket));
+            } catch (PiikInvalidParameters invalidParameters) {
+                invalidParameters.showAlert();
+            }
+        });
     }
 }

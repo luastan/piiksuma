@@ -9,7 +9,6 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 
-import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,6 +60,12 @@ public class InteractionDao extends AbstractDao {
 
             // The event won't be created unless there's no error generating its ID
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
@@ -241,7 +246,7 @@ public class InteractionDao extends AbstractDao {
         }
 
         new DeleteMapper<>(getConnection()).createUpdate("DELETE FROM participateevent WHERE event = ? AND usr = ?")
-                .defineParameters(event.getId(), user.getPK());
+                .defineParameters(event.getId(), user.getPK()).executeUpdate();
     }
 
     /**
@@ -268,7 +273,11 @@ public class InteractionDao extends AbstractDao {
             usersPK.add(user);
         }
 
-        return ApiFacade.getEntrypoint().getUserDao().getUsers(usersPK);
+        if(usersPK.isEmpty()){
+            return new HashMap<>();
+        } else{
+            return ApiFacade.getEntrypoint().getUserDao().getUsers(usersPK);
+        }
     }
     //******************************************************************************************************************
 
@@ -288,10 +297,10 @@ public class InteractionDao extends AbstractDao {
         return new QueryMapper<Event>(super.getConnection()).createQuery(
                 "SELECT e.* " +
                         "FROM event as e " +
-                        "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) " +
+                        "WHERE e.author IN (SELECT followed FROM followuser WHERE follower = ?) OR e.author = ? " +
                         "ORDER BY e.date DESC " +
                         "LIMIT 10;"
-        ).defineClass(Event.class).defineParameters(user.getId()).list();
+        ).defineClass(Event.class).defineParameters(user.getId(),user.getId()).list();
     }
     //******************************************************************************************************************
     //==================================================================================================================
@@ -422,6 +431,12 @@ public class InteractionDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // Notification's IDs are generated automatically when inserted
@@ -523,9 +538,8 @@ public class InteractionDao extends AbstractDao {
         }
         // Returns the list of notifications
         return new QueryMapper<Notification>(super.getConnection()).createQuery("SELECT n.* FROM notification as n," +
-                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "?").defineClass(Notification.class)
-                .defineParameters(
-                        user.getPK()).list();
+                "havenotification as h WHERE n.id = h.notification AND h.usr = " + "? ORDER BY creationDate DESC")
+                .defineClass(Notification.class).defineParameters(user.getPK()).list();
     }
 
     //******************************************************************************************************************

@@ -6,7 +6,7 @@ import piiksuma.database.MapperTable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-@MapperTable
+@MapperTable(nombre = "event")
 public class Event extends PiikObject{
     @MapperColumn(pkey = true, hasDefault = true)
     private String id;

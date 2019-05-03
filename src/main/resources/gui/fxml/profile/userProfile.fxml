@@ -30,9 +30,10 @@
                 <!-- Profile picture + username + functionality butons -->
                 <StackPane>
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <ImageView>
-                            <Image preserveRatio="true" requestedHeight="75" url="/imagenes/huevo.png"/>
-                        </ImageView>
+                        <StackPane>
+                            <StackPane style="-fx-padding: 5 5 5 5" fx:id="profilePicture"/>
+                            <StackPane/> <!-- Prevents  user from clicking the profile -->
+                        </StackPane>
                         <VBox alignment="CENTER" spacing="10">
                             <VBox alignment="CENTER_LEFT">
                                 <!-- Username and User's name -->
@@ -45,9 +46,9 @@
                                 Their name and code should be replaced depending on who is
                                 the current user and who is the profiles owner
                                 -->
-                                <JFXButton text="buttonLeft" styleClass="jfx-button-border" fx:id="buttonLeft"/>
-                                <JFXButton text="buttonCenter" styleClass="jfx-button-border" fx:id="buttonCenter"/>
-                                <JFXButton text="buttonRight" styleClass="jfx-button-border" fx:id="buttonRight"/>
+                                <JFXButton text="buttonLeft" styleClass="button-colored" fx:id="buttonLeft"/>
+                                <JFXButton text="buttonCenter" styleClass="button-colored" fx:id="buttonCenter"/>
+                                <JFXButton text="buttonRight" styleClass="button-colored" fx:id="buttonRight"/>
                             </HBox>
                         </VBox>
                     </HBox>
@@ -67,7 +68,7 @@
                         <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
                     </ScrollPane>
                 </Tab>
-                <Tab text="Archived">
+                <Tab text="Archived" fx:id="archivedTab">
                     <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
                                 styleClass="profile-post-feed">
                         <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>

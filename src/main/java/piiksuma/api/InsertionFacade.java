@@ -330,10 +330,6 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.equals(post.getPostAuthor())) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
         parentFacade.getPostDao().repost(userRepost, post, userPost);
     }
 
@@ -492,11 +488,11 @@ public class InsertionFacade {
      */
     public void administratePersonalData(User user, User currentUser) throws PiikDatabaseException {
 
-        if (user == null || !user.checkNotNull(false)) {
+        if (user == null ) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if (currentUser == null || !currentUser.checkNotNull(false)) {
+        if (currentUser == null ) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
@@ -515,7 +511,7 @@ public class InsertionFacade {
      * @throws PiikDatabaseException
      */
     public void reply(Post reply, User currentUser) throws PiikDatabaseException {
-        if (reply == null || !reply.checkNotNull(false)) {
+        if (reply == null || !reply.checkNotNull(true)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("reply"));
         }
 
@@ -523,7 +519,7 @@ public class InsertionFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (reply.getFatherPost() == null || !reply.checkNotNull(true)) {
+        if (reply.getFatherPost() == null || !reply.getFatherPost().checkNotNull(false)) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("fatherPost"));
         }
 
@@ -533,6 +529,7 @@ public class InsertionFacade {
 
         parentFacade.getPostDao().createPost(reply);
     }
+
 
 
 

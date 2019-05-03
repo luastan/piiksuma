@@ -16,9 +16,6 @@ import piiksuma.exceptions.PiikException;
 
 import java.net.URL;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class CreateEventController implements Initializable {
@@ -53,7 +50,7 @@ public class CreateEventController implements Initializable {
         if(!checkFields()){
             Alert alert = new Alert(ContextHandler.getContext().getStage("createEvent"));
             alert.setHeading("Fields empty!");
-            alert.addText("EventName field cannot be empty");
+            alert.addText("Fields cannot be empty");
             alert.addCloseButton();
             alert.show();
             return;
@@ -71,6 +68,7 @@ public class CreateEventController implements Initializable {
 
         try {
             newEvent = ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
+            ContextHandler.getContext().getEventsController().updateEventFeed();
         }catch (PiikException e){
             e.showAlert();
             return;
@@ -80,7 +78,7 @@ public class CreateEventController implements Initializable {
     }
 
     private boolean checkFields(){
-        if(eventName.getText().isEmpty()){
+        if(eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()){
             return false;
         }
         return true;

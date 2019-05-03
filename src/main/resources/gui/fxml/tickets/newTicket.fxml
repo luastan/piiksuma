@@ -13,7 +13,7 @@
 <?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.NewTicketController"
+           fx:controller="piiksuma.gui.tickets.NewTicketController"
            prefHeight="400.0" prefWidth="600.0">
     <VBox spacing="50">
         <StackPane.margin>
@@ -27,7 +27,8 @@
             <Text text="Issue:" translateX="20" translateY="5"/>
             <JFXTextArea fx:id="description"/>
         </HBox>
-        <JFXButton fx:id="sendButton" text="Send" styleClass="jfx-button-border" alignment="BOTTOM_CENTER" translateX="150"/>
+        <JFXButton fx:id="sendButton" text="Send" styleClass="button-colored" alignment="BOTTOM_CENTER"
+                   translateX="150" disable="true"/>
     </VBox>
 
 </StackPane>

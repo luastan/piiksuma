@@ -13,8 +13,8 @@
            style="-fx-padding: 20 20 20 20">
     <VBox spacing="20" alignment="CENTER">
         <Label text="New Message" style="-fx-padding: 10 10 10 10; -fx-font-size: 15"/>
-        <JFXTextField fx:id="userField" promptText="Introduce a user name" styleClass="fx-text-field"/>
-        <JFXTextField fx:id="messageField" promptText="Introduce the message" styleClass="fx-text-field"/>
+        <JFXTextField fx:id="userField" promptText="Introduce a user name" styleClass="piik-text-field"/>
+        <JFXTextField fx:id="messageField" promptText="Introduce the message" styleClass="piik-text-field"/>
         <JFXButton StackPane.alignment="BOTTOM_CENTER" styleClass="deck-button" fx:id="mainButton"
                    ripplerFill="rgba(255, 255, 255, 0.70)" disable="true">
             <graphic>

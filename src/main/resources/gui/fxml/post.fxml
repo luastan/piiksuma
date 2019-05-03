@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import com.jfoenix.controls.JFXToolbar?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.*?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
-<?import javafx.geometry.Rectangle2D?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container">
@@ -24,12 +20,8 @@
                 <StackPane styleClass="post-inner-container">
                     <HBox alignment="CENTER" spacing="10">
                         <!-- Avatar goes here-->
-                        <ImageView fx:id="profilePicture">
-                            <!--TODO: Clip Avatar to make it rounded -->
-
-                            <Image preserveRatio="true" requestedWidth="50" requestedHeight="50"
-                                   url="/imagenes/huevo.png"/>
-                        </ImageView>
+                        <StackPane fx:id="profilePicture">
+                        </StackPane>
                         <VBox alignment="CENTER_LEFT">
                             <Label fx:id="authorName" style="-fx-font-weight: BOLD;"/>
                             <Label fx:id="authorId"/>
@@ -38,12 +30,13 @@
                 </StackPane>
             </left>
             <right>
-                <!-- Share button -->
+                <!-- Answer button -->
                 <StackPane styleClass="post-inner-container">
-                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)"
+                               alignment="CENTER">
                         <graphic>
-                            <MaterialIconView glyphName="SHARE" size="30"
-                                              styleClass="deck-small-button-graphic"/>
+                            <FontAwesomeIconView glyphName="SHARE" size="30"
+                                                 styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
                 </StackPane>
@@ -52,7 +45,7 @@
     </top>
     <center>
         <StackPane>
-            <VBox alignment="CENTER_LEFT" spacing="10">
+            <VBox alignment="CENTER_LEFT" spacing="5">
 
                 <!-- Multimedia goes here -->
                 <ImageView fx:id="boxImage" preserveRatio="true">
@@ -60,6 +53,14 @@
 
                 <!-- Atual Post Content -->
                 <Label text="Actual Post content goes here" fx:id="postContent" wrapText="true" styleClass="post-text"/>
+                <StackPane alignment="CENTER_LEFT" style="-fx-background-color: -white-high-emphasis">
+                    <ScrollPane vbarPolicy="NEVER" fx:id="hashtagsContainer"
+                                style="-fx-background-color: -white-high-emphasis;" styleClass="hashtags-view">
+                        <HBox fx:id="hashtags" spacing="2"
+                              style="-fx-padding: 0 0 0 10; -fx-background-color: -white-high-emphasis;"
+                              styleClass="hashtags-view"/>
+                    </ScrollPane>
+                </StackPane>
             </VBox>
         </StackPane>
 
@@ -75,21 +76,67 @@
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
-                    <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                    <JFXButton fx:id="repost" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
-                            <FontAwesomeIconView glyphName="PLUS" size="24"
+                            <FontAwesomeIconView glyphName="RETWEET" size="24"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
-                    <!--This button is for admins, to modify or delete a post-->
+                    <JFXButton fx:id="archiveButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="ARCHIVE" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+
+                    <!--This button is for admins and for the creator, to delete a post-->
                     <JFXButton fx:id="deleteButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
                         <graphic>
                             <FontAwesomeIconView glyphName="TRASH" size="24"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>
+                    <!-- TODO iconos para estas cosas-->
+                    <JFXNodesList fx:id="reactionsButton" rotate="180.0" spacing="7.5">
+                        <JFXButton fx:id="mainButton" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="PLUS" size="24" styleClass="deck-small-button-graphic" />
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="loveItButton" styleClass="button-reaction, deck-small-button"
+                                   ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="ARROW_UP" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="hateItButton" contentDisplay="GRAPHIC_ONLY"
+                                   styleClass="button-reaction, deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="ARROW_DOWN" size="24"
+                                                     styleClass="deck-small-button-graphic"/>
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="makesMeAngry" contentDisplay="GRAPHIC_ONLY"
+                                   styleClass="button-reaction, deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                            <graphic>
+                                <FontAwesomeIconView glyphName="FIRE" size="24" styleClass="deck-small-button-graphic"/>
+                            </graphic>
+                        </JFXButton>
+                    </JFXNodesList>
                 </HBox>
             </left>
+            <right>
+                <StackPane>
+                    <!-- Replies go here -->
+                    <JFXButton fx:id="replies" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
+                        <graphic>
+                            <FontAwesomeIconView glyphName="COMMENT" size="24"
+                                                 styleClass="deck-small-button-graphic"/>
+                        </graphic>
+                    </JFXButton>
+                </StackPane>
+            </right>
         </BorderPane>
     </bottom>
 

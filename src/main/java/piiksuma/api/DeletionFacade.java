@@ -178,11 +178,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("repost"));
         }
 
-        if (!currentUser.checkAdministrator() && !currentUser.equals(repost.getPostAuthor())) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
-        }
-
-        parentFacade.getPostDao().removeRepost(repost);
+        parentFacade.getPostDao().removeRepost(repost, currentUser);
     }
 
     /**
@@ -253,7 +249,7 @@ public class DeletionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (e == null || e.checkNotNull(false)) {
+        if (e == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("event"));
         }
 
@@ -312,4 +308,24 @@ public class DeletionFacade {
         parentFacade.getInteractionDao().removeReaction(reaction);
     }
 
+    /**
+     * Function to remove an archive post from an user
+     *
+     * @param post
+     * @param user
+     * @param current
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
+    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
+        if (current == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        if (post == null ) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        parentFacade.getPostDao().removeArchivePost(post, user);
+    }
 }

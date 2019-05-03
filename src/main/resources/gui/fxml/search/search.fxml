@@ -31,7 +31,7 @@
                 </left>
                 <center>
                     <StackPane styleClass="deck-small-button-container">
-                        <JFXTextField styleClass="fx-text-field" fx:id="searchText"/>
+                        <JFXTextField styleClass="piik-text-field" fx:id="searchText"/>
                     </StackPane>
                 </center>
                 <right>
@@ -102,4 +102,13 @@
         </center>
     </BorderPane>
 
+    <StackPane pickOnBounds="false" style="-fx-padding: 30 30 30 30;" StackPane.alignment="BOTTOM_RIGHT"
+               alignment="BOTTOM_RIGHT">
+        <JFXButton fx:id="trendingTopics" styleClass="trending-button" ripplerFill="rgba(255, 145, 0, 0.77)">
+            <graphic>
+                <FontAwesomeIconView glyphName="FIRE" size="30"
+                                     styleClass="deck-small-button-graphic"/>
+            </graphic>
+        </JFXButton>
+    </StackPane>
 </StackPane>

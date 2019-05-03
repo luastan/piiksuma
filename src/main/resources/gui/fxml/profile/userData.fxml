@@ -17,7 +17,7 @@
     </StackPane.margin>
     <VBox spacing="25">
         <HBox spacing="40">
-            <ImageView fx:id="imageView" translateY="20">
+            <ImageView fx:id="imageView" translateY="20" fitWidth="90" fitHeight="90" preserveRatio="true">
                 <Image  preserveRatio="true" requestedWidth="180" requestedHeight="90" url="/imagenes/huevo.png"/>
             </ImageView>
             <JFXButton fx:id="multimediaButton" styleClass="deck-small-button" translateY="50" ripplerFill="rgba(0, 50, 255, 0.24)" >
@@ -29,7 +29,7 @@
             <VBox spacing="10">
 
                 <Label alignment="BOTTOM_LEFT" text="Description:"/>
-                <JFXTextArea fx:id="description" styleClass="fx-text-field" maxWidth="180" maxHeight="100"/>
+                <JFXTextArea fx:id="description" styleClass="piik-text-field" maxWidth="180" maxHeight="100"/>
             </VBox>
         </HBox>
         <HBox spacing="20">
@@ -38,31 +38,31 @@
 
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*UserID:"/>
-                    <JFXTextField alignment="TOP_LEFT" styleClass="fx-text-field" fx:id="userId" maxWidth="110"/>
+                    <JFXTextField alignment="TOP_LEFT" styleClass="piik-text-field" fx:id="userId" maxWidth="110"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*Name:"/>
-                    <JFXTextField alignment="TOP_LEFT" styleClass="fx-text-field" fx:id="userName" maxWidth="115"/>
+                    <JFXTextField alignment="TOP_LEFT" styleClass="piik-text-field" fx:id="userName" maxWidth="115"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label layoutY="50" text="*Email:"/>
-                    <JFXTextField fx:id="email" styleClass="fx-text-field" maxWidth="115"/>
+                    <JFXTextField fx:id="email" styleClass="piik-text-field" maxWidth="115"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*Password:"/>
-                    <JFXPasswordField fx:id="password" styleClass="fx-text-field" maxWidth="85"/>
+                    <JFXPasswordField fx:id="password" styleClass="piik-text-field" maxWidth="85"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="*Birthday:"/>
-                    <JFXTextField fx:id="birthday" styleClass="fx-text-field" maxWidth="90" promptText="DD-MM-YYYY"/>
+                    <JFXDatePicker fx:id="birthday" styleClass="piik-text-field" maxWidth="90" accessibleHelp="Pick your birthday's date"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Birthplace:"/>
-                    <JFXTextField fx:id="birthplace" styleClass="fx-text-field" maxWidth="90"/>
+                    <JFXTextField fx:id="birthplace" styleClass="piik-text-field" maxWidth="90"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Religion:"/>
-                    <JFXTextField fx:id="religion" styleClass="fx-text-field" maxWidth="115"/>
+                    <JFXTextField fx:id="religion" styleClass="piik-text-field" maxWidth="115"/>
                 </HBox>
 
             </VBox>
@@ -70,27 +70,27 @@
             <VBox spacing="30">
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="City:"/>
-                    <JFXTextField fx:id="city" styleClass="fx-text-field" maxWidth="150"/>
+                    <JFXTextField fx:id="city" styleClass="piik-text-field" maxWidth="150"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="PostalCode:"/>
-                    <JFXTextField fx:id="postalCode" styleClass="fx-text-field" maxWidth="110"/>
+                    <JFXTextField fx:id="postalCode" styleClass="piik-text-field" maxWidth="110"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label  text="Home:"/>
-                    <JFXTextField fx:id="home" styleClass="fx-text-field" maxWidth="150"/>
+                    <JFXTextField fx:id="home" styleClass="piik-text-field" maxWidth="150"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Province:"/>
-                    <JFXTextField fx:id="province" styleClass="fx-text-field" maxWidth="125"/>
+                    <JFXTextField fx:id="province" styleClass="piik-text-field" maxWidth="125"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Country:"/>
-                    <JFXTextField fx:id="country" styleClass="fx-text-field" maxWidth="130"/>
+                    <JFXTextField fx:id="country" styleClass="piik-text-field" maxWidth="130"/>
                 </HBox>
                 <HBox spacing="10">
                     <Label alignment="BOTTOM_LEFT" text="Actual job:"/>
-                    <JFXTextField fx:id="job" styleClass="fx-text-field" maxWidth="115"/>
+                    <JFXTextField fx:id="job" styleClass="piik-text-field" maxWidth="115"/>
                 </HBox>
 
                 <JFXComboBox fx:id="genderBox" maxWidth="200" promptText="Gender"/>
@@ -98,18 +98,19 @@
         </HBox>
         <HBox spacing="20">
                 <Label alignment="BOTTOM_LEFT" text="Emotional Situation:"/>
-                <JFXTextField fx:id="emotionalSituation" styleClass="fx-text-field" maxWidth="200"/>
+            <JFXTextField fx:id="emotionalSituation" styleClass="piik-text-field" maxWidth="200"/>
 
         </HBox>
         <HBox spacing="15">
             <Label text="Telephones"/>
-            <JFXButton fx:id="addTelephone" styleClass="jfx-button-border" text="Add Telephone"/>
-            <JFXButton fx:id="removeTelephone" styleClass="jfx-button-border" text="Remove Telephone"/>
+            <JFXButton fx:id="addTelephone" styleClass="button-colored" text="Add Telephone"/>
+            <JFXButton fx:id="removeTelephone" styleClass="button-colored" text="Remove Telephone"/>
         </HBox>
         <JFXListView  editable="true" fx:id="telephoneList"/>
 
 
-        <JFXButton StackPane.alignment="BOTTOM_CENTER" translateX="150" fx:id="update" styleClass="jfx-button-border" text="UpdateData"/>
+        <JFXButton StackPane.alignment="BOTTOM_CENTER" translateX="150" fx:id="update" styleClass="button-colored"
+                   text="UpdateData"/>
     </VBox>
 
 </StackPane>

@@ -73,6 +73,13 @@ public class DeckPopUpController implements Initializable {
                 stage.setTitle("Statistics");
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/stats.fxml"));
                 break;
+            case 3:
+                try {
+                    ContextHandler.getContext().invokeStage("/gui/fxml/tickets/adminTickets.fxml", null, "Tickets");
+                } catch (PiikInvalidParameters invalidParameters) {
+                    invalidParameters.showAlert();
+                }
+                return;
             default:
                 return;
         }

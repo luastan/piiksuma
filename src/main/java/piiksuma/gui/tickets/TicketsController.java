@@ -15,6 +15,7 @@ import piiksuma.Ticket;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
@@ -25,30 +26,21 @@ public class TicketsController implements Initializable {
 
     @FXML
     private ScrollPane ticketScrollPane;
+
     @FXML
     private JFXMasonryPane ticketMasonryPane;
-    @FXML
-    private JFXTextField searchText;
-    @FXML
-    private JFXButton Search;
 
-    private ObservableList<Ticket> ticketFeed;
-
+    private ObservableList<Ticket> tickets;
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
-        ticketFeed = FXCollections.observableArrayList();
+        tickets = FXCollections.observableArrayList();
 
-        ContextHandler.getContext().setTicketsController(this);
         setUpFeedListener();
-
-        try {
-            updateTicketFeed();
-        } catch (PiikDatabaseException e) {
-            e.showAlert();
-        }
-        Search.setOnAction(this::handleSearch);
+        handleSearch(null);
     }
+
 
     private void handleSearch(Event event){
         try {
@@ -59,20 +51,19 @@ public class TicketsController implements Initializable {
     }
 
     private void updateTicketFeed() throws PiikDatabaseException {
-
-        ticketFeed.clear();
-        if (searchText.getText().isEmpty()){
-            searchText.setText("");
+        try {
+            tickets.addAll(ApiFacade.getEntrypoint().getSearchFacade().getUserTickets(
+                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser(), 20));
+        } catch (PiikInvalidParameters piikInvalidParameters) {
+            // TODO handle
+            piikInvalidParameters.printStackTrace();
         }
-        ticketFeed.addAll(new QueryMapper<Ticket>(ApiFacade.getEntrypoint().getConnection()).defineClass(Ticket.class).createQuery("SELECT * FROM ticket WHERE section LIKE ?;")
-                .defineParameters("%"+searchText.getText()+"%").list());
-
     }
 
     private void setUpFeedListener() {
-        ticketFeed.addListener((ListChangeListener<? super Ticket>) change -> {
+        tickets.addListener((ListChangeListener<? super Ticket>) change -> {
             ticketMasonryPane.getChildren().clear();
-            ticketFeed.forEach(this::insertTicket);
+            tickets.forEach(this::insertTicket);
         });
     }
 

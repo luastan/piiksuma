@@ -8,6 +8,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Line?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            styleClass="message-preview-container">
@@ -15,10 +16,9 @@
     <BorderPane>
         <left>
             <!-- Other person's profiles -->
-            <StackPane style="-fx-padding: 10 10 10 10">
-                <ImageView preserveRatio="true" fitHeight="40" fitWidth="40" fx:id="profilePicture">
-                    <Image url="/imagenes/huevo.png"/>
-                </ImageView>
+            <StackPane>
+                <StackPane style="-fx-padding: 5 5 5 5" fx:id="profilePicture"/>
+                <StackPane/> <!-- Prevents  user from clicking the profile -->
             </StackPane>
         </left>
         <center>
@@ -38,6 +38,14 @@
                 <Label text="3 days ago" fx:id="elapsedTime"/>
             </StackPane>
         </right>
+        <top>
+            <StackPane>
+                <StackPane style="-fx-background-color: -black-disabled; -fx-padding: 0 1 0 0"
+                           maxHeight="1" maxWidth="150">
+                    <Line strokeWidth="0" startX="150" endX="350"/>
+                </StackPane>
+            </StackPane>
+        </top>
     </BorderPane>
 
 </StackPane>

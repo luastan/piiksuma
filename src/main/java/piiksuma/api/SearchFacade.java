@@ -117,6 +117,29 @@ public class SearchFacade {
     }
 
     /**
+     * Function to check if the user followed follow the user follower
+     *
+     * @param followed
+     * @param follower
+     * @return
+     */
+    public boolean isFollowed(User followed, User follower, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (followed == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("followed"));
+        }
+
+        if (follower == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("follower"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getUserDao().isFollowed(followed, follower);
+    }
+
+    /**
      * Function to login into the app; it will try to find a user that meets the given keys
      *
      * @param user user whose primary fields will be used in the search
@@ -128,7 +151,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        User candidate = parentFacade.getUserDao().login(user);
+         User candidate = parentFacade.getUserDao().login(user);
+       // User candidate = parentFacade.getUserDao().getUser(user);
         if (candidate == null) {
             return null;
         }
@@ -148,7 +172,7 @@ public class SearchFacade {
         messageDigest.update(salt);
         String storedHash = matcher.group(2);
         String calculatedHash = Base64.getEncoder().encodeToString(messageDigest.digest(user.getPass().getBytes()));
-        candidate.setPass(" ");
+        //candidate.setPass(" ");
         return storedHash.equals(calculatedHash) ? candidate : null;
     }
 
@@ -240,7 +264,7 @@ public class SearchFacade {
      * @throws PiikDatabaseException
      */
     public Multimedia getMultimedia(Multimedia multimedia, User current) throws PiikInvalidParameters, PiikDatabaseException {
-        if (multimedia == null || !multimedia.checkNotNull(false)) {
+        if (multimedia == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("multimedia"));
         }
 
@@ -316,6 +340,25 @@ public class SearchFacade {
     /* POST related methods */
 
     /**
+     * Checks if the specified post contains the a given hashtag
+     *
+     * @param hashtag hashtag that will be checked
+     * @param post    post which may contain the given hashtag
+     * @return if the given hashtag is contained in the specified post
+     */
+    public boolean hashtagInPost(Hashtag hashtag, Post post) throws PiikInvalidParameters, PiikDatabaseException {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        return parentFacade.getPostDao().hashtagInPost(hashtag, post);
+    }
+
+    /**
      * Returns a post form db
      *
      * @param post Post wanted
@@ -336,6 +379,20 @@ public class SearchFacade {
         }
 
         return parentFacade.getPostDao().getPost(post);
+    }
+
+    /**
+     * Function that returns the answers / children of the indicated post
+     *
+     * @param post
+     * @return
+     */
+    public List<Post> getAnswers(Post post) throws PiikDatabaseException, PiikInvalidParameters {
+        if (post == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        return parentFacade.getPostDao().getAnswers(post);
     }
 
     // TODO we need to set a limit
@@ -375,10 +432,6 @@ public class SearchFacade {
 
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
-        }
-
-        if (!current.checkAdministrator() && !user.equals(current)) {
-            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getPostDao().getPost(user);
@@ -580,6 +633,35 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
+    /* This function allows an user to retrieve his open tickets
+     * @param user whose tickets will be retrieved
+     * @param current current user
+     * @param limit maximum number of tickets to retrieve
+     * @return the list of all the tickets which haven't been closed
+     * @throws PiikDatabaseException Thrown on query gone wrong
+     * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
+     */
+    public List<Ticket> getUserTickets(User user, User current, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (current == null || !current.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("current"));
+        }
+
+        if (!current.checkAdministrator() && !current.equals(user)) {
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return parentFacade.getMessagesDao().getUserTickets(user, limit);
+    }
+
     /**
      * Allows the user to read his messages
      *
@@ -598,6 +680,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
+        // TODO permission check
+
         return parentFacade.getMessagesDao().readMessages(user);
     }
 
@@ -610,13 +694,16 @@ public class SearchFacade {
     public Map<User, List<Message>> messageWithUser(User user, Integer limit, User current) throws
             PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null){
+        if (user == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        if(current == null){
+        if (current == null) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("current"));
         }
+
+        // TODO permission check
+
 
         return parentFacade.getMessagesDao().messageWithUser(user, limit);
     }
@@ -648,8 +735,36 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        // TODO permission check
+
+
         return parentFacade.getMessagesDao().getConversation(user1, user2, limit);
 
+    }
+
+    /**
+     * Function to get a chat associated to a ticket
+     *
+     * @param limit
+     * @return
+     */
+    public List<Message> getConversationTicket(Ticket ticket, User current, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+
+        if(ticket == null || !ticket.checkNotNull(false)){
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        // TODO permission check
+
+
+
+        return parentFacade.getMessagesDao().getConversationTicket(ticket, limit);
     }
 
 
@@ -750,5 +865,80 @@ public class SearchFacade {
         }
 
         return parentFacade.getInteractionDao().usersInEvent(event);
+    }
+
+    /**
+     * Function to check if the user1 has blocked the user2
+     *
+     * @param user1
+     * @param user2
+     * @return
+     */
+    public boolean isBlock(User user1, User user2, User current) throws PiikDatabaseException, PiikInvalidParameters {
+        if (user1 == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user1"));
+        }
+
+        if (user2 == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user2"));
+        }
+
+        if (current == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getUserDao().isBlock(user1, user2);
+    }
+
+    /**
+     * Function to check if an user has already reposted a post
+     *
+     * @param user        User we want to check if he has already reposted
+     * @param post        Post we want to check
+     * @param currentUser Current user logged in the app
+     * @return "True" if the user reposted the post, otherwise "false"
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
+    public boolean checkUserResposted(User user, Post post, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        if (user == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (post == null || !post.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (currentUser == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getPostDao().checkUserResposted(user, post, currentUser);
+    }
+
+    /**
+     * Function to check if a user has already archived a post
+     *
+     * @param post
+     * @param user
+     * @param currentUser
+     * @return
+     * @throws PiikInvalidParameters
+     * @throws PiikDatabaseException
+     */
+    public boolean isPostArchived(Post post, User user, User currentUser) throws PiikInvalidParameters, PiikDatabaseException {
+        if (user == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        if (post == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (currentUser == null) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+
+        return parentFacade.getPostDao().isPostArchived(post, user);
     }
 }

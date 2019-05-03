@@ -46,6 +46,12 @@ public class MultimediaDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             clause.append("INSERT INTO multimedia(hash, resolution, uri) SELECT ?, ?, ? WHERE NOT EXISTS" +
@@ -123,7 +129,7 @@ public class MultimediaDao extends AbstractDao {
         }
 
         // Return multimedia
-        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia" +
+        return new QueryMapper<Multimedia>(super.getConnection()).createQuery("SELECT * FROM multimedia " +
                 "WHERE hash=?").defineClass(Multimedia.class).defineParameters(multimedia.getPK()).findFirst();
     }
     //******************************************************************************************************************

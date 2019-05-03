@@ -13,8 +13,10 @@ import piiksuma.database.QueryMapper;
 import piiksuma.database.UpdateMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.ContextHandler;
 
 import javax.management.Query;
+import javax.naming.Context;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -66,6 +68,12 @@ public class MessagesDao extends AbstractDao {
 
             // The post won't be created unless there's no error modifying all related tables and generating its ID
             con.setAutoCommit(false);
+
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 
             /* Statement */
@@ -236,7 +244,7 @@ public class MessagesDao extends AbstractDao {
 
         List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT message.*, receiver " +
                 "FROM receivemessage JOIN message  ON(id=message) WHERE receivemessage.author LIKE ? OR receiver LIKE ?" +
-                "ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
+                "AND ticket IS NULL ORDER BY date DESC LIMIT ?").defineParameters(user.getPK(), user.getPK(), limit).mapList();
 
         HashMap<User, List<Message>> returnMessages = new HashMap<>();
 
@@ -357,6 +365,28 @@ public class MessagesDao extends AbstractDao {
                 "(message.author LIKE ? AND receiver LIKE ?) ORDER BY date DESC LIMIT ?")
                 .defineParameters(user1.getPK(), user2.getPK(), user2.getPK(), user1.getPK(), limit).list();
     }
+
+    /**
+     * Function to get a chat associated to a ticket
+     *
+     * * @param limit
+     * @return
+     */
+    public List<Message> getConversationTicket(Ticket ticket, Integer limit) throws PiikDatabaseException,
+            PiikInvalidParameters {
+
+        if(ticket == null || !ticket.checkPrimaryKey(false)){
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
+        }
+
+        if(limit <= 0){
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
+                "JOIN message ON(id=message) WHERE message.ticket = ? " +
+                "ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+    }
     //******************************************************************************************************************
 
     /*******************************************************************************************************************
@@ -387,6 +417,12 @@ public class MessagesDao extends AbstractDao {
         StringBuilder clause = new StringBuilder();
 
         try {
+
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
 
             /* Statement */
 
@@ -531,6 +567,12 @@ public class MessagesDao extends AbstractDao {
             con.setAutoCommit(false);
 
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+
             /* Statement */
 
             // "closeDate" and "adminClosing" are inserted as NULL because they are intended to be stored when closing
@@ -628,8 +670,44 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE deadline is " +
-                "NULL LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+        List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+
+        for(Ticket ticket : result) {
+            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
+                    ContextHandler.getContext().getCurrentUser()));
+        }
+
+        return result;
+    }
+
+    /* This function allows an user to retrieve his open tickets
+     * @param user whose tickets will be retrieved
+     * @param limit maximum number of tickets to retrieve
+     * @return the list of all the tickets which haven't been closed
+     * @throws PiikDatabaseException Thrown on query gone wrong
+     * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
+     */
+    public List<Ticket> getUserTickets(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
+
+        if(user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        if (limit <= 0) {
+            throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
+        }
+
+        List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
+                "NULL AND usr = ? ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(
+                user.getPK(), limit).list();
+
+        for(Ticket ticket : result) {
+            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
+                    ContextHandler.getContext().getCurrentUser()));
+        }
+
+        return result;
     }
     //******************************************************************************************************************
 // =====================================================================================================================

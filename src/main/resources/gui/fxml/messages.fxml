@@ -14,7 +14,7 @@
            fx:controller="piiksuma.gui.MessagesController">
     <ScrollPane fx:id="messageScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
                 StackPane.alignment="TOP_CENTER">
-        <JFXMasonryPane fx:id="messageMasonryPane" VSpacing="-1" styleClass="main-masonry">
+        <JFXMasonryPane fx:id="messageMasonryPane" VSpacing="0" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
 </StackPane>

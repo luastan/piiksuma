@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import com.jfoenix.controls.JFXMasonryPane?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           prefWidth="450.0" minWidth="450.0" maxWidth="450.0">
+    <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
+                StackPane.alignment="TOP_CENTER">
+        <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry">
+        </JFXMasonryPane>
+    </ScrollPane>
+</StackPane>

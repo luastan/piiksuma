@@ -7,10 +7,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +65,7 @@ public class UserDao extends AbstractDao {
      * @throws SQLException Thrown if the build fails
      */
     private int setUserQuery(PreparedStatement statement, boolean multimediaExists, boolean phonesExists,
-                             User user, Multimedia multimedia) throws SQLException {
+                             User user, Multimedia multimedia, boolean update) throws SQLException {
 
         int offset = 1;
 
@@ -85,12 +82,19 @@ public class UserDao extends AbstractDao {
             offset += 6;
         }
 
+        if(update){
+            statement.setString(offset++,user.getPK());
+        }
+
         // Phones insertion
         if (phonesExists) {
             for (String phone : user.getPhones()) {
                 if (phone != null && !phone.isEmpty() && phone.length() >= 4) {
-                    String prefix = phone.substring(0, 2);
+                    String prefix = phone.substring(0, 3);
                     String withoutPrefix = phone.substring(3);
+                    statement.setString(offset++, prefix);
+                    statement.setString(offset++, withoutPrefix);
+                    statement.setString(offset++, user.getPK());
                     statement.setString(offset++, prefix);
                     statement.setString(offset++, withoutPrefix);
                     statement.setString(offset++, user.getPK());
@@ -128,6 +132,23 @@ public class UserDao extends AbstractDao {
         StringBuilder clauseAux = new StringBuilder();
 
         try {
+
+            /* Isolation level */
+
+            // We need to check that the given database supports the serializable isolation level
+            try {
+                DatabaseMetaData metaData = super.getConnection().getMetaData();
+
+                if (metaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE)) {
+                    super.getConnection().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Serializable isolation level not supported");
+                super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                throw new PiikDatabaseException(e.getMessage());
+            }
+
 
             /* Statement */
 
@@ -225,7 +246,7 @@ public class UserDao extends AbstractDao {
 
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia, false);
 
             // User's data insertion
             for (Object value : columnValues) {
@@ -288,6 +309,12 @@ public class UserDao extends AbstractDao {
 
         try {
 
+            /* Isolation level */
+
+            // Default in PostgreSQL
+            super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            
+
             /* Statement */
 
             // If the message will display some kind of media, it gets inserted if it does not exist in the database
@@ -299,6 +326,8 @@ public class UserDao extends AbstractDao {
                 clause.append("INSERT INTO multimediaImage SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
                         "multimediaimage WHERE hash = ? FOR UPDATE); ");
             }
+
+            clause.append("DELETE FROM phone WHERE usr=?;");
 
             if (user.getPhones() != null && !user.getPhones().isEmpty()) {
                 for (String phone : user.getPhones()) {
@@ -326,33 +355,36 @@ public class UserDao extends AbstractDao {
                     //  True -> equals to the attribute's name
                     //  False -> they don't match; the proper name is put in the class
                     String column = Mapper.extractColumnName(field);
-                    clause.append(column).append(" = ");
 
-                    Object value = null;
+                    if (!column.equals("pass") && !column.equals("registrationdate")) {
+                        clause.append(column).append(" = ");
 
-                    try {
-                        value = field.get(user);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                        Object value = null;
 
-                    // The iterated field cannot be null
-                    if (mapperColumn.pkey() || mapperColumn.notNull()) {
-                        clause.append("?");
-                        // To preserve the order when filling values in the prepared statement
-                        columnValues.add(value);
-                    } else {
-                        // Unable to set a value in prepared statement or it is an empty string
-                        if (value == null || (value instanceof String && ((String) value).isEmpty())) {
-                            clause.append("NULL");
-                        } else {
+                        try {
+                            value = field.get(user);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        // The iterated field cannot be null
+                        if (mapperColumn.pkey() || mapperColumn.notNull()) {
                             clause.append("?");
                             // To preserve the order when filling values in the prepared statement
                             columnValues.add(value);
+                        } else {
+                            // Unable to set a value in prepared statement or it is an empty string
+                            if (value == null || (value instanceof String && ((String) value).isEmpty())) {
+                                clause.append("NULL");
+                            } else {
+                                clause.append("?");
+                                // To preserve the order when filling values in the prepared statement
+                                columnValues.add(value);
+                            }
                         }
-                    }
 
-                    clause.append(", ");
+                        clause.append(", ");
+                    }
                 }
             }
 
@@ -369,6 +401,7 @@ public class UserDao extends AbstractDao {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
+            System.out.println(clause.toString());
             statement = getConnection().prepareStatement(clause.toString());
 
 
@@ -376,10 +409,13 @@ public class UserDao extends AbstractDao {
 
             boolean phonesExists = user.getPhones() != null && !user.getPhones().isEmpty();
 
-            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia);
+            int offset = setUserQuery(statement, multimediaExists, phonesExists, user, multimedia, true);
 
             // User's data insertion
             for (Object value : columnValues) {
+                if(value instanceof Multimedia){
+                    value = ((Multimedia)value).getHash();
+                }
                 statement.setObject(offset++, value);
             }
 
@@ -421,7 +457,7 @@ public class UserDao extends AbstractDao {
      * Function to get the user that matches the given specifications
      *
      * @param user            user that contains the requirements that will be applied in the search
-     * @param typeTransaction nivel of isolation
+     * @param typeTransaction level of isolation // TODO isolation level
      * @return user that meets the given information
      */
     public User getUser(User user, Integer typeTransaction) throws PiikDatabaseException {
@@ -461,6 +497,16 @@ public class UserDao extends AbstractDao {
                 } else {
                     returnUser.setType(UserType.administrator);
                 }
+            }
+
+            String profPicture = (String) columnsUsr.get("profilepicture");
+
+            if(profPicture != null && !profPicture.isEmpty()){
+                Multimedia multimedia = new Multimedia();
+                multimedia.setHash(profPicture);
+
+                returnUser.setMultimedia(multimedia);
+                columnsUsr.put("profilepicture", multimedia);
             }
 
             // User information is saved
@@ -503,8 +549,12 @@ public class UserDao extends AbstractDao {
      * @return users that meets the given information
      */
     public Map<String, User> getUsers(List<User> users, Integer typeTransaction) throws PiikDatabaseException {
-        if (users == null || users.isEmpty()) {
+        if (users == null) {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("users"));
+        }
+
+        if(users.isEmpty()) {
+            return new HashMap<String, User>();
         }
 
         String query = "SELECT t.*, ad.id as type  FROM (piiUser LEFT JOIN phone ON(id = usr)) as t LEFT JOIN " +
@@ -573,6 +623,16 @@ public class UserDao extends AbstractDao {
                     } else {
                         returnUser.setType(UserType.administrator);
                     }
+                }
+
+                String profPicture = (String) tuple.get("profilepicture");
+
+                if(profPicture != null && !profPicture.isEmpty()){
+                    Multimedia multimedia = new Multimedia();
+                    multimedia.setHash(profPicture);
+
+                    returnUser.setMultimedia(multimedia);
+                    tuple.put("profilepicture", multimedia);
                 }
 
                 // User information is saved
@@ -742,6 +802,32 @@ public class UserDao extends AbstractDao {
     }
 
     /**
+     * Function to check if the user followed follow the user follower
+     *
+     * @param followed
+     * @param follower
+     * @return
+     */
+    public boolean isFollowed(User followed, User follower) throws PiikDatabaseException {
+        if (followed == null || !followed.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("followed"));
+        }
+
+        if (follower == null || !follower.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("follower"));
+        }
+
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT * FROM followuser " +
+                "WHERE followed = ? AND follower = ?").defineParameters(followed.getPK(), follower.getPK()).mapList();
+
+        if(query.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Function to unfollow a user
      *
      * @param followed User to be unfollowed
@@ -781,6 +867,31 @@ public class UserDao extends AbstractDao {
 
         new InsertionMapper<Object>(super.getConnection()).createUpdate("INSERT INTO blockuser(usr,blocked) VALUES " +
                 "(?,?)").defineClass(Object.class).defineParameters(user.getPK(), blockedUser.getPK()).executeUpdate();
+    }
+
+    /**
+     * Function to check if the user1 has blocked the user2
+     * @param user1
+     * @param user2
+     * @return
+     */
+    public boolean isBlock(User user1, User user2) throws PiikDatabaseException {
+        if (user1 == null || !user1.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user1"));
+        }
+        if (user2 == null || !user2.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user2"));
+        }
+
+        List<Map<String, Object>> query = new QueryMapper<>(getConnection()).createQuery("SELECT * FROM blockuser WHERE " +
+                "usr = ? and blocked = ?").defineParameters(user2.getPK(), user1.getPK()).mapList();
+
+        if(query == null || query.isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**
@@ -837,72 +948,83 @@ public class UserDao extends AbstractDao {
 
         Statistics statistics = new Statistics();
 
-        List<Map<String, Object>> estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                //Query to take the number of followers the given user has
-                "SELECT count(follower) AS followers \n" +
-                        "FROM followuser \n" +
-                        "WHERE followed LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).mapList();
+        List<Map<String, Object>> result = new QueryMapper<>(super.getConnection()).createQuery("" +
+                "WITH followerstable AS (SELECT * FROM followuser WHERE followed LIKE ?),\n" +
+                "     followedtable AS (SELECT * FROM followuser WHERE follower LIKE ?),\n" +
+                "     reactionstable AS (SELECT * FROM react WHERE author LIKE ?)\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followers' as type\n" +
+                "FROM followerstable\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followed' as type\n" +
+                "FROM followedtable\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'followback' as type\n" +
+                "FROM followerstable, followedtable\n" +
+                "WHERE followedtable.followed = followerstable.follower\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countLikeIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'LikeIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countLoveIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'LoveIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countHateIt' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'HateIt'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT count(*) as value, 'countMakesMeAngry' as type\n" +
+                "FROM reactionstable\n" +
+                "WHERE reactiontype LIKE 'MakesMeAngry'").defineParameters(user.getPK(), user.getPK(), user.getPK())
+                .setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
 
-        statistics.setFollowers((Long) estatistics.get(0).get("followers"));
+        for(Map<String, Object> row : result) {
 
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "\n" +//Query to take the number of users that the user follows
-                        "SELECT count(followed) AS followed \n" +
-                        "FROM followuser \n" +
-                        "WHERE follower LIKE ? \n").defineParameters(user.getPK()).setIsolationLevel(
-                Connection.TRANSACTION_SERIALIZABLE).mapList();
+            // Statistic type
+            String type = (String)row.get("type");
+            // Value
+            Long value = (Long)row.get("value");
 
-        statistics.setFollowing((Long) estatistics.get(0).get("followed"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "\n" +//Query to take the number of users that followback the given user
-                        "WITH followerstable AS( SELECT * \n" +
-                        "FROM followuser \n" +
-                        "WHERE followed LIKE ? ),\n" +
-                        "\n" +
-                        "followedtable AS( SELECT * \n" +
-                        "FROM followuser \n" +
-                        "WHERE follower LIKE ? )\n" +
-                        "\n" +
-                        "SELECT COUNT(*) AS followback " +
-                        "FROM followedtable, followerstable " +
-                        "WHERE followedtable.followed=followerstable.follower"
-        ).defineParameters(user.getPK(), user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setFollowBack((Long) estatistics.get(0).get("followback"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LikeIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setMaxLikeIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='LoveIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setMaxLoveIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='HateIt' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setMaxHateIt((Long) estatistics.get(0).get("reaction"));
-
-        estatistics = new QueryMapper<User>(super.getConnection()).createQuery(
-                "SELECT count(reactiontype) AS reaction " +
-                        "FROM react " +
-                        "WHERE author LIKE ? AND reactiontype='MakesMeAngry' ").defineParameters(
-                user.getPK()).setIsolationLevel(Connection.TRANSACTION_SERIALIZABLE).mapList();
-
-        statistics.setMaxMakesMeAngry((Long) estatistics.get(0).get("reaction"));
+            switch (type) {
+                case "followers":
+                    statistics.setFollowers(value);
+                    break;
+                case "followed":
+                    statistics.setFollowing(value);
+                    break;
+                case "followback":
+                    statistics.setFollowBack(value);
+                    break;
+                case "countLikeIt":
+                    statistics.setCountLikeIt(value);
+                    break;
+                case "countLoveIt":
+                    statistics.setCountLoveIt(value);
+                    break;
+                case "countHateIt":
+                    statistics.setCountHateIt(value);
+                    break;
+                case "countMakesMeAngry":
+                    statistics.setCountMakesMeAngry(value);
+                    break;
+                default:
+                    System.out.println("Statistic not found");
+            }
+        }
 
         return statistics;
     }

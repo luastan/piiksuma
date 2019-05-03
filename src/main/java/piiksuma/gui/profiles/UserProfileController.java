@@ -11,7 +11,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.UserType;
@@ -20,7 +22,7 @@ import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-import piiksuma.gui.PostController;
+import piiksuma.gui.posts.PostController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,6 +51,12 @@ public class UserProfileController implements Initializable {
     @FXML
     private Label userNotFound;
 
+    @FXML
+    private StackPane profilePicture;
+
+    @FXML
+    private Tab archivedTab;
+
     private User user;
 
     private ObservableList<Post> publishedPostsList;
@@ -59,6 +67,18 @@ public class UserProfileController implements Initializable {
         this.user = user;
         publishedPostsList = FXCollections.observableArrayList();
         archivedPostsList = FXCollections.observableArrayList();
+    }
+
+
+    public void setProfilePicture() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
+        loader.setController(new ProfilePreviewController(user));
+        profilePicture.getChildren().clear();
+        try {
+            profilePicture.getChildren().add(loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -81,7 +101,7 @@ public class UserProfileController implements Initializable {
             description.setText(user.getDescription());
 
             updateFeed();
-            updateArchivedPosts();
+
 
 
             publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
@@ -90,15 +110,19 @@ public class UserProfileController implements Initializable {
             });
             publishedPostsList.forEach(this::insertPost);
 
-            archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
-                archivedPostsMasonry.getChildren().clear();
+            if (user.equals(ContextHandler.getContext().getCurrentUser())) {
+                updateArchivedPosts();
+                archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
+                    archivedPostsMasonry.getChildren().clear();
+                    archivedPostsList.forEach(this::archivePost);
+                });
                 archivedPostsList.forEach(this::archivePost);
-            });
-            archivedPostsList.forEach(this::archivePost);
+            }
 
             // TODO: Initialize the buttons
             buttonInit();
             setUpPostsListener();
+            setProfilePicture();
 
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
@@ -135,49 +159,59 @@ public class UserProfileController implements Initializable {
 
 
     private void updateFollowButton() {
-        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
-        if (currentUserFollows) {
-            buttonCenter.setText("Follow");
-            buttonCenter.setStyle("-fx-background-color: -primary-color-5");
-        } else {
-            buttonCenter.setText("UnFollow");
-            buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        User current = ContextHandler.getContext().getCurrentUser();
+        try {
+            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
+            if (!currentUserFollows) {
+                buttonCenter.setText("Follow");
+                buttonCenter.setStyle("-fx-background-color: -primary-color-5");
+            } else {
+                buttonCenter.setText("UnFollow");
+                buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+            }
+        }catch (PiikInvalidParameters | PiikDatabaseException e){
+            e.showAlert();
         }
     }
 
     private void handleFollow(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
-        Boolean currentUserFollows = true;  // TODO: Method to know if a user follows another one
         try {
+            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
             if (currentUserFollows) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unfollowUser(user, current, current);
             } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().followUser(user, current, current);
             }
-        } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+        } catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert();
         }
         updateFollowButton();
     }
 
 
     private void updateBlockButton() {
-        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
-        if (currentUserBlocks) {
-            buttonLeft.setText("Block");
-            buttonLeft.setStyle("-fx-background-color: -primary-color-5");
-        } else {
-            buttonLeft.setText("UnBlock");
-            buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+        User current = ContextHandler.getContext().getCurrentUser();
+        try {
+            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            if (!currentUserBlocks) {
+                buttonLeft.setText("Block");
+                buttonLeft.setStyle("-fx-background-color: -primary-color-5");
+            } else {
+                buttonLeft.setText("UnBlock");
+                buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+            }
+        }catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert();
         }
     }
 
     private void handleBlock(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
-        Boolean currentUserBlocks = true;  // TODO: Method to know if a user follows another one
         try {
+            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (currentUserBlocks) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user, current, current);
             } else {
@@ -247,7 +281,7 @@ public class UserProfileController implements Initializable {
 
         try {
             List<Post> searchPosts = ApiFacade.getEntrypoint().getSearchFacade().getPost(
-                    ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
+                    user , ContextHandler.getContext().getCurrentUser());
 
             if(searchPosts != null && !searchPosts.isEmpty()) {
                 publishedPostsList.addAll(searchPosts);
@@ -260,20 +294,24 @@ public class UserProfileController implements Initializable {
         publishedPosts.requestFocus();
 
         publishedPostsMasonry.requestLayout();
+        setProfilePicture();
     }
 
     public void updateArchivedPosts() {
+        if (!user.equals(ContextHandler.getContext().getCurrentUser())) {
+            return;
+        }
         archivedPostsList.clear();
-/*      TODO: Fix NullPointer thrown by the Dao
+
         try {
-            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade()
-                    .getArchivedPosts(user, ContextHandler.getContext().getCurrentUser()));
+            archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
+                    user, ContextHandler.getContext().getCurrentUser()));
+            System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
-        } catch (PiikInvalidParameters ignore) {
-            // Current user is not allowed to see archived posts from other user
+        } catch (PiikInvalidParameters e) {
+            e.showAlert();
         }
-*/
 
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();

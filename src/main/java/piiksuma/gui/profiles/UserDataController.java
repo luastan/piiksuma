@@ -5,19 +5,30 @@ import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import piiksuma.Multimedia;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
+import piiksuma.api.MultimediaType;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
+import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 public class UserDataController implements Initializable {
@@ -38,7 +49,7 @@ public class UserDataController implements Initializable {
     @FXML
     private JFXTextField country;
     @FXML
-    private JFXTextField birthday;
+    private JFXDatePicker birthday;
     @FXML
     private JFXTextField religion;
     @FXML
@@ -64,19 +75,12 @@ public class UserDataController implements Initializable {
     @FXML
     private JFXButton multimediaButton;
 
+    private Multimedia multimedia;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // User user = ContextHandler.getContext().getCurrentUser();
-        User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
 
-        user.setBirthday(Timestamp.from(Instant.now()));
-        user.setPass("pass1");
-        user.setGender("O");
-        user.setDescription("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        user.addPhone("12345");
-        user.addPhone("573643736");
-
-        initFields(user);
+        initFields();
 
         addTelephone.setOnAction(this::handleAddTelephone);
 
@@ -86,18 +90,21 @@ public class UserDataController implements Initializable {
         telephoneList.setCellFactory(TextFieldListCell.forListView());
         multimediaButton.setOnAction(this::handleMultimediaButton);
         update.setOnAction(this::handleUpdate);
+        password.setEditable(false);
 
     }
 
-    private void initFields(User user) {
-        genderBox.setItems(FXCollections.observableArrayList("M", "V", "O"));
+    private void initFields() {
+        User user = ContextHandler.getContext().getCurrentUser();
+
+        genderBox.setItems(FXCollections.observableArrayList("M", "H", "O"));
         //We add to the fields all the info about the user
         userId.setText(user.getId());
         //WE dont let the user to changue his id
         userId.setDisable(true);
         userName.setText(user.getName());
         email.setText(user.getEmail());
-        password.setText(user.getPass());
+        //  password.setText(user.getPass());
         home.setText(user.getHome());
         city.setText(user.getCity());
         birthplace.setText(user.getBirthplace());
@@ -109,8 +116,28 @@ public class UserDataController implements Initializable {
         religion.setText(user.getReligion());
         genderBox.getSelectionModel().select(user.getGender());
 
+        birthday.setValue(user.getBirthday().toLocalDateTime().toLocalDate());
+
         for (String telephone : user.getPhones()) {
             telephoneList.getItems().add(telephone);
+        }
+
+        // Multimedia insertion
+        if (user.getMultimedia() != null && user.getMultimedia().getHash() != null
+                && !user.getMultimedia().getHash().isEmpty()) {
+            if (user.getMultimedia().getUri() == null || user.getMultimedia().getUri().isEmpty()) {
+                try {
+                    user.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade()
+                            .getMultimedia(user.getMultimedia(), ContextHandler.getContext().getCurrentUser()));
+                } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
+                    piikInvalidParameters.printStackTrace();
+                }
+            }
+
+            imageView.setImage(new Image(user.getMultimedia().getUri(), 450, 800,
+                    true, true));
+            imageView.setViewport(new Rectangle2D((imageView.getImage().getWidth() - 450) / 2,
+                    (imageView.getImage().getHeight() - 170) / 2, 450, 170));
         }
     }
 
@@ -125,7 +152,30 @@ public class UserDataController implements Initializable {
         File imagen = fileChooser.showOpenDialog(null);
 
         if (imagen != null) {
-            imageView.setImage(new Image(imagen.toURI().toString()));
+            try {
+                // Copy img from source to resource folder
+                BufferedImage img = ImageIO.read(imagen);
+                File outputFile = new File("src/main/resources/imagenes/" + imagen.getName());
+                ImageIO.write(img, imagen.getName().split("\\.")[1], outputFile);
+                imageView.setImage(new Image(outputFile.toURI().toString()));
+                // Create multimedia
+                multimedia = new Multimedia();
+                try {
+                    RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+                    byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+                    file.read(imgBytes);
+                    multimedia.setHash(Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes)));
+                    multimedia.setUri(outputFile.toURI().toString());
+                    multimedia.setType(MultimediaType.image);
+                    multimedia.setResolution(String.valueOf((int) imageView.getImage().getWidth()) + 'x'
+                            + (int) imageView.getImage().getHeight());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -160,13 +210,42 @@ public class UserDataController implements Initializable {
     }
 
     private void handleUpdate(Event event) {
-        User currentUser = ContextHandler.getContext().getCurrentUser();
+        User modifyUser = new User();
+
+        modifyUser.setId(userId.getText());
+        modifyUser.setName(userName.getText());
+        modifyUser.setGender(genderBox.getSelectionModel().getSelectedItem());
+        modifyUser.setEmail(email.getText());
+        modifyUser.setDescription(description.getText());
+        modifyUser.setEmotionalSituation(emotionalSituation.getText());
+        modifyUser.setCity(city.getText());
+        modifyUser.setJob(job.getText());
+        modifyUser.setBirthplace(birthplace.getText());
+        modifyUser.setReligion(religion.getText());
+        modifyUser.setProvince(province.getText());
+        modifyUser.setCountry(country.getText());
+        modifyUser.setHome(home.getText());
+        if (multimedia != null) {
+            modifyUser.setMultimedia(multimedia);
+        }
+        // Create multimedia
+        // modifyUser.setPass(password.getText());
+
+        for (String telephone : telephoneList.getItems()) {
+            modifyUser.getPhones().add(telephone);
+        }
+
+        if (birthday.validate()) {
+            modifyUser.setBirthday(Timestamp.valueOf(birthday.getValue().atStartOfDay()));
+        }
 
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(currentUser, currentUser);
+            ApiFacade.getEntrypoint().getInsertionFacade().administratePersonalData(modifyUser, modifyUser);
             //Update the user in the app
-            ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(currentUser, currentUser));
-            ContextHandler.getContext().getStage("userData").close();
+            ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
+            ContextHandler.getContext().getStage("User data").close();
+            ContextHandler.getContext().getFeedController().updateFeed();
+            ContextHandler.getContext().getUserProfileController().updateFeed();
         } catch (PiikException e) {
             e.showAlert();
         }
