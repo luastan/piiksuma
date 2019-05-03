@@ -98,6 +98,12 @@ public class TicketConvController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         // TODO: grab all the messages in a ticket conversation and call insertMessage
         // ApiFacade.getEntrypoint().getSearchFacade().getMessages(ticket, current).forEach(this::insertMessage);
+        try {
+            ApiFacade.getEntrypoint().getSearchFacade().getConversationTicket(ticket.getUser(), ticket, current, 100)
+                    .forEach(this::insertMessage);
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
+        }
     }
 
     private void insertMessage(Message message) {

@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.posts.CreatePostController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -59,7 +60,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
      */
     private void handleNewPostEvent(ActionEvent event) {
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", null, "Create Post");
+            ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(null), "Create Post");
 
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.showAlert();

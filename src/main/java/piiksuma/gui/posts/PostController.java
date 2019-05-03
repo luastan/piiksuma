@@ -72,6 +72,9 @@ public class PostController implements Initializable {
     private JFXButton makesMeAngry;
 
     @FXML
+    private JFXButton replies;
+
+    @FXML
     private JFXButton mainButton;
 
     private Post post;
@@ -106,6 +109,14 @@ public class PostController implements Initializable {
         }
 
         post.setAuthor(author);
+
+        replies.setOnAction(event -> {
+            try {
+                ContextHandler.getContext().invokeStage("/gui/fxml/postAnswers.fxml", new AnswerPostsController(post));
+            } catch (PiikInvalidParameters invalidParameters) {
+                invalidParameters.showAlert();
+            }
+        });
 
         postContent.setText(post.getText());
         authorName.setText(post.getAuthor().getName());
@@ -290,7 +301,7 @@ public class PostController implements Initializable {
 
     private void handleAnswer(Event event){
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/createAnswer.fxml", new CreateAnswerController(post), "Answer Post");
+            ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(post), "Create Post");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.showAlert();
         }

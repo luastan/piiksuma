@@ -63,6 +63,10 @@ public class CreatePostController implements Initializable {
 
     private Post postFather;
 
+    public CreatePostController(Post postFather) {
+        this.postFather = postFather;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         postButton.setOnAction(this::publishPost);
