@@ -301,7 +301,7 @@ public class PostController implements Initializable {
 
     private void handleAnswer(Event event){
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/createAnswer.fxml", new CreateAnswerController(post), "Answer Post");
+            ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(post), "Create Post");
         } catch (PiikInvalidParameters invalidParameters) {
             invalidParameters.showAlert();
         }

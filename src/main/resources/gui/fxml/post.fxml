@@ -35,7 +35,7 @@
                     <JFXButton fx:id="buttonAnswer" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)"
                                alignment="CENTER">
                         <graphic>
-                            <FontAwesomeIconView glyphName="PLUS" size="30"
+                            <FontAwesomeIconView glyphName="SHARE" size="30"
                                                  styleClass="deck-small-button-graphic"/>
                         </graphic>
                     </JFXButton>

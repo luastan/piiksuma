@@ -15,7 +15,6 @@
 <?import com.jfoenix.controls.JFXChipView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="piiksuma.gui.posts.CreatePostController"
            prefHeight="400.0" prefWidth="600.0">
 
 
