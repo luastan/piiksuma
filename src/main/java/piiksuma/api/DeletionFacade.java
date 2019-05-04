@@ -317,13 +317,17 @@ public class DeletionFacade {
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
      */
-    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
-        if (current == null ) {
+    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters, PiikForbiddenException{
+        if (current == null || !current.checkNotNull(false) ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (post == null ) {
+        if (post == null || !post.checkNotNull(false) ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (!current.equals(user)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getPostDao().removeArchivePost(post, user);

@@ -17,8 +17,6 @@
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container"
             style="-fx-padding: 50 30 30 30">
-
-
     <top>
         <JFXToolbar>
             <!-- Header with achievement info -->

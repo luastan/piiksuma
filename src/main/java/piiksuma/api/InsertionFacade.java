@@ -150,7 +150,7 @@ public class InsertionFacade {
      * @param user        User who wants to block the other user
      * @throws PiikDatabaseException
      */
-    public void blockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void blockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters, PiikForbiddenException {
 
 
         if (currentUser == null || !currentUser.checkNotNull(false)) {
@@ -162,6 +162,10 @@ public class InsertionFacade {
         }
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        if (!currentUser.equals(user)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().blockUser(blockedUser, user);
