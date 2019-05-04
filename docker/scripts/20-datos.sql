@@ -36,7 +36,7 @@ VALUES ('Piblo', 'piblo@gmail.com', 'Pablo Martínez Gómez',
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
-VALUES ('Saul', 'saul@gmail.com', 'Saúl Gay Barral',
+VALUES ('luastan', 'luastan@gmail.com', 'Saúl Gay Barral',
         'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
         'M', 'Hacker and freelancer', 'Cows', '39218', 'Lugo', 'Cow-ntry', 'CowLugo', '1996-11-27',
         CURRENT_DATE);
@@ -46,18 +46,6 @@ VALUES ('Saul', 'saul@gmail.com', 'Saúl Gay Barral',
 INSERT INTO administrator (id)
 VALUES ('Alvaru');
 
--- Associated account
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaaa', 'tokenaaaa', 'Alvaru');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaab', 'tokenaaaab', 'Danilo');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaac', 'tokenaaac', 'Cardamis');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaad', 'tokenaaad', 'Alvaru');
 
 -- Blocked Users
 INSERT INTO blockuser (usr, blocked)

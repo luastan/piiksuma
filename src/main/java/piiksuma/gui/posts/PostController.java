@@ -19,6 +19,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
 import piiksuma.gui.profiles.ProfilePreviewController;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -76,6 +77,9 @@ public class PostController implements Initializable {
 
     @FXML
     private JFXButton mainButton;
+
+    @FXML
+    private StackPane boxImageContainer;
 
     private Post post;
 
@@ -136,6 +140,8 @@ public class PostController implements Initializable {
 
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
+        } else {
+            boxImageContainer.setVisible(false);
         }
 
         // Profile Picture
@@ -154,22 +160,29 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);
+                hateItButton.setDisable(true);
+                loveItButton.setDisable(true);
+                hateItButton.setDisable(true);
+
             }
             react = new Reaction(current, post, ReactionType.LoveIt);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 loveItButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+                buttonLike.setDisable(true);
                 hateItButton.setDisable(true);
                 makesMeAngry.setDisable(true);
             }
             react = new Reaction(current, post, ReactionType.HateIt);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 hateItButton.getGraphic().setStyle("-fx-fill: -color-error;");
+                buttonLike.setDisable(true);
                 loveItButton.setDisable(true);
                 makesMeAngry.setDisable(true);
             }
             react = new Reaction(current, post, ReactionType.MakesMeAngry);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 makesMeAngry.getGraphic().setStyle("-fx-fill:-piik-orange-ripple;");
+                buttonLike.setDisable(true);
                 loveItButton.setDisable(true);
                 hateItButton.setDisable(true);
             }
@@ -272,11 +285,14 @@ public class PostController implements Initializable {
             if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
                 ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("");
-                System.out.println("Desarchived");
             }else {
                 ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
-                System.out.println("Archived");
+            }
+            UserProfileController profileController = ContextHandler.getContext().getUserProfileController();
+            if (profileController != null) {
+                profileController.updateArchivedPosts();
+                profileController.updateFeed();
             }
         }catch (PiikDatabaseException | PiikInvalidParameters e){
             e.showAlert();
@@ -317,6 +333,8 @@ public class PostController implements Initializable {
                 buttonLike.getGraphic().setStyle("");
                 mainButton.setDisable(false);
             } else {
+
+                System.out.println("LIKE");
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);

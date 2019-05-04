@@ -8,6 +8,7 @@
 
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.events.EventsController" alignment="TOP_CENTER">
@@ -15,4 +16,12 @@
         <JFXMasonryPane fx:id="eventMasonryPane" VSpacing="0" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
+    <StackPane fx:id="noContentLabel" style="-fx-padding: 40 40 40 40">
+        <Label text="No events on your radar" wrapText="true" style="-fx-font-size: 15">
+            <graphic>
+                <FontAwesomeIconView glyphName="CALENDAR" size="55"
+                                     styleClass="deck-small-button-graphic"/>
+            </graphic>
+        </Label>
+    </StackPane>
 </StackPane>

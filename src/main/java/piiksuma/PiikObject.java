@@ -176,7 +176,7 @@ public abstract class PiikObject {
                     String columnName = Mapper.extractColumnName(field);
 
                     if(information.containsKey(columnName)){
-                        System.out.println(columnName + "->>>>>>>>>>>" + information.get(columnName));
+//                        System.out.println(columnName + "->>>>>>>>>>>" + information.get(columnName));
                         field.set(this, information.get(columnName));
                     }
                 }

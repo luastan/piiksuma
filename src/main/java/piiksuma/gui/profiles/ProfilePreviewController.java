@@ -11,6 +11,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -53,7 +54,6 @@ public class ProfilePreviewController implements Initializable {
         tooltip.setGraphic(graphic);
         Tooltip.install(profilePicture, tooltip);
         profilePicture.setOnMouseClicked(this::handle);
-        // TODO: Profile image initialization
 
         // Multimedia insertion
         if (profile.getMultimedia() != null && profile.getMultimedia().getHash() != null
@@ -70,6 +70,14 @@ public class ProfilePreviewController implements Initializable {
         } else {
             profilePicture.setImage(new Image(new File("src/main/resources/imagenes/huevo.png").toURI().toString()));
         }
+
+        // Profile image into a circle
+
+        Circle clip = new Circle(profilePicture.getFitWidth() / 2.1);
+        clip.setCenterX(profilePicture.getFitWidth() / 2);
+        clip.setCenterY(profilePicture.getFitHeight() / 2);
+        profilePicture.setClip(clip);
+
         profilePicture.setVisible(true);
     }
 

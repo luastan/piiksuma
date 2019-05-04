@@ -9,6 +9,7 @@
 
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.MessagesController">
@@ -17,4 +18,12 @@
         <JFXMasonryPane fx:id="messageMasonryPane" VSpacing="0" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
+    <StackPane fx:id="noContentLabel" style="-fx-padding: 40 40 40 40">
+        <Label text="Your inbox is empty" wrapText="true" style="-fx-font-size: 15">
+            <graphic>
+                <FontAwesomeIconView glyphName="ENVELOPE" size="55"
+                                     styleClass="deck-small-button-graphic"/>
+            </graphic>
+        </Label>
+    </StackPane>
 </StackPane>

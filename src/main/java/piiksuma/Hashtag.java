@@ -5,7 +5,7 @@ import piiksuma.database.MapperTable;
 
 import java.util.Objects;
 
-@MapperTable
+@MapperTable(nombre = "hashtag")
 public class Hashtag extends PiikObject{
 
     /* Attributes */
