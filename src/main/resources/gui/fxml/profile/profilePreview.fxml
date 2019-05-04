@@ -8,12 +8,13 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Circle?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            prefHeight="60" prefWidth="60" minHeight="60" minWidth="60" maxHeight="60" maxWidth="60"
            style="-fx-padding: 10 10 10 10" pickOnBounds="false">
-
-    <ImageView fx:id="profilePicture" preserveRatio="true" fitWidth="50" fitHeight="50" styleClass="profile-preview">
+    <ImageView fx:id="profilePicture" preserveRatio="true" fitWidth="50" pickOnBounds="true" fitHeight="50"
+               styleClass="profile-preview">
         <Image url="/imagenes/profile.png"/>
     </ImageView>
 </StackPane>

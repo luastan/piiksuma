@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class EventsController implements Initializable {
 
+    public StackPane noContentLabel;
     @FXML
     private ScrollPane eventScrollPane;
     @FXML
@@ -54,6 +55,7 @@ public class EventsController implements Initializable {
             System.out.println(e.getMessage());
             return;
         }
+        noContentLabel.setVisible(eventFeed.size() == 0);
 
     }
 

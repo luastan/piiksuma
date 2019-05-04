@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.api.ApiFacade;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 
 public class FeedController implements Initializable {
 
+    public StackPane noPostLabel;
     @FXML
     private JFXMasonryPane postMasonryPane;
 
@@ -57,11 +59,12 @@ public class FeedController implements Initializable {
      * Reloads feed retrieving last posts from  the database
      */
     public void updateFeed() throws PiikDatabaseException, PiikInvalidParameters {
-        // TODO: update the feed propperly
         User currentUser = ContextHandler.getContext().getCurrentUser();
         feed.clear();
         feed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getFeed(currentUser, 10, currentUser));
+        noPostLabel.setVisible(feed.size() == 0);
     }
+
 
     /**
      * Code to be executed when the feed gets updated. Posts at the interface

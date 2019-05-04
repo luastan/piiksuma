@@ -13,7 +13,7 @@
             xmlns:fx="http://javafx.com/fxml"
             styleClass="post-container">
     <top>
-        <BorderPane>
+        <BorderPane style="-fx-padding: 0 0 0 0">
             <!-- Header with user info -->
             <left>
                 <!-- Avatar + User's  name + username -->
@@ -45,11 +45,14 @@
     </top>
     <center>
         <StackPane>
-            <VBox alignment="CENTER_LEFT" spacing="5">
+            <VBox spacing="5">
 
                 <!-- Multimedia goes here -->
-                <ImageView fx:id="boxImage" preserveRatio="true">
-                </ImageView>
+                <StackPane fx:id="boxImageContainer" style="-fx-padding: 10 0 0 0">
+                    <ImageView fx:id="boxImage" preserveRatio="true">
+                    </ImageView>
+                </StackPane>
+
 
                 <!-- Atual Post Content -->
                 <Label text="Actual Post content goes here" fx:id="postContent" wrapText="true" styleClass="post-text"/>

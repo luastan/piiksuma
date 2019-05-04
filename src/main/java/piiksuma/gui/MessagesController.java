@@ -33,6 +33,7 @@ import java.util.*;
 
 public class MessagesController implements Initializable {
 
+    public StackPane noContentLabel;
     @FXML
     private ScrollPane messageScrollPane;
     @FXML
@@ -62,6 +63,7 @@ public class MessagesController implements Initializable {
         lastMessages = ApiFacade.getEntrypoint().getSearchFacade().messageWithUser(current, 100, current);
         peers.clear();
         peers.addAll(lastMessages.keySet());
+        noContentLabel.setVisible(peers.size() == 0);
     }
 
     private void setUpFeedListener() {

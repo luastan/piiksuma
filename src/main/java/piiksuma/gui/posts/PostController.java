@@ -78,6 +78,9 @@ public class PostController implements Initializable {
     @FXML
     private JFXButton mainButton;
 
+    @FXML
+    private StackPane boxImageContainer;
+
     private Post post;
 
     public PostController(Post post) {
@@ -137,6 +140,8 @@ public class PostController implements Initializable {
 
             boxImage.setImage(new Image(post.getMultimedia().getUri(), 450, 800, true, true));
             boxImage.setViewport(new Rectangle2D((boxImage.getImage().getWidth() - 450) / 2, (boxImage.getImage().getHeight() - 170) / 2, 450, 170));
+        } else {
+            boxImageContainer.setVisible(false);
         }
 
         // Profile Picture
