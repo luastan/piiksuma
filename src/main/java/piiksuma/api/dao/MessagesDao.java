@@ -651,7 +651,7 @@ public class MessagesDao extends AbstractDao {
         }
         // Set ticket as closed
         new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
-                "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+                "adminclosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
     //******************************************************************************************************************
