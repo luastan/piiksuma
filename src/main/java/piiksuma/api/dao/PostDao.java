@@ -912,10 +912,9 @@ public class PostDao extends AbstractDao {
         //                        "administrator WHERE id = ? FOR UPDATE);
 
         new InsertionMapper<Hashtag>(super.getConnection()).
-                createUpdate("INSERT INTO followhashtag (piiUser, hashtag) VALUES (?, ?) " +
-                        "WHERE NOT EXISTS (SELECT * FROM hashtag as h WHERE h.name = ?)").
+                createUpdate("INSERT INTO followhashtag (piiUser, hashtag) VALUES (?, (SELECT name FROM hashtag WHERE name = ?))").
                 defineClass(Hashtag.class).
-                defineParameters(user.getPK(), hashtag.getName(), hashtag.getName()).executeUpdate();
+                defineParameters(user.getPK(), hashtag.getName()).executeUpdate();
     }
 
     /**
