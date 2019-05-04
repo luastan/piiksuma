@@ -384,8 +384,8 @@ public class MessagesDao extends AbstractDao {
         }
 
         return new QueryMapper<Message>(getConnection()).defineClass(Message.class)
-                .createQuery("SELECT message.* FROM receivemessage  JOIN message ON(id=message) WHERE " +
-                        "message.ticket = ? ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+                .createQuery("SELECT * FROM message WHERE ticket = ? ORDER BY date ASC LIMIT ?")
+                .defineParameters(ticket.getId(), limit).list();
     }
     //******************************************************************************************************************
 
@@ -651,7 +651,7 @@ public class MessagesDao extends AbstractDao {
         }
         // Set ticket as closed
         new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
-                "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+                "adminclosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
     //******************************************************************************************************************

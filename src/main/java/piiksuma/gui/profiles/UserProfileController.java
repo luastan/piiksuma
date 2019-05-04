@@ -100,23 +100,23 @@ public class UserProfileController implements Initializable {
             Name.setText(user.getName());
             description.setText(user.getDescription());
 
-            updateFeed();
-
-
-
             publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
                 publishedPostsMasonry.getChildren().clear();
                 publishedPostsList.forEach(this::insertPost);
             });
-            publishedPostsList.forEach(this::insertPost);
+            updateFeed();
+
+//            publishedPostsList.forEach(this::insertPost);
 
             if (user.equals(ContextHandler.getContext().getCurrentUser())) {
-                updateArchivedPosts();
                 archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
                     archivedPostsMasonry.getChildren().clear();
                     archivedPostsList.forEach(this::archivePost);
                 });
-                archivedPostsList.forEach(this::archivePost);
+                updateArchivedPosts();
+//                archivedPostsList.forEach(this::archivePost);
+            } else {
+                archivedTab.getTabPane().getTabs().remove(archivedTab);
             }
 
             // TODO: Initialize the buttons
@@ -306,17 +306,14 @@ public class UserProfileController implements Initializable {
         try {
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
                     user, ContextHandler.getContext().getCurrentUser()));
-            System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
         } catch (PiikInvalidParameters e) {
             e.showAlert();
         }
-
+        archivedPostsMasonry.requestLayout();
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();
-
-        archivedPostsMasonry.requestLayout();
     }
 
     /**
@@ -344,13 +341,13 @@ public class UserProfileController implements Initializable {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         try {
             postLoader.setController(new PostController(post));
-            publishedPostsMasonry.getChildren().add(postLoader.load());
+            masonry.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        publishedPosts.requestFocus();
-        publishedPosts.requestLayout();
+        scrollPane.requestFocus();
+        scrollPane.requestLayout();
     }
 
 

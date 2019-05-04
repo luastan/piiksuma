@@ -128,7 +128,7 @@ public class TicketConvController implements Initializable {
     private void sendMessage(ActionEvent event) {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
+            ApiFacade.getEntrypoint().getInsertionFacade().replyTicket(ticket, newMessage, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
@@ -140,12 +140,13 @@ public class TicketConvController implements Initializable {
 
 
     private void closeTicket(Event event) {
-        Stage stage = ContextHandler.getContext().getStage("Ticket");
+        Stage stage = ContextHandler.getContext().getStage("conversation");
         if (stage != null) {
             stage.close();
         }
         User current = ContextHandler.getContext().getCurrentUser();
         try {
+            ticket.setAdminClosing(current);
             ApiFacade.getEntrypoint().getInsertionFacade().closeTicket(ticket, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();

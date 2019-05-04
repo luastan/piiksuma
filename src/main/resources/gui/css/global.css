@@ -27,7 +27,7 @@
     -piik-isabelline: #F6E8EA;
     -piik-pastel-yellow: #FFFD82;
     -piik-pastel-green: #7DDF64;
-    -piik-light-green: #9CE37D;
+    -piik-light-green: #86FFEA;
     -piik-yellow-mustard: #FFC857;
     -piik-blue-green: #119DA4;
     -piik-orange-ripple: rgba(255, 145, 0, 0.77);
@@ -48,7 +48,7 @@
     -color-surface-app-ui: #ebebeb;
 
     -color-surface-snackbar: #202020;
-    -color-error: #FF0C3E;
+    -color-error: -piik-dark-pink;
 }
 
 
@@ -465,13 +465,13 @@
     /*-fx-pref-width: 35;*/
     -fx-min-width: 45;
     -fx-max-width: 100;
-    -fx-background-color: -black-disabled;
+    -fx-background-color: -color-surface-app-ui;
     -fx-background-radius: 10;
     -fx-cursor: hand;
 }
 
 .hashtag-preview-label {
-    -fx-text-fill: -white-high-emphasis;
+    -fx-text-fill: -black-high-emphasis;
     -fx-padding: 2 2 2 2;
 }
 
@@ -480,4 +480,20 @@
     -fx-border-radius: 1;
     -fx-border-color: -black-disabled;
     /*-fx-background-color: -white-medium-emphasis;*/
+}
+
+
+/* Snackbar style */
+.jfx-snackbar-content {
+    -fx-background-color: -black-high-emphasis;
+    -fx-background-radius: 2;
+}
+
+.jfx-snackbar-toast {
+    -fx-text-fill: -white-high-emphasis;
+}
+
+.jfx-snackbar-action {
+    -fx-text-fill: -primary-color-3;
+    -fx-font-weight: BOLD;
 }

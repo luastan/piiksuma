@@ -10,7 +10,7 @@
            xmlns:fx="http://javafx.com/fxml"
            minWidth="450" style="-fx-padding: 10 10 10 10" alignment="CENTER_LEFT" fx:id="messageHolder">
 
-    <StackPane styleClass="message-body-container">
+    <StackPane styleClass="message-body-container" fx:id="messageHitbox">
         <Label text="Message content" fx:id="content" wrapText="true"/>
     </StackPane>
 
