@@ -1,4 +1,4 @@
-# Piiksuma &middot;
+# Piiksuma
 Proyecto de bases de datos
 
 ## Enlaces chulis :)
