@@ -272,12 +272,11 @@ public class PostController implements Initializable {
             if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
                 ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("");
-                System.out.println("Desarchived");
             }else {
                 ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
-                System.out.println("Archived");
             }
+            ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
         }catch (PiikDatabaseException | PiikInvalidParameters e){
             e.showAlert();
         }

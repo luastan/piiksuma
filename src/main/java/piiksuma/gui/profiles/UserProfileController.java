@@ -117,6 +117,8 @@ public class UserProfileController implements Initializable {
                     archivedPostsList.forEach(this::archivePost);
                 });
                 archivedPostsList.forEach(this::archivePost);
+            } else {
+                archivedTab.getTabPane().getTabs().remove(archivedTab);
             }
 
             // TODO: Initialize the buttons
@@ -312,11 +314,11 @@ public class UserProfileController implements Initializable {
         } catch (PiikInvalidParameters e) {
             e.showAlert();
         }
-
+        archivedPostsMasonry.requestLayout();
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();
 
-        archivedPostsMasonry.requestLayout();
+
     }
 
     /**
@@ -344,13 +346,13 @@ public class UserProfileController implements Initializable {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         try {
             postLoader.setController(new PostController(post));
-            publishedPostsMasonry.getChildren().add(postLoader.load());
+            masonry.getChildren().add(postLoader.load());
         } catch (IOException e) {
             // TODO: Handle Exception
             e.printStackTrace();
         }
-        publishedPosts.requestFocus();
-        publishedPosts.requestLayout();
+        scrollPane.requestFocus();
+        scrollPane.requestLayout();
     }
 
 
