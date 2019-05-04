@@ -94,6 +94,7 @@ public class HashtagController implements Initializable {
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
+        updateButtonState();
     }
 
     private void unFollowHashtag(Event event) {
@@ -102,5 +103,6 @@ public class HashtagController implements Initializable {
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
+        updateButtonState();
     }
 }
