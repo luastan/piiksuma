@@ -155,6 +155,10 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);
+                hateItButton.setDisable(true);
+                loveItButton.setDisable(true);
+                hateItButton.setDisable(true);
+
             }
             react = new Reaction(current, post, ReactionType.LoveIt);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
