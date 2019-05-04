@@ -96,6 +96,11 @@ public class PostController implements Initializable {
 //        }
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -221,7 +226,15 @@ public class PostController implements Initializable {
         }
     }
 
+<<<<<<< HEAD
     private void handleLoveIt(Event event) {
+=======
+    /**
+     * Funtion to be executed when love it reaction is pressed
+     * @param event Event on the window
+     */
+    private void handleLoveIt(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.LoveIt);
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
@@ -243,7 +256,15 @@ public class PostController implements Initializable {
         }
     }
 
+<<<<<<< HEAD
     private void handleHateIt(Event event) {
+=======
+    /**
+     * Funtion to be executed when hate it reaction is pressed
+     * @param event Event on the window
+     */
+    private void handleHateIt(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.HateIt);
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
@@ -264,7 +285,15 @@ public class PostController implements Initializable {
         }
     }
 
+<<<<<<< HEAD
     private void handleAngry(Event event) {
+=======
+    /**
+     * Funtion to be executed when angry reaction is pressed
+     * @param event Event on the window
+     */
+    private void handleAngry(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.MakesMeAngry);
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
@@ -321,7 +350,15 @@ public class PostController implements Initializable {
 
     }
 
+<<<<<<< HEAD
     private void handleAnswer(Event event) {
+=======
+    /**
+     * Function to answer a post
+     * @param event Event on the window
+     */
+    private void handleAnswer(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(post), "Create Post");
         } catch (PiikInvalidParameters invalidParameters) {
@@ -329,7 +366,10 @@ public class PostController implements Initializable {
         }
 
     }
-
+    /**
+     * Funtion to be executed when like reaction is pressed
+     * @param event Event on the window
+     */
     private void handleLike(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
@@ -351,10 +391,21 @@ public class PostController implements Initializable {
 
     }
 
+<<<<<<< HEAD
     private void handleDelete(Event event) {
         try {
             ApiFacade.getEntrypoint().getDeletionFacade().removePost(post, ContextHandler.getContext().getCurrentUser());
             if (ContextHandler.getContext().getUserProfileController() != null) {
+=======
+    /**
+     * Function to delete a post
+     * @param event Event on the window
+     */
+    private void handleDelete(Event event){
+        try{
+            ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
+            if(ContextHandler.getContext().getUserProfileController() != null){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
                 ContextHandler.getContext().getUserProfileController().updateFeed();
                 ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
             }
@@ -373,6 +424,10 @@ public class PostController implements Initializable {
         }
     }
 
+    /**
+     * Function to repost a post
+     * @param event Event on the window
+     */
     private void handleRepost(Event event) {
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,

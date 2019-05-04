@@ -38,6 +38,11 @@ public class EventsController implements Initializable {
 
     private ObservableList<Event> eventFeed;
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         eventFeed = FXCollections.observableArrayList();
@@ -48,6 +53,9 @@ public class EventsController implements Initializable {
         updateEventFeed();
     }
 
+    /**
+     * Update the event feed with new information
+     */
     public void updateEventFeed() {
         User user = ContextHandler.getContext().getCurrentUser();
         eventFeed.clear();
@@ -61,6 +69,9 @@ public class EventsController implements Initializable {
 
     }
 
+    /**
+     * Sets up the feed listener
+     */
     private void setUpFeedListener() {
         eventFeed.addListener((ListChangeListener<? super Event>) change -> {
             eventMasonryPane.getChildren().clear();
@@ -68,6 +79,10 @@ public class EventsController implements Initializable {
         });
     }
 
+    /**
+     * Inserts an event on the window
+     * @param event Event which is goint to be inserted
+     */
     private void insertEvent(Event event) {
         FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
         eventLoader.setController(new EventPreviewController(event));
@@ -84,7 +99,10 @@ public class EventsController implements Initializable {
         eventScrollPane.requestFocus();
     }
 
-
+    /**
+     * Sets up what happens with a mouse event
+     * @param mouseEvent Mouse Event which activates this codde
+     */
     private void clickEvent(MouseEvent mouseEvent) {
         if (!(mouseEvent.getSource() instanceof StackPane)) {
             return;

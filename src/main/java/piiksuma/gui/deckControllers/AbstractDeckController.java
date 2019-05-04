@@ -78,11 +78,20 @@ public class AbstractDeckController {
 
     }
 
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param userProfileButton Button of the userProfile
+     */
     public void setUserProfileButton(JFXButton userProfileButton) {
         this.userProfileButton = userProfileButton;
         userProfileButton.setOnAction(this::handleUserButton);
     }
 
+
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
     private void handleUserButton(ActionEvent event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
@@ -94,11 +103,18 @@ public class AbstractDeckController {
 
     }
 
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param userDataButton Button of the userProfile
+     */
     public void setUserDataButton(JFXButton userDataButton) {
         this.userDataButton = userDataButton;
         userDataButton.setOnAction(this::handleUserDataButton);
     }
-
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
     private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
@@ -107,13 +123,24 @@ public class AbstractDeckController {
             invalidParameters.showAlert(invalidParameters, "Failure updating the feed for the new post");
         }
     }
-
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param viewNotificationsButton  Button of the userProfile
+     */
     public void setViewNotificationsButton(JFXButton viewNotificationsButton) {
         this.viewNotificationsButton = viewNotificationsButton;
         viewNotificationsButton.setOnAction(this::handleNotification);
     }
+<<<<<<< HEAD
 
     private void handleNotification(Event event) {
+=======
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
+    private void handleNotification(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         User current = ContextHandler.getContext().getCurrentUser();
         try {
             ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);
@@ -122,7 +149,10 @@ public class AbstractDeckController {
         }
 
     }
-
+    /**
+     * Sends the notification to the window
+     * @param notification Notificacion to be send
+     */
     private void sendNotification(Notification notification) {
         JFXSnackbarLayout layout = new JFXSnackbarLayout(notification.getContent(), "!", Event::consume);
         new JFXSnackbar(deck).enqueue(new JFXSnackbar.SnackbarEvent(layout));

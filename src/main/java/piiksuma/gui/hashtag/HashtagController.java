@@ -43,6 +43,11 @@ public class HashtagController implements Initializable {
         this.hashtag = hashtag;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         name.setText(hashtag.getName());
@@ -73,6 +78,9 @@ public class HashtagController implements Initializable {
         }
     }
 
+    /**
+     * Update the function of the button depending on the window state
+     */
     private void updateButtonState() {
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().userFollowsHashtag(hashtag, ContextHandler.getContext().getCurrentUser())) {
@@ -89,19 +97,29 @@ public class HashtagController implements Initializable {
         }
     }
 
+    /**
+     * Function to follow a Hashtag
+     * @param event Event on the window
+     */
     private void followHashtag(Event event) {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().followHastag(hashtag, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert(e, "Faliure following the hashtag");
         }
+        updateButtonState();
     }
 
+    /**
+     * Function to unfollow a Hashtag
+     * @param event Event on the window
+     */
     private void unFollowHashtag(Event event) {
         try {
             ApiFacade.getEntrypoint().getDeletionFacade().unfollowHastag(hashtag, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert(e, "Faliure un-following the hashtag");
         }
+        updateButtonState();
     }
 }

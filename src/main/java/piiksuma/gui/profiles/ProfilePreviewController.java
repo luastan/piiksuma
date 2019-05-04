@@ -35,6 +35,10 @@ public class ProfilePreviewController implements Initializable {
         this.profile = profile;
     }
 
+    /**
+     * Funtion to be executed to open the user profile
+     * @param event Event on the window
+     */
     private void handle(MouseEvent event) {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
@@ -44,6 +48,11 @@ public class ProfilePreviewController implements Initializable {
         }
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Tooltip tooltip = new Tooltip(profile.getName());

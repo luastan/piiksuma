@@ -39,6 +39,12 @@ public class EventsDeckController extends AbstractDeckController implements Init
     @FXML
     private JFXButton viewNotificationsButton;
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation

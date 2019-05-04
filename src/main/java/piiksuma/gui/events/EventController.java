@@ -65,6 +65,9 @@ public class EventController implements Initializable {
         this.event = event;
     }
 
+    /**
+     * Initialization of thw buttons on the window
+     */
     private void buttonInitialization() {
         User current = ContextHandler.getContext().getCurrentUser();
         deleteButton.setDisable(current.getType() != UserType.administrator && !current.equals(event.getCreator()));
@@ -88,7 +91,10 @@ public class EventController implements Initializable {
         }
     }
 
-
+    /**
+     * Function to participate in an event
+     * @param event
+     */
     private void participate(javafx.event.Event event) {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().participateEvent(this.event, ContextHandler.getContext().getCurrentUser());
@@ -99,7 +105,10 @@ public class EventController implements Initializable {
         }
     }
 
-
+    /**
+     * Function to don't participate in an event
+     * @param event
+     */
     private void unParticipate(javafx.event.Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
@@ -112,7 +121,11 @@ public class EventController implements Initializable {
         }
     }
 
-
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         HBox.setHgrow(participantMasonryPane, Priority.ALWAYS);
@@ -126,6 +139,9 @@ public class EventController implements Initializable {
         buttonInitialization();
     }
 
+    /**
+     * Set info of the event with the information on the window
+     */
     private void setEventInfo() {
         refreshParticipants();
         eventName.setText(event.getName());
@@ -136,6 +152,9 @@ public class EventController implements Initializable {
         nParticipants.setText("" + participants.size());
     }
 
+    /**
+     * Update the participants in the window
+     */
     private void refreshParticipants() {
         try {
             participants.clear();
@@ -146,6 +165,10 @@ public class EventController implements Initializable {
         }
     }
 
+    /**
+     * Inserts an user in the window
+     * @param user User to be inserted
+     */
     private void insertParticipantMasonry(User user) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
         loader.setController(new ProfilePreviewController(user));

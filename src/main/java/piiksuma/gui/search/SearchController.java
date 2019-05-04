@@ -67,6 +67,9 @@ public class SearchController implements Initializable {
 
     @Override
 
+    /**
+     * Inits the window components
+     */
     public void initialize(URL location, ResourceBundle resources) {
         back.setOnAction(this::backButton);
         buttonSearch.setOnAction(this::handleSearch);
@@ -89,6 +92,9 @@ public class SearchController implements Initializable {
 
     }
 
+    /**
+     * Clears all the feeds
+     */
     public void clear() {
         postFeed.clear();
         userFeed.clear();
@@ -110,7 +116,15 @@ public class SearchController implements Initializable {
 
     }
 
+<<<<<<< HEAD
     private void handleSearch(Event event) {
+=======
+    /**
+     * Function of the search button
+     * @param event Event on the window
+     */
+    private void handleSearch(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             updatePostFeed();
             updateUserFeed();
@@ -121,6 +135,10 @@ public class SearchController implements Initializable {
         }
     }
 
+    /**
+     * Updates the posts feed
+     * @throws PiikDatabaseException
+     */
     public void updatePostFeed() throws PiikDatabaseException {
         postFeed.clear();
         if (searchText.getText().isEmpty()) {
@@ -130,6 +148,10 @@ public class SearchController implements Initializable {
                 .defineParameters("%" + searchText.getText() + "%").list());
     }
 
+    /**
+     * Updates the users feed
+     * @throws PiikDatabaseException
+     */
     public void updateUserFeed() throws PiikDatabaseException {
         userFeed.clear();
         if (searchText.getText().isEmpty()) {
@@ -140,7 +162,16 @@ public class SearchController implements Initializable {
                 .defineParameters("%" + searchText.getText() + "%", ContextHandler.getContext().getCurrentUser().getId()).list());
     }
 
+<<<<<<< HEAD
     public void updateEventFeed() throws PiikDatabaseException {
+=======
+    /**
+     * Updates the events feed
+     * @throws PiikDatabaseException
+     */
+    public void updateEventFeed() throws PiikDatabaseException{
+        // TODO: update the feed propperly
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         eventFeed.clear();
         if (searchText.getText().isEmpty()) {
             searchText.setText("");
@@ -162,7 +193,12 @@ public class SearchController implements Initializable {
             postFeed.forEach(this::insertPost);
         });
     }
-
+    /**
+     * Code to be executed when the feed gets updated. Users at the interface
+     * have to be updated.
+     * <p>
+     * Recieves change performed to the list via {@link ListChangeListener#onChanged(ListChangeListener.Change)}
+     */
     private void setUpFeedUserListener() {
         userFeed.addListener((ListChangeListener<? super User>) change -> {
             userMasonryPane.getChildren().clear();
@@ -171,6 +207,12 @@ public class SearchController implements Initializable {
         });
     }
 
+    /**
+     * Code to be executed when the feed gets updated. Events at the interface
+     * have to be updated.
+     * <p>
+     * Recieves change performed to the list via {@link ListChangeListener#onChanged(ListChangeListener.Change)}
+     */
     private void setUpFeedEventListener() {
         eventFeed.addListener((ListChangeListener<? super piiksuma.Event>) change -> {
             eventMasonryPane.getChildren().clear();
@@ -179,7 +221,10 @@ public class SearchController implements Initializable {
         });
     }
 
-
+    /**
+     * Inserts a post in the window
+     * @param post Post to be inserted
+     */
     private void insertPost(Post post) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         postLoader.setController(new PostController(post));
@@ -193,6 +238,10 @@ public class SearchController implements Initializable {
         postScrollPane.requestLayout();
     }
 
+    /**
+     * Inserts an user in the window
+     * @param user User to be inserted
+     */
     private void insertUser(User user) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
         postLoader.setController(new ProfilePreviewController(user));
@@ -206,6 +255,10 @@ public class SearchController implements Initializable {
         userScrollPane.requestFocus();
     }
 
+    /**
+     * Inserts an event in the window
+     * @param event Event on the window
+     */
     private void insertEvent(piiksuma.Event event) {
         FXMLLoader eventLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/events/eventPreview.fxml"));
         eventLoader.setController(new EventPreviewController(event));
@@ -221,6 +274,10 @@ public class SearchController implements Initializable {
         eventScrollPane.requestFocus();
     }
 
+    /**
+     * Sets up the click event
+     * @param mouseEvent Event on the window
+     */
     private void clickEvent(MouseEvent mouseEvent) {
         if (!(mouseEvent.getSource() instanceof StackPane)) {
             return;

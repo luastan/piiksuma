@@ -76,7 +76,9 @@ public class UserProfileController implements Initializable {
         archivedPostsList = FXCollections.observableArrayList();
     }
 
-
+    /**
+     * Set the profile Picture with a preview of it
+     */
     public void setProfilePicture() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/profile/profilePreview.fxml"));
         loader.setController(new ProfilePreviewController(user));
@@ -89,6 +91,11 @@ public class UserProfileController implements Initializable {
         }
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -138,6 +145,9 @@ public class UserProfileController implements Initializable {
 
     }
 
+    /**
+     * Init the buttons text
+     */
     private void buttonInit() {
         User current = ContextHandler.getContext().getCurrentUser();
         if (user.equals(current)) { /* If user is the current user */
@@ -164,7 +174,9 @@ public class UserProfileController implements Initializable {
 
     }
 
-
+    /**
+     * Updated the follow button's text depending on the window state
+     */
     private void updateFollowButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
@@ -181,6 +193,10 @@ public class UserProfileController implements Initializable {
         }
     }
 
+    /**
+     * Function to be executed when the follow button is pressed
+     * @param event Event on the window
+     */
     private void handleFollow(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
@@ -197,7 +213,9 @@ public class UserProfileController implements Initializable {
         updateFollowButton();
     }
 
-
+    /**
+     * Update the block button's text depending on the window state
+     */
     private void updateBlockButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
@@ -214,6 +232,10 @@ public class UserProfileController implements Initializable {
         }
     }
 
+    /**
+     * Funtion to be executed when the block button is pressed
+     * @param event Event on the window
+     */
     private void handleBlock(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
 
@@ -230,8 +252,16 @@ public class UserProfileController implements Initializable {
         updateBlockButton();
     }
 
+<<<<<<< HEAD
 
     private void handleDelete(Event event) {
+=======
+    /**
+     * Function to be executed when the delete button is pressed
+     * @param event
+     */
+    private void handleDelete(Event event){
+>>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             ApiFacade.getEntrypoint().getDeletionFacade().removeUser(user, ContextHandler.getContext().getCurrentUser());
             if (user.equals(ContextHandler.getContext().getCurrentUser())) {
@@ -334,14 +364,28 @@ public class UserProfileController implements Initializable {
         });
     }
 
+    /**
+     * Funtion to insert a post
+     * @param post Post to be inserted
+     */
     private void insertPost(Post post) {
         placePost(post, publishedPostsMasonry, publishedPosts);
     }
 
+    /**
+     * Function to archive a post
+     * @param post Post to be archived
+     */
     private void archivePost(Post post) {
         placePost(post, archivedPostsMasonry, archivedPosts);
     }
 
+    /**
+     * Place post in the window
+     * @param post Post to be shown
+     * @param masonry
+     * @param scrollPane
+     */
     private void placePost(Post post, JFXMasonryPane masonry, ScrollPane scrollPane) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         try {
@@ -355,11 +399,18 @@ public class UserProfileController implements Initializable {
         scrollPane.requestLayout();
     }
 
-
+    /**
+     * Sets up the function of the feed button
+     * @param event
+     */
     public void handleFeedButton(Event event) {
         updateFeed();
     }
 
+    /**
+     * Sets up the function of the archived posts button
+     * @param event
+     */
     public void handleArchivedPostsButton(Event event) {
         updateArchivedPosts();
     }

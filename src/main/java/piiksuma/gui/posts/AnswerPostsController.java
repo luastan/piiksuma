@@ -28,6 +28,11 @@ public class AnswerPostsController implements Initializable {
         this.post = post;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         User current = ContextHandler.getContext().getCurrentUser();

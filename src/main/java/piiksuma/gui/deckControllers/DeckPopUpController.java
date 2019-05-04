@@ -27,6 +27,9 @@ public class DeckPopUpController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * Select the items to be shown on the deck
+     */
     public void selectItem() {
         Stage stage = new Stage();
         FXMLLoader loader;

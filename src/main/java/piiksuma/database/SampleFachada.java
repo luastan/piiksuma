@@ -158,7 +158,7 @@ public class SampleFachada {
     /**
      * //TODO Delete when it's not necessary anymore
      */
-    public void ejemploGETFK(){
+    public void ejemploGETFK() {
 
         User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
         User user2 = new User("Álvaro Goldar", "alvrogd", "alvarogoldard@gmail.com");
@@ -215,7 +215,7 @@ public class SampleFachada {
         }*/
 
         // Se imprimen
-        for(String column : fks.keySet()){
+        for (String column : fks.keySet()) {
             System.out.println(column + " " + fks.get(column).toString());
         }
 
@@ -226,7 +226,7 @@ public class SampleFachada {
             e.printStackTrace();
         }
 
-        for(Post post : posts) {
+        for (Post post : posts) {
             System.out.println(post);
         }
 
@@ -283,7 +283,7 @@ public class SampleFachada {
         }*/
     }
 
-    public void pruebasCheck(){
+    public void pruebasCheck() {
         User user = new User("Fran", "Cardama", "francardama@gmail.com");
         User user2 = new User("Álvaro Goldar", null, "alvarogoldard@gmail.com");
 
@@ -314,6 +314,9 @@ public class SampleFachada {
  */
     }
 
+    /**
+     * Print the users returned by the Query
+     */
     public void printUsers() {
         List<User> usuarios = null;
         try {
@@ -328,7 +331,7 @@ public class SampleFachada {
     }
 
     /**
-     *
+     * Print the users returned by the Query
      */
     public void mapaSample() {
         List<Map<String, Object>> usuarios = null;

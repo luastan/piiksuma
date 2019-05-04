@@ -31,6 +31,11 @@ public class NotificationsController implements Initializable {
 
     private ObservableList<Notification> notifications;
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -49,7 +54,10 @@ public class NotificationsController implements Initializable {
         }
     }
 
-
+    /**
+     * Updates the notification feed
+     * @throws PiikDatabaseException
+     */
     private void updateNotifications() throws PiikDatabaseException {
 
         notifications.clear();
@@ -65,7 +73,9 @@ public class NotificationsController implements Initializable {
         }
     }
 
-
+    /**
+     * Sets up the feed listener
+     */
     private void setUpNotificationsListener() {
 
         // Change takes place
@@ -77,7 +87,10 @@ public class NotificationsController implements Initializable {
         });
     }
 
-
+    /**
+     * Inserts a notification in the feed
+     * @param notification Notification to be inserted
+     */
     private void insertNotification(Notification notification) {
 
         // Achievement container

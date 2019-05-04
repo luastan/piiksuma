@@ -31,6 +31,11 @@ public class TicketController implements Initializable {
         this.ticket = ticket;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         id.setText(Integer.toString(ticket.getId()));

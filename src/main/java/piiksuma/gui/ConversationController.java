@@ -61,7 +61,11 @@ public class ConversationController implements Initializable {
 
     private Message newMessage;
 
-
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ContextHandler.getContext().setConversationController(this);
@@ -94,6 +98,10 @@ public class ConversationController implements Initializable {
 
     }
 
+    /**
+     * Sends a message to another user
+     * @param event Event on the window
+     */
     private void sendMessage(ActionEvent event) {
         try {
             User current = ContextHandler.getContext().getCurrentUser();
@@ -110,13 +118,19 @@ public class ConversationController implements Initializable {
         updateMessages();
     }
 
-
+    /**
+     * Init a new message
+     */
     private void initializeNewMessage() {
         newMessage = new Message();
         newMessage.setSender(ContextHandler.getContext().getCurrentUser());
         newMessage.setId(" ");
     }
 
+    /**
+     * Inserts a message on the window
+     * @param message
+     */
     private void insertMessage(Message message) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/message.fxml"));
         loader.setController(new MessageController(message));
@@ -128,6 +142,9 @@ public class ConversationController implements Initializable {
         }
     }
 
+    /**
+     * Updates the messages on the window
+     */
     private void updateMessages() {
         try {
             User current = ContextHandler.getContext().getCurrentUser();

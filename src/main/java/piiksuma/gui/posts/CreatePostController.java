@@ -67,6 +67,11 @@ public class CreatePostController implements Initializable {
         this.postFather = postFather;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         postButton.setOnAction(this::publishPost);
@@ -88,6 +93,7 @@ public class CreatePostController implements Initializable {
         hashtagEditor.requestFocus();
     }
 
+    //GETTERS AND SETTERS
     public Post getPostFather() {
         return postFather;
     }
@@ -96,6 +102,10 @@ public class CreatePostController implements Initializable {
         this.postFather = postFather;
     }
 
+    /**
+     * Function to be executed with a click on the multimedia button
+     * @param event Event on the window
+     */
     private void handleMultimediaButton(Event event) {
         // Creating window to choose image/video
         FileChooser fileChooser = new FileChooser();
@@ -153,6 +163,10 @@ public class CreatePostController implements Initializable {
 */
     }
 
+    /**
+     * Function to publish a post
+     * @param event Event on the window
+     */
     private void publishPost(Event event) {
 
         post.getHashtags().clear();

@@ -38,6 +38,11 @@ public class NewTicketController implements Initializable {
 
     private Ticket ticket;
 
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ticket = new Ticket();
@@ -59,6 +64,10 @@ public class NewTicketController implements Initializable {
         });
     }
 
+    /**
+     * Code to the send button
+     * @param event Event on the window
+     */
     public void handleSendButton(Event event) {
         Ticket ticket = new Ticket();
         if (section.getText().isEmpty() || description.getText().isEmpty()) {

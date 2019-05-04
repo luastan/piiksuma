@@ -49,6 +49,11 @@ public class MessageController implements Initializable {
         this.message = message;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         User current = ContextHandler.getContext().getCurrentUser();
@@ -63,7 +68,9 @@ public class MessageController implements Initializable {
         });
     }
 
-
+    /**
+     * Inits the text of the buttons and fieldTexts
+     */
     private void initializeForward() {
         forwardAlert = Alert.newAlert().setHeading("Forward message");
         JFXButton forwardButton = new JFXButton("Send");

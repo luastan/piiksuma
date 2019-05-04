@@ -12,6 +12,9 @@ public class PiikForbiddenException extends PiikDatabaseException {
         super(message);
     }
 
+    /**
+     * Create an alert with the message of the exception
+     */
     @Override
     public void showAlert(Exception e, String message) {
         PiikLogger.getInstance().log(Level.SEVERE, "PiikForbiddenException", e);
