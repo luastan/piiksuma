@@ -888,7 +888,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
-                "WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
+                "SELECT WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
                 limit).list();
     }
 
@@ -908,9 +908,12 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(getPkConstraintMessage("user"));
         }
 
+        // INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
+        //                        "administrator WHERE id = ? FOR UPDATE);
+
         new InsertionMapper<Hashtag>(super.getConnection()).
                 createUpdate("INSERT INTO followhashtag (piiUser, hashtag) VALUES (?, ?) " +
-                        "WHERE EXISTS (SELECT * FROM hashtag as h WHERE h.name = ?)").
+                        "WHERE NOT EXISTS (SELECT * FROM hashtag as h WHERE h.name = ?)").
                 defineClass(Hashtag.class).
                 defineParameters(user.getPK(), hashtag.getName(), hashtag.getName()).executeUpdate();
     }
@@ -932,7 +935,7 @@ public class PostDao extends AbstractDao {
         }
 
         new DeleteMapper<>(super.getConnection()).
-                createUpdate("DELETE FROM followhashtag WHERE name = ? AND piiUser = ?").
+                createUpdate("DELETE FROM followhashtag WHERE hashtag = ? AND piiUser = ?").
                 defineParameters(hashtag.getName(), user.getPK()).executeUpdate();
     }
 

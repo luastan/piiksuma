@@ -98,7 +98,7 @@ public class HashtagController implements Initializable {
 
     private void unFollowHashtag(Event event) {
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().followHastag(hashtag, ContextHandler.getContext().getCurrentUser());
+            ApiFacade.getEntrypoint().getDeletionFacade().unfollowHastag(hashtag, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
