@@ -100,16 +100,13 @@ public class UserProfileController implements Initializable {
             Name.setText(user.getName());
             description.setText(user.getDescription());
 
-
-
-
             publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
                 publishedPostsMasonry.getChildren().clear();
                 publishedPostsList.forEach(this::insertPost);
             });
             updateFeed();
 
-            publishedPostsList.forEach(this::insertPost);
+//            publishedPostsList.forEach(this::insertPost);
 
             if (user.equals(ContextHandler.getContext().getCurrentUser())) {
                 archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
@@ -117,7 +114,7 @@ public class UserProfileController implements Initializable {
                     archivedPostsList.forEach(this::archivePost);
                 });
                 updateArchivedPosts();
-                archivedPostsList.forEach(this::archivePost);
+//                archivedPostsList.forEach(this::archivePost);
             } else {
                 archivedTab.getTabPane().getTabs().remove(archivedTab);
             }
@@ -301,17 +298,14 @@ public class UserProfileController implements Initializable {
     }
 
     public void updateArchivedPosts() {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         if (!user.equals(ContextHandler.getContext().getCurrentUser())) {
             return;
         }
         archivedPostsList.clear();
 
         try {
-            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
                     user, ContextHandler.getContext().getCurrentUser()));
-            System.out.println("Size: " + archivedPostsList.size());
         } catch (PiikDatabaseException e) {
             e.showAlert();
         } catch (PiikInvalidParameters e) {
@@ -320,8 +314,6 @@ public class UserProfileController implements Initializable {
         archivedPostsMasonry.requestLayout();
         archivedPosts.requestLayout();
         archivedPosts.requestFocus();
-
-
     }
 
     /**

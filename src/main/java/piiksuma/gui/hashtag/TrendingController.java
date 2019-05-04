@@ -20,7 +20,7 @@ public class TrendingController implements Initializable {
     // The -fx-background-color complains always if the string gets constructed instead of being entirely hardcoded
     // So "-fx-background-color: " + randomColor + ";" doesnt even compile =)
     private static String[] styles = {
-            "-fx-background-color: #391072;",
+            "-fx-background-color: #119DA4;",
             "-fx-background-color: #FFC857;",
             "-fx-background-color: #FFFD82;",
             "-fx-background-color: #EA526F;",

@@ -68,7 +68,7 @@ public class StartChatController implements Initializable {
             message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
         try {

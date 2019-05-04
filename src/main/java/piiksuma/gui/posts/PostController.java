@@ -19,6 +19,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
 import piiksuma.gui.profiles.ProfilePreviewController;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -276,7 +277,11 @@ public class PostController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
             }
-            ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
+            UserProfileController profileController = ContextHandler.getContext().getUserProfileController();
+            if (profileController != null) {
+                profileController.updateArchivedPosts();
+                profileController.updateFeed();
+            }
         }catch (PiikDatabaseException | PiikInvalidParameters e){
             e.showAlert();
         }
