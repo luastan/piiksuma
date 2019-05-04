@@ -29,7 +29,7 @@ public class EventPreviewController implements Initializable {
     }
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

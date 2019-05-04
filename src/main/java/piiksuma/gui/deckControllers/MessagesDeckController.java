@@ -40,7 +40,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
     private JFXButton viewNotificationsButton;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

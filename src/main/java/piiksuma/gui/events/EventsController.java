@@ -37,7 +37,7 @@ public class EventsController implements Initializable {
     private ObservableList<Event> eventFeed;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

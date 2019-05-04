@@ -34,6 +34,9 @@ public class AdminTicketsController implements Initializable {
 
     @Override
 
+    /**
+     * Init the window components
+     */
     public void initialize(URL location, ResourceBundle resources) {
         tickets = FXCollections.observableArrayList();
 
@@ -41,7 +44,10 @@ public class AdminTicketsController implements Initializable {
         handleSearch(null);
     }
 
-
+    /**
+     * Code the the search button
+     * @param event Event on the window
+     */
     private void handleSearch(Event event) {
         try {
             updateTicketFeed();
@@ -50,6 +56,10 @@ public class AdminTicketsController implements Initializable {
         }
     }
 
+    /**
+     * Updates the tickets feed
+     * @throws PiikDatabaseException
+     */
     private void updateTicketFeed() throws PiikDatabaseException {
         try {
             tickets.addAll(ApiFacade.getEntrypoint().getSearchFacade().getAdminTickets(10, ContextHandler.getContext().getCurrentUser()));
@@ -60,6 +70,9 @@ public class AdminTicketsController implements Initializable {
         }
     }
 
+    /**
+     * Sets up the feed listener
+     */
     private void setUpFeedListener() {
         tickets.addListener((ListChangeListener<? super Ticket>) change -> {
             ticketMasonryPane.getChildren().clear();
@@ -67,6 +80,10 @@ public class AdminTicketsController implements Initializable {
         });
     }
 
+    /**
+     * Inserts a ticket in the window
+     * @param ticket Ticket to be inserted
+     */
     private void insertTicket(Ticket ticket) {
         FXMLLoader ticketLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/tickets/ticket.fxml"));
         try {

@@ -78,7 +78,7 @@ public class UserDataController implements Initializable {
     private Multimedia multimedia;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

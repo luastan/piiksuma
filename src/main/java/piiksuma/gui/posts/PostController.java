@@ -92,6 +92,11 @@ public class PostController implements Initializable {
 //        }
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -217,6 +222,10 @@ public class PostController implements Initializable {
         }
     }
 
+    /**
+     * Funtion to be executed when love it reaction is pressed
+     * @param event Event on the window
+     */
     private void handleLoveIt(Event event){
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.LoveIt);
         try{
@@ -239,6 +248,10 @@ public class PostController implements Initializable {
         }
     }
 
+    /**
+     * Funtion to be executed when hate it reaction is pressed
+     * @param event Event on the window
+     */
     private void handleHateIt(Event event){
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.HateIt);
         try{
@@ -260,6 +273,10 @@ public class PostController implements Initializable {
         }
     }
 
+    /**
+     * Funtion to be executed when angry reaction is pressed
+     * @param event Event on the window
+     */
     private void handleAngry(Event event){
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.MakesMeAngry);
         try{
@@ -315,6 +332,10 @@ public class PostController implements Initializable {
 
     }
 
+    /**
+     * Function to answer a post
+     * @param event Event on the window
+     */
     private void handleAnswer(Event event){
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(post), "Create Post");
@@ -323,7 +344,10 @@ public class PostController implements Initializable {
         }
 
     }
-
+    /**
+     * Funtion to be executed when like reaction is pressed
+     * @param event Event on the window
+     */
     private void handleLike(Event event) {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
@@ -345,6 +369,10 @@ public class PostController implements Initializable {
 
     }
 
+    /**
+     * Function to delete a post
+     * @param event Event on the window
+     */
     private void handleDelete(Event event){
         try{
             ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
@@ -367,6 +395,10 @@ public class PostController implements Initializable {
         }
     }
 
+    /**
+     * Function to repost a post
+     * @param event Event on the window
+     */
     private void handleRepost(Event event) {
         try {
             if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,

@@ -44,7 +44,7 @@ public class StatsController implements Initializable {
     private JFXButton closeButton;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

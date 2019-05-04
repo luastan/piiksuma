@@ -39,7 +39,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     private JFXButton viewNotificationsButton;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */

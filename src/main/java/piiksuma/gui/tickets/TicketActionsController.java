@@ -26,6 +26,11 @@ public class TicketActionsController implements Initializable {
         this.ticket = ticket;
     }
 
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         reason.setText(ticket.getTextProblem());

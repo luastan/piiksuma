@@ -38,7 +38,7 @@ public class EventsDeckController extends AbstractDeckController implements Init
     private JFXButton viewNotificationsButton;
 
     /**
-     * Init the window components
+     * Inits the window components
      * @param location
      * @param resources
      */
