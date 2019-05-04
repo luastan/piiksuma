@@ -104,6 +104,19 @@ public class DeletionFacade {
         parentFacade.getUserDao().unfollowUser(followed, follower);
     }
 
+    public void unfollowHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+        // Null check
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
+        }
+
+        parentFacade.getPostDao().unfollowHashtag(hashtag, currentUser);
+    }
+
     /* MULTIMEDIA related methods */
 
     /**

@@ -888,7 +888,7 @@ public class PostDao extends AbstractDao {
         }
 
         return new QueryMapper<Hashtag>(super.getConnection()).createQuery("SELECT * FROM hashtag " +
-                "WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
+                "SELECT WHERE name LIKE '%?%' LIMIT ?").defineClass(Hashtag.class).defineParameters(hashtag.getName(),
                 limit).list();
     }
 
@@ -898,7 +898,7 @@ public class PostDao extends AbstractDao {
      * @param hashtag hashtag to follow
      * @param user    user who will follow the given hashtag
      */
-    public void followHastag(Hashtag hashtag, User user) throws PiikDatabaseException {
+    public void followHashtag(Hashtag hashtag, User user) throws PiikDatabaseException {
 
         if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(getPkConstraintMessage("hashtag"));
@@ -909,10 +909,30 @@ public class PostDao extends AbstractDao {
         }
 
         new InsertionMapper<Hashtag>(super.getConnection()).
-                createUpdate("INSERT INTO followhastag (piiuser, hashtag) VALUES (?, ?) " +
-                        "WHERE EXISTS (SELECT FROM hastag WHERE name = ?)").
+                createUpdate("INSERT INTO followhashtag (piiUser, hashtag) VALUES (?, (SELECT name FROM hashtag WHERE name = ?))").
                 defineClass(Hashtag.class).
-                defineParameters(hashtag.getName(), user.getPK(), hashtag.getName()).executeUpdate();
+                defineParameters(user.getPK(), hashtag.getName()).executeUpdate();
+    }
+
+    /**
+     * Lets a user unfollow a hashtag
+     *
+     * @param hashtag hashtag to unfollow
+     * @param user    user who will unfollow the given hashtag
+     */
+    public void unfollowHashtag(Hashtag hashtag, User user) throws PiikDatabaseException {
+
+        if (hashtag == null || !hashtag.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(getPkConstraintMessage("hashtag"));
+        }
+
+        if (user == null || !user.checkPrimaryKey(false)) {
+            throw new PiikDatabaseException(getPkConstraintMessage("user"));
+        }
+
+        new DeleteMapper<>(super.getConnection()).
+                createUpdate("DELETE FROM followhashtag WHERE hashtag = ? AND piiUser = ?").
+                defineParameters(hashtag.getName(), user.getPK()).executeUpdate();
     }
 
     /**

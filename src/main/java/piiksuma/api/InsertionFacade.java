@@ -261,7 +261,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
-        parentFacade.getPostDao().followHastag(hashtag, currentUser);
+        parentFacade.getPostDao().followHashtag(hashtag, currentUser);
     }
 
     /**
