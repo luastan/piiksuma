@@ -31,6 +31,12 @@ public class TrendingController implements Initializable {
 
     public JFXMasonryPane hasthags;
 
+
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

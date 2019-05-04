@@ -28,6 +28,11 @@ public class EventPreviewController implements Initializable {
         this.event = event;
     }
 
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         hiddenEventId.setText(event.getId());
