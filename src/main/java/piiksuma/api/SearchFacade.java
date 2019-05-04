@@ -119,9 +119,10 @@ public class SearchFacade {
     /**
      * Function to check if the user followed follow the user follower
      *
-     * @param followed
-     * @param follower
-     * @return
+     * @param followed User who is followed by the follower
+     * @param follower User who follows the followed
+     * @param current  Current user logged into the app
+     * @return TRUE if the relation exists in the database, FALSE in the other case
      */
     public boolean isFollowed(User followed, User follower, User current) throws PiikDatabaseException, PiikInvalidParameters {
         if (followed == null) {
@@ -151,8 +152,8 @@ public class SearchFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
 
-         User candidate = parentFacade.getUserDao().login(user);
-       // User candidate = parentFacade.getUserDao().getUser(user);
+        User candidate = parentFacade.getUserDao().login(user);
+        // User candidate = parentFacade.getUserDao().getUser(user);
         if (candidate == null) {
             return null;
         }
@@ -206,7 +207,7 @@ public class SearchFacade {
      *
      * @param user    User we want to get the achievements from
      * @param current Curren user logged into the app
-     * @return
+     * @return List of achievements
      * @throws PiikInvalidParameters
      * @throws PiikDatabaseException
      */
@@ -230,7 +231,8 @@ public class SearchFacade {
     /**
      * Gets the dates when the achievements were unlocked by the user
      *
-     * @param user User whom we get the dates from
+     * @param user    User whom we get the dates from
+     * @param current Current user logged into the app
      * @return Returns a map with the name of the achievement and the date
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
@@ -280,7 +282,7 @@ public class SearchFacade {
      *
      * @param multimedia Multimedia we search for
      * @param current    Current user logged into the app
-     * @return
+     * @return TRUE if the multimedia is in the database, FALSE in the other case
      * @throws PiikInvalidParameters
      * @throws PiikDatabaseException
      */
@@ -300,6 +302,7 @@ public class SearchFacade {
      * Count the number of post which contains the given multimedia
      *
      * @param multimedia Multimedia we want to count
+     * @param current    Current user logged into the app
      * @return Number of post containing multimedia
      * @throws PiikDatabaseException Thrown if multimedia or its primary key are null
      * @throws PiikInvalidParameters
@@ -321,6 +324,7 @@ public class SearchFacade {
      * Gets all post containing multimedia
      *
      * @param multimedia Multimedia we are looking for on posts
+     * @param current    Current user logged into the app
      * @return List of post containing multimedia
      * @throws PiikInvalidParameters
      * @throws PiikDatabaseException
@@ -359,10 +363,11 @@ public class SearchFacade {
     }
 
     /**
-     * Returns a post form db
+     * Returns a post form database
      *
-     * @param post Post wanted
-     * @return Post
+     * @param post    Post wanted
+     * @param current Current user logged into the app
+     * @return Post found in the database
      * @throws PiikDatabaseException Thrown if post or its primary keys are null
      */
     public Post getPost(Post post, User current) throws PiikDatabaseException, PiikInvalidParameters {
@@ -384,8 +389,8 @@ public class SearchFacade {
     /**
      * Function that returns the answers / children of the indicated post
      *
-     * @param post
-     * @return
+     * @param post from which we want to get the answers
+     * @return List of post which are answers to the Post
      */
     public List<Post> getAnswers(Post post) throws PiikDatabaseException, PiikInvalidParameters {
         if (post == null) {
@@ -401,6 +406,7 @@ public class SearchFacade {
      * Gets a list of post containing a given hashtag
      *
      * @param hashtag Hashtag to be searched for
+     * @param current Current user logged into the app
      * @return List with all the posts that have the hashtag
      * @throws PiikDatabaseException Thrown if hashtag or its primary keys are null
      */
@@ -421,7 +427,8 @@ public class SearchFacade {
     /**
      * Gets a list of post containing a given user
      *
-     * @param user User to be searched for
+     * @param user    User to be searched for
+     * @param current Current user logged into the app
      * @return List post created by the user
      * @throws PiikDatabaseException Thrown if user or its primary keys are null
      */
@@ -483,9 +490,10 @@ public class SearchFacade {
 
     /**
      * Checks if a given user follows a given hashtag
-     * @param hashtag
-     * @param user
-     * @return
+     *
+     * @param hashtag Hashtag from which we want to know if it's followed by the user
+     * @param user    User who follows the Hashtad
+     * @return TRUE if the user follows the hastag, FALSE in the other case
      * @throws PiikDatabaseException
      */
     public boolean userFollowsHashtag(Hashtag hashtag, User user) throws PiikDatabaseException {
@@ -497,7 +505,7 @@ public class SearchFacade {
             throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
         }
 
-        return(parentFacade.getPostDao().userFollowsHashtag(hashtag, user));
+        return (parentFacade.getPostDao().userFollowsHashtag(hashtag, user));
     }
 
     /**
@@ -530,7 +538,7 @@ public class SearchFacade {
      * @param reaction reaction to check
      * @param user     user who wants to check if he reacted
      * @param current  current user
-     * @return
+     * @return TRUE is the user reacted to the post with the specific reaction, FALSE in the other case
      */
     public boolean isReact(Reaction reaction, User user, User current) throws PiikDatabaseException,
             PiikInvalidParameters {
@@ -652,10 +660,12 @@ public class SearchFacade {
         return parentFacade.getMessagesDao().getAdminTickets(limit);
     }
 
-    /* This function allows an user to retrieve his open tickets
-     * @param user whose tickets will be retrieved
+    /**
+     * This function allows an user to retrieve his open tickets
+     *
+     * @param user    whose tickets will be retrieved
      * @param current current user
-     * @param limit maximum number of tickets to retrieve
+     * @param limit   maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      * @throws PiikDatabaseException Thrown on query gone wrong
      * @throws PiikInvalidParameters Thrown if limit is equal or less than 0
@@ -707,7 +717,9 @@ public class SearchFacade {
     /**
      * Function to get the messages with other user
      *
-     * @param user send of the messages
+     * @param user    send of the messages
+     * @param current Current user logged into the app
+     * @param limit   maximum number of messages to be retrieve
      * @return
      */
     public Map<User, List<Message>> messageWithUser(User user, Integer limit, User current) throws
@@ -730,9 +742,10 @@ public class SearchFacade {
     /**
      * Function to get the private conversation of two users
      *
-     * @param user1
-     * @param user2
-     * @param limit
+     * @param user1   User from a conversation
+     * @param user2   The other user from the conversation
+     * @param limit   maximum number of messages to be retrieve
+     * @param current Current user logged into the app
      * @return
      */
     public List<Message> getConversation(User user1, User user2, User current, Integer limit) throws PiikDatabaseException,
@@ -764,23 +777,24 @@ public class SearchFacade {
     /**
      * Function to get a chat associated to a ticket
      *
-     * @param limit
+     * @param limit   maximum number of messages to be retrieve
+     * @param current Current user logged into the app
+     * @param ticket  Ticket from which we want to obtain the messages
      * @return
      */
     public List<Message> getConversationTicket(Ticket ticket, User current, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
 
 
-        if(ticket == null || !ticket.checkNotNull(false)){
+        if (ticket == null || !ticket.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
         }
 
-        if(limit <= 0){
+        if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
         // TODO permission check
-
 
 
         return parentFacade.getMessagesDao().getConversationTicket(ticket, limit);
@@ -837,6 +851,7 @@ public class SearchFacade {
      * Function to get the image of the multimedia
      *
      * @param multimedia Multimedia that contains the information of the image
+     * @param current    Current user logged into the app
      * @return the image of the multimedia
      * @throws PiikDatabaseException
      */
@@ -869,7 +884,8 @@ public class SearchFacade {
     /**
      * Function that returns the users that participate in the indicated event
      *
-     * @param event
+     * @param event   from which we want to know his participants
+     * @param current Current user logged into the app
      * @return a map with the user indexed by her primary key
      * @throws PiikDatabaseException
      */
@@ -889,8 +905,9 @@ public class SearchFacade {
     /**
      * Function to check if the user1 has blocked the user2
      *
-     * @param user1
-     * @param user2
+     * @param user1   User who is blocked
+     * @param user2   User who has blocked the other one
+     * @param current Current user logged into the app
      * @return
      */
     public boolean isBlock(User user1, User user2, User current) throws PiikDatabaseException, PiikInvalidParameters {
@@ -938,10 +955,10 @@ public class SearchFacade {
     /**
      * Function to check if a user has already archived a post
      *
-     * @param post
-     * @param user
-     * @param currentUser
-     * @return
+     * @param post Post to determinate if it's archived or not
+     * @param user User from who we want to know if he has archived the post or not
+     * @param currentUser Current user logged into the app
+     * @return TRUE if the user has archived the post, FALSE in the other case
      * @throws PiikInvalidParameters
      * @throws PiikDatabaseException
      */
