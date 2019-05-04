@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -26,6 +27,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MessageController implements Initializable {
 
@@ -92,7 +94,8 @@ public class MessageController implements Initializable {
                 forwardAlert.getAlert().close();
                 ContextHandler.getContext().getMessagesController().updateMessageFeed();
             } catch (PiikDatabaseException | PiikInvalidParameters e) {
-                e.showAlert();
+                PiikLogger.getInstance().log(Level.SEVERE, "MessageController -> initializeForward", e);
+                Alert.newAlert().setHeading("Send message error").addText("Failure sending the private message").addCloseButton().show();
             }
         });
 

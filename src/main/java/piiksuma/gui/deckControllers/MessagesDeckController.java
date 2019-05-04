@@ -12,12 +12,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MessagesDeckController extends AbstractDeckController implements Initializable {
 
@@ -55,13 +57,13 @@ public class MessagesDeckController extends AbstractDeckController implements In
         mainButton.setOnAction(this::handleMessageButton);
     }
 
-    public void handleMessageButton (ActionEvent event){
+    public void handleMessageButton(ActionEvent event) {
         Stage searchStage = new Stage();
 
         try {
             ContextHandler.getContext().register("startChat", searchStage);
         } catch (PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure starting the chat");
             return;
         }
         // Stage configuration
@@ -73,7 +75,7 @@ public class MessagesDeckController extends AbstractDeckController implements In
         try {
             decorator = new JFXDecorator(searchStage, loader.load(), false, false, true);
         } catch (IOException e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "MessagesDeckController -> handleMessageButton", e);
             return;
         }
 

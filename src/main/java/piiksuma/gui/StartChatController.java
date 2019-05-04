@@ -57,7 +57,7 @@ public class StartChatController implements Initializable {
         });
     }
 
-    private void handleNewMessage(Event event){
+    private void handleNewMessage(Event event) {
         if (!messageField.validate() && !userField.validate()) {
             return;
         }
@@ -65,16 +65,16 @@ public class StartChatController implements Initializable {
         message.setSender(current);
 
         try {
-            message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,current);
+            message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message, current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure sending the private message");
         }
 
         try {
             ContextHandler.getContext().getMessagesController().updateMessageFeed();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the message feed");
         }
     }
 }

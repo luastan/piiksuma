@@ -1,6 +1,9 @@
 package piiksuma.exceptions;
 
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.gui.Alert;
+
+import java.util.logging.Level;
 
 // TODO I don't think so
 public class PiikForbiddenException extends PiikDatabaseException {
@@ -10,7 +13,8 @@ public class PiikForbiddenException extends PiikDatabaseException {
     }
 
     @Override
-    public void showAlert() {
-        Alert.newAlert().setHeading("Forbidden").addText(getMessage()).addCloseButton().show();
+    public void showAlert(Exception e, String message) {
+        PiikLogger.getInstance().log(Level.SEVERE, "PiikForbiddenException", e);
+        Alert.newAlert().setHeading("Forbidden error").addText(message).addCloseButton().show();
     }
 }

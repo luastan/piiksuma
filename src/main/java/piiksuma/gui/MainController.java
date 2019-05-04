@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.deckControllers.EventsDeckController;
 import piiksuma.gui.deckControllers.FeedDeckController;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MainController implements Initializable {
 
@@ -62,8 +64,9 @@ public class MainController implements Initializable {
                 deckLoader.setController(new FeedDeckController());
                 try {
                     deckContainer.getChildren().add(deckLoader.load());
-                } catch (IOException ignore) {
-                    // TODO: Handle exception
+                } catch (IOException e) {
+                    PiikLogger.getInstance().log(Level.SEVERE, "MainController -> tabInitialization", e);
+                    Alert.newAlert().setHeading("Tab error").addText("Failure loading the feed tab").addCloseButton().show();
                 }
 
             } else {
@@ -93,9 +96,9 @@ public class MainController implements Initializable {
                 try {
                     FXMLLoader searchViewLoader = new FXMLLoader(getClass().getResource("/gui/fxml/search/search.fxml"));
                     mainContainer.getChildren().add(searchViewLoader.load());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    // TODO: Handle exception
+                } catch (IOException e) {
+                    PiikLogger.getInstance().log(Level.SEVERE, "MainController -> tabInitialization", e);
+                    Alert.newAlert().setHeading("Tab error").addText("Failure loading the search tab").addCloseButton().show();
                 }
                 deckContainer.getChildren().clear();
             } else {
@@ -118,8 +121,9 @@ public class MainController implements Initializable {
                 try {
                     deckLoader.setController(new MessagesDeckController());
                     deckContainer.getChildren().add(deckLoader.load());
-                } catch (IOException ignore) {
-                    // TODO: Handle exception
+                } catch (IOException e) {
+                    PiikLogger.getInstance().log(Level.SEVERE, "MainController -> tabInitialization", e);
+                    Alert.newAlert().setHeading("Tab error").addText("Failure loading the messages tab").addCloseButton().show();
                 }
             } else {
                 messagesTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
@@ -139,8 +143,9 @@ public class MainController implements Initializable {
                 try {
                     deckLoader.setController(new EventsDeckController());
                     deckContainer.getChildren().add(deckLoader.load());
-                } catch (IOException ignore) {
-                    // TODO: Handle exception
+                } catch (IOException e) {
+                    PiikLogger.getInstance().log(Level.SEVERE, "MainController -> tabInitialization", e);
+                    Alert.newAlert().setHeading("Tab error").addText("Failure loading the events tab").addCloseButton().show();
                 }
             } else {
                 eventTabIcon.setStyle("-fx-fill: -white-medium-emphasis;");
@@ -162,9 +167,9 @@ public class MainController implements Initializable {
             deckLoader = new FXMLLoader(getClass().getResource("/gui/fxml/deck.fxml"));
             deckLoader.setController(new FeedDeckController());
             deckContainer.getChildren().add(deckLoader.load());
-        } catch (IOException | PiikInvalidParameters ioEx) {
-            ioEx.printStackTrace();
-            System.out.println("Unable to load FXML");
+        } catch (IOException | PiikInvalidParameters e) {
+            PiikLogger.getInstance().log(Level.SEVERE, "MainController -> initialize", e);
+            Alert.newAlert().setHeading("Initialize error").addText("Failure loading the deck stage").addCloseButton().show();
         }
 
 

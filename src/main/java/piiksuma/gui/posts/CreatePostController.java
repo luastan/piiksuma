@@ -116,7 +116,8 @@ public class CreatePostController implements Initializable {
             ImageIO.write(img, multimedia.getName().split("\\.")[1], outputFile);
             // Put the new img on multimedia
             RandomAccessFile file = new RandomAccessFile(outputFile, "r");
-            byte[] imgBytes = new byte[Math.toIntExact(file.length())];file.readFully(imgBytes);
+            byte[] imgBytes = new byte[Math.toIntExact(file.length())];
+            file.readFully(imgBytes);
             post.setMultimedia(new Multimedia());
             post.getMultimedia().setHash(
                     Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes))
@@ -167,7 +168,7 @@ public class CreatePostController implements Initializable {
             ContextHandler.getContext().getFeedController().updateFeed();
             ContextHandler.getContext().getStage("Create Post").close();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure publishing the post");
         }
 
     }

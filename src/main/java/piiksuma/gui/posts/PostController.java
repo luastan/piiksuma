@@ -1,4 +1,5 @@
 package piiksuma.gui.posts;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -12,10 +13,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import piiksuma.*;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
 import piiksuma.gui.profiles.ProfilePreviewController;
@@ -24,6 +27,7 @@ import piiksuma.gui.profiles.UserProfileController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class PostController implements Initializable {
 
@@ -109,7 +113,7 @@ public class PostController implements Initializable {
             author = ApiFacade.getEntrypoint().getSearchFacade().getUser(
                     author, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure user not found");
         }
 
         post.setAuthor(author);
@@ -118,7 +122,7 @@ public class PostController implements Initializable {
             try {
                 ContextHandler.getContext().invokeStage("/gui/fxml/postAnswers.fxml", new AnswerPostsController(post));
             } catch (PiikInvalidParameters invalidParameters) {
-                invalidParameters.showAlert();
+                invalidParameters.showAlert(invalidParameters, "Failure loading the postAnswes stage");
             }
         });
 
@@ -127,14 +131,14 @@ public class PostController implements Initializable {
         authorId.setText(post.getAuthor().getId());
 
         // Multimedia insertion
-        if(post.getMultimedia() != null && post.getMultimedia().getHash() != null
+        if (post.getMultimedia() != null && post.getMultimedia().getHash() != null
                 && !post.getMultimedia().getHash().isEmpty()) {
             if (post.getMultimedia().getUri() == null || post.getMultimedia().getUri().isEmpty()) {
                 try {
                     post.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade().getMultimedia(post.getMultimedia(),
                             current));
                 } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-                    piikInvalidParameters.printStackTrace();
+                    piikInvalidParameters.showAlert(piikInvalidParameters, "Failure loading the image");
                 }
             }
 
@@ -150,8 +154,8 @@ public class PostController implements Initializable {
         try {
             profilePicture.getChildren().add(profilePicLoader.load());
         } catch (IOException e) {
-            // TODO: handle exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "PostController -> initialize", e);
+            Alert.newAlert().setHeading("Loading image error").addText("Failure loading the profile picture").addCloseButton().show();
         }
 
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
@@ -190,11 +194,11 @@ public class PostController implements Initializable {
                     ContextHandler.getContext().getCurrentUser())) {
                 repost.getGraphic().setStyle("-fx-fill: -piik-blue-green;");
             }
-            if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
+            if (ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())) {
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure loading the reactions to the post");
         }
 
         buttonLike.setOnAction(this::handleLike);
@@ -217,16 +221,16 @@ public class PostController implements Initializable {
         }
     }
 
-    private void handleLoveIt(Event event){
+    private void handleLoveIt(Event event) {
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.LoveIt);
-        try{
-            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+        try {
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
                 loveItButton.getGraphic().setStyle("");
                 hateItButton.setDisable(false);
                 makesMeAngry.setDisable(false);
                 buttonLike.setDisable(false);
-            }else{
+            } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
                 loveItButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
                 hateItButton.setDisable(true);
@@ -234,58 +238,59 @@ public class PostController implements Initializable {
                 buttonLike.setDisable(true);
             }
 
-        }catch (PiikDatabaseException | PiikInvalidParameters e){
-            e.showAlert();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert(e, "Failure loving the post");
         }
     }
 
-    private void handleHateIt(Event event){
+    private void handleHateIt(Event event) {
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.HateIt);
-        try{
-            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+        try {
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
                 hateItButton.getGraphic().setStyle("");
                 loveItButton.setDisable(false);
                 makesMeAngry.setDisable(false);
                 buttonLike.setDisable(false);
-            }else{
+            } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
                 hateItButton.getGraphic().setStyle("-fx-fill: -color-error;");
                 loveItButton.setDisable(true);
                 makesMeAngry.setDisable(true);
                 buttonLike.setDisable(true);
             }
-        }catch (PiikDatabaseException | PiikInvalidParameters e){
-            e.showAlert();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert(e, "Failure hating the post");
         }
     }
 
-    private void handleAngry(Event event){
+    private void handleAngry(Event event) {
         Reaction reaction = new Reaction(ContextHandler.getContext().getCurrentUser(), post, ReactionType.MakesMeAngry);
-        try{
-            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())){
+        try {
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(reaction, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser())) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(reaction, ContextHandler.getContext().getCurrentUser());
                 makesMeAngry.getGraphic().setStyle("");
                 loveItButton.setDisable(false);
                 hateItButton.setDisable(false);
                 buttonLike.setDisable(false);
-            }else{
+            } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().react(reaction, ContextHandler.getContext().getCurrentUser());
                 makesMeAngry.getGraphic().setStyle("-fx-fill: -piik-orange-ripple;");
                 loveItButton.setDisable(true);
                 hateItButton.setDisable(true);
                 buttonLike.setDisable(true);
             }
-        }catch (PiikDatabaseException | PiikInvalidParameters e){
-            e.showAlert();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert(e, "Failure getting angry at the post");
         }
     }
-    private void handleArchive(Event event){
-        try{
-            if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
-                ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
+
+    private void handleArchive(Event event) {
+        try {
+            if (ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())) {
+                ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("");
-            }else {
+            } else {
                 ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
             }
@@ -294,10 +299,11 @@ public class PostController implements Initializable {
                 profileController.updateArchivedPosts();
                 profileController.updateFeed();
             }
-        }catch (PiikDatabaseException | PiikInvalidParameters e){
-            e.showAlert();
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert(e, "Failure archiving the post");
         }
     }
+
     /**
      * Adds a hashtag to post's hashtag list
      *
@@ -309,17 +315,17 @@ public class PostController implements Initializable {
         try {
             hashtags.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Propperly handle the exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "PostController -> addHashtag", e);
+            Alert.newAlert().setHeading("Adding hashtag error").addText("Failure adding the hashtag").addCloseButton().show();
         }
 
     }
 
-    private void handleAnswer(Event event){
+    private void handleAnswer(Event event) {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(post), "Create Post");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the answer");
         }
 
     }
@@ -328,7 +334,7 @@ public class PostController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
         Reaction react = new Reaction(current, post, ReactionType.LikeIt);
         try {
-            if(ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
+            if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeReaction(react, current);
                 buttonLike.getGraphic().setStyle("");
                 mainButton.setDisable(false);
@@ -340,20 +346,20 @@ public class PostController implements Initializable {
                 mainButton.setDisable(true);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-            piikInvalidParameters.showAlert();
+            piikInvalidParameters.showAlert(piikInvalidParameters, "Failure reacting to the post");
         }
 
     }
 
-    private void handleDelete(Event event){
-        try{
-            ApiFacade.getEntrypoint().getDeletionFacade().removePost(post,ContextHandler.getContext().getCurrentUser());
-            if(ContextHandler.getContext().getUserProfileController() != null){
+    private void handleDelete(Event event) {
+        try {
+            ApiFacade.getEntrypoint().getDeletionFacade().removePost(post, ContextHandler.getContext().getCurrentUser());
+            if (ContextHandler.getContext().getUserProfileController() != null) {
                 ContextHandler.getContext().getUserProfileController().updateFeed();
                 ContextHandler.getContext().getUserProfileController().updateArchivedPosts();
             }
             ContextHandler.getContext().getFeedController().updateFeed();
-            if(ContextHandler.getContext().getSearchController() != null){
+            if (ContextHandler.getContext().getSearchController() != null) {
                 ContextHandler.getContext().getSearchController().updatePostFeed();
             }
             if (ContextHandler.getContext().getFeedController() != null) {
@@ -362,8 +368,8 @@ public class PostController implements Initializable {
             if (ContextHandler.getContext().getSearchController() != null) {
                 ContextHandler.getContext().getSearchController().updatePostFeed();
             }
-        }catch (PiikException e){
-            e.showAlert();
+        } catch (PiikException e) {
+            e.showAlert(e, "Failure deleting the post");
         }
     }
 
@@ -384,7 +390,7 @@ public class PostController implements Initializable {
             }
 //            ContextHandler.getContext().getFeedController().updateFeed();
         } catch (PiikInvalidParameters | PiikDatabaseException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure re-posting");
         }
     }
 }

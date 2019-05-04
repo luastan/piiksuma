@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.logging.Level;
 
 public class MessagesController implements Initializable {
 
@@ -54,7 +56,7 @@ public class MessagesController implements Initializable {
         try {
             updateMessageFeed();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the message feed");
         }
     }
 
@@ -82,8 +84,8 @@ public class MessagesController implements Initializable {
             messageMasonryPane.getChildren().add(messagePreview);
             messagePreview.setOnMouseClicked(this::clickMessage);
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "MessagesController -> insertConversation", e);
+            Alert.newAlert().setHeading("Conversation error").addText("Failure loading the conversation").addCloseButton().show();
         }
         messageScrollPane.requestLayout();
         messageScrollPane.requestFocus();
@@ -107,7 +109,7 @@ public class MessagesController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", controller, "Messages" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the conversation stage");
         }
     }
 

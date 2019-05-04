@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.UserType;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
@@ -16,6 +17,7 @@ import piiksuma.gui.ContextHandler;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class DeckPopUpController implements Initializable {
     @FXML
@@ -39,7 +41,7 @@ public class DeckPopUpController implements Initializable {
             loader = new FXMLLoader(getClass().getResource("/gui/fxml/login.fxml"));
             try {
                 decorator = new JFXDecorator(stage, loader.load(), false, false, true);
-            }catch (IOException e){
+            } catch (IOException e) {
                 return;
             }
 
@@ -54,7 +56,7 @@ public class DeckPopUpController implements Initializable {
             try {
                 ContextHandler.getContext().register("login", stage);
             } catch (PiikInvalidParameters piikInvalidParameters) {
-                piikInvalidParameters.printStackTrace();
+                piikInvalidParameters.showAlert(piikInvalidParameters, "Failure loading the login stage");
             }
             // Show
             stage.show();
@@ -64,13 +66,11 @@ public class DeckPopUpController implements Initializable {
         switch (popup.getSelectionModel().getSelectedIndex()) {
             case 1:
                 /* Show achievements */
-                // TODO: Define the fxml and the controller
                 stage.setTitle("Achievements");
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/achievements.fxml"));
                 break;
             case 2:
                 /* Show statistics */
-                // TODO: Define the fxml and the controller
                 stage.setTitle("Statistics");
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/stats.fxml"));
                 break;
@@ -83,7 +83,7 @@ public class DeckPopUpController implements Initializable {
                 try {
                     ContextHandler.getContext().invokeStage("/gui/fxml/tickets/adminTickets.fxml", null, "Tickets");
                 } catch (PiikInvalidParameters invalidParameters) {
-                    invalidParameters.showAlert();
+                    invalidParameters.showAlert(invalidParameters, "Failure loading the adminTickets stage");
                 }
                 return;
             default:
@@ -100,13 +100,10 @@ public class DeckPopUpController implements Initializable {
                     true
             );
         } catch (PiikInvalidParameters invalidParameters) {
-            // TODO: Handle the exception
-            System.out.println("invalid fxml");
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the fxml");
             return;
         } catch (IOException e) {
-            // TODO: Handle the exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "DeckPopUpController -> selectItem", e);
             return;
         }
         Scene scene = new Scene(decorator);

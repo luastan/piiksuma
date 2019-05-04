@@ -26,7 +26,6 @@ public class NotificationController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         creationDate.setText(notification.getCreationDate().toString());
         notificationContent.setText(notification.getContent());
-
     }
 
 }

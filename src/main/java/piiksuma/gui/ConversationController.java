@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class ConversationController implements Initializable {
 
@@ -98,7 +100,8 @@ public class ConversationController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(newMessage, peer, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            PiikLogger.getInstance().log(Level.SEVERE, "ConversationController -> sendMessage", e);
+            Alert.newAlert().setHeading("Send message error").addText("Failure sending the message").addCloseButton().show();
         }
         initializeNewMessage();
         messageField.setText("");
@@ -120,8 +123,8 @@ public class ConversationController implements Initializable {
         try {
             messageMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Handle Exceptions
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "ConversationController -> insertMessage", e);
+            Alert.newAlert().setHeading("Insert message error").addText("Failure inserting the message").addCloseButton().show();
         }
     }
 
@@ -133,7 +136,7 @@ public class ConversationController implements Initializable {
                     .messageWithUser(current, 250, current)
                     .get(peer));
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the messages");
         }
     }
 }

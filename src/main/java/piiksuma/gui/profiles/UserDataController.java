@@ -12,11 +12,13 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import piiksuma.Multimedia;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 
 import javax.imageio.ImageIO;
@@ -30,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class UserDataController implements Initializable {
     @FXML
@@ -130,7 +133,7 @@ public class UserDataController implements Initializable {
                     user.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade()
                             .getMultimedia(user.getMultimedia(), ContextHandler.getContext().getCurrentUser()));
                 } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-                    piikInvalidParameters.printStackTrace();
+                    piikInvalidParameters.showAlert(piikInvalidParameters, "Failure inserting the image");
                 }
             }
 
@@ -170,12 +173,13 @@ public class UserDataController implements Initializable {
                     multimedia.setResolution(String.valueOf((int) imageView.getImage().getWidth()) + 'x'
                             + (int) imageView.getImage().getHeight());
                 } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
+                    PiikLogger.getInstance().log(Level.SEVERE, "UserDataController -> handleMultimediaButton", e);
+                    Alert.newAlert().setHeading("Plus button error").addText("Failure adding the image").addCloseButton().show();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                PiikLogger.getInstance().log(Level.SEVERE, "UserDataController -> handleMultimediaButton", e);
+                Alert.newAlert().setHeading("Plus button error").addText("Failure adding the image").addCloseButton().show();
             }
-
         }
     }
 
@@ -247,7 +251,7 @@ public class UserDataController implements Initializable {
             ContextHandler.getContext().getFeedController().updateFeed();
             ContextHandler.getContext().getUserProfileController().updateFeed();
         } catch (PiikException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the personal data check that all the required parameters are fulfilled");
         }
 
 

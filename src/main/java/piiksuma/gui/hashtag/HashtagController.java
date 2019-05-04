@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Hashtag;
 import piiksuma.Post;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -22,6 +23,7 @@ import piiksuma.gui.posts.PostController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class HashtagController implements Initializable {
 
@@ -55,7 +57,7 @@ public class HashtagController implements Initializable {
             ApiFacade.getEntrypoint().getSearchFacade()
                     .getPost(hashtag, ContextHandler.getContext().getCurrentUser()).forEach(this::addPost);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the feed");
         }
         updateButtonState();
     }
@@ -67,8 +69,7 @@ public class HashtagController implements Initializable {
         try {
             postMasonry.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Handle exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "HashtagController -> addPost", e);
         }
     }
 
@@ -84,7 +85,7 @@ public class HashtagController implements Initializable {
                 follow.setOnAction(this::followHashtag);
             }
         } catch (PiikDatabaseException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure with the follow/un-follow request");
         }
     }
 
@@ -92,7 +93,7 @@ public class HashtagController implements Initializable {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().followHastag(hashtag, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Faliure following the hashtag");
         }
     }
 
@@ -100,7 +101,7 @@ public class HashtagController implements Initializable {
         try {
             ApiFacade.getEntrypoint().getDeletionFacade().unfollowHastag(hashtag, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Faliure un-following the hashtag");
         }
     }
 }

@@ -12,15 +12,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Ticket;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class AdminTicketsController implements Initializable {
 
@@ -46,7 +49,8 @@ public class AdminTicketsController implements Initializable {
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
-            e.showAlert();
+            PiikLogger.getInstance().log(Level.SEVERE, "AdminTicketsController -> handleSearch", e);
+            Alert.newAlert().setHeading("Search error").addText("Failure loading the tickets feed").addCloseButton().show();
         }
     }
 
@@ -55,8 +59,7 @@ public class AdminTicketsController implements Initializable {
             tickets.addAll(ApiFacade.getEntrypoint().getSearchFacade().getAdminTickets(10, ContextHandler.getContext().getCurrentUser()));
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
-            // TODO handle
-            piikInvalidParameters.printStackTrace();
+            piikInvalidParameters.showAlert(piikInvalidParameters, "Failure loading the tickets feed");
         }
     }
 
@@ -73,8 +76,8 @@ public class AdminTicketsController implements Initializable {
             ticketLoader.setController(new TicketController(ticket));
             ticketMasonryPane.getChildren().add(ticketLoader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "AdminTicketsController -> insertTicket", e);
+            Alert.newAlert().setHeading("Insert ticket error").addText("Failure inserting the ticket").addCloseButton().show();
         }
         ticketScrollPane.requestLayout();
         ticketScrollPane.requestFocus();

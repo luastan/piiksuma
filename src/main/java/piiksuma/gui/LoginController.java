@@ -57,7 +57,7 @@ public class LoginController implements Initializable {
         try {
             userLoggin = ApiFacade.getEntrypoint().getSearchFacade().login(user);
         } catch (PiikException e) {
-            System.out.println(e.getMessage());
+            e.showAlert(e, "Failure logging into the application");
             return;
         }
 
@@ -97,7 +97,7 @@ public class LoginController implements Initializable {
         try {
             ContextHandler.getContext().register("primary", mainStage);
         } catch (PiikException e) {
-            //TODO
+            e.showAlert(e, "Failure loading the main stage");
             return;
         }
         // Stage configuration
@@ -136,7 +136,7 @@ public class LoginController implements Initializable {
         try {
             ContextHandler.getContext().register("register", registerStage);
         } catch (PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure registering into the application");
             return;
         }
         // Stage configuration
