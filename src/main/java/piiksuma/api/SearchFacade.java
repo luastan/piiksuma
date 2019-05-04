@@ -482,6 +482,25 @@ public class SearchFacade {
     }
 
     /**
+     * Checks if a given user follows a given hashtag
+     * @param hashtag
+     * @param user
+     * @return
+     * @throws PiikDatabaseException
+     */
+    public boolean userFollowsHashtag(Hashtag hashtag, User user) throws PiikDatabaseException {
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("hashtag"));
+        }
+
+        if (user == null || !user.checkNotNull(false)) {
+            throw new PiikDatabaseException(ErrorMessage.getNullParameterMessage("user"));
+        }
+
+        return(parentFacade.getPostDao().userFollowsHashtag(hashtag, user));
+    }
+
+    /**
      * Function to search the posts which contain a given text, ordered by descending publication date
      *
      * @param text    text to be searched
