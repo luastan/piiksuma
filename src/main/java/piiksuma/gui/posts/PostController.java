@@ -160,22 +160,29 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);
+                hateItButton.setDisable(true);
+                loveItButton.setDisable(true);
+                hateItButton.setDisable(true);
+
             }
             react = new Reaction(current, post, ReactionType.LoveIt);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 loveItButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
+                buttonLike.setDisable(true);
                 hateItButton.setDisable(true);
                 makesMeAngry.setDisable(true);
             }
             react = new Reaction(current, post, ReactionType.HateIt);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 hateItButton.getGraphic().setStyle("-fx-fill: -color-error;");
+                buttonLike.setDisable(true);
                 loveItButton.setDisable(true);
                 makesMeAngry.setDisable(true);
             }
             react = new Reaction(current, post, ReactionType.MakesMeAngry);
             if (ApiFacade.getEntrypoint().getSearchFacade().isReact(react, current, current)) {
                 makesMeAngry.getGraphic().setStyle("-fx-fill:-piik-orange-ripple;");
+                buttonLike.setDisable(true);
                 loveItButton.setDisable(true);
                 hateItButton.setDisable(true);
             }
@@ -326,6 +333,8 @@ public class PostController implements Initializable {
                 buttonLike.getGraphic().setStyle("");
                 mainButton.setDisable(false);
             } else {
+
+                System.out.println("LIKE");
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.MainController">
@@ -12,7 +12,7 @@
         <JFXTabPane fx:id="mainPane">
             <Tab fx:id="feedTab">
                 <graphic>
-                    <FontAwesomeIconView glyphName="COMMENT"
+                    <FontAwesomeIconView  glyphName="COMMENT"
                                          style="-fx-fill: -white-medium-emphasis;"/>
                 </graphic>
             </Tab>
