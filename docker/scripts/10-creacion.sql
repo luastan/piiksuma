@@ -169,16 +169,6 @@ CREATE TABLE administrator
         on delete cascade on update cascade
 );
 
-CREATE TABLE associatedAccount
-(
-    id    varchar(32) not null primary key,
-    token varchar(128), -- todo vamos a meter el token al final?
-    usr   varchar(32),
-
-    foreign key (usr) references piiUser (id)
-        on delete cascade on update cascade
-);
-
 
 /*
       Tickets

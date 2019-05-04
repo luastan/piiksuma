@@ -12,13 +12,13 @@ public class Message extends PiikObject {
     private String id;
     @MapperColumn(notNull = true)
     private String text;
-    @MapperColumn(pkey = true, columna = "author", fKeys = "sender", targetClass = User.class)
+    @MapperColumn(pkey = true, columna = "author", fKeys = "author:id", targetClass = User.class)
     private User sender;
-    @MapperColumn(fKeys = "multimedia", targetClass = Multimedia.class)
+    @MapperColumn(fKeys = "multimedia:hash", targetClass = Multimedia.class)
     private Multimedia multimedia;
     @MapperColumn(pkey = true, hasDefault = true)
     private Timestamp date;
-    @MapperColumn(fKeys = "ticket", targetClass = Ticket.class)
+    @MapperColumn(fKeys = "ticket:id", targetClass = Ticket.class)
     private Ticket ticket;
 
     public Message() {

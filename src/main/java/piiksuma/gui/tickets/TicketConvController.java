@@ -109,6 +109,7 @@ public class TicketConvController implements Initializable {
     private void insertMessage(Message message) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/message.fxml"));
         loader.setController(new MessageController(message));
+
         try {
             messageMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
@@ -127,24 +128,25 @@ public class TicketConvController implements Initializable {
     private void sendMessage(ActionEvent event) {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
+            ApiFacade.getEntrypoint().getInsertionFacade().replyTicket(ticket, newMessage, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
         initializeNewMessage();
         messageField.setText("");
-        sendButton.setDisable(true);
+        messageField.resetValidation();
         updateMessages();
     }
 
 
     private void closeTicket(Event event) {
-        Stage stage = ContextHandler.getContext().getStage("Ticket");
+        Stage stage = ContextHandler.getContext().getStage("conversation");
         if (stage != null) {
             stage.close();
         }
         User current = ContextHandler.getContext().getCurrentUser();
         try {
+            ticket.setAdminClosing(current);
             ApiFacade.getEntrypoint().getInsertionFacade().closeTicket(ticket, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();

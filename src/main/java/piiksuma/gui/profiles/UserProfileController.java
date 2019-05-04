@@ -100,7 +100,6 @@ public class UserProfileController implements Initializable {
             Name.setText(user.getName());
             description.setText(user.getDescription());
 
-            updateFeed();
 
 
 
@@ -108,14 +107,16 @@ public class UserProfileController implements Initializable {
                 publishedPostsMasonry.getChildren().clear();
                 publishedPostsList.forEach(this::insertPost);
             });
+            updateFeed();
+
             publishedPostsList.forEach(this::insertPost);
 
             if (user.equals(ContextHandler.getContext().getCurrentUser())) {
-                updateArchivedPosts();
                 archivedPostsList.addListener((ListChangeListener<? super Post>) c -> {
                     archivedPostsMasonry.getChildren().clear();
                     archivedPostsList.forEach(this::archivePost);
                 });
+                updateArchivedPosts();
                 archivedPostsList.forEach(this::archivePost);
             } else {
                 archivedTab.getTabPane().getTabs().remove(archivedTab);
@@ -300,12 +301,14 @@ public class UserProfileController implements Initializable {
     }
 
     public void updateArchivedPosts() {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         if (!user.equals(ContextHandler.getContext().getCurrentUser())) {
             return;
         }
         archivedPostsList.clear();
 
         try {
+            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
                     user, ContextHandler.getContext().getCurrentUser()));
             System.out.println("Size: " + archivedPostsList.size());
