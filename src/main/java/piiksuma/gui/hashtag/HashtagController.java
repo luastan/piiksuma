@@ -71,6 +71,6 @@ public class HashtagController implements Initializable {
     }
 
     private void updateButtonState() {
-//        if (ApiFacade.getEntrypoint().getInsertionFacade().followHastag();)
+//        ApiFacade.getEntrypoint().getSearchFacade().
     }
 }

@@ -39,11 +39,15 @@ public class UserProfileController implements Initializable {
     public JFXButton buttonCenter;
     public JFXButton buttonRight;
 
+
     @FXML
     private BorderPane profileContent;
 
     @FXML
     private Label Name;
+
+    @FXML
+    private Label userId;
 
     @FXML
     private Label description;
@@ -99,6 +103,7 @@ public class UserProfileController implements Initializable {
 
             Name.setText(user.getName());
             description.setText(user.getDescription());
+            userId.setText(user.getId());
 
             publishedPostsList.addListener((ListChangeListener<? super Post>) c -> {
                 publishedPostsMasonry.getChildren().clear();

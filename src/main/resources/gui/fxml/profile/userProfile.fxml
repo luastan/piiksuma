@@ -38,7 +38,7 @@
                             <VBox alignment="CENTER_LEFT">
                                 <!-- Username and User's name -->
                                 <Label text="User's name" style="-fx-font-weight: BOLD" fx:id="Name"/>
-                                <Label text="id"/>
+                                <Label text="id" fx:id="userId"/>
                             </VBox>
                             <HBox alignment="CENTER" spacing="10">
                                 <!--

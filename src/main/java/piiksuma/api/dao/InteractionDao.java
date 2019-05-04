@@ -319,7 +319,7 @@ public class InteractionDao extends AbstractDao {
         // Insert reaction
         new InsertionMapper<>(super.getConnection()).createUpdate("INSERT INTO react(reactiontype, post, usr, " +
                 "author) VALUES(?,?,?,?)")
-                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                .defineParameters(reaction.getReactionType().toString().toLowerCase(), reaction.getPost().getId(),
                         reaction.getUser().getPK(), reaction.getPost().getAuthor().getPK()).executeUpdate();
     }
 
@@ -344,7 +344,7 @@ public class InteractionDao extends AbstractDao {
 
         List<Map<String, Object>> reactions =new QueryMapper<>(getConnection())
                 .createQuery("SELECT * FROM react WHERE reactiontype = ? and post = ? and  author = ? and usr = ?")
-                .defineParameters(reaction.getReactionType().toString(), reaction.getPost().getId(),
+                .defineParameters(reaction.getReactionType().toString().toLowerCase(), reaction.getPost().getId(),
                         reaction.getPost().getAuthor().getPK(), user.getPK()).mapList();
 
         return (!reactions.isEmpty());
