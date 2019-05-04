@@ -98,6 +98,11 @@ public class User extends PiikObject{
         phones = new ArrayList<>();
     }
 
+    public User(String id) {
+        this.id = id;
+        phones = new ArrayList<>();
+    }
+
     public String getEmail() {
         return email;
     }

@@ -19,6 +19,7 @@ import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.hashtag.HashtagPreviewController;
 import piiksuma.gui.profiles.ProfilePreviewController;
+import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -272,11 +273,14 @@ public class PostController implements Initializable {
             if(ApiFacade.getEntrypoint().getPostDao().isPostArchived(post, ContextHandler.getContext().getCurrentUser())){
                 ApiFacade.getEntrypoint().getDeletionFacade().removeArchivedPost(post, ContextHandler.getContext().getCurrentUser(),ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("");
-                System.out.println("Desarchived");
             }else {
                 ApiFacade.getEntrypoint().getInsertionFacade().archivePost(post, ContextHandler.getContext().getCurrentUser(), ContextHandler.getContext().getCurrentUser());
                 archiveButton.getGraphic().setStyle("-fx-fill: -piik-pastel-green;");
-                System.out.println("Archived");
+            }
+            UserProfileController profileController = ContextHandler.getContext().getUserProfileController();
+            if (profileController != null) {
+                profileController.updateArchivedPosts();
+                profileController.updateFeed();
             }
         }catch (PiikDatabaseException | PiikInvalidParameters e){
             e.showAlert();

@@ -63,16 +63,20 @@
             <!-- Feed -->
             <JFXTabPane>
                 <Tab text="Published">
-                    <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
-                                styleClass="profile-post-feed">
-                        <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
-                    </ScrollPane>
+                    <StackPane>
+                        <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                    styleClass="profile-post-feed">
+                            <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                        </ScrollPane>
+                    </StackPane>
                 </Tab>
                 <Tab text="Archived" fx:id="archivedTab">
-                    <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
-                                styleClass="profile-post-feed">
-                        <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
-                    </ScrollPane>
+                    <StackPane>
+                        <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                    styleClass="profile-post-feed">
+                            <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                        </ScrollPane>
+                    </StackPane>
                 </Tab>
             </JFXTabPane>
 

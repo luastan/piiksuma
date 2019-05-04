@@ -1,11 +1,16 @@
 package piiksuma.gui.deckControllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import piiksuma.Notification;
+import piiksuma.User;
+import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.profiles.UserProfileController;
@@ -20,6 +25,9 @@ public class AbstractDeckController {
     private JFXButton userDataButton;
 
     private JFXButton viewNotificationsButton;
+
+    @FXML
+    public StackPane deck;
 
     public AbstractDeckController() {
     }
@@ -101,15 +109,21 @@ public class AbstractDeckController {
 
     public void setViewNotificationsButton(JFXButton viewNotificationsButton) {
         this.viewNotificationsButton = viewNotificationsButton;
-
         viewNotificationsButton.setOnAction(this::handleNotification);
     }
 
     private void handleNotification(Event event){
+        User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/notifications.fxml", null, "User notifications");
-        } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
         }
+
+    }
+
+    private void sendNotification(Notification notification) {
+        JFXSnackbarLayout layout = new JFXSnackbarLayout(notification.getContent(), "!", Event::consume);
+        new JFXSnackbar(deck).enqueue(new JFXSnackbar.SnackbarEvent(layout));
     }
 }
