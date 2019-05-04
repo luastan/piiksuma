@@ -18,6 +18,7 @@ import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
+import piiksuma.gui.FeedController;
 import piiksuma.gui.posts.PostController;
 
 import java.io.IOException;
@@ -94,6 +95,14 @@ public class HashtagController implements Initializable {
             }
         } catch (PiikDatabaseException e) {
             e.showAlert(e, "Failure with the follow/un-follow request");
+        }
+        FeedController controller = ContextHandler.getContext().getFeedController();
+        if (controller != null) {
+            try {
+                controller.updateFeed();
+            } catch (PiikDatabaseException | PiikInvalidParameters e) {
+                e.showAlert(e, "Failure updating the feed");
+            }
         }
     }
 
