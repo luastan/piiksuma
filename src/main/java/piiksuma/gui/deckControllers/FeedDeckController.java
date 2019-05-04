@@ -38,6 +38,11 @@ public class FeedDeckController extends AbstractDeckController implements Initia
     @FXML
     private JFXButton viewNotificationsButton;
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation

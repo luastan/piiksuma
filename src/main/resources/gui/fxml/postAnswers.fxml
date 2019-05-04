@@ -9,7 +9,7 @@
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           prefWidth="450.0" minWidth="450.0" maxWidth="450.0">
+           prefWidth="445.0" minWidth="445.0" maxWidth="445.0">
     <ScrollPane fx:id="postScrollPane" vbarPolicy="NEVER" hbarPolicy="NEVER" styleClass="main-content"
                 StackPane.alignment="TOP_CENTER">
         <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry">

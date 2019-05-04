@@ -229,7 +229,8 @@ public class MessagesDao extends AbstractDao {
      * Function to get the messages with other user
      *
      * @param user send of the messages
-     * @return
+     * @param limit maximun of messages to be retrieve
+     * @return list of messages with the other user
      */
     public Map<User, List<Message>> messageWithUser(User user, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
@@ -340,9 +341,9 @@ public class MessagesDao extends AbstractDao {
     /**
      * Function to get the private conversation of two users
      *
-     * @param user1
-     * @param user2
-     * @param limit
+     * @param user1 user from the conversation
+     * @param user2 the other user from the conversation
+     * @param limit maximum of messages to be retrieve
      * @return
      */
     public List<Message> getConversation(User user1, User user2, Integer limit) throws PiikDatabaseException,
@@ -369,7 +370,8 @@ public class MessagesDao extends AbstractDao {
     /**
      * Function to get a chat associated to a ticket
      *
-     * * @param limit
+     * @param limit maximum of messages to be retrieve
+     * @param ticket ticket from which we want to obtain its messages
      * @return
      */
     public List<Message> getConversationTicket(Ticket ticket, Integer limit) throws PiikDatabaseException,
@@ -383,9 +385,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
-        return new QueryMapper<Message>(getConnection()).createQuery("SELECT message.* FROM receivemessage " +
-                "JOIN message ON(id=message) WHERE message.ticket = ? " +
-                "ORDER BY date DESC LIMIT ?").defineParameters(ticket.getId(), limit).list();
+        return new QueryMapper<Message>(getConnection()).defineClass(Message.class)
+                .createQuery("SELECT * FROM message WHERE ticket = ? ORDER BY date ASC LIMIT ?")
+                .defineParameters(ticket.getId(), limit).list();
     }
     //******************************************************************************************************************
 
@@ -651,7 +653,7 @@ public class MessagesDao extends AbstractDao {
         }
         // Set ticket as closed
         new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
-                "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+                "adminclosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
     //******************************************************************************************************************
@@ -670,8 +672,9 @@ public class MessagesDao extends AbstractDao {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
+        System.out.println("gggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggu");
         List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
-                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list();
+                "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list(true);
 
         for(Ticket ticket : result) {
             ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
@@ -681,7 +684,7 @@ public class MessagesDao extends AbstractDao {
         return result;
     }
 
-    /* This function allows an user to retrieve his open tickets
+    /** This function allows an user to retrieve his open tickets
      * @param user whose tickets will be retrieved
      * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
@@ -703,8 +706,7 @@ public class MessagesDao extends AbstractDao {
                 user.getPK(), limit).list();
 
         for(Ticket ticket : result) {
-            ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
-                    ContextHandler.getContext().getCurrentUser()));
+            ticket.setUser(user);
         }
 
         return result;

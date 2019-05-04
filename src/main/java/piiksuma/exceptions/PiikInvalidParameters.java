@@ -7,7 +7,9 @@ public class PiikInvalidParameters extends PiikException {
         super(message);
     }
 
-
+    /**
+     * Create an alert with the message of the exception
+     */
     @Override
     public void showAlert() {
         Alert.newAlert().setHeading("InvalidParameters").addText(getMessage()).addCloseButton().show();

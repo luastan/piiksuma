@@ -804,9 +804,9 @@ public class UserDao extends AbstractDao {
     /**
      * Function to check if the user followed follow the user follower
      *
-     * @param followed
-     * @param follower
-     * @return
+     * @param followed User who is followed
+     * @param follower User who is the follower
+     * @return TRUE is the follower follows the followed, FALSE in the other case
      */
     public boolean isFollowed(User followed, User follower) throws PiikDatabaseException {
         if (followed == null || !followed.checkPrimaryKey(false)) {
@@ -871,9 +871,9 @@ public class UserDao extends AbstractDao {
 
     /**
      * Function to check if the user1 has blocked the user2
-     * @param user1
-     * @param user2
-     * @return
+     * @param user1 User who is blocked
+     * @param user2 User who has blocked the other one
+     * @return TRUE is the relation exists in the database
      */
     public boolean isBlock(User user1, User user2) throws PiikDatabaseException {
         if (user1 == null || !user1.checkPrimaryKey(false)) {
@@ -898,7 +898,7 @@ public class UserDao extends AbstractDao {
      * Unblock an user
      *
      * @param blockedUser user that was blocked
-     * @param user
+     * @param user User who is going to unblock the other one
      * @throws PiikDatabaseException
      */
     public void unblockUser(User blockedUser, User user) throws PiikDatabaseException {

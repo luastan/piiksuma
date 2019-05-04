@@ -33,6 +33,7 @@ import java.util.*;
 
 public class MessagesController implements Initializable {
 
+    public StackPane noContentLabel;
     @FXML
     private ScrollPane messageScrollPane;
     @FXML
@@ -42,7 +43,11 @@ public class MessagesController implements Initializable {
 
     private Map<User, List<Message>> lastMessages;
 
-
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         peers = FXCollections.observableArrayList();
@@ -57,13 +62,22 @@ public class MessagesController implements Initializable {
         }
     }
 
+    /**
+     * Updates the messages shown in the window
+     * @throws PiikDatabaseException
+     * @throws PiikInvalidParameters
+     */
     public void updateMessageFeed() throws PiikDatabaseException, PiikInvalidParameters {
         User current = ContextHandler.getContext().getCurrentUser();
         lastMessages = ApiFacade.getEntrypoint().getSearchFacade().messageWithUser(current, 100, current);
         peers.clear();
         peers.addAll(lastMessages.keySet());
+        noContentLabel.setVisible(peers.size() == 0);
     }
 
+    /**
+     * Sets up the feed listener
+     */
     private void setUpFeedListener() {
         peers.addListener((ListChangeListener<? super User>) change -> {
             messageMasonryPane.getChildren().clear();
@@ -71,6 +85,10 @@ public class MessagesController implements Initializable {
         });
     }
 
+    /**
+     * Inserts a conversation in the feed
+     * @param peer
+     */
     private void insertConversation(User peer) {
         User current = ContextHandler.getContext().getCurrentUser();
         FXMLLoader messageLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/messagePreview.fxml"));
@@ -87,6 +105,10 @@ public class MessagesController implements Initializable {
         messageScrollPane.requestFocus();
     }
 
+    /**
+     * Code to be executed when a mouse event happens
+     * @param mouseEvent mouse event on the window
+     */
     private void clickMessage(MouseEvent mouseEvent) {
         if (!(mouseEvent.getSource() instanceof StackPane)) {
 

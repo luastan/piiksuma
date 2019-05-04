@@ -8,7 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.UserType;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
@@ -21,9 +23,11 @@ public class DeckPopUpController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
+    /**
+     * Select the items to be shown on the deck
+     */
     public void selectItem() {
         Stage stage = new Stage();
         FXMLLoader loader;
@@ -74,6 +78,11 @@ public class DeckPopUpController implements Initializable {
                 loader = new FXMLLoader(getClass().getResource("/gui/fxml/stats.fxml"));
                 break;
             case 3:
+                if (ContextHandler.getContext().getCurrentUser().getType().equals(UserType.user)) {
+                    Alert.newAlert().setHeading("Forbidden").addText("Only adiminstrators are allowed to view all the tickets").addCloseButton().show();
+                    return;
+                }
+
                 try {
                     ContextHandler.getContext().invokeStage("/gui/fxml/tickets/adminTickets.fxml", null, "Tickets");
                 } catch (PiikInvalidParameters invalidParameters) {

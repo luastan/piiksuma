@@ -38,7 +38,7 @@
                             <VBox alignment="CENTER_LEFT">
                                 <!-- Username and User's name -->
                                 <Label text="User's name" style="-fx-font-weight: BOLD" fx:id="Name"/>
-                                <Label text="id"/>
+                                <Label text="id" fx:id="userId"/>
                             </VBox>
                             <HBox alignment="CENTER" spacing="10">
                                 <!--
@@ -63,16 +63,20 @@
             <!-- Feed -->
             <JFXTabPane>
                 <Tab text="Published">
-                    <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
-                                styleClass="profile-post-feed">
-                        <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
-                    </ScrollPane>
+                    <StackPane>
+                        <ScrollPane fx:id="publishedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                    styleClass="profile-post-feed">
+                            <JFXMasonryPane fx:id="publishedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                        </ScrollPane>
+                    </StackPane>
                 </Tab>
                 <Tab text="Archived" fx:id="archivedTab">
-                    <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
-                                styleClass="profile-post-feed">
-                        <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
-                    </ScrollPane>
+                    <StackPane>
+                        <ScrollPane fx:id="archivedPosts" vbarPolicy="NEVER" hbarPolicy="NEVER"
+                                    styleClass="profile-post-feed">
+                            <JFXMasonryPane fx:id="archivedPostsMasonry" VSpacing="10" styleClass="main-masonry"/>
+                        </ScrollPane>
+                    </StackPane>
                 </Tab>
             </JFXTabPane>
 

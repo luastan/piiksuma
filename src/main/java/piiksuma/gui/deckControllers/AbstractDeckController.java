@@ -1,11 +1,16 @@
 package piiksuma.gui.deckControllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import piiksuma.Notification;
+import piiksuma.User;
+import piiksuma.api.ApiFacade;
+import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.profiles.UserProfileController;
@@ -20,6 +25,9 @@ public class AbstractDeckController {
     private JFXButton userDataButton;
 
     private JFXButton viewNotificationsButton;
+
+    @FXML
+    public StackPane deck;
 
     public AbstractDeckController() {
     }
@@ -69,11 +77,20 @@ public class AbstractDeckController {
 
     }
 
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param userProfileButton Button of the userProfile
+     */
     public void setUserProfileButton(JFXButton userProfileButton) {
         this.userProfileButton = userProfileButton;
         userProfileButton.setOnAction(this::handleUserButton);
     }
 
+
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
     private void handleUserButton(ActionEvent event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
@@ -85,11 +102,18 @@ public class AbstractDeckController {
 
     }
 
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param userDataButton Button of the userProfile
+     */
     public void setUserDataButton(JFXButton userDataButton) {
         this.userDataButton = userDataButton;
         userDataButton.setOnAction(this::handleUserDataButton);
     }
-
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
     private void handleUserDataButton(Event event) {
         // Requests the feed controller to update the feed for the new Post to show up
         try {
@@ -98,18 +122,33 @@ public class AbstractDeckController {
             invalidParameters.showAlert();
         }
     }
-
+    /**
+     * Add the function to the button to be executed when the it's pressed
+     * @param viewNotificationsButton  Button of the userProfile
+     */
     public void setViewNotificationsButton(JFXButton viewNotificationsButton) {
         this.viewNotificationsButton = viewNotificationsButton;
-
         viewNotificationsButton.setOnAction(this::handleNotification);
     }
-
+    /**
+     * Code to be executed when the window event happened
+     * @param event Window event
+     */
     private void handleNotification(Event event){
+        User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ContextHandler.getContext().invokeStage("/gui/fxml/notifications.fxml", null, "User notifications");
-        } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
         }
+
+    }
+    /**
+     * Sends the notification to the window
+     * @param notification Notificacion to be send
+     */
+    private void sendNotification(Notification notification) {
+        JFXSnackbarLayout layout = new JFXSnackbarLayout(notification.getContent(), "!", Event::consume);
+        new JFXSnackbar(deck).enqueue(new JFXSnackbar.SnackbarEvent(layout));
     }
 }

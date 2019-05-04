@@ -10,34 +10,34 @@ VALUES ('Alvaru', 'alvaru@gmail.com', 'Álvaro Goldar Dieste',
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Danilo', 'danilo@gmail.com', 'Daniel Martínez Fernández',
-        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
+        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
         'M', 'FXML Designer', 'My house', '231', 'Pontevedra', 'España', 'Vigo', '1999-12-1', CURRENT_DATE);
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Cardamis', 'cardamis@gmail.com', 'Francisco Javier Cardama Santiago',
-        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
+        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
         'M', 'Im going to make a son out of Tanenbaum', 'La Isla', '12341', 'Pontevedra', 'España', 'THE Island',
         '1999-04-12', CURRENT_DATE);
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Marpin', 'marpin@gmail.com', 'Marcos López Lamas',
-        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
-        'M', 'Best programmer Galicia', 'My team friends <3', '39218', 'Pontevedra', 'España', 'Vigo', '2019-04-12',
+        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
+        'M', 'Worst programmer Galicia', 'My team friends <3', '39218', 'Pontevedra', 'España', 'Vigo', '2019-04-12',
         CURRENT_DATE);
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Piblo', 'piblo@gmail.com', 'Pablo Martínez Gómez',
-        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
+        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
         'M', 'I like my roomMate', 'VIGO', '39218', 'Pontevedra', 'España', 'Vigo', '1999-05-05',
         CURRENT_DATE);
 
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
-VALUES ('Saul', 'saul@gmail.com', 'Saúl Gay Barral',
-        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==W',
+VALUES ('luastan', 'luastan@gmail.com', 'Saúl Gay Barral',
+        'fwOqspRFP2Z+P1m57Lso4A==$a2vujM97TD31jBCJc/AXAqya7dcVhrnNn/2zyrQKJCPKj38MvI84+FD+ZZ4Tj7ksPp/ONqdWopu4IUt8BkDccw==',
         'M', 'Hacker and freelancer', 'Cows', '39218', 'Lugo', 'Cow-ntry', 'CowLugo', '1996-11-27',
         CURRENT_DATE);
 
@@ -46,18 +46,6 @@ VALUES ('Saul', 'saul@gmail.com', 'Saúl Gay Barral',
 INSERT INTO administrator (id)
 VALUES ('Alvaru');
 
--- Associated account
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaaa', 'tokenaaaa', 'Alvaru');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaab', 'tokenaaaab', 'Danilo');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaac', 'tokenaaac', 'Cardamis');
-
-INSERT INTO associatedaccount (id, token, usr)
-VALUES ('aaad', 'tokenaaad', 'Alvaru');
 
 -- Blocked Users
 INSERT INTO blockuser (usr, blocked)

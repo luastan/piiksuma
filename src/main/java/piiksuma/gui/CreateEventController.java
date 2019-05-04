@@ -29,6 +29,12 @@ public class CreateEventController implements Initializable {
     private JFXDatePicker date;
     @FXML
     private JFXTextArea description;
+
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newEvent.setOnAction(this::handleNew);
@@ -44,6 +50,10 @@ public class CreateEventController implements Initializable {
         });
     }
 
+    /**
+     * Code to the new event button
+     * @param event
+     */
     private void handleNew(Event event) {
         piiksuma.Event newEvent = new piiksuma.Event();
 
@@ -77,6 +87,10 @@ public class CreateEventController implements Initializable {
         ContextHandler.getContext().getStage("createEvent").close();
     }
 
+    /**
+     * Function to check if the fields are correctly fill
+     * @return TRUE if the fields are correctly fill, FALSE in the other case
+     */
     private boolean checkFields(){
         if(eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()){
             return false;

@@ -104,6 +104,19 @@ public class DeletionFacade {
         parentFacade.getUserDao().unfollowUser(followed, follower);
     }
 
+    public void unfollowHastag(Hashtag hashtag, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+        // Null check
+        if (currentUser == null || !currentUser.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
+        }
+        // Null check
+        if (hashtag == null || !hashtag.checkNotNull(false)) {
+            throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
+        }
+
+        parentFacade.getPostDao().unfollowHashtag(hashtag, currentUser);
+    }
+
     /* MULTIMEDIA related methods */
 
     /**
@@ -202,6 +215,10 @@ public class DeletionFacade {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
+        if (!user.equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         parentFacade.getUserDao().unblockUser(blockedUser, user);
     }
     /* MESSAGE related methods */
@@ -262,8 +279,9 @@ public class DeletionFacade {
 
     /**
      * Delete a user from an event
-     * @param event
-     * @param user
+     * @param event Event from which the user is going to be deleted
+     * @param user User who is going to be deleted from the event
+     * @param current Current user logged into the app
      * @throws PiikDatabaseException
      */
     public void deleteUserInEvent(Event event, User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
@@ -311,19 +329,23 @@ public class DeletionFacade {
     /**
      * Function to remove an archive post from an user
      *
-     * @param post
-     * @param user
-     * @param current
+     * @param post Post which is going to be remove form archived posts
+     * @param user User who is going to remove the post from archived posts
+     * @param current Current user logged into the app
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
      */
-    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters{
-        if (current == null ) {
+    public void removeArchivedPost(Post post, User user, User current) throws PiikDatabaseException, PiikInvalidParameters, PiikForbiddenException{
+        if (current == null || !current.checkNotNull(false) ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("currentUser"));
         }
 
-        if (post == null ) {
+        if (post == null || !post.checkNotNull(false) ) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
+        }
+
+        if (!current.equals(user)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getPostDao().removeArchivePost(post, user);

@@ -14,7 +14,7 @@ public class Ticket extends PiikObject{
     private Integer id;
     @MapperColumn(columna = "closedate")
     private String closeDate;
-    @MapperColumn(fKeys = "usr", targetClass = User.class, notNull = true)
+    @MapperColumn(fKeys = "usr:id", targetClass = User.class, notNull = true)
     private User user;
     @MapperColumn(notNull = true)
     private String section;
@@ -22,7 +22,7 @@ public class Ticket extends PiikObject{
     private String textProblem;
     @MapperColumn
     private String creationDate;
-    @MapperColumn(fKeys = "adminclosing", targetClass = User.class)
+    @MapperColumn(fKeys = "adminclosing:id", targetClass = User.class)
     private User adminClosing;
 
     /* Constructors */

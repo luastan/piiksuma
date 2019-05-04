@@ -150,7 +150,7 @@ public class InsertionFacade {
      * @param user        User who wants to block the other user
      * @throws PiikDatabaseException
      */
-    public void blockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters {
+    public void blockUser(User blockedUser, User user, User currentUser) throws PiikDatabaseException, PiikInvalidParameters, PiikForbiddenException {
 
 
         if (currentUser == null || !currentUser.checkNotNull(false)) {
@@ -162,6 +162,10 @@ public class InsertionFacade {
         }
         if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
+        }
+
+        if (!currentUser.equals(user)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         parentFacade.getUserDao().blockUser(blockedUser, user);
@@ -213,6 +217,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
+        if (!post.getAuthor().equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         return parentFacade.getPostDao().createPost(post);
     }
 
@@ -253,7 +261,7 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("hashtag"));
         }
 
-        parentFacade.getPostDao().followHastag(hashtag, currentUser);
+        parentFacade.getPostDao().followHashtag(hashtag, currentUser);
     }
 
     /**
@@ -330,6 +338,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
+        if (!userRepost.equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         parentFacade.getPostDao().repost(userRepost, post, userPost);
     }
 
@@ -370,6 +382,10 @@ public class InsertionFacade {
 
         if (ticket == null || !ticket.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
+        }
+
+        if (!ticket.getUser().equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getMessagesDao().newTicket(ticket);
@@ -601,6 +617,7 @@ public class InsertionFacade {
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
+
 
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }

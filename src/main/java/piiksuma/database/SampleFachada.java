@@ -112,8 +112,8 @@ public class SampleFachada {
     }
 
     /**
-     * //TODO borrar esto cuando ya no sea necesario
-     * Ejemplo para el uso de los mappers :)
+     * //TODO delete this when is not necessary anymore
+     * Example of the use of the mappers
      */
     public void meterUsuario() throws PiikDatabaseException {
 
@@ -132,17 +132,17 @@ public class SampleFachada {
         new InsertionMapper<User>(this.conexion).addAll(newUsuario).defineClass(User.class).insert();
         System.out.println("Se han insertado los siguientes usuarios: " + newUsuario.getId() + ", " +
                 newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
         //new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
         System.out.println("Se ha borrado el id: " + newUsuario.getId());
-        imprimirUsuarios();
+        printUsers();
 
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createUpdate(
                 "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Goldar").executeUpdate();
 
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
         // Modificación nueva a partir de una clase
         // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
@@ -151,14 +151,14 @@ public class SampleFachada {
         newUsuario2.setGender("M");
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
     }
 
     /**
-     * //TODO BORRAR CUANDO NO HAGA FALTA
+     * //TODO Delete when it's not necessary anymore
      */
-    public void ejemploGETFK(){
+    public void ejemploGETFK() {
 
         User user = new User("Francisco Javier", "Cardama", "francardama@gmail.com");
         User user2 = new User("Álvaro Goldar", "alvrogd", "alvarogoldard@gmail.com");
@@ -215,7 +215,7 @@ public class SampleFachada {
         }*/
 
         // Se imprimen
-        for(String column : fks.keySet()){
+        for (String column : fks.keySet()) {
             System.out.println(column + " " + fks.get(column).toString());
         }
 
@@ -226,7 +226,7 @@ public class SampleFachada {
             e.printStackTrace();
         }
 
-        for(Post post : posts) {
+        for (Post post : posts) {
             System.out.println(post);
         }
 
@@ -283,7 +283,7 @@ public class SampleFachada {
         }*/
     }
 
-    public void pruebasCheck(){
+    public void pruebasCheck() {
         User user = new User("Fran", "Cardama", "francardama@gmail.com");
         User user2 = new User("Álvaro Goldar", null, "alvarogoldard@gmail.com");
 
@@ -314,7 +314,10 @@ public class SampleFachada {
  */
     }
 
-    public void imprimirUsuarios() {
+    /**
+     * Print the users returned by the Query
+     */
+    public void printUsers() {
         List<User> usuarios = null;
         try {
             usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +
@@ -328,7 +331,7 @@ public class SampleFachada {
     }
 
     /**
-     *
+     * Print the users returned by the Query
      */
     public void mapaSample() {
         List<Map<String, Object>> usuarios = null;

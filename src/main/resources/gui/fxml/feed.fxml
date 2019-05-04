@@ -10,6 +10,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="piiksuma.gui.FeedController">
@@ -18,4 +19,13 @@
         <JFXMasonryPane fx:id="postMasonryPane" VSpacing="10" styleClass="main-masonry">
         </JFXMasonryPane>
     </ScrollPane>
+    <StackPane fx:id="noPostLabel" style="-fx-padding: 40 40 40 40">
+        <Label text="Your feed is empty" wrapText="true" style="-fx-font-size: 15">
+            <graphic>
+                <FontAwesomeIconView glyphName="COMMENT" size="55"
+                                     styleClass="deck-small-button-graphic"/>
+            </graphic>
+        </Label>
+    </StackPane>
+
 </StackPane>

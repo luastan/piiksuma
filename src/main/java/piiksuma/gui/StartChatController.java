@@ -35,6 +35,11 @@ public class StartChatController implements Initializable {
 
     private User receiver = new User();
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mainButton.setOnAction(this::handleNewMessage);
@@ -57,6 +62,10 @@ public class StartChatController implements Initializable {
         });
     }
 
+    /**
+     * Code to be executed when the new message button is pressed
+     * @param event Event on the window
+     */
     private void handleNewMessage(Event event){
         if (!messageField.validate() && !userField.validate()) {
             return;
@@ -68,7 +77,7 @@ public class StartChatController implements Initializable {
             message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message,current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            e.showAlert();
         }
 
         try {

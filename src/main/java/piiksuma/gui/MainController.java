@@ -151,6 +151,11 @@ public class MainController implements Initializable {
 
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Code to initialize current view

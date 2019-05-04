@@ -64,6 +64,11 @@ public class TicketConvController implements Initializable {
         initializeNewMessage();
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ValidatorBase validator = new RequiredFieldValidator("Required Field");
@@ -89,15 +94,22 @@ public class TicketConvController implements Initializable {
         }
     }
 
+    /**
+     * Updates the messages on the window
+     */
     public void updateMessages() {
         messageMasonryPane.getChildren().clear();
         this.insertMessages();
     }
 
+
+    /**
+     * grab all the messages in a ticket conversation and call insertMessage
+     */
     private void insertMessages() {
         User current = ContextHandler.getContext().getCurrentUser();
-        // TODO: grab all the messages in a ticket conversation and call insertMessage
-        // ApiFacade.getEntrypoint().getSearchFacade().getMessages(ticket, current).forEach(this::insertMessage);
+
+
         try {
             ApiFacade.getEntrypoint().getSearchFacade().getConversationTicket(ticket, current, 100)
                     .forEach(this::insertMessage);
@@ -106,9 +118,14 @@ public class TicketConvController implements Initializable {
         }
     }
 
+    /**
+     * Inserts messages on the window
+     * @param message
+     */
     private void insertMessage(Message message) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/message.fxml"));
         loader.setController(new MessageController(message));
+
         try {
             messageMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
@@ -117,6 +134,9 @@ public class TicketConvController implements Initializable {
         }
     }
 
+    /**
+     * Inits a new message
+     */
     private void initializeNewMessage() {
         newMessage = new Message();
         newMessage.setSender(ContextHandler.getContext().getCurrentUser());
@@ -124,27 +144,35 @@ public class TicketConvController implements Initializable {
         newMessage.setTicket(this.ticket);
     }
 
+    /**
+     * Sends a message in the ticket
+     * @param event Event on the window
+     */
     private void sendMessage(ActionEvent event) {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ApiFacade.getEntrypoint().getInsertionFacade().createMessage(newMessage, current);
+            ApiFacade.getEntrypoint().getInsertionFacade().replyTicket(ticket, newMessage, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
         initializeNewMessage();
         messageField.setText("");
-        sendButton.setDisable(true);
+        messageField.resetValidation();
         updateMessages();
     }
 
-
+    /**
+     * Close an open ticket
+     * @param event Event on the window
+     */
     private void closeTicket(Event event) {
-        Stage stage = ContextHandler.getContext().getStage("Ticket");
+        Stage stage = ContextHandler.getContext().getStage("conversation");
         if (stage != null) {
             stage.close();
         }
         User current = ContextHandler.getContext().getCurrentUser();
         try {
+            ticket.setAdminClosing(current);
             ApiFacade.getEntrypoint().getInsertionFacade().closeTicket(ticket, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();

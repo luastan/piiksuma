@@ -14,6 +14,5 @@
     <Label text="Log-out"/>
     <Label text="Show achievements"/>
     <Label text="Show Statistics"/>
-    <Label text="Show Tickets"/>
-    <!--    <Label text="Modify Data"/>-->
+    <Label text="Show Tickets (Admins) "/>
 </JFXListView>

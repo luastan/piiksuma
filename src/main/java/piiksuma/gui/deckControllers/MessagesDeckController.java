@@ -39,7 +39,11 @@ public class MessagesDeckController extends AbstractDeckController implements In
     @FXML
     private JFXButton viewNotificationsButton;
 
-
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Common deck implementation
@@ -55,6 +59,10 @@ public class MessagesDeckController extends AbstractDeckController implements In
         mainButton.setOnAction(this::handleMessageButton);
     }
 
+    /**
+     * Code to be executed when the window event happens
+     * @param event Event which happen in the window
+     */
     public void handleMessageButton (ActionEvent event){
         Stage searchStage = new Stage();
 
