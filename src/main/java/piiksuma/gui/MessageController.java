@@ -83,6 +83,7 @@ public class MessageController implements Initializable {
 
         forwardButton.setOnAction(event -> {
             Message forwarded = new Message(message);
+            forwarded.setTicket(null);
             forwarded.setSender(ContextHandler.getContext().getCurrentUser());
             try {
                 ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(
