@@ -77,6 +77,11 @@ public class UserDataController implements Initializable {
 
     private Multimedia multimedia;
 
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -94,6 +99,9 @@ public class UserDataController implements Initializable {
 
     }
 
+    /**
+     * Inits the fields with the user information
+     */
     private void initFields() {
         User user = ContextHandler.getContext().getCurrentUser();
 
@@ -208,6 +216,11 @@ public class UserDataController implements Initializable {
         telephoneList.edit(telephoneList.getItems().size() - 1);
 
     }
+
+    /**
+     * Function to update the user data
+     * @param event Event on the window
+     */
 
     private void handleUpdate(Event event) {
         User modifyUser = new User();
