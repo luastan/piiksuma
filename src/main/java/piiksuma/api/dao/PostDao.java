@@ -932,7 +932,7 @@ public class PostDao extends AbstractDao {
         }
 
         return(!(new QueryMapper<>(super.getConnection()).createQuery("SELECT * FROM followhashtag WHERE hashtag = ? " +
-                "AND piiUser = ?").defineParameters(hashtag.getName(), user.getPK()).list()).isEmpty());
+                "AND piiUser = ?").defineParameters(hashtag.getName(), user.getPK()).mapList()).isEmpty());
     }
 
     /**
