@@ -82,6 +82,10 @@ public class FeedController implements Initializable {
         });
     }
 
+    /**
+     * Inserts a post in the window
+     * @param post
+     */
     private void insertPost(Post post) {
         FXMLLoader postLoader = new FXMLLoader(this.getClass().getResource("/gui/fxml/post.fxml"));
         postLoader.setController(new PostController(post));

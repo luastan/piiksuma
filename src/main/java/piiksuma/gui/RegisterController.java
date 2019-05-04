@@ -54,6 +54,11 @@ public class RegisterController implements Initializable {
     @FXML
     private JFXTextField city;
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Add options to the comboBox

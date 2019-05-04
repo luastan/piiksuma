@@ -39,6 +39,11 @@ public class MessagePreviewController implements Initializable {
         this.peer = peer;
     }
 
+    /**
+     * Inits the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (message != null) {
@@ -61,6 +66,9 @@ public class MessagePreviewController implements Initializable {
         }
     }
 
+    /**
+     * SETTERS AND GETTERS
+     */
     public User getPeer() {
         return peer;
     }
