@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXMasonryPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -56,6 +57,7 @@ public class HashtagController implements Initializable {
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
+        updateButtonState();
     }
 
     // Adds a post to the pane
@@ -71,6 +73,34 @@ public class HashtagController implements Initializable {
     }
 
     private void updateButtonState() {
-//        ApiFacade.getEntrypoint().getSearchFacade().
+        try {
+            if (ApiFacade.getEntrypoint().getSearchFacade().userFollowsHashtag(hashtag, ContextHandler.getContext().getCurrentUser())) {
+                follow.setText("UnFollow");
+                follow.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
+                follow.setOnAction(this::unFollowHashtag);
+            } else {
+                follow.setText("Follow");
+                follow.setStyle("-fx-background-color: -primary-color-5");
+                follow.setOnAction(this::followHashtag);
+            }
+        } catch (PiikDatabaseException e) {
+            e.showAlert();
+        }
+    }
+
+    private void followHashtag(Event event) {
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().followHastag(hashtag, ContextHandler.getContext().getCurrentUser());
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
+        }
+    }
+
+    private void unFollowHashtag(Event event) {
+        try {
+            ApiFacade.getEntrypoint().getInsertionFacade().followHastag(hashtag, ContextHandler.getContext().getCurrentUser());
+        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+            e.showAlert();
+        }
     }
 }
