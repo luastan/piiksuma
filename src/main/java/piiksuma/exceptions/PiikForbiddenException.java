@@ -9,6 +9,9 @@ public class PiikForbiddenException extends PiikDatabaseException {
         super(message);
     }
 
+    /**
+     * Create an alert with the message of the exception
+     */
     @Override
     public void showAlert() {
         Alert.newAlert().setHeading("Forbidden").addText(getMessage()).addCloseButton().show();

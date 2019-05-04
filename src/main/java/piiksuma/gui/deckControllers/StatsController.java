@@ -43,6 +43,11 @@ public class StatsController implements Initializable {
     @FXML
     private JFXButton closeButton;
 
+    /**
+     * Init the window components
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -51,6 +56,9 @@ public class StatsController implements Initializable {
         searchStats();
     }
 
+    /**
+     * Search the user stats to be display on the window
+     */
     private void searchStats() {
         User user = ContextHandler.getContext().getCurrentUser();
 
