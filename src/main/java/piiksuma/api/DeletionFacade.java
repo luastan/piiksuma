@@ -202,6 +202,10 @@ public class DeletionFacade {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
+        if (!user.equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         parentFacade.getUserDao().unblockUser(blockedUser, user);
     }
     /* MESSAGE related methods */

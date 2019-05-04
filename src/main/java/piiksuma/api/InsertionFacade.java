@@ -217,6 +217,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("post"));
         }
 
+        if (!post.getAuthor().equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         return parentFacade.getPostDao().createPost(post);
     }
 
@@ -334,6 +338,10 @@ public class InsertionFacade {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("userPost"));
         }
 
+        if (!userRepost.equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
+        }
+
         parentFacade.getPostDao().repost(userRepost, post, userPost);
     }
 
@@ -374,6 +382,10 @@ public class InsertionFacade {
 
         if (ticket == null || !ticket.checkNotNull(true)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("ticket"));
+        }
+
+        if (!ticket.getUser().equals(currentUser)){
+            throw new PiikForbiddenException(ErrorMessage.getPermissionDeniedMessage());
         }
 
         return parentFacade.getMessagesDao().newTicket(ticket);
@@ -605,6 +617,7 @@ public class InsertionFacade {
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
+        
 
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }
