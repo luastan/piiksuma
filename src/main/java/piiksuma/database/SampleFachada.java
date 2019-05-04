@@ -112,8 +112,8 @@ public class SampleFachada {
     }
 
     /**
-     * //TODO borrar esto cuando ya no sea necesario
-     * Ejemplo para el uso de los mappers :)
+     * //TODO delete this when is not necessary anymore
+     * Example of the use of the mappers
      */
     public void meterUsuario() throws PiikDatabaseException {
 
@@ -132,17 +132,17 @@ public class SampleFachada {
         new InsertionMapper<User>(this.conexion).addAll(newUsuario).defineClass(User.class).insert();
         System.out.println("Se han insertado los siguientes usuarios: " + newUsuario.getId() + ", " +
                 newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
         //new DeleteMapper<User>(this.conexion).add(newUsuario).defineClass(User.class).delete();
         System.out.println("Se ha borrado el id: " + newUsuario.getId());
-        imprimirUsuarios();
+        printUsers();
 
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).createUpdate(
                 "UPDATE piiUser SET id = ? WHERE id = ?").defineParameters("idNuevo", "Goldar").executeUpdate();
 
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
         // Modificación nueva a partir de una clase
         // El mapper va a actualizar todos los atributos que no estén a null, esto es útil cuando se va a actualizar
@@ -151,12 +151,12 @@ public class SampleFachada {
         newUsuario2.setGender("M");
         new UpdateMapper<User>(this.conexion).add(newUsuario2).defineClass(User.class).update();
         System.out.println("Se ha actualizado el usuario: " + newUsuario2.getId());
-        imprimirUsuarios();
+        printUsers();
 
     }
 
     /**
-     * //TODO BORRAR CUANDO NO HAGA FALTA
+     * //TODO Delete when it's not necessary anymore
      */
     public void ejemploGETFK(){
 
@@ -314,7 +314,7 @@ public class SampleFachada {
  */
     }
 
-    public void imprimirUsuarios() {
+    public void printUsers() {
         List<User> usuarios = null;
         try {
             usuarios = new QueryMapper<User>(this.conexion).createQuery("SELECT * FROM piiUser where email " +

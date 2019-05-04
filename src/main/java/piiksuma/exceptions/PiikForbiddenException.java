@@ -2,7 +2,7 @@ package piiksuma.exceptions;
 
 import piiksuma.gui.Alert;
 
-// TODO i don't think so
+// TODO I don't think so
 public class PiikForbiddenException extends PiikDatabaseException {
 
     public PiikForbiddenException(String message) {
