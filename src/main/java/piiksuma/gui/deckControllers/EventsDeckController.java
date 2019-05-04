@@ -14,12 +14,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class EventsDeckController extends AbstractDeckController implements Initializable {
 
@@ -73,7 +75,7 @@ public class EventsDeckController extends AbstractDeckController implements Init
             ContextHandler.getContext().register("createEvent", eventStage);
         } catch (PiikInvalidParameters e) {
 
-            e.showAlert();
+            e.showAlert(e, "Failure updating the feed for the new post");
             return;
         }
         // Stage configuration
@@ -86,8 +88,7 @@ public class EventsDeckController extends AbstractDeckController implements Init
         try {
             decorator = new JFXDecorator(eventStage, loader.load(), false, false, true);
         } catch (IOException e) {
-
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "EventsDeckController -> handleNewEvent", e);
             return;
         }
 

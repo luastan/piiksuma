@@ -55,7 +55,7 @@ public class TrendingController implements Initializable {
                 }
             });
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Faliure loadiang the trendig stage");
         }
     }
 }

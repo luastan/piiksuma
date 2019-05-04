@@ -8,5 +8,5 @@ public abstract class PiikException extends Exception {
         super(message);
     }
 
-    public abstract void showAlert();
+    public abstract void showAlert(Exception e, String message);
 }

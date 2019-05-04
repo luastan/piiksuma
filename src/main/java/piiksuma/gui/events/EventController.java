@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import piiksuma.Event;
 import piiksuma.User;
 import piiksuma.UserType;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class EventController implements Initializable {
 
@@ -75,7 +77,7 @@ public class EventController implements Initializable {
                 ContextHandler.getContext().getStage("Event - " + event.getName()).close();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
             } catch (PiikDatabaseException | PiikInvalidParameters e) {
-                e.showAlert();
+                e.showAlert(e, "Failure deleting the event");
             }
         });
         if (participants.contains(current)) {
@@ -99,7 +101,7 @@ public class EventController implements Initializable {
             refreshParticipants();
             buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure adding participant to the event");
         }
     }
 
@@ -115,7 +117,7 @@ public class EventController implements Initializable {
             refreshParticipants();
             buttonInitialization();
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure deleting participant of the event");
         }
     }
 
@@ -159,7 +161,7 @@ public class EventController implements Initializable {
             participants.addAll(ApiFacade.getEntrypoint()
                     .getSearchFacade().usersInEvent(event, ContextHandler.getContext().getCurrentUser()).values());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure refreshing participants");
         }
     }
 
@@ -174,7 +176,7 @@ public class EventController implements Initializable {
         try {
             profile = loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "EventController -> insertParticipantMasonry", e);
             return;
         }
         participantMasonryPane.getChildren().add(profile);

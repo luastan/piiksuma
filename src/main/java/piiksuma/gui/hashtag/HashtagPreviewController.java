@@ -46,7 +46,7 @@ public class HashtagPreviewController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/hashtags/hashtag.fxml", new HashtagController(hashtag), "Hashtag");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading de hashtag stage");
         }
     }
 }

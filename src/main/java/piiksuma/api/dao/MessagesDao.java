@@ -191,7 +191,7 @@ public class MessagesDao extends AbstractDao {
      * Function to sent a private message to other user
      *
      * @param message private message
-     * @param user receiver to the private message
+     * @param user    receiver to the private message
      */
     public void sendPrivateMessage(Message message, User user) throws PiikDatabaseException {
         // Check if message or its primary key are null
@@ -228,18 +228,18 @@ public class MessagesDao extends AbstractDao {
     /**
      * Function to get the messages with other user
      *
-     * @param user send of the messages
+     * @param user  send of the messages
      * @param limit maximun of messages to be retrieve
      * @return list of messages with the other user
      */
     public Map<User, List<Message>> messageWithUser(User user, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(user == null || !user.checkPrimaryKey(false)){
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
-        if(limit <= 0){
+        if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
@@ -253,18 +253,18 @@ public class MessagesDao extends AbstractDao {
         ArrayList<User> userPKs = new ArrayList<>();
 
         // The primary keys of the receivers are added
-        for(Map<String, Object> tuple : query){
+        for (Map<String, Object> tuple : query) {
             User userInfo = new User();
             User senderInfo = new User();
 
             userInfo.setId((String) tuple.get("receiver"));
             senderInfo.setId((String) tuple.get("author"));
 
-            if(!userPKs.contains(userInfo)) {
+            if (!userPKs.contains(userInfo)) {
                 userPKs.add(userInfo);
             }
 
-            if(!userPKs.contains(senderInfo)){
+            if (!userPKs.contains(senderInfo)) {
                 userPKs.add(senderInfo);
             }
         }
@@ -275,7 +275,7 @@ public class MessagesDao extends AbstractDao {
         user = users.get(user.getPK());
 
         // Se recorren todas las tuplas obtenidas en la consulta
-        for(Map<String, Object> tuple : query){
+        for (Map<String, Object> tuple : query) {
 
             // Se crea el mensaje correspondiente y su multimedia
             Message message = new Message();
@@ -295,8 +295,8 @@ public class MessagesDao extends AbstractDao {
             Object multimedia = tuple.get("multimedia");
 
             // En caso de que exista se añade el hash y se establece en el mensaje
-            if(multimedia != null){
-                multMessage.setHash((String)multimedia);
+            if (multimedia != null) {
+                multMessage.setHash((String) multimedia);
                 message.setMultimedia(multMessage);
             }
 
@@ -304,7 +304,7 @@ public class MessagesDao extends AbstractDao {
             String receiverPK = (String) tuple.get("receiver");
             User receiver = users.get(receiverPK);
 
-            if(receiver.equals(user)) {
+            if (receiver.equals(user)) {
                 // En caso de que la lista con los mensajes para ese receptor ya exista, se añade directamente en la lista
                 // del HashMap
                 if (returnMessages.containsKey(message.getSender())) {
@@ -349,15 +349,15 @@ public class MessagesDao extends AbstractDao {
     public List<Message> getConversation(User user1, User user2, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(user1 == null || !user1.checkPrimaryKey(false)){
+        if (user1 == null || !user1.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user1"));
         }
 
-        if(user2 == null || !user2.checkPrimaryKey(false)){
+        if (user2 == null || !user2.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user2"));
         }
 
-        if(limit <= 0){
+        if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
@@ -370,18 +370,18 @@ public class MessagesDao extends AbstractDao {
     /**
      * Function to get a chat associated to a ticket
      *
-     * @param limit maximum of messages to be retrieve
+     * @param limit  maximum of messages to be retrieve
      * @param ticket ticket from which we want to obtain its messages
      * @return
      */
     public List<Message> getConversationTicket(Ticket ticket, Integer limit) throws PiikDatabaseException,
             PiikInvalidParameters {
 
-        if(ticket == null || !ticket.checkPrimaryKey(false)){
+        if (ticket == null || !ticket.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
 
-        if(limit <= 0){
+        if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
 
@@ -671,12 +671,10 @@ public class MessagesDao extends AbstractDao {
         if (limit <= 0) {
             throw new PiikInvalidParameters(ErrorMessage.getNegativeLimitMessage());
         }
-
-        System.out.println("gggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggugggggggggggggggguggggggggggggggggu");
         List<Ticket> result = new QueryMapper<Ticket>(super.getConnection()).createQuery("SELECT * FROM ticket WHERE closeDate is " +
                 "NULL ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(limit).list(true);
 
-        for(Ticket ticket : result) {
+        for (Ticket ticket : result) {
             ticket.setUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(ticket.getUser(),
                     ContextHandler.getContext().getCurrentUser()));
         }
@@ -684,8 +682,10 @@ public class MessagesDao extends AbstractDao {
         return result;
     }
 
-    /** This function allows an user to retrieve his open tickets
-     * @param user whose tickets will be retrieved
+    /**
+     * This function allows an user to retrieve his open tickets
+     *
+     * @param user  whose tickets will be retrieved
      * @param limit maximum number of tickets to retrieve
      * @return the list of all the tickets which haven't been closed
      * @throws PiikDatabaseException Thrown on query gone wrong
@@ -693,7 +693,7 @@ public class MessagesDao extends AbstractDao {
      */
     public List<Ticket> getUserTickets(User user, Integer limit) throws PiikDatabaseException, PiikInvalidParameters {
 
-        if(user == null || !user.checkPrimaryKey(false)) {
+        if (user == null || !user.checkPrimaryKey(false)) {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("user"));
         }
 
@@ -705,7 +705,7 @@ public class MessagesDao extends AbstractDao {
                 "NULL AND usr = ? ORDER BY creationDate ASC LIMIT ?").defineClass(Ticket.class).defineParameters(
                 user.getPK(), limit).list();
 
-        for(Ticket ticket : result) {
+        for (Ticket ticket : result) {
             ticket.setUser(user);
         }
 

@@ -7,12 +7,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.gui.profiles.ProfilePreviewController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 
 public class MessagePreviewController implements Initializable {
@@ -61,8 +63,8 @@ public class MessagePreviewController implements Initializable {
         try {
             profilePicture.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Handle exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "MessagePreviewController -> initializeForward", e);
+            Alert.newAlert().setHeading("Image error").addText("Failure loading the profile preview").addCloseButton().show();
         }
     }
 

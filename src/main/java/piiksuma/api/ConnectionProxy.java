@@ -1,11 +1,14 @@
 package piiksuma.api;
 
+import piiksuma.Utilities.PiikLogger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 
 /**
  * Proxy around the Database connection. It creates the connection with the database
@@ -38,7 +41,7 @@ public class ConnectionProxy {
             );
 
         } catch (IOException | SQLException e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "ApiFacade -> ConnectionProxy", e);
         }
     }
 

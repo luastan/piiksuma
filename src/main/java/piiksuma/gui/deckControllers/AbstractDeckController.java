@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import piiksuma.Notification;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -16,6 +17,7 @@ import piiksuma.gui.ContextHandler;
 import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class AbstractDeckController {
     private JFXHamburger hamburguerButton;
@@ -71,8 +73,7 @@ public class AbstractDeckController {
                 popup.setAutoHide(true);
             });
         } catch (IOException e) {
-            // TODO: Handle the exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "AbstractDeckController -> setHamburguerButton", e);
         }
 
     }
@@ -97,7 +98,7 @@ public class AbstractDeckController {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
                     new UserProfileController(ContextHandler.getContext().getCurrentUser()), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure updating the feed for the new post");
         }
 
     }
@@ -119,7 +120,7 @@ public class AbstractDeckController {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userData.fxml", null, "User data");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure updating the feed for the new post");
         }
     }
     /**
@@ -139,7 +140,7 @@ public class AbstractDeckController {
         try {
             ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Could not show the notification");
         }
 
     }

@@ -68,7 +68,7 @@ public class FeedDeckController extends AbstractDeckController implements Initia
             ContextHandler.getContext().invokeStage("/gui/fxml/createPost.fxml", new CreatePostController(null), "Create Post");
 
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading createPost stage");
         }
 
     }

@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import piiksuma.Event;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
@@ -25,6 +26,7 @@ import piiksuma.gui.ConversationController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class EventsController implements Initializable {
 
@@ -59,8 +61,8 @@ public class EventsController implements Initializable {
         eventFeed.clear();
         try {
             eventFeed.addAll(ApiFacade.getEntrypoint().getSearchFacade().getEvents(user, user));
-        }catch (PiikException e){
-            System.out.println(e.getMessage());
+        } catch (PiikException e) {
+            e.showAlert(e, "Failure updating the event feed");
             return;
         }
         noContentLabel.setVisible(eventFeed.size() == 0);
@@ -91,7 +93,7 @@ public class EventsController implements Initializable {
             eventMasonryPane.getChildren().add(node);
         } catch (IOException e) {
             // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "Failure loading the eventPreview stage");
         }
         eventScrollPane.requestLayout();
         eventScrollPane.requestFocus();
@@ -117,7 +119,7 @@ public class EventsController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/events/event.fxml", controller, "Event" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert(invalidParameters, "Failure showing the event event");
         }
     }
 

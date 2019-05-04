@@ -21,16 +21,19 @@ import piiksuma.Message;
 import piiksuma.Ticket;
 import piiksuma.User;
 import piiksuma.UserType;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.MessageController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class TicketConvController implements Initializable {
 
@@ -114,7 +117,8 @@ public class TicketConvController implements Initializable {
             ApiFacade.getEntrypoint().getSearchFacade().getConversationTicket(ticket, current, 100)
                     .forEach(this::insertMessage);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            PiikLogger.getInstance().log(Level.SEVERE, "TicketConvController -> insertMessages", e);
+            Alert.newAlert().setHeading("Insert messages error").addText("Failure loading the messages of the ticket").addCloseButton().show();
         }
     }
 
@@ -129,8 +133,8 @@ public class TicketConvController implements Initializable {
         try {
             messageMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Handle Exceptions
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "TicketConvController -> insertMessage", e);
+            Alert.newAlert().setHeading("Insert message error").addText("Failure inserting the message").addCloseButton().show();
         }
     }
 
@@ -153,7 +157,7 @@ public class TicketConvController implements Initializable {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().replyTicket(ticket, newMessage, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure sending the message");
         }
         initializeNewMessage();
         messageField.setText("");
@@ -175,7 +179,7 @@ public class TicketConvController implements Initializable {
             ticket.setAdminClosing(current);
             ApiFacade.getEntrypoint().getInsertionFacade().closeTicket(ticket, current);
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure closing the ticket");
         }
     }
 

@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import piiksuma.Notification;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class NotificationsController implements Initializable {
     @FXML
@@ -48,7 +50,7 @@ public class NotificationsController implements Initializable {
             // Update its contents
             updateNotifications();
         } catch (PiikDatabaseException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating notifications");
         }
     }
 
@@ -67,7 +69,7 @@ public class NotificationsController implements Initializable {
             notifications.addAll(notifications1);
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.showAlert();
+            piikInvalidParameters.showAlert(piikInvalidParameters, "Failure updating notifications");
         }
     }
 
@@ -99,8 +101,8 @@ public class NotificationsController implements Initializable {
         try {
             notificationMasonryPane.getChildren().add(loader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "NotificationController -> insertNotification", e);
+            Alert.newAlert().setHeading("Insert notification error").addText("Failure inserting the notification").addCloseButton().show();
         }
 
         notScrollPane.requestLayout();

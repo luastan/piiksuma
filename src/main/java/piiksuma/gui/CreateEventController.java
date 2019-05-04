@@ -11,12 +11,14 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class CreateEventController implements Initializable {
     @FXML
@@ -30,11 +32,6 @@ public class CreateEventController implements Initializable {
     @FXML
     private JFXTextArea description;
 
-    /**
-     * Inits the window components
-     * @param location
-     * @param resources
-     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newEvent.setOnAction(this::handleNew);
@@ -57,7 +54,7 @@ public class CreateEventController implements Initializable {
     private void handleNew(Event event) {
         piiksuma.Event newEvent = new piiksuma.Event();
 
-        if(!checkFields()){
+        if (!checkFields()) {
             Alert alert = new Alert(ContextHandler.getContext().getStage("createEvent"));
             alert.setHeading("Fields empty!");
             alert.addText("Fields cannot be empty");
@@ -79,8 +76,9 @@ public class CreateEventController implements Initializable {
         try {
             newEvent = ApiFacade.getEntrypoint().getInsertionFacade().createEvent(newEvent, ContextHandler.getContext().getCurrentUser());
             ContextHandler.getContext().getEventsController().updateEventFeed();
-        }catch (PiikException e){
-            e.showAlert();
+        } catch (PiikException e) {
+            PiikLogger.getInstance().log(Level.SEVERE, "CreateEventController -> handleNew", e);
+            Alert.newAlert().setHeading("Create event error").addText("Failure creating the new event").addCloseButton().show();
             return;
         }
 

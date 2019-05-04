@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -20,6 +21,7 @@ import piiksuma.gui.posts.PostController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class FeedController implements Initializable {
 
@@ -53,7 +55,8 @@ public class FeedController implements Initializable {
         try {
             updateFeed();
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "FeedControler -> initialize", e);
+            Alert.newAlert().setHeading("Feed error").addText("Failure initializing the feed").addCloseButton().show();
         }
     }
 
@@ -92,8 +95,8 @@ public class FeedController implements Initializable {
         try {
             postMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "FeedControler -> insertPost", e);
+            Alert.newAlert().setHeading("Insert post error").addText("Failure inserting the post").addCloseButton().show();
         }
         postScrollPane.requestLayout();
         postScrollPane.requestFocus();

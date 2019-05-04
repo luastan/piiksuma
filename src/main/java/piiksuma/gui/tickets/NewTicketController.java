@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import piiksuma.Ticket;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -21,6 +22,7 @@ import piiksuma.gui.ContextHandler;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class NewTicketController implements Initializable {
 
@@ -82,7 +84,8 @@ public class NewTicketController implements Initializable {
         try {
             ApiFacade.getEntrypoint().getInsertionFacade().newTicket(ticket, ContextHandler.getContext().getCurrentUser());
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            PiikLogger.getInstance().log(Level.SEVERE, "NewTicketController -> handleSendButton", e);
+            Alert.newAlert().setHeading("Send error").addText("Failure sending the ticket to the admin").addCloseButton().show();
         }
 
         ContextHandler.getContext().getStage("New Ticket").close();

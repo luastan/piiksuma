@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import piiksuma.Achievement;
 import piiksuma.User;
 import piiksuma.UserType;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class AchievementsController implements Initializable {
 
@@ -42,6 +44,7 @@ public class AchievementsController implements Initializable {
 
     /**
      * Initializes a window that shows a group of achievements
+     *
      * @param location
      * @param resources
      */
@@ -60,7 +63,7 @@ public class AchievementsController implements Initializable {
             // Update its contents
             updateAchievements();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            e.showAlert(e, "Failure updating achievements");
         }
     }
 
@@ -92,8 +95,8 @@ public class AchievementsController implements Initializable {
 
             Map<String, Timestamp> unlockDates = ApiFacade.getEntrypoint().getSearchFacade().getUnlockDates(user, user);
 
-            for(Achievement achievement : unlockedAchievements) {
-                if(unlockDates.get(achievement.getId()) == null ) {
+            for (Achievement achievement : unlockedAchievements) {
+                if (unlockDates.get(achievement.getId()) == null) {
                     System.out.println("es null");
                 }
                 achievement.setUnlockDate(unlockDates.get(achievement.getId()));
@@ -103,7 +106,7 @@ public class AchievementsController implements Initializable {
             achievements.addAll(unlockedAchievements);
 
         } catch (PiikInvalidParameters piikInvalidParameters) {
-            piikInvalidParameters.printStackTrace();
+            piikInvalidParameters.showAlert(piikInvalidParameters, "Failure retrieving unlocked achievements");
         }
     }
 
@@ -123,6 +126,7 @@ public class AchievementsController implements Initializable {
 
     /**
      * Adds an achievement representation
+     *
      * @param achievement achievement whose data will be represented
      */
     private void insertAchievement(Achievement achievement) {
@@ -135,8 +139,7 @@ public class AchievementsController implements Initializable {
         try {
             eventMasonryPane.getChildren().add(achievementLoader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "Achievements Controller -> insertAchievement", e);
         }
 
         eventScrollPane.requestLayout();

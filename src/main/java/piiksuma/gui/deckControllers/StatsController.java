@@ -65,15 +65,15 @@ public class StatsController implements Initializable {
         try {
             Statistics statistics = ApiFacade.getEntrypoint().getSearchFacade().getUserStatistics(user, user);
             userName.setText(user.getId());
-            countHateIt.setText(""+statistics.getCountHateIt());
-            countLikeIt.setText(""+statistics.getCountLikeIt());
-            countLoveIt.setText(""+statistics.getCountLoveIt());
-            maxMadeMeAngry.setText(""+statistics.getCountMakesMeAngry());
-            followers.setText(""+statistics.getFollowers());
-            following.setText(""+statistics.getFollowing());
-            followBack.setText(""+statistics.getFollowBack());
+            countHateIt.setText("" + statistics.getCountHateIt());
+            countLikeIt.setText("" + statistics.getCountLikeIt());
+            countLoveIt.setText("" + statistics.getCountLoveIt());
+            maxMadeMeAngry.setText("" + statistics.getCountMakesMeAngry());
+            followers.setText("" + statistics.getFollowers());
+            following.setText("" + statistics.getFollowing());
+            followBack.setText("" + statistics.getFollowBack());
         } catch (PiikException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure loading the current user statistics");
         }
     }
 

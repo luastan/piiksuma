@@ -123,7 +123,7 @@ public class RegisterController implements Initializable {
 
         User user = new User(userName.getText(), userId.getText(), email.getText());
         if (birthday.validate()) {
-           user.setBirthday(Timestamp.valueOf(birthday.getValue().atStartOfDay()));
+            user.setBirthday(Timestamp.valueOf(birthday.getValue().atStartOfDay()));
         }
         user.setPass(password.getText());
         user.setGender(genderBox.getSelectionModel().getSelectedItem());
@@ -137,12 +137,12 @@ public class RegisterController implements Initializable {
         user.setCity(city.getText());
         user.setEmotionalSituation(emotionalSituation.getText());
 
-        for(String s: telephoneList.getItems()){
+        for (String s : telephoneList.getItems()) {
 
-            try{
+            try {
                 Integer.parseInt(s);
                 user.addPhone(s);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Not a telephone");
             }
 
@@ -151,8 +151,7 @@ public class RegisterController implements Initializable {
             ApiFacade.getEntrypoint().getInsertionFacade().createUser(user);
             ContextHandler.getContext().getStage("register").close();
         } catch (PiikException e) {
-            //TODO handle exceptions properly
-            System.out.println(e.getMessage());
+            e.showAlert(e, "Failure registering the user");
         }
     }
 

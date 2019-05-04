@@ -17,10 +17,12 @@ import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.UserType;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.posts.PostController;
 
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class UserProfileController implements Initializable {
 
@@ -83,7 +86,8 @@ public class UserProfileController implements Initializable {
         try {
             profilePicture.getChildren().add(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "UserProfileController -> setProfilePicture", e);
+            Alert.newAlert().setHeading("Profile preview error").addText("Failure loading the profile picture").addCloseButton().show();
         }
     }
 
@@ -130,14 +134,12 @@ public class UserProfileController implements Initializable {
             } else {
                 archivedTab.getTabPane().getTabs().remove(archivedTab);
             }
-
-            // TODO: Initialize the buttons
             buttonInit();
             setUpPostsListener();
             setProfilePicture();
 
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure getting the user data");
         }
 
 
@@ -186,8 +188,8 @@ public class UserProfileController implements Initializable {
                 buttonCenter.setText("UnFollow");
                 buttonCenter.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
             }
-        }catch (PiikInvalidParameters | PiikDatabaseException e){
-            e.showAlert();
+        } catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert(e, "Failure checking if the user is followed");
         }
     }
 
@@ -206,7 +208,7 @@ public class UserProfileController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().followUser(user, current, current);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure following/un-following the user");
         }
         updateFollowButton();
     }
@@ -225,8 +227,8 @@ public class UserProfileController implements Initializable {
                 buttonLeft.setText("UnBlock");
                 buttonLeft.setStyle("-fx-background-color: -primary-color-2; -fx-text-fill: -black-high-emphasis");
             }
-        }catch (PiikInvalidParameters | PiikDatabaseException e) {
-            e.showAlert();
+        } catch (PiikInvalidParameters | PiikDatabaseException e) {
+            e.showAlert(e, "Failure checking if the user is blocked");
         }
     }
 
@@ -245,7 +247,7 @@ public class UserProfileController implements Initializable {
                 ApiFacade.getEntrypoint().getInsertionFacade().blockUser(user, current, current);
             }
         } catch (PiikInvalidParameters | PiikDatabaseException invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure blocking/un-blocking the user");
         }
         updateBlockButton();
     }
@@ -268,8 +270,7 @@ public class UserProfileController implements Initializable {
             }
 
         } catch (PiikException e) {
-            //TODO handle exception
-            e.showAlert();
+            e.showAlert(e, "Failure deleting the user");
         }
 
 
@@ -284,7 +285,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket stage");
         }
     }
 
@@ -297,27 +298,26 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets stage");
         }
     }
 
     /**
      * Function to update the feed
-     *
      */
-    public void updateFeed()  {
+    public void updateFeed() {
         // TODO: update the feed propperly
         publishedPostsList.clear();
 
         try {
             List<Post> searchPosts = ApiFacade.getEntrypoint().getSearchFacade().getPost(
-                    user , ContextHandler.getContext().getCurrentUser());
+                    user, ContextHandler.getContext().getCurrentUser());
 
-            if(searchPosts != null && !searchPosts.isEmpty()) {
+            if (searchPosts != null && !searchPosts.isEmpty()) {
                 publishedPostsList.addAll(searchPosts);
             }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the feed");
         }
 
         publishedPosts.requestLayout();
@@ -337,9 +337,9 @@ public class UserProfileController implements Initializable {
             archivedPostsList.addAll(ApiFacade.getEntrypoint().getSearchFacade().getArchivedPosts(
                     user, ContextHandler.getContext().getCurrentUser()));
         } catch (PiikDatabaseException e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the archived posts");
         } catch (PiikInvalidParameters e) {
-            e.showAlert();
+            e.showAlert(e, "Failure updating the archived posts");
         }
         archivedPostsMasonry.requestLayout();
         archivedPosts.requestLayout();

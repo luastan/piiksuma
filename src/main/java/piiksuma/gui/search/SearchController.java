@@ -20,10 +20,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
+import piiksuma.Utilities.PiikLogger;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
+import piiksuma.gui.Alert;
 import piiksuma.gui.ContextHandler;
 import piiksuma.gui.events.EventController;
 import piiksuma.gui.posts.PostController;
@@ -33,6 +35,7 @@ import piiksuma.gui.profiles.ProfilePreviewController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class SearchController implements Initializable {
 
@@ -83,7 +86,7 @@ public class SearchController implements Initializable {
             try {
                 ContextHandler.getContext().invokeStage("/gui/fxml/hashtags/trending.fxml", null);
             } catch (PiikInvalidParameters invalidParameters) {
-                invalidParameters.showAlert();
+                invalidParameters.showAlert(invalidParameters, "Failure loading the trending stage");
             }
         });
 
@@ -97,7 +100,6 @@ public class SearchController implements Initializable {
         userFeed.clear();
         eventFeed.clear();
     }
-
 
 
     /**
@@ -124,7 +126,8 @@ public class SearchController implements Initializable {
             updateUserFeed();
             updateEventFeed();
         } catch (PiikDatabaseException e) {
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "SearchController -> handleSearch", e);
+            Alert.newAlert().setHeading("Search error").addText("Failure searching the data").addCloseButton().show();
         }
     }
 
@@ -133,7 +136,6 @@ public class SearchController implements Initializable {
      * @throws PiikDatabaseException
      */
     public void updatePostFeed() throws PiikDatabaseException {
-        // TODO: update the feed propperly
         postFeed.clear();
         if (searchText.getText().isEmpty()) {
             searchText.setText("");
@@ -147,14 +149,13 @@ public class SearchController implements Initializable {
      * @throws PiikDatabaseException
      */
     public void updateUserFeed() throws PiikDatabaseException {
-        // TODO: update the feed propperly
         userFeed.clear();
         if (searchText.getText().isEmpty()) {
             searchText.setText("");
         }
         userFeed.addAll(new QueryMapper<User>(ApiFacade.getEntrypoint().getConnection()).defineClass(User.class).createQuery("SELECT * FROM piiUser WHERE name LIKE ?" +
                 " AND id != ?;")
-                .defineParameters("%" + searchText.getText() + "%",ContextHandler.getContext().getCurrentUser().getId()).list());
+                .defineParameters("%" + searchText.getText() + "%", ContextHandler.getContext().getCurrentUser().getId()).list());
     }
 
     /**
@@ -222,8 +223,8 @@ public class SearchController implements Initializable {
         try {
             postMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "SearchController -> insertPost", e);
+            Alert.newAlert().setHeading("Insert post error").addText("Failure inserting the post").addCloseButton().show();
         }
         postScrollPane.requestFocus();
         postScrollPane.requestLayout();
@@ -239,8 +240,8 @@ public class SearchController implements Initializable {
         try {
             userMasonryPane.getChildren().add(postLoader.load());
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "SearchController -> insertUser", e);
+            Alert.newAlert().setHeading("Insert user error").addText("Failure inserting the user").addCloseButton().show();
         }
         userScrollPane.requestLayout();
         userScrollPane.requestFocus();
@@ -258,8 +259,8 @@ public class SearchController implements Initializable {
             node.setOnMouseClicked(this::clickEvent);
             eventMasonryPane.getChildren().add(node);
         } catch (IOException e) {
-            // TODO: Handle Exception
-            e.printStackTrace();
+            PiikLogger.getInstance().log(Level.SEVERE, "SearchController -> insertEvent", e);
+            Alert.newAlert().setHeading("Insert event error").addText("Failure inserting the event").addCloseButton().show();
         }
         eventScrollPane.requestLayout();
         eventScrollPane.requestFocus();
@@ -285,7 +286,7 @@ public class SearchController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/events/event.fxml", controller, "Event" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.printStackTrace();
+            invalidParameters.showAlert(invalidParameters, "Failure loading the event stage");
         }
     }
 
