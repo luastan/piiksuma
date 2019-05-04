@@ -617,7 +617,7 @@ public class InsertionFacade {
         if (user == null || !user.checkNotNull(false)) {
             throw new PiikInvalidParameters(ErrorMessage.getNullParameterMessage("user"));
         }
-        
+
 
         parentFacade.getInteractionDao().notifyUser(notification, user);
     }

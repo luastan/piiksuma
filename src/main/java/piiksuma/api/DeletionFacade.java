@@ -279,8 +279,9 @@ public class DeletionFacade {
 
     /**
      * Delete a user from an event
-     * @param event
-     * @param user
+     * @param event Event from which the user is going to be deleted
+     * @param user User who is going to be deleted from the event
+     * @param current Current user logged into the app
      * @throws PiikDatabaseException
      */
     public void deleteUserInEvent(Event event, User user, User current) throws PiikDatabaseException, PiikInvalidParameters {
@@ -328,9 +329,9 @@ public class DeletionFacade {
     /**
      * Function to remove an archive post from an user
      *
-     * @param post
-     * @param user
-     * @param current
+     * @param post Post which is going to be remove form archived posts
+     * @param user User who is going to remove the post from archived posts
+     * @param current Current user logged into the app
      * @throws PiikDatabaseException
      * @throws PiikInvalidParameters
      */

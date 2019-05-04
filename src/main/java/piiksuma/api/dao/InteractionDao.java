@@ -231,8 +231,8 @@ public class InteractionDao extends AbstractDao {
 
     /**
      * Delete a user from an event
-     * @param event
-     * @param user
+     * @param event Event from which we want to eliminate an user
+     * @param user User who is going to be removed from the event
      * @throws PiikDatabaseException
      */
     public void deleteUserInEvent(Event event, User user) throws PiikDatabaseException {
@@ -252,7 +252,7 @@ public class InteractionDao extends AbstractDao {
     /**
      * Function that returns the users that participate in the indicated event
      *
-     * @param event
+     * @param event from we want to obtain its users
      * @return a map with the user indexed by her primary key
      * @throws PiikDatabaseException
      */
@@ -328,7 +328,7 @@ public class InteractionDao extends AbstractDao {
      *
      * @param reaction reaction to check
      * @param user user who wants to check if he reacted
-     * @return
+     * @return TRUE if the user has reacted to a post with a specific reaction, FALSE in the other case
      */
     public boolean isReact(Reaction reaction, User user) throws PiikDatabaseException {
 

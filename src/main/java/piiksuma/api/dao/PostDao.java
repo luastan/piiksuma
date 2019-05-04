@@ -762,7 +762,7 @@ public class PostDao extends AbstractDao {
      * Function to swap information from the database to the Post class
      *
      * @param result the information from the database
-     * @return
+     * @return list of posts
      */
     private List<Post> getPosts(List<Map<String, Object>> result) {
         if (result == null || result.isEmpty()) {
@@ -937,9 +937,9 @@ public class PostDao extends AbstractDao {
 
     /**
      * Checks if a given user follows a given hashtag
-     * @param hashtag
-     * @param user
-     * @return
+     * @param hashtag Hashtag from which we want to know if it's followed
+     * @param user User from who we want to know if it's following the hashtag
+     * @return TRUE if the user is following the hashtag, FALSE in the other case
      * @throws PiikDatabaseException
      */
     public boolean userFollowsHashtag(Hashtag hashtag, User user) throws PiikDatabaseException {
@@ -1293,9 +1293,9 @@ public class PostDao extends AbstractDao {
     /**
      * Function to check if a user has already archived a post
      *
-     * @param post
-     * @param user
-     * @return
+     * @param post Post from which we want to know if it's archived
+     * @param user User from who we want to know if he had archived the post
+     * @return TRUE if the user has archived the post, FALSE in the other case
      * @throws PiikDatabaseException
      */
     public boolean isPostArchived(Post post, User user) throws PiikDatabaseException{
@@ -1309,8 +1309,8 @@ public class PostDao extends AbstractDao {
 
     /**
      * Function to remove an archive post from an user
-     * @param post
-     * @param user
+     * @param post Post which is going to be removed from the archived posts
+     * @param user User which is going to removed the post from archived posts
      * @throws PiikDatabaseException
      */
     public void removeArchivePost(Post post, User user) throws PiikDatabaseException {

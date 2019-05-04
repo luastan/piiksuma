@@ -22,6 +22,12 @@ public class NotificationController implements Initializable {
         this.notification = notification;
     }
 
+    /**
+     * Init the window components
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         creationDate.setText(notification.getCreationDate().toString());

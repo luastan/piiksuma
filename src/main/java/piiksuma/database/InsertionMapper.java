@@ -66,11 +66,11 @@ public class InsertionMapper<E> extends Mapper<E> {
     /**
      * Adds multiple objects to the insertion tool
      *
-     * @param objetos Objetos que se quieren insertar
+     * @param objects Objects that are goint to be inserted
      * @return El propio insertionMapper
      */
-    public InsertionMapper<E> addAll(E... objetos) {
-        insertions.addAll(Arrays.asList(objetos));
+    public InsertionMapper<E> addAll(E... objects) {
+        insertions.addAll(Arrays.asList(objects));
         return this;
     }
 
