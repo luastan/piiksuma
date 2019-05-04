@@ -106,6 +106,7 @@ public class HashtagController implements Initializable {
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
+        updateButtonState();
     }
 
     /**
@@ -118,5 +119,6 @@ public class HashtagController implements Initializable {
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
             e.showAlert();
         }
+        updateButtonState();
     }
 }
