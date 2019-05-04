@@ -908,9 +908,6 @@ public class PostDao extends AbstractDao {
             throw new PiikDatabaseException(getPkConstraintMessage("user"));
         }
 
-        // INSERT INTO administrator(id) SELECT ? WHERE NOT EXISTS (SELECT * FROM " +
-        //                        "administrator WHERE id = ? FOR UPDATE);
-
         new InsertionMapper<Hashtag>(super.getConnection()).
                 createUpdate("INSERT INTO followhashtag (piiUser, hashtag) VALUES (?, (SELECT name FROM hashtag WHERE name = ?))").
                 defineClass(Hashtag.class).
