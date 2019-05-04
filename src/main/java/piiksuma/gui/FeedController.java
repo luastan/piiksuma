@@ -38,14 +38,11 @@ public class FeedController implements Initializable {
     private ObservableList<Post> feed;
 
 
-<<<<<<< HEAD
-=======
     /**
      * Inits the window components
      * @param location
      * @param resources
      */
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize Feed view & controller

@@ -116,15 +116,11 @@ public class SearchController implements Initializable {
 
     }
 
-<<<<<<< HEAD
-    private void handleSearch(Event event) {
-=======
     /**
      * Function of the search button
      * @param event Event on the window
      */
     private void handleSearch(Event event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             updatePostFeed();
             updateUserFeed();
@@ -162,16 +158,12 @@ public class SearchController implements Initializable {
                 .defineParameters("%" + searchText.getText() + "%", ContextHandler.getContext().getCurrentUser().getId()).list());
     }
 
-<<<<<<< HEAD
-    public void updateEventFeed() throws PiikDatabaseException {
-=======
     /**
      * Updates the events feed
      * @throws PiikDatabaseException
      */
     public void updateEventFeed() throws PiikDatabaseException{
         // TODO: update the feed propperly
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         eventFeed.clear();
         if (searchText.getText().isEmpty()) {
             searchText.setText("");

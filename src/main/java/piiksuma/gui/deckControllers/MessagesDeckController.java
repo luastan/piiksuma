@@ -61,15 +61,11 @@ public class MessagesDeckController extends AbstractDeckController implements In
         mainButton.setOnAction(this::handleMessageButton);
     }
 
-<<<<<<< HEAD
-    public void handleMessageButton(ActionEvent event) {
-=======
     /**
      * Code to be executed when the window event happens
      * @param event Event which happen in the window
      */
     public void handleMessageButton (ActionEvent event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         Stage searchStage = new Stage();
 
         try {

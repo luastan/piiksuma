@@ -131,16 +131,11 @@ public class AbstractDeckController {
         this.viewNotificationsButton = viewNotificationsButton;
         viewNotificationsButton.setOnAction(this::handleNotification);
     }
-<<<<<<< HEAD
-
-    private void handleNotification(Event event) {
-=======
     /**
      * Code to be executed when the window event happened
      * @param event Window event
      */
     private void handleNotification(Event event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         User current = ContextHandler.getContext().getCurrentUser();
         try {
             ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);

@@ -62,15 +62,11 @@ public class StartChatController implements Initializable {
         });
     }
 
-<<<<<<< HEAD
-    private void handleNewMessage(Event event) {
-=======
     /**
      * Code to be executed when the new message button is pressed
      * @param event Event on the window
      */
     private void handleNewMessage(Event event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         if (!messageField.validate() && !userField.validate()) {
             return;
         }

@@ -252,16 +252,11 @@ public class UserProfileController implements Initializable {
         updateBlockButton();
     }
 
-<<<<<<< HEAD
-
-    private void handleDelete(Event event) {
-=======
     /**
      * Function to be executed when the delete button is pressed
      * @param event
      */
     private void handleDelete(Event event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             ApiFacade.getEntrypoint().getDeletionFacade().removeUser(user, ContextHandler.getContext().getCurrentUser());
             if (user.equals(ContextHandler.getContext().getCurrentUser())) {

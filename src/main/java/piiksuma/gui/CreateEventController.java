@@ -32,14 +32,6 @@ public class CreateEventController implements Initializable {
     @FXML
     private JFXTextArea description;
 
-<<<<<<< HEAD
-=======
-    /**
-     * Inits the window components
-     * @param location
-     * @param resources
-     */
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newEvent.setOnAction(this::handleNew);
@@ -93,17 +85,12 @@ public class CreateEventController implements Initializable {
         ContextHandler.getContext().getStage("createEvent").close();
     }
 
-<<<<<<< HEAD
-    private boolean checkFields() {
-        if (eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()) {
-=======
     /**
      * Function to check if the fields are correctly fill
      * @return TRUE if the fields are correctly fill, FALSE in the other case
      */
     private boolean checkFields(){
         if(eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
             return false;
         }
         return true;

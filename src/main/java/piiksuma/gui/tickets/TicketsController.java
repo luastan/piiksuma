@@ -47,16 +47,11 @@ public class TicketsController implements Initializable {
         handleSearch(null);
     }
 
-<<<<<<< HEAD
-
-    private void handleSearch(Event event) {
-=======
     /**
      * Code to the search button
      * @param event
      */
     private void handleSearch(Event event){
->>>>>>> 49c36003ff789a2871a06df61fe15cc3eb4f3e07
         try {
             updateTicketFeed();
         } catch (PiikDatabaseException e) {
