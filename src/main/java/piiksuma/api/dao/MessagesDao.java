@@ -650,8 +650,8 @@ public class MessagesDao extends AbstractDao {
             throw new PiikDatabaseException(ErrorMessage.getPkConstraintMessage("ticket"));
         }
         // Set ticket as closed
-        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET closedate = NOW(), " +
-                "admindlosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
+        new UpdateMapper<Ticket>(super.getConnection()).createUpdate("UPDATE ticket SET " +
+                "closedate = NOW(), adminclosing = ? WHERE id = ?").defineParameters(ticket.getAdminClosing().getPK(),
                 ticket.getId()).executeUpdate();
     }
     //******************************************************************************************************************
