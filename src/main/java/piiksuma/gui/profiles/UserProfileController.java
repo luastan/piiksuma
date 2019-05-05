@@ -267,6 +267,11 @@ public class UserProfileController implements Initializable {
                 ContextHandler.getContext().getMessagesController().updateMessageFeed();
                 ContextHandler.getContext().getFeedController().updateFeed();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
+                if(ContextHandler.getContext().getSearchController()!=null){
+                    ContextHandler.getContext().getSearchController().updateUserFeed();
+                    ContextHandler.getContext().getSearchController().updatePostFeed();
+                    ContextHandler.getContext().getSearchController().updateEventFeed();
+                }
             }
 
         } catch (PiikException e) {
@@ -285,7 +290,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket window");
         }
     }
 
@@ -298,7 +303,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets window");
         }
     }
 

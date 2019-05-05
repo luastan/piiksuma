@@ -127,7 +127,7 @@ public class PostController implements Initializable {
             try {
                 ContextHandler.getContext().invokeStage("/gui/fxml/postAnswers.fxml", new AnswerPostsController(post));
             } catch (PiikInvalidParameters invalidParameters) {
-                invalidParameters.showAlert(invalidParameters, "Failure loading the postAnswes stage");
+                invalidParameters.showAlert(invalidParameters, "Failure loading the postAnswes window");
             }
         });
 
@@ -364,7 +364,7 @@ public class PostController implements Initializable {
                 mainButton.setDisable(false);
             } else {
 
-                System.out.println("LIKE");
+
                 ApiFacade.getEntrypoint().getInsertionFacade().react(react, current);
                 buttonLike.getGraphic().setStyle("-fx-fill: -piik-dark-pink;");
                 mainButton.setDisable(true);
@@ -410,11 +410,11 @@ public class PostController implements Initializable {
             if (ApiFacade.getEntrypoint().getSearchFacade().checkUserResposted(post.getAuthor(), post,
                     ContextHandler.getContext().getCurrentUser())) {
                 // If the repost exists it gets deleted and the graphic gets grey color
-                System.out.println("Vou borrar");
+
                 ApiFacade.getEntrypoint().getDeletionFacade().removeRePost(post, ContextHandler.getContext().getCurrentUser());
                 repost.getGraphic().setStyle("");
             } else {
-                System.out.println("Vou repostear");
+
                 // If the repost doesn't exist it gets reposted and the graphic gets green color
                 ApiFacade.getEntrypoint().getInsertionFacade().repost(ContextHandler.getContext().getCurrentUser(), post,
                         post.getAuthor(), ContextHandler.getContext().getCurrentUser());

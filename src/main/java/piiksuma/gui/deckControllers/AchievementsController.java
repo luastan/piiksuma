@@ -79,6 +79,7 @@ public class AchievementsController implements Initializable {
 
         // All the achievements that the current user has unlocked
         // TODO use logged-in user
+<<<<<<< HEAD
         User user = new User();
         user.setId("Alvaru");
         user.setEmail("alvaru@gmail.com");
@@ -87,6 +88,9 @@ public class AchievementsController implements Initializable {
         user.setRegistrationDate(new Timestamp(1));
         user.setBirthday(new Timestamp(1));
         user.setType(UserType.user);
+=======
+        User user = ContextHandler.getContext().getCurrentUser();
+>>>>>>> c204c06cad5e33a20c8af98a4d8c3dd01913c87e
 
         // Retrieving unlock achievements from the database and their unlock dates
         try {
@@ -96,9 +100,6 @@ public class AchievementsController implements Initializable {
             Map<String, Timestamp> unlockDates = ApiFacade.getEntrypoint().getSearchFacade().getUnlockDates(user, user);
 
             for (Achievement achievement : unlockedAchievements) {
-                if (unlockDates.get(achievement.getId()) == null) {
-                    System.out.println("es null");
-                }
                 achievement.setUnlockDate(unlockDates.get(achievement.getId()));
             }
 

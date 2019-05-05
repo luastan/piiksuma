@@ -90,7 +90,7 @@ public class SearchController implements Initializable {
             try {
                 ContextHandler.getContext().invokeStage("/gui/fxml/hashtags/trending.fxml", null);
             } catch (PiikInvalidParameters invalidParameters) {
-                invalidParameters.showAlert(invalidParameters, "Failure loading the trending stage");
+                invalidParameters.showAlert(invalidParameters, "Failure loading the trending window");
             }
         });
 
@@ -299,7 +299,7 @@ public class SearchController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/events/event.fxml", controller, "Event" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the event stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the event window");
         }
     }
 

@@ -32,14 +32,14 @@
             </leftItems>
             <rightItems>
                 <!-- Share button -->
-                <StackPane>
-                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">
-                        <graphic>
-                            <FontAwesomeIconView glyphName="SHARE" size="24"
-                                                 styleClass="deck-small-button-graphic"/>
-                        </graphic>
-                    </JFXButton>
-                </StackPane>
+                <!--                <StackPane>-->
+                <!--                    <JFXButton text="der2" styleClass="deck-small-button" ripplerFill="rgba(0, 0, 0, 0.80)">-->
+                <!--                        <graphic>-->
+                <!--                            <FontAwesomeIconView glyphName="SHARE" size="24"-->
+                <!--                                                 styleClass="deck-small-button-graphic"/>-->
+                <!--                        </graphic>-->
+                <!--                    </JFXButton>-->
+                <!--                </StackPane>-->
             </rightItems>
         </JFXToolbar>
     </top>

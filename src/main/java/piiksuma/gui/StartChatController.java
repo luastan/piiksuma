@@ -58,12 +58,12 @@ public class StartChatController implements Initializable {
         messageField.getValidators().addAll(validator);
 
         messageField.textProperty().addListener((observable, oldValue, newValue) -> {
-            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            mainButton.setDisable(!messageField.validate() || userField.getText().length() == 0);
             message.setText(messageField.getText());
         });
 
         userField.textProperty().addListener((observable, oldValue, newValue) -> {
-            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            mainButton.setDisable(messageField.getText().length() == 0 || !userField.validate());
             receiver.setId(userField.getText());
         });
     }
@@ -83,7 +83,9 @@ public class StartChatController implements Initializable {
         try {
             message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message, current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
-        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+        } catch (PiikDatabaseException e) {
+            e.showAlert(e, "User doesn't exist");
+        } catch (PiikInvalidParameters e) {
             e.showAlert(e, "Failure sending the private message");
         }
 

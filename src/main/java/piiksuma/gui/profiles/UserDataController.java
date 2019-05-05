@@ -132,15 +132,33 @@ public class UserDataController implements Initializable {
         userName.setText(user.getName());
         email.setText(user.getEmail());
         //  password.setText(user.getPass());
-        home.setText(user.getHome());
-        city.setText(user.getCity());
-        birthplace.setText(user.getBirthplace());
-        province.setText(user.getProvince());
-        country.setText(user.getCountry());
-        job.setText(user.getJob());
-        emotionalSituation.setText(user.getEmotionalSituation());
-        description.setText(user.getDescription());
-        religion.setText(user.getReligion());
+        if(user.getHome()!=null){
+            home.setText(user.getHome());
+        }
+        if(user.getCity()!=null){
+            city.setText(user.getCity());
+        }
+        if(user.getBirthplace()!=null){
+            birthplace.setText(user.getBirthplace());
+        }
+        if(user.getProvince()!=null){
+            province.setText(user.getProvince());
+        }
+        if(user.getCountry()!=null){
+            country.setText(user.getCountry());
+        }
+        if(user.getJob()!=null){
+            job.setText(user.getJob());
+        }
+        if(user.getEmotionalSituation()!=null){
+            emotionalSituation.setText(user.getEmotionalSituation());
+        }
+        if(user.getDescription()!=null){
+            description.setText(user.getDescription());
+        }
+        if(user.getReligion()!=null){
+            religion.setText(user.getReligion());
+        }
         genderBox.getSelectionModel().select(user.getGender());
 
         birthday.setValue(user.getBirthday().toLocalDateTime().toLocalDate());
@@ -279,7 +297,10 @@ public class UserDataController implements Initializable {
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
             ContextHandler.getContext().getStage("User data").close();
             ContextHandler.getContext().getFeedController().updateFeed();
-            ContextHandler.getContext().getUserProfileController().updateFeed();
+            if(ContextHandler.getContext().getUserProfileController()!=null){
+                ContextHandler.getContext().getUserProfileController().updateFeed();
+            }
+
         } catch (PiikException e) {
             e.showAlert(e, "Failure updating the personal data check that all the required parameters are fulfilled");
         }

@@ -59,7 +59,7 @@ public class DeckPopUpController implements Initializable {
             try {
                 ContextHandler.getContext().register("login", stage);
             } catch (PiikInvalidParameters piikInvalidParameters) {
-                piikInvalidParameters.showAlert(piikInvalidParameters, "Failure loading the login stage");
+                piikInvalidParameters.showAlert(piikInvalidParameters, "Failure loading the login window");
             }
             // Show
             stage.show();
@@ -86,7 +86,7 @@ public class DeckPopUpController implements Initializable {
                 try {
                     ContextHandler.getContext().invokeStage("/gui/fxml/tickets/adminTickets.fxml", null, "Tickets");
                 } catch (PiikInvalidParameters invalidParameters) {
-                    invalidParameters.showAlert(invalidParameters, "Failure loading the adminTickets stage");
+                    invalidParameters.showAlert(invalidParameters, "Failure loading the adminTickets window");
                 }
                 return;
             default:

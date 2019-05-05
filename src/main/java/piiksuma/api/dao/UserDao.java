@@ -144,7 +144,7 @@ public class UserDao extends AbstractDao {
                 }
 
             } catch (SQLException e) {
-                System.err.println("Serializable isolation level not supported");
+
                 super.getConnection().setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
                 throw new PiikDatabaseException(e.getMessage());
             }
@@ -401,7 +401,7 @@ public class UserDao extends AbstractDao {
                 clause.append("DELETE FROM administrator WHERE id = ?; ");
             }
 
-            System.out.println(clause.toString());
+
             statement = getConnection().prepareStatement(clause.toString());
 
 
@@ -1022,7 +1022,7 @@ public class UserDao extends AbstractDao {
                     statistics.setCountMakesMeAngry(value);
                     break;
                 default:
-                    System.out.println("Statistic not found");
+
             }
         }
 

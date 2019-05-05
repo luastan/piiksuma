@@ -44,7 +44,7 @@ public class ProfilePreviewController implements Initializable {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
                     new UserProfileController(profile), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the userProfile stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the userProfile window");
         }
     }
 
