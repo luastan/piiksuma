@@ -267,6 +267,11 @@ public class UserProfileController implements Initializable {
                 ContextHandler.getContext().getMessagesController().updateMessageFeed();
                 ContextHandler.getContext().getFeedController().updateFeed();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
+                if(ContextHandler.getContext().getSearchController()!=null){
+                    ContextHandler.getContext().getSearchController().updateUserFeed();
+                    ContextHandler.getContext().getSearchController().updatePostFeed();
+                    ContextHandler.getContext().getSearchController().updateEventFeed();
+                }
             }
 
         } catch (PiikException e) {
