@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import piiksuma.User;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -33,6 +34,11 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userId, 32);
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(password, 256);
+
         register.setOnAction(this::handleRegister);
         logIn.setOnAction(this::handleLogIn);
     }

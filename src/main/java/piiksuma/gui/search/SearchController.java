@@ -21,6 +21,7 @@ import javafx.scene.layout.StackPane;
 import piiksuma.Post;
 import piiksuma.User;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -71,6 +72,9 @@ public class SearchController implements Initializable {
      * Inits the window components
      */
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(searchText, 40);
+
         back.setOnAction(this::backButton);
         buttonSearch.setOnAction(this::handleSearch);
 
@@ -118,9 +122,10 @@ public class SearchController implements Initializable {
 
     /**
      * Function of the search button
+     *
      * @param event Event on the window
      */
-    private void handleSearch(Event event){
+    private void handleSearch(Event event) {
         try {
             updatePostFeed();
             updateUserFeed();
@@ -133,6 +138,7 @@ public class SearchController implements Initializable {
 
     /**
      * Updates the posts feed
+     *
      * @throws PiikDatabaseException
      */
     public void updatePostFeed() throws PiikDatabaseException {
@@ -146,6 +152,7 @@ public class SearchController implements Initializable {
 
     /**
      * Updates the users feed
+     *
      * @throws PiikDatabaseException
      */
     public void updateUserFeed() throws PiikDatabaseException {
@@ -160,9 +167,10 @@ public class SearchController implements Initializable {
 
     /**
      * Updates the events feed
+     *
      * @throws PiikDatabaseException
      */
-    public void updateEventFeed() throws PiikDatabaseException{
+    public void updateEventFeed() throws PiikDatabaseException {
         // TODO: update the feed propperly
         eventFeed.clear();
         if (searchText.getText().isEmpty()) {
@@ -185,6 +193,7 @@ public class SearchController implements Initializable {
             postFeed.forEach(this::insertPost);
         });
     }
+
     /**
      * Code to be executed when the feed gets updated. Users at the interface
      * have to be updated.
@@ -215,6 +224,7 @@ public class SearchController implements Initializable {
 
     /**
      * Inserts a post in the window
+     *
      * @param post Post to be inserted
      */
     private void insertPost(Post post) {
@@ -232,6 +242,7 @@ public class SearchController implements Initializable {
 
     /**
      * Inserts an user in the window
+     *
      * @param user User to be inserted
      */
     private void insertUser(User user) {
@@ -249,6 +260,7 @@ public class SearchController implements Initializable {
 
     /**
      * Inserts an event in the window
+     *
      * @param event Event on the window
      */
     private void insertEvent(piiksuma.Event event) {
@@ -268,6 +280,7 @@ public class SearchController implements Initializable {
 
     /**
      * Sets up the click event
+     *
      * @param mouseEvent Event on the window
      */
     private void clickEvent(MouseEvent mouseEvent) {

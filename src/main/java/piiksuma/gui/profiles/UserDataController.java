@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import piiksuma.Multimedia;
 import piiksuma.User;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -82,11 +83,26 @@ public class UserDataController implements Initializable {
 
     /**
      * Inits the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userId, 32);
+        PiikTextLimiter.addTextLimiter(userName, 35);
+        PiikTextLimiter.addTextLimiter(email, 35);
+        PiikTextLimiter.addTextLimiter(password, 256);
+        PiikTextLimiter.addTextLimiter(home, 20);
+        PiikTextLimiter.addTextLimiter(province, 30);
+        PiikTextLimiter.addTextLimiter(country, 30);
+        PiikTextLimiter.addTextLimiter(religion, 20);
+        PiikTextLimiter.addTextLimiter(job, 35);
+        PiikTextLimiter.addTextLimiter(description, 256);
+        PiikTextLimiter.addTextLimiter(emotionalSituation, 20);
+        PiikTextLimiter.addTextLimiter(birthplace, 30);
+        PiikTextLimiter.addTextLimiter(city, 30);
 
         initFields();
 
@@ -223,6 +239,7 @@ public class UserDataController implements Initializable {
 
     /**
      * Function to update the user data
+     *
      * @param event Event on the window
      */
 

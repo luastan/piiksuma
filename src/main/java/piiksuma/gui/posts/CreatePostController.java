@@ -82,7 +82,7 @@ public class CreatePostController implements Initializable {
             post.setText(newValue);
             postButton.setDisable(!postText.validate());
         });
-        PiikTextLimiter.addTextLimiter(postText, 140);
+        PiikTextLimiter.addTextLimiter(postText, 256);
         // Checks if the input is empty
         RequiredFieldValidator validator = new RequiredFieldValidator();
         validator.setMessage("Field required");

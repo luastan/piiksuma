@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -37,11 +38,16 @@ public class StartChatController implements Initializable {
 
     /**
      * Inits the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userField, 32);
+        PiikTextLimiter.addTextLimiter(messageField, 200);
+
         mainButton.setOnAction(this::handleNewMessage);
 
         ValidatorBase validator = new RequiredFieldValidator("Required field");
@@ -64,9 +70,10 @@ public class StartChatController implements Initializable {
 
     /**
      * Code to be executed when the new message button is pressed
+     *
      * @param event Event on the window
      */
-    private void handleNewMessage(Event event){
+    private void handleNewMessage(Event event) {
         if (!messageField.validate() && !userField.validate()) {
             return;
         }

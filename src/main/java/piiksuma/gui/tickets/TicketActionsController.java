@@ -10,6 +10,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import piiksuma.Ticket;
+import piiksuma.Utilities.PiikTextLimiter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,11 +29,15 @@ public class TicketActionsController implements Initializable {
 
     /**
      * Init the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(messageField, 200);
+
         reason.setText(ticket.getTextProblem());
         if (ticket.getAdminClosing() != null) {
             closeTicket.setText("Closed by: " + ticket.getAdminClosing().getId());
