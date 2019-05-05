@@ -80,10 +80,10 @@ public class AchievementsController implements Initializable {
         // All the achievements that the current user has unlocked
         // TODO use logged-in user
         User user = new User();
-        user.setId("usr1");
-        user.setEmail("usr1@gmail.com");
-        user.setName("myname");
-        user.setPass("pass");
+        user.setId("Alvaru");
+        user.setEmail("alvaru@gmail.com");
+        user.setName("Álvaro Goldar Dieste");
+        user.setPass("sesamo");
         user.setRegistrationDate(new Timestamp(1));
         user.setBirthday(new Timestamp(1));
         user.setType(UserType.user);

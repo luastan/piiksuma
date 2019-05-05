@@ -40,9 +40,11 @@ public class PiikLogger {
         LogManager.getLogManager().reset();
         logger.setLevel(Level.ALL);
 
+        /* Un-comment for debugging
         ConsoleHandler ch = new ConsoleHandler();
         ch.setLevel(Level.ALL);
         logger.addHandler(ch);
+        */
 
         FileHandler fh;
 
