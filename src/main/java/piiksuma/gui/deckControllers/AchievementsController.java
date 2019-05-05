@@ -78,7 +78,6 @@ public class AchievementsController implements Initializable {
         achievements.clear();
 
         // All the achievements that the current user has unlocked
-        // TODO use logged-in user
         User user = ContextHandler.getContext().getCurrentUser();
 
         // Retrieving unlock achievements from the database and their unlock dates

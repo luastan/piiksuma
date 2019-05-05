@@ -45,6 +45,7 @@ public class PiikLogger {
 
         ConsoleHandler ch = new ConsoleHandler();
         ch.setLevel(Level.ALL);
+
         if (DEBUG) {
             logger.addHandler(ch);
         }
