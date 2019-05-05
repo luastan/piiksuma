@@ -1,4 +1,14 @@
 piiksuma
+piiksuma.Utilities
 piiksuma.api
 piiksuma.api.dao
 piiksuma.database
+piiksuma.exceptions
+piiksuma.gui
+piiksuma.gui.deckControllers
+piiksuma.gui.events
+piiksuma.gui.hashtag
+piiksuma.gui.posts
+piiksuma.gui.profiles
+piiksuma.gui.search
+piiksuma.gui.tickets

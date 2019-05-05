@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import piiksuma.Ticket;
 import piiksuma.User;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -40,11 +41,16 @@ public class NewTicketController implements Initializable {
 
     /**
      * Init the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(section, 20);
+        PiikTextLimiter.addTextLimiter(description, 200);
+
         ticket = new Ticket();
         sendButton.setOnAction(this::handleSendButton);
 
@@ -66,6 +72,7 @@ public class NewTicketController implements Initializable {
 
     /**
      * Code to the send button
+     *
      * @param event Event on the window
      */
     public void handleSendButton(Event event) {

@@ -76,7 +76,7 @@ public class PostDao extends AbstractDao {
         boolean authorDaddyExists = sugarDaddyExists && post.getFatherPost().getAuthor() != null &&
                 post.getFatherPost().getAuthor().checkPrimaryKey(false);
         if (authorDaddyExists) {
-            System.out.println("Dafuq");
+
         }
         boolean multimediaExists = multimedia != null && multimedia.checkPrimaryKey(false);
 
@@ -186,23 +186,23 @@ public class PostDao extends AbstractDao {
 
             /* Execution and key retrieval */
 
-            System.out.println("Resultados");
+
             ResultSet keys = statement.executeQuery();
-            System.out.println("Resultados obtenidos");
+
 
             // ID generation successful
             if (keys.next()) {
-                System.out.println("hay");
+
                 completePost.setId(keys.getString("id"));
             } else {
-                System.out.println("No hay");
+
                 throw new PiikDatabaseException("Post ID generation failed");
             }
 
 
             /* Statement for hashtags */
 
-            System.out.println("empezada insercion de hashtags");
+
             clause = new StringBuilder();
             // Hashtags which do not already exist are inserted in the database
             clause.append("INSERT INTO hashtag(name) SELECT ? WHERE NOT EXISTS (SELECT * FROM hashtag WHERE name = ? " +
@@ -215,7 +215,7 @@ public class PostDao extends AbstractDao {
                 statementHashtags.setString(2, hashtag.getName());
                 statementHashtags.executeUpdate();
             }
-            System.out.println("pasada inserción de hashtags");
+
 
             /* Statement for owning hashtags */
 
@@ -232,7 +232,7 @@ public class PostDao extends AbstractDao {
                 statementHashtags.executeUpdate();
             }
 
-            System.out.println("pasada inserción de tener hashtags");
+
             /* Commit */
 
             con.commit();
@@ -426,7 +426,7 @@ public class PostDao extends AbstractDao {
                 statementHashtags.setString(2, hashtag.getName());
                 statementHashtags.executeUpdate();
             }
-            System.out.println("pasada inserción de hashtags");
+
 
             clause = new StringBuilder();
             // TODO it would by nice to erase only those who were removed
@@ -808,7 +808,6 @@ public class PostDao extends AbstractDao {
                 columnsPost.put("author", user);
             }
 
-            System.out.println(columnsPost);
 
             resultPost.addInfo(columnsPost);
 

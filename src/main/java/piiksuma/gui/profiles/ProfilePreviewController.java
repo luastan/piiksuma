@@ -5,7 +5,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -17,9 +16,6 @@ import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
 import piiksuma.gui.ContextHandler;
-
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -44,7 +40,7 @@ public class ProfilePreviewController implements Initializable {
             ContextHandler.getContext().invokeStage("/gui/fxml/profile/userProfile.fxml",
                     new UserProfileController(profile), "User profile");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the userProfile stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the userProfile window");
         }
     }
 
@@ -72,23 +68,21 @@ public class ProfilePreviewController implements Initializable {
                     profile.setMultimedia(ApiFacade.getEntrypoint().getSearchFacade()
                             .getMultimedia(profile.getMultimedia(), ContextHandler.getContext().getCurrentUser()));
                 } catch (PiikInvalidParameters | PiikDatabaseException piikInvalidParameters) {
-                    piikInvalidParameters.printStackTrace();
+                    piikInvalidParameters.showAlert(piikInvalidParameters, "Couldn't load the profile picture");
                 }
             }
-            profilePicture.setImage(new Image(profile.getMultimedia().getUri()));
+            profilePicture.setImage(new Image(profile.getMultimedia().getUri(), 800, 800, true, true));
         } else {
-            profilePicture.setImage(new Image(new File("src/main/resources/imagenes/huevo.png").toURI().toString()));
+            profilePicture.setImage(new Image(getClass().getResource("/imagenes/huevo.png").toExternalForm()));
         }
 
         // Profile image into a circle
 
-        Circle clip = new Circle(profilePicture.getFitWidth() / 2.1);
-        clip.setCenterX(profilePicture.getFitWidth() / 2);
+        Circle clip = new Circle(profilePicture.getFitHeight() / 2.1);
+        clip.setCenterX(profilePicture.getFitHeight() / 2);
         clip.setCenterY(profilePicture.getFitHeight() / 2);
         profilePicture.setClip(clip);
 
         profilePicture.setVisible(true);
     }
-
-
 }

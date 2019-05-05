@@ -74,6 +74,9 @@ public class TicketConvController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(messageField, 200);
+
         ValidatorBase validator = new RequiredFieldValidator("Required Field");
         validator.setIcon(GlyphsBuilder.create(FontAwesomeIconView.class)
                 .glyph(FontAwesomeIcon.WARNING)

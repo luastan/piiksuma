@@ -76,6 +76,9 @@ public class EventController implements Initializable {
                 ApiFacade.getEntrypoint().getDeletionFacade().removeEvent(event, current);
                 ContextHandler.getContext().getStage("Event - " + event.getName()).close();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
+                if(ContextHandler.getContext().getSearchController()!=null){
+                    ContextHandler.getContext().getSearchController().updateEventFeed();
+                }
             } catch (PiikDatabaseException | PiikInvalidParameters e) {
                 e.showAlert(e, "Failure deleting the event");
             }

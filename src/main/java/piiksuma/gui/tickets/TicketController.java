@@ -45,7 +45,7 @@ public class TicketController implements Initializable {
             try {
                 ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", new TicketConvController(ticket));
             } catch (PiikInvalidParameters invalidParameters) {
-                invalidParameters.showAlert(invalidParameters,"Failure loading the conversation stage");
+                invalidParameters.showAlert(invalidParameters, "Failure loading the conversation window");
             }
         });
     }

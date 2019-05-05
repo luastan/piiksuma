@@ -180,7 +180,9 @@ public class UserProfileController implements Initializable {
     private void updateFollowButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
+            ContextHandler.getContext().getFeedController().updateFeed();
+            ContextHandler.getContext().getEventsController().updateEventFeed();
+            boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
             if (!currentUserFollows) {
                 buttonCenter.setText("Follow");
                 buttonCenter.setStyle("-fx-background-color: -primary-color-5");
@@ -219,7 +221,9 @@ public class UserProfileController implements Initializable {
     private void updateBlockButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            ContextHandler.getContext().getEventsController().updateEventFeed();
+            ContextHandler.getContext().getFeedController().updateFeed();
+            boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (!currentUserBlocks) {
                 buttonLeft.setText("Block");
                 buttonLeft.setStyle("-fx-background-color: -primary-color-5");
@@ -240,7 +244,7 @@ public class UserProfileController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
 
         try {
-            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (currentUserBlocks) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user, current, current);
             } else {
@@ -267,6 +271,11 @@ public class UserProfileController implements Initializable {
                 ContextHandler.getContext().getMessagesController().updateMessageFeed();
                 ContextHandler.getContext().getFeedController().updateFeed();
                 ContextHandler.getContext().getEventsController().updateEventFeed();
+                if(ContextHandler.getContext().getSearchController()!=null){
+                    ContextHandler.getContext().getSearchController().updateUserFeed();
+                    ContextHandler.getContext().getSearchController().updatePostFeed();
+                    ContextHandler.getContext().getSearchController().updateEventFeed();
+                }
             }
 
         } catch (PiikException e) {
@@ -285,7 +294,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket window");
         }
     }
 
@@ -298,7 +307,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets window");
         }
     }
 

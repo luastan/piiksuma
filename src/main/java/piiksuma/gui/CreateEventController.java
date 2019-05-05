@@ -12,6 +12,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 
@@ -34,6 +35,11 @@ public class CreateEventController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(eventName, 50);
+        PiikTextLimiter.addTextLimiter(this.location, 50);
+        PiikTextLimiter.addTextLimiter(description, 200);
+
         newEvent.setOnAction(this::handleNew);
         date.setValidators(new RequiredFieldValidator());
         RequiredFieldValidator eventNameValidator = new RequiredFieldValidator();
@@ -49,6 +55,7 @@ public class CreateEventController implements Initializable {
 
     /**
      * Code to the new event button
+     *
      * @param event
      */
     private void handleNew(Event event) {
@@ -87,10 +94,11 @@ public class CreateEventController implements Initializable {
 
     /**
      * Function to check if the fields are correctly fill
+     *
      * @return TRUE if the fields are correctly fill, FALSE in the other case
      */
-    private boolean checkFields(){
-        if(eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()){
+    private boolean checkFields() {
+        if (eventName.getText().isEmpty() || description.getText().isEmpty() || date.validate() || location.getText().isEmpty()) {
             return false;
         }
         return true;

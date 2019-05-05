@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import piiksuma.Message;
 import piiksuma.User;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikDatabaseException;
 import piiksuma.exceptions.PiikInvalidParameters;
@@ -37,11 +38,16 @@ public class StartChatController implements Initializable {
 
     /**
      * Inits the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userField, 32);
+        PiikTextLimiter.addTextLimiter(messageField, 200);
+
         mainButton.setOnAction(this::handleNewMessage);
 
         ValidatorBase validator = new RequiredFieldValidator("Required field");
@@ -52,21 +58,22 @@ public class StartChatController implements Initializable {
         messageField.getValidators().addAll(validator);
 
         messageField.textProperty().addListener((observable, oldValue, newValue) -> {
-            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            mainButton.setDisable(!messageField.validate() || userField.getText().length() == 0);
             message.setText(messageField.getText());
         });
 
         userField.textProperty().addListener((observable, oldValue, newValue) -> {
-            mainButton.setDisable(!messageField.validate() || !userField.validate());
+            mainButton.setDisable(messageField.getText().length() == 0 || !userField.validate());
             receiver.setId(userField.getText());
         });
     }
 
     /**
      * Code to be executed when the new message button is pressed
+     *
      * @param event Event on the window
      */
-    private void handleNewMessage(Event event){
+    private void handleNewMessage(Event event) {
         if (!messageField.validate() && !userField.validate()) {
             return;
         }
@@ -76,7 +83,9 @@ public class StartChatController implements Initializable {
         try {
             message = ApiFacade.getEntrypoint().getInsertionFacade().createMessage(message, current);
             ApiFacade.getEntrypoint().getInsertionFacade().sendPrivateMessage(message, receiver, current);
-        } catch (PiikDatabaseException | PiikInvalidParameters e) {
+        } catch (PiikDatabaseException e) {
+            e.showAlert(e, "User doesn't exist");
+        } catch (PiikInvalidParameters e) {
             e.showAlert(e, "Failure sending the private message");
         }
 

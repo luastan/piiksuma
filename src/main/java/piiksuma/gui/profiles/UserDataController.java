@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import piiksuma.Multimedia;
 import piiksuma.User;
 import piiksuma.Utilities.PiikLogger;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.api.MultimediaType;
 import piiksuma.exceptions.PiikDatabaseException;
@@ -82,11 +83,26 @@ public class UserDataController implements Initializable {
 
     /**
      * Inits the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userId, 32);
+        PiikTextLimiter.addTextLimiter(userName, 35);
+        PiikTextLimiter.addTextLimiter(email, 35);
+        PiikTextLimiter.addTextLimiter(password, 256);
+        PiikTextLimiter.addTextLimiter(home, 20);
+        PiikTextLimiter.addTextLimiter(province, 30);
+        PiikTextLimiter.addTextLimiter(country, 30);
+        PiikTextLimiter.addTextLimiter(religion, 20);
+        PiikTextLimiter.addTextLimiter(job, 35);
+        PiikTextLimiter.addTextLimiter(description, 256);
+        PiikTextLimiter.addTextLimiter(emotionalSituation, 20);
+        PiikTextLimiter.addTextLimiter(birthplace, 30);
+        PiikTextLimiter.addTextLimiter(city, 30);
 
         initFields();
 
@@ -116,15 +132,33 @@ public class UserDataController implements Initializable {
         userName.setText(user.getName());
         email.setText(user.getEmail());
         //  password.setText(user.getPass());
-        home.setText(user.getHome());
-        city.setText(user.getCity());
-        birthplace.setText(user.getBirthplace());
-        province.setText(user.getProvince());
-        country.setText(user.getCountry());
-        job.setText(user.getJob());
-        emotionalSituation.setText(user.getEmotionalSituation());
-        description.setText(user.getDescription());
-        religion.setText(user.getReligion());
+        if(user.getHome()!=null){
+            home.setText(user.getHome());
+        }
+        if(user.getCity()!=null){
+            city.setText(user.getCity());
+        }
+        if(user.getBirthplace()!=null){
+            birthplace.setText(user.getBirthplace());
+        }
+        if(user.getProvince()!=null){
+            province.setText(user.getProvince());
+        }
+        if(user.getCountry()!=null){
+            country.setText(user.getCountry());
+        }
+        if(user.getJob()!=null){
+            job.setText(user.getJob());
+        }
+        if(user.getEmotionalSituation()!=null){
+            emotionalSituation.setText(user.getEmotionalSituation());
+        }
+        if(user.getDescription()!=null){
+            description.setText(user.getDescription());
+        }
+        if(user.getReligion()!=null){
+            religion.setText(user.getReligion());
+        }
         genderBox.getSelectionModel().select(user.getGender());
 
         birthday.setValue(user.getBirthday().toLocalDateTime().toLocalDate());
@@ -145,10 +179,8 @@ public class UserDataController implements Initializable {
                 }
             }
 
-            imageView.setImage(new Image(user.getMultimedia().getUri(), 450, 800,
+            imageView.setImage(new Image(user.getMultimedia().getUri(), 800, 800,
                     true, true));
-            imageView.setViewport(new Rectangle2D((imageView.getImage().getWidth() - 450) / 2,
-                    (imageView.getImage().getHeight() - 170) / 2, 450, 170));
         }
     }
 
@@ -164,19 +196,16 @@ public class UserDataController implements Initializable {
 
         if (imagen != null) {
             try {
-                // Copy img from source to resource folder
-                BufferedImage img = ImageIO.read(imagen);
-                File outputFile = new File("src/main/resources/imagenes/" + imagen.getName());
-                ImageIO.write(img, imagen.getName().split("\\.")[1], outputFile);
-                imageView.setImage(new Image(outputFile.toURI().toString()));
+
+                imageView.setImage(new Image(imagen.toURI().toString()));
                 // Create multimedia
                 multimedia = new Multimedia();
                 try {
-                    RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+                    RandomAccessFile file = new RandomAccessFile(imagen, "r");
                     byte[] imgBytes = new byte[Math.toIntExact(file.length())];
                     file.read(imgBytes);
                     multimedia.setHash(Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes)));
-                    multimedia.setUri(outputFile.toURI().toString());
+                    multimedia.setUri(imagen.toURI().toString());
                     multimedia.setType(MultimediaType.image);
                     multimedia.setResolution(String.valueOf((int) imageView.getImage().getWidth()) + 'x'
                             + (int) imageView.getImage().getHeight());
@@ -223,6 +252,7 @@ public class UserDataController implements Initializable {
 
     /**
      * Function to update the user data
+     *
      * @param event Event on the window
      */
 
@@ -262,7 +292,10 @@ public class UserDataController implements Initializable {
             ContextHandler.getContext().setCurrentUser(ApiFacade.getEntrypoint().getSearchFacade().getUser(modifyUser, modifyUser));
             ContextHandler.getContext().getStage("User data").close();
             ContextHandler.getContext().getFeedController().updateFeed();
-            ContextHandler.getContext().getUserProfileController().updateFeed();
+            if(ContextHandler.getContext().getUserProfileController()!=null){
+                ContextHandler.getContext().getUserProfileController().updateFeed();
+            }
+
         } catch (PiikException e) {
             e.showAlert(e, "Failure updating the personal data check that all the required parameters are fulfilled");
         }

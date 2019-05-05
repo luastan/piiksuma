@@ -63,11 +63,15 @@ public class ConversationController implements Initializable {
 
     /**
      * Inits the window components
+     *
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(messageField, 200);
+
         ContextHandler.getContext().setConversationController(this);
         messages = FXCollections.observableArrayList();
         initializeNewMessage();
@@ -100,6 +104,7 @@ public class ConversationController implements Initializable {
 
     /**
      * Sends a message to another user
+     *
      * @param event Event on the window
      */
     private void sendMessage(ActionEvent event) {
@@ -129,6 +134,7 @@ public class ConversationController implements Initializable {
 
     /**
      * Inserts a message on the window
+     *
      * @param message
      */
     private void insertMessage(Message message) {

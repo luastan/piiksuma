@@ -32,6 +32,9 @@ public class PiikLogger {
     private static PiikLogger piikLogger;
     private static Logger logger;
 
+    // Usefull during development
+    private static Boolean DEBUG = Boolean.FALSE;
+
     /**
      * Constructor that generates the log console and file
      */
@@ -42,14 +45,19 @@ public class PiikLogger {
 
         ConsoleHandler ch = new ConsoleHandler();
         ch.setLevel(Level.ALL);
-        logger.addHandler(ch);
+
+        if (DEBUG) {
+            logger.addHandler(ch);
+        }
 
         FileHandler fh;
 
         try {
             fh = new FileHandler("src/main/resources/log/PiikLogger.log");
             fh.setLevel(Level.ALL);
-            logger.addHandler(fh);
+            if (DEBUG) {
+                logger.addHandler(fh);
+            }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Couldn't create log file", e);
         }

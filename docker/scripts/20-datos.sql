@@ -7,6 +7,8 @@ VALUES ('Alvaru', 'alvaru@gmail.com', 'Álvaro Goldar Dieste',
         'M', 'I send work to my minions', 'Home', '36112', 'Pontevedra', 'España', 'A toxa', '1999-04-12',
         CURRENT_DATE);
 
+-- Password is sesamo
+
 INSERT INTO piiuser (id, email, name, pass, gender, description, home,
                      postalcode, province, country, city, birthdate, registrationdate)
 VALUES ('Danilo', 'danilo@gmail.com', 'Daniel Martínez Fernández',
@@ -383,7 +385,7 @@ VALUES ('Cardamis', 'Alvaro is sendig work again... run !', '2019-04-11', 'aaaa'
 INSERT INTO message (author, text, date, multimedia, ticket)
 VALUES ('Danilo', 'Alvaro is sendig work again... run !', '2019-04-12', 'aaaa', 1);
 INSERT INTO message (author, text, date, multimedia)
-VALUES ('Alvaru', 'WORK MINIONS WORK !', '2019-04-13', 'aaad');
+VALUES ('Alvaru', 'Good morning !', '2019-04-13', 'aaad');
 
 -- Recieve Message
 INSERT INTO receivemessage (message, author, receiver)
@@ -414,16 +416,16 @@ LIMIT 1 OFFSET 3;
 -- =============================================== DATA NOTIFICATIONS ==================================================
 -- Notification
 INSERT INTO notification (creationdate, content)
-VALUES ('2019-04-12', 'Viqueira sais: 4.9');
+VALUES ('2019-04-12', 'Have a good day');
 
 INSERT INTO notification (creationdate, content)
-VALUES ('2019-04-11', 'Easy game easy life');
+VALUES ('2019-04-11', 'Sistem will go under manteinance tomorrow');
 
 INSERT INTO notification (creationdate, content)
-VALUES ('2019-04-10', 'Hi');
+VALUES ('2019-04-10', 'Hello');
 
 INSERT INTO notification (creationdate, content)
-VALUES ('2019-04-10', 'No sleep');
+VALUES ('2019-04-10', 'Did you know piiksuma means tweet in Estonia');
 
 -- Have Notification
 INSERT INTO havenotification (notification, usr)

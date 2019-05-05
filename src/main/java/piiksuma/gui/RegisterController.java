@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.TextFieldListCell;
 import piiksuma.User;
+import piiksuma.Utilities.PiikTextLimiter;
 import piiksuma.api.ApiFacade;
 import piiksuma.exceptions.PiikException;
 
@@ -61,6 +62,21 @@ public class RegisterController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Limit text fields
+        PiikTextLimiter.addTextLimiter(userId, 32);
+        PiikTextLimiter.addTextLimiter(userName, 35);
+        PiikTextLimiter.addTextLimiter(email, 35);
+        PiikTextLimiter.addTextLimiter(password, 256);
+        PiikTextLimiter.addTextLimiter(home, 20);
+        PiikTextLimiter.addTextLimiter(province, 30);
+        PiikTextLimiter.addTextLimiter(country, 30);
+        PiikTextLimiter.addTextLimiter(religion, 20);
+        PiikTextLimiter.addTextLimiter(job, 35);
+        PiikTextLimiter.addTextLimiter(description, 256);
+        PiikTextLimiter.addTextLimiter(emotionalSituation, 20);
+        PiikTextLimiter.addTextLimiter(birthplace, 30);
+        PiikTextLimiter.addTextLimiter(city, 30);
+
         //Add options to the comboBox
         genderBox.setItems(FXCollections.observableArrayList("M", "H", "O"));
 
@@ -143,7 +159,7 @@ public class RegisterController implements Initializable {
                 Integer.parseInt(s);
                 user.addPhone(s);
             } catch (NumberFormatException e) {
-                System.out.println("Not a telephone");
+
             }
 
         }

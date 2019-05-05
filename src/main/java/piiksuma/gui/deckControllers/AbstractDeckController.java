@@ -17,6 +17,7 @@ import piiksuma.gui.ContextHandler;
 import piiksuma.gui.profiles.UserProfileController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 
 public class AbstractDeckController {
@@ -138,9 +139,15 @@ public class AbstractDeckController {
     private void handleNotification(Event event){
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current).forEach(this::sendNotification);
+            List<Notification> notifications = ApiFacade.getEntrypoint().getSearchFacade().getNotifications(current, current);
+            if (notifications.size() > 0) {
+                notifications.forEach(this::sendNotification);
+            } else {
+                JFXSnackbarLayout layout = new JFXSnackbarLayout("There's not notifications for you at the moment", "Piiksuma", Event::consume);
+                new JFXSnackbar(deck).enqueue(new JFXSnackbar.SnackbarEvent(layout));
+            }
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert(e, "Could not show the notification");
+            e.showAlert(e, "Could not show the notifications");
         }
 
     }
