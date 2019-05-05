@@ -1,27 +1,13 @@
 package piiksuma;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import piiksuma.api.ApiFacade;
 import piiksuma.database.QueryMapper;
-import piiksuma.database.SampleFachada;
 import piiksuma.gui.ContextHandler;
-import piiksuma.Utilities.PiikLogger;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.logging.Level;
 
 public class Arranque extends Application {
     public static void main(String[] args) {
-//        SampleFachada.getDb().ejemploGETFK();
-        //      SampleFachada.getDb().pruebasCheck();
-        // SampleFachada.getDb().idGenerationTest();
-        SampleFachada.getDb().aTest();
         launch(args);
     }
 

@@ -103,7 +103,7 @@ public class LoginController implements Initializable {
         try {
             ContextHandler.getContext().register("primary", mainStage);
         } catch (PiikException e) {
-            e.showAlert(e, "Failure loading the main stage");
+            e.showAlert(e, "Failure loading the main window");
             return;
         }
         // Stage configuration

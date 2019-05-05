@@ -159,7 +159,7 @@ public class RegisterController implements Initializable {
                 Integer.parseInt(s);
                 user.addPhone(s);
             } catch (NumberFormatException e) {
-                System.out.println("Not a telephone");
+
             }
 
         }

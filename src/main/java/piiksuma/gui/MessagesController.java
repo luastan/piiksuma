@@ -129,7 +129,7 @@ public class MessagesController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/conversation.fxml", controller, "Messages" + (target.getName() != null ? " - " + target.getName() : ""));
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the conversation stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the conversation window");
         }
     }
 

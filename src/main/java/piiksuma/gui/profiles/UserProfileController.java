@@ -290,7 +290,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/newTicket.fxml", null, "New Ticket");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the newTicket window");
         }
     }
 
@@ -303,7 +303,7 @@ public class UserProfileController implements Initializable {
         try {
             ContextHandler.getContext().invokeStage("/gui/fxml/tickets/tickets.fxml", null, "Tickets");
         } catch (PiikInvalidParameters invalidParameters) {
-            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets stage");
+            invalidParameters.showAlert(invalidParameters, "Failure loading the tickets window");
         }
     }
 

@@ -74,7 +74,7 @@ public abstract class Mapper<T> {
             }
 
         } catch (SQLException e) {
-            System.err.println("Unable to set the given transaction isolation level");
+
             throw new PiikDatabaseException(e.getMessage());
         }
 
@@ -472,7 +472,7 @@ public abstract class Mapper<T> {
         try {
             this.connection.setTransactionIsolation(this.isolationLevel);
         } catch (SQLException e) {
-            System.err.println("Unable to set the desired transaction isolation level");
+
             throw new PiikDatabaseException(e.getMessage());
         }
     }

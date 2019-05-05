@@ -47,7 +47,7 @@ public class AnswerPostsController implements Initializable {
                 }
             });
         } catch (PiikDatabaseException | PiikInvalidParameters e) {
-            e.showAlert(e, "Failure loading the Answer post stage");
+            e.showAlert(e, "Failure loading the Answer post window");
         }
     }
 }
