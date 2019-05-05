@@ -180,7 +180,9 @@ public class UserProfileController implements Initializable {
     private void updateFollowButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            Boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
+            ContextHandler.getContext().getFeedController().updateFeed();
+            ContextHandler.getContext().getEventsController().updateEventFeed();
+            boolean currentUserFollows = ApiFacade.getEntrypoint().getSearchFacade().isFollowed(user, current, current);
             if (!currentUserFollows) {
                 buttonCenter.setText("Follow");
                 buttonCenter.setStyle("-fx-background-color: -primary-color-5");
@@ -219,7 +221,9 @@ public class UserProfileController implements Initializable {
     private void updateBlockButton() {
         User current = ContextHandler.getContext().getCurrentUser();
         try {
-            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            ContextHandler.getContext().getEventsController().updateEventFeed();
+            ContextHandler.getContext().getFeedController().updateFeed();
+            boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (!currentUserBlocks) {
                 buttonLeft.setText("Block");
                 buttonLeft.setStyle("-fx-background-color: -primary-color-5");
@@ -240,7 +244,7 @@ public class UserProfileController implements Initializable {
         User current = ContextHandler.getContext().getCurrentUser();
 
         try {
-            Boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
+            boolean currentUserBlocks = ApiFacade.getEntrypoint().getSearchFacade().isBlock(user, current, current);
             if (currentUserBlocks) {
                 ApiFacade.getEntrypoint().getDeletionFacade().unblockUser(user, current, current);
             } else {

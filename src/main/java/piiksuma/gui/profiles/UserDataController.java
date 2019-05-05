@@ -179,10 +179,8 @@ public class UserDataController implements Initializable {
                 }
             }
 
-            imageView.setImage(new Image(user.getMultimedia().getUri(), 450, 800,
+            imageView.setImage(new Image(user.getMultimedia().getUri(), 800, 800,
                     true, true));
-            imageView.setViewport(new Rectangle2D((imageView.getImage().getWidth() - 450) / 2,
-                    (imageView.getImage().getHeight() - 170) / 2, 450, 170));
         }
     }
 
@@ -198,19 +196,16 @@ public class UserDataController implements Initializable {
 
         if (imagen != null) {
             try {
-                // Copy img from source to resource folder
-                BufferedImage img = ImageIO.read(imagen);
-                File outputFile = new File("src/main/resources/imagenes/" + imagen.getName());
-                ImageIO.write(img, imagen.getName().split("\\.")[1], outputFile);
-                imageView.setImage(new Image(outputFile.toURI().toString()));
+
+                imageView.setImage(new Image(imagen.toURI().toString()));
                 // Create multimedia
                 multimedia = new Multimedia();
                 try {
-                    RandomAccessFile file = new RandomAccessFile(outputFile, "r");
+                    RandomAccessFile file = new RandomAccessFile(imagen, "r");
                     byte[] imgBytes = new byte[Math.toIntExact(file.length())];
                     file.read(imgBytes);
                     multimedia.setHash(Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest(imgBytes)));
-                    multimedia.setUri(outputFile.toURI().toString());
+                    multimedia.setUri(imagen.toURI().toString());
                     multimedia.setType(MultimediaType.image);
                     multimedia.setResolution(String.valueOf((int) imageView.getImage().getWidth()) + 'x'
                             + (int) imageView.getImage().getHeight());

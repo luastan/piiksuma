@@ -75,9 +75,9 @@ public class ProfilePreviewController implements Initializable {
                     piikInvalidParameters.printStackTrace();
                 }
             }
-            profilePicture.setImage(new Image(profile.getMultimedia().getUri()));
+            profilePicture.setImage(new Image(profile.getMultimedia().getUri(), 800, 800, true, true));
         } else {
-            profilePicture.setImage(new Image(new File("src/main/resources/imagenes/huevo.png").toURI().toString()));
+            profilePicture.setImage(new Image(getClass().getResource("/imagenes/huevo.png").toExternalForm()));
         }
 
         // Profile image into a circle
